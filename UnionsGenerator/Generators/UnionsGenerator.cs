@@ -177,22 +177,29 @@ public class UnionsGenerator : IIncrementalGenerator
 
                 var mutableResult = new Dictionary<TypeSignatureModel, (List<PartialRepresentableTypeModel> representableTypes, HashSet<TypeSignatureModel> mappedRepresentableTypes)>();
                 var result = new Dictionary<TypeSignatureModel, (EquatableList<PartialRepresentableTypeModel> representableTypes, Boolean isEqualsRequired, Boolean doesNotImplementToString)>();
-                var isEqualsRequiredAccumulator = true;
-                var doesNotImplementToStringAccumulator = true;
+                var isEqualsRequiredAccumulators = new Dictionary<TypeSignatureModel, Boolean>();
+                var doesNotImplementToStringAccumulators = new Dictionary<TypeSignatureModel, Boolean>();
+
                 foreach(var (key, value, isEqualsRequired, doesNotImplementToString, _) in keyValuePairs)
                 {
-                    isEqualsRequiredAccumulator &= isEqualsRequired;
-                    doesNotImplementToStringAccumulator &= doesNotImplementToString;
+                    if(!isEqualsRequiredAccumulators.ContainsKey(key))
+                        isEqualsRequiredAccumulators[key] = true;
+
+                    if(!doesNotImplementToStringAccumulators.ContainsKey(key))
+                        doesNotImplementToStringAccumulators[key] = true;
+
+                    isEqualsRequiredAccumulators[key] &= isEqualsRequired;
+                    doesNotImplementToStringAccumulators[key] &= doesNotImplementToString;
 
                     ct.ThrowIfCancellationRequested();
                     if(!mutableResult.TryGetValue(key, out var data))
                     {
                         data = ([], []);
                         mutableResult.Add(key, data);
-                        result.Add(key, (new(data.representableTypes), isEqualsRequiredAccumulator, doesNotImplementToStringAccumulator));
+                        result.Add(key, (new(data.representableTypes), isEqualsRequiredAccumulators[key], doesNotImplementToStringAccumulators[key]));
                     } else
                     {
-                        result[key] = (result[key].representableTypes, isEqualsRequiredAccumulator, doesNotImplementToStringAccumulator);
+                        result[key] = (result[key].representableTypes, isEqualsRequiredAccumulators[key], doesNotImplementToStringAccumulators[key]);
                     }
 
                     if(data.mappedRepresentableTypes.Add(value.Signature))
