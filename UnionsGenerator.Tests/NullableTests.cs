@@ -30,6 +30,39 @@ public class NullableTests : TestBase
     [InlineData(new[] { "Foo" }, new String[] { "Bar" }, "IsBar", true)]
     [InlineData(new[] { "Foo" }, new String[] { "Bar" }, "IsFoo", false)]
     [InlineData(new[] { "Foo" }, new String[] { "Bar" }, "IsBar", false, "AsFoo")]
+
+    [InlineData(new String[] { }, new String[] { "Foo", "Bar" }, "IsFoo", true)]
+    [InlineData(new String[] { }, new String[] { "Foo", "Bar" }, "IsBar", true)]
+    [InlineData(new String[] { }, new String[] { "Foo", "Bar" }, "IsFoo", false)]
+    [InlineData(new String[] { }, new String[] { "Foo", "Bar" }, "IsBar", false)]
+
+    [InlineData(new[] { "Foo", "Bar", "Baz" }, new String[] { }, "IsFoo", true, "AsFoo")]
+    [InlineData(new[] { "Foo", "Bar", "Baz" }, new String[] { }, "IsBar", true, "AsBar")]
+    [InlineData(new[] { "Foo", "Bar", "Baz" }, new String[] { }, "IsBaz", true, "AsBaz")]
+    [InlineData(new[] { "Foo", "Bar", "Baz" }, new String[] { }, "IsFoo", false)]
+    [InlineData(new[] { "Foo", "Bar", "Baz" }, new String[] { }, "IsBar", false)]
+    [InlineData(new[] { "Foo", "Bar", "Baz" }, new String[] { }, "IsBaz", false)]
+
+    [InlineData(new[] { "Foo", "Bar" }, new String[] { "Baz" }, "IsFoo", true, "AsFoo")]
+    [InlineData(new[] { "Foo", "Bar" }, new String[] { "Baz" }, "IsBar", true, "AsBar")]
+    [InlineData(new[] { "Foo", "Bar" }, new String[] { "Baz" }, "IsBaz", true)]
+    [InlineData(new[] { "Foo", "Bar" }, new String[] { "Baz" }, "IsFoo", false)]
+    [InlineData(new[] { "Foo", "Bar" }, new String[] { "Baz" }, "IsBar", false)]
+    [InlineData(new[] { "Foo", "Bar" }, new String[] { "Baz" }, "IsBaz", false)]
+
+    [InlineData(new[] { "Foo" }, new String[] { "Baz", "Bar" }, "IsFoo", true, "AsFoo")]
+    [InlineData(new[] { "Foo" }, new String[] { "Baz", "Bar" }, "IsBar", true)]
+    [InlineData(new[] { "Foo" }, new String[] { "Baz", "Bar" }, "IsBaz", true)]
+    [InlineData(new[] { "Foo" }, new String[] { "Baz", "Bar" }, "IsFoo", false)]
+    [InlineData(new[] { "Foo" }, new String[] { "Baz", "Bar" }, "IsBar", false)]
+    [InlineData(new[] { "Foo" }, new String[] { "Baz", "Bar" }, "IsBaz", false)]
+
+    [InlineData(new String[] { }, new String[] { "Foo", "Bar", "Baz" }, "IsFoo", true)]
+    [InlineData(new String[] { }, new String[] { "Foo", "Bar", "Baz" }, "IsBar", true)]
+    [InlineData(new String[] { }, new String[] { "Foo", "Bar", "Baz" }, "IsBaz", true)]
+    [InlineData(new String[] { }, new String[] { "Foo", "Bar", "Baz" }, "IsFoo", false)]
+    [InlineData(new String[] { }, new String[] { "Foo", "Bar", "Baz" }, "IsBar", false)]
+    [InlineData(new String[] { }, new String[] { "Foo", "Bar", "Baz" }, "IsBaz", false)]
     public void AnnotatesWithMemberNotNullWhenAttribute(
         String[] classNames,
         String[] structNames,
@@ -44,12 +77,12 @@ public class NullableTests : TestBase
             {{String.Join('\n', classNames.Select(n => $"class {n.TrimEnd('?')} {{}}"))}}
             {{String.Join('\n', structNames.Select(n => $"struct {n} {{}}"))}}
 
-            [UnionType<{{String.Join(',', structNames.Concat(classNames.Select(n=>n.TrimEnd('?'))))}}>]
+            [UnionType<{{String.Join(',', structNames.Concat(classNames.Select(n => n.TrimEnd('?'))))}}>]
             partial struct Union { }
             """,
             s =>
             {
-                var hasMatchingAttribute = s.GetMembers()
+                var actualMatch = s.GetMembers()
                     .OfType<IPropertySymbol>()
                     .Single(p => p.Name == propertyName)
                     .GetAttributes()
@@ -59,9 +92,6 @@ public class NullableTests : TestBase
                     .Select(a => a.ConstructorArguments)
                     .Select(args =>
                     {
-                        if(expectedMemberNames.Length == 0)
-                            return true;
-
                         var result = args.Length == expectedMemberNames.Length + 1
                             && args[0] is
                             {
@@ -82,7 +112,9 @@ public class NullableTests : TestBase
                     .Where(v => v)
                     .SingleOrDefault();
 
-                Assert.True(hasMatchingAttribute);
+                var expectedMatch = expectedMemberNames is [.., { }];
+
+                Assert.Equal(expectedMatch, actualMatch);
             },
             "Union");
     }
