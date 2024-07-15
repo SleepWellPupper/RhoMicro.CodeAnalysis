@@ -39,7 +39,7 @@ sealed partial class AppendableSourceText(UnionTypeModel target) : IIndentedStri
         }
 
         builder.Append("partial ").Append(signature.DeclarationKeyword).Append(' ').Append(signature.Names.GenericName)
-            .Append(" : System.IEquatable<").Append(signature.Names.GenericName).Append(b =>
+            .Append(" : global::System.IEquatable<").Append(signature.Names.GenericName).Append(b =>
             {
                 if(target.Signature.Nature == TypeNature.ReferenceType)
                     b.AppendCore('?');
@@ -612,6 +612,23 @@ sealed partial class AppendableSourceText(UnionTypeModel target) : IIndentedStri
                 b.Comment.OpenSummary()
                     .Append("Gets a value indicating whether this instance is representing a value of type ").Comment.Ref(a.Signature).Append('.')
                 .CloseBlock()
+                .Append(b =>
+                {
+                    if(a.Signature.Nature is TypeNature.ReferenceType)
+                    {
+                        b.Append("[global::System.Diagnostics.CodeAnalysis.MemberNotNullWhen(true, \"As").Append(a.Alias).Append("\")]").AppendLineCore();
+                    }
+
+                    if(target.RepresentableTypes.Count == 2)
+                    {
+                        var otherRepresentable = target.RepresentableTypes.Single(r => r.Alias != a.Alias);
+
+                        if(otherRepresentable.Signature.Nature == TypeNature.ReferenceType)
+                        {
+                            b.Append("[global::System.Diagnostics.CodeAnalysis.MemberNotNullWhen(false, \"As").Append(otherRepresentable.Alias).Append("\")]").AppendLineCore();
+                        }
+                    }
+                })
                 .Append("public System.Boolean Is").Append(a.Alias).Append(" => ")
                 .Append(target.Settings.TagFieldName).Append(" == ")
                 .Append(target.Settings.TagTypeName).Append('.').Append(a.Alias))
