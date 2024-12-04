@@ -1,7 +1,5 @@
 ﻿namespace RhoMicro.CodeAnalysis.Library;
 
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-
 using System.Collections;
 
 sealed class EquatableList<T>(IReadOnlyList<T> decorated) : IReadOnlyList<T>, IEquatable<EquatableList<T>?>

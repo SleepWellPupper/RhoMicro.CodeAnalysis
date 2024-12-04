@@ -1,7 +1,5 @@
 ﻿namespace RhoMicro.CodeAnalysis.UnionsGenerator.Transformation.Storage;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Text.RegularExpressions;
 
 static class StringExtensions

@@ -1,0 +1,46 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net9.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<IsPackable>false</IsPackable>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <Compile Remove="NuGetTests\HelloWorld\bin\**" />
+	  <Compile Remove="NuGetTests\HelloWorld\obj\Debug\net6.0\refint\**" />
+	  <Compile Remove="NuGetTests\HelloWorld\obj\Debug\net6.0\ref\**" />
+	  <Compile Remove="NuGetTests\HelloWorld\obj\Release\net6.0\refint\**" />
+	  <Compile Remove="NuGetTests\HelloWorld\obj\Release\net6.0\ref\**" />
+	  <EmbeddedResource Remove="NuGetTests\HelloWorld\bin\**" />
+	  <EmbeddedResource Remove="NuGetTests\HelloWorld\obj\Debug\net6.0\refint\**" />
+	  <EmbeddedResource Remove="NuGetTests\HelloWorld\obj\Debug\net6.0\ref\**" />
+	  <EmbeddedResource Remove="NuGetTests\HelloWorld\obj\Release\net6.0\refint\**" />
+	  <EmbeddedResource Remove="NuGetTests\HelloWorld\obj\Release\net6.0\ref\**" />
+	  <None Remove="NuGetTests\HelloWorld\bin\**" />
+	  <None Remove="NuGetTests\HelloWorld\obj\Debug\net6.0\refint\**" />
+	  <None Remove="NuGetTests\HelloWorld\obj\Debug\net6.0\ref\**" />
+	  <None Remove="NuGetTests\HelloWorld\obj\Release\net6.0\refint\**" />
+	  <None Remove="NuGetTests\HelloWorld\obj\Release\net6.0\ref\**" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="coverlet.collector" Version="6.0.2" />
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
+		<PackageReference Include="xunit" Version="2.9.2" />
+		<PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" />
+		<PackageReference Include="Basic.Reference.Assemblies" Version="1.7.9" />
+		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="*" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\JsonSchemaGenerator.Cli\JsonSchemaGenerator.Cli.csproj" />
+	  <ProjectReference Include="..\JsonSchemaGenerator\JsonSchemaGenerator.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Using Include="Xunit" />
+	</ItemGroup>
+
+</Project>

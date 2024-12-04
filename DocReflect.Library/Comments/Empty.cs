@@ -1,6 +1,4 @@
 ﻿namespace RhoMicro.CodeAnalysis.DocReflect.Comments;
-using System;
-
 /// <summary>
 /// Represents an empty or non-existent top-level documentation comment.
 /// </summary>

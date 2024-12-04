@@ -1,22 +1,30 @@
 using RhoMicro.CodeAnalysis;
 
+using TestApp;
+
 internal class Program
 {
-    private static void Main(String[] _0)
+    private static void Main(String[] args)
     {
-
     }
 }
 
-[UnionType<ErrorCode, MultipleUsersError, User>(Storage = StorageOption.Value)]
-readonly partial struct GetUserResult;
-
-sealed record User(String Name);
-
-enum ErrorCode
+enum MyEnum
 {
-    NotFound,
-    Unauthorized
+    A, B, C
 }
 
-readonly record struct MultipleUsersError(Int32 Count);
+[JsonSchema]
+sealed partial class Settings
+{
+    public required NamespaceSettings NamespaceSettingsProp { get; set; }
+    public MyEnum EnumProp { get; set; }
+    public Settings[] ArrayProp { get; set; } = [];
+    public List<SubSettings> ListProp { get; set; } = [];
+}
+
+[JsonSchema]
+sealed partial class SubSettings
+{
+    public required Int32 IntProp { get; set; }
+}

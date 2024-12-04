@@ -4,7 +4,6 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 using RhoMicro.CodeAnalysis;
-using RhoMicro.CodeAnalysis.Library;
 using RhoMicro.CodeAnalysis.Library.Text;
 using RhoMicro.CodeAnalysis.UnionsGenerator.Models;
 using RhoMicro.CodeAnalysis.UnionsGenerator.Transformation.Visitors;
@@ -19,9 +18,7 @@ using RelationsProvider = Microsoft.CodeAnalysis.IncrementalValueProvider<Equata
 using SettingsMapProvider = Microsoft.CodeAnalysis.IncrementalValueProvider<(Models.SettingsModel fallbackSettings, EquatableDictionary<Models.TypeSignatureModel, Models.SettingsModel> definedSettings)>;
 using SourceTextProvider = Microsoft.CodeAnalysis.IncrementalValuesProvider<(String hintName, String source)>;
 using System.Linq;
-using System.Collections.Immutable;
 using RhoMicro.CodeAnalysis.UnionsGenerator.Analyzers;
-using Microsoft.CodeAnalysis.CSharp;
 
 /// <summary>
 /// Generates partial union type implementations.

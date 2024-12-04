@@ -1,13 +1,10 @@
 ﻿namespace RhoMicro.CodeAnalysis.UnionsGenerator.Transformation.Visitors;
 
 using System.Collections.Immutable;
-using System.Xml.Linq;
 
 using RhoMicro.CodeAnalysis.Library.Text;
 using RhoMicro.CodeAnalysis.UnionsGenerator.Models;
 using RhoMicro.CodeAnalysis.UnionsGenerator.Utils;
-
-using static Library.Text.IndentedStringBuilder.Appendables;
 
 sealed partial class AppendableSourceText(UnionTypeModel target) : IIndentedStringBuilderAppendable
 {

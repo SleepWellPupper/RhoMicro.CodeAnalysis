@@ -1,7 +1,5 @@
 ﻿namespace RhoMicro.CodeAnalysis.UnionsGenerator.Utils;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 internal static class Throw
 {

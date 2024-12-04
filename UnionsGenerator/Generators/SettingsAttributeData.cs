@@ -1,15 +1,11 @@
 ﻿namespace RhoMicro.CodeAnalysis.UnionsGenerator.Generators;
 
 using Microsoft.CodeAnalysis;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.CodeAnalysis.CSharp;
 
-using RhoMicro.CodeAnalysis;
 using RhoMicro.CodeAnalysis.UnionsGenerator.Models;
 
 using System;
 using System.Collections.Immutable;
-using System.Reflection;
 
 sealed class SettingsAttributeData : AttributeData, IEquatable<SettingsAttributeData?>
 {

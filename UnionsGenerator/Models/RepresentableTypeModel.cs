@@ -1,9 +1,6 @@
 ﻿namespace RhoMicro.CodeAnalysis.UnionsGenerator.Models;
 
-using System.Collections.Immutable;
 using System.Threading;
-
-using Microsoft.CodeAnalysis;
 
 using RhoMicro.CodeAnalysis.UnionsGenerator.Models.Storage;
 using RhoMicro.CodeAnalysis.UnionsGenerator.Utils;

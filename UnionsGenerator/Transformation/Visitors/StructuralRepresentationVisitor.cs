@@ -1,6 +1,5 @@
 ﻿namespace RhoMicro.CodeAnalysis.UnionsGenerator.Transformation.Visitors
 {
-    using RhoMicro.CodeAnalysis;
     using RhoMicro.CodeAnalysis.Library.Text;
     using RhoMicro.CodeAnalysis.UnionsGenerator.Models;
 

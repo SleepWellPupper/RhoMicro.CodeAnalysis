@@ -1,0 +1,243 @@
+﻿namespace RhoMicro.CodeAnalysis.JsonSchemaGenerator.Tests;
+
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis;
+using Basic.Reference.Assemblies;
+using Microsoft.CodeAnalysis.Diagnostics;
+using System.Text.Json.Nodes;
+using System.Text.Json;
+
+/// <summary>
+/// Base class for tests verifying <see cref="UnionsGenerator"/> outputs.
+/// </summary>
+public abstract class TestBase
+{
+    protected TestBase() : this(Net80.References.All.ToArray()) { }
+    protected TestBase(IEnumerable<MetadataReference> references) =>
+        _references = [.. references];
+
+    private readonly MetadataReference[] _references;
+
+    //requiring >= C#11 due to file scoped modifiers
+    private const LanguageVersion _targetLanguageVersion = LanguageVersion.Preview;
+    private static readonly CSharpParseOptions _parseOptions =
+        new(languageVersion: _targetLanguageVersion,
+            documentationMode: DocumentationMode.Diagnose,
+            kind: SourceCodeKind.Regular);
+    /// <summary>
+    /// Tests a generated schema against an expected one.
+    /// </summary>
+    /// <param name="source"></param>
+    /// <param name="expectedSchema"></param>
+    /// <param name="id"></param>
+    public void TestSchema(String source, Object expectedSchema, String? id = null) =>
+        TestSchema(source, actual => AssertSchemataEqual(expectedSchema, actual), id);
+
+    protected static async Task AssertSchemataEqual(Object expectedSchema, String actualPath)
+    {
+        using var fs = File.OpenRead(actualPath);
+        var actual = await JsonNode.ParseAsync(fs).ConfigureAwait(ConfigureAwaitOptions.None) as JsonObject;
+        AssertSchemataEqual(expectedSchema, actual);
+    }
+    protected static void AssertSchemataEqual(Object expectedSchema, JsonObject? actual)
+    {
+#pragma warning disable
+        var expected = JsonNode.Parse(JsonSerializer.Serialize(
+            expectedSchema,
+            new JsonSerializerOptions(JsonSerializerDefaults.General)
+            {
+                AllowTrailingCommas = false,
+                IncludeFields = false,
+                WriteIndented = true,
+                PropertyNamingPolicy = null
+            }));
+        actual.AssertEquality(expected);
+#pragma warning restore
+    }
+
+    /// <summary>
+    /// Invokes an assertion on the json schema implementation generated from a source.
+    /// </summary>
+    /// <param name="source"></param>
+    /// <param name="assertion"></param>
+    /// <param name="id"></param>
+    public void TestSchema(String source, Action<JsonObject> assertion, String? id = null)
+    {
+        _ = assertion ?? throw new ArgumentNullException(nameof(assertion));
+
+        Compilation compilation = CreateCompilation(source, out var sourceTree);
+        var runResult = RunGenerator(ref compilation);
+        Assert.Empty(runResult.Diagnostics.Where(d => d.IsWarningAsError || d.Severity is DiagnosticSeverity.Error));
+
+        var schemata = compilation.Assembly
+            .GetAttributes()
+            .OfGeneratedJsonSchemaAttribute()
+            .Select(a => JsonNode.Parse(a.Schema))
+            .OfType<JsonObject>()
+            .Select(s => (hasId: s.TryGetPropertyValue("$id", out var idNode), idNode, s))
+            .Where(t => t.hasId)
+            .ToDictionary(t => t.idNode!.AsValue().ToString(), t => t.s);
+
+        Assert.NotEmpty(schemata);
+        JsonObject schema;
+        if(id is not null)
+        {
+            Assert.True(schemata.TryGetValue(id, out schema!));
+        } else
+        {
+            schema = schemata.First().Value;
+        }
+
+        assertion.Invoke(schema);
+    }
+    /// <summary>
+    /// Invokes an assertion on the result of running the generator once on a source.
+    /// </summary>
+    /// <param name="source"></param>
+    /// <param name="assertion"></param>
+    public void TestDriverResult(String source, Action<GeneratorDriverRunResult> assertion)
+    {
+        _ = assertion ?? throw new ArgumentNullException(nameof(assertion));
+
+        Compilation compilation = CreateCompilation(source, out var _);
+        var result = RunGenerator(ref compilation);
+        assertion.Invoke(result);
+    }
+    public Task TestDiagnostics(String source, Func<CompilationWithAnalyzers, Task> assertion)
+    {
+        _ = assertion ?? throw new ArgumentNullException(nameof(assertion));
+
+        var compilation = CreateCompilation(source, out _);
+        var compilationWithDiagnostics = AttachAnalyzer(compilation);
+        return assertion.Invoke(compilationWithDiagnostics);
+    }
+    private CompilationWithAnalyzers AttachAnalyzer(Compilation compilation)
+    {
+        var result = compilation.WithAnalyzers([/*(DiagnosticAnalyzer)new Analyzers.Analyzer()*/]);
+
+        return result;
+    }
+    protected GeneratorDriverRunResult RunGenerator(ref Compilation compilation)
+    {
+        var generator = new JsonSchemaGenerator.Generators.JsonSchemaGenerator();
+
+        var driver = CSharpGeneratorDriver.Create(generator)
+            .WithUpdatedParseOptions(_parseOptions);
+
+        // Run the generation pass
+        // (Note: the generator driver itself is immutable, and all calls return an updated version of the driver that you should use for subsequent calls)
+        driver = driver.RunGeneratorsAndUpdateCompilation(compilation, out compilation, out var diagnostics);
+
+        // We can now assert things about the resulting compilation:
+        Assert.Empty(diagnostics); // there were no diagnostics created by the generators
+        var aggregateDiagnostics = compilation
+            .GetDiagnostics()
+            .Where(d => d is { IsWarningAsError: true } or { Severity: DiagnosticSeverity.Error });
+        Assert.Empty(aggregateDiagnostics); // verify the compilation with the added source has no diagnostics
+
+        // Or we can look at the results directly:
+        var result = driver.GetRunResult();
+
+        // The runResult contains the combined results of all generators passed to the driver
+        Assert.Empty(result.Diagnostics);
+
+        return result;
+    }
+
+    protected CSharpCompilation CreateCompilation(String source, out SyntaxTree sourceTree)
+    {
+        var options = CreateCompilationOptions();
+        sourceTree = CSharpSyntaxTree.ParseText(source, _parseOptions);
+        var attributeTree = CSharpSyntaxTree.ParseText(
+            """
+            // <auto-generated/>
+            #pragma warning disable
+            #nullable enable annotations
+
+            // Licensed to the .NET Foundation under one or more agreements.
+            // The .NET Foundation licenses this file to you under the MIT license.
+
+            namespace System.Diagnostics.CodeAnalysis
+            {
+                /// <summary>
+                /// Specifies that when a method returns <see cref="ReturnValue"/>, the parameter will not be null even if the corresponding type allows it.
+                /// </summary>
+                [global::System.AttributeUsage(global::System.AttributeTargets.Parameter, Inherited = false)]
+                [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+                internal sealed class NotNullWhenAttribute : global::System.Attribute
+                {
+                    /// <summary>
+                    /// Initializes the attribute with the specified return value condition.
+                    /// </summary>
+                    /// <param name="returnValue">The return value condition. If the method returns this value, the associated parameter will not be null.</param>
+                    public NotNullWhenAttribute(bool returnValue)
+                    {
+                        ReturnValue = returnValue;
+                    }
+
+                    /// <summary>Gets the return value condition.</summary>
+                    public bool ReturnValue { get; }
+                }
+                [global::System.AttributeUsage(
+                    global::System.AttributeTargets.Method |
+                    global::System.AttributeTargets.Property,
+                    Inherited = false, AllowMultiple = true)]
+                [global::System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+                internal sealed class MemberNotNullWhenAttribute : global::System.Attribute
+                {
+                    /// <summary>
+                    /// Initializes the attribute with the specified return value condition and a field or property member.
+                    /// </summary>
+                    /// <param name="returnValue">The return value condition. If the method returns this value, the associated parameter will not be null.</param>
+                    /// <param name="member">The field or property member that is promised to be not-null.</param>
+                    public MemberNotNullWhenAttribute(bool returnValue, string member)
+                    {
+                        ReturnValue = returnValue;
+                        Members = new[] { member };
+                    }
+
+                    /// <summary>
+                    /// Initializes the attribute with the specified return value condition and list of field and property members.
+                    /// </summary>
+                    /// <param name="returnValue">The return value condition. If the method returns this value, the associated parameter will not be null.</param>
+                    /// <param name="members">The list of field and property members that are promised to be not-null.</param>
+                    public MemberNotNullWhenAttribute(bool returnValue, params string[] members)
+                    {
+                        ReturnValue = returnValue;
+                        Members = members;
+                    }
+
+                    /// <summary>
+                    /// Gets the return value condition.
+                    /// </summary>
+                    public bool ReturnValue { get; }
+
+                    /// <summary>
+                    /// Gets field or property member names.
+                    /// </summary>
+                    public string[] Members { get; }
+                }
+            }
+            """, _parseOptions);
+
+        var result = CSharpCompilation.Create(
+            assemblyName: $"TestAssembly_{Interlocked.Increment(ref _testAssemblyCount)}",
+            syntaxTrees: [sourceTree, attributeTree],
+            references: [.. _references],
+            options: options);
+
+        return result;
+    }
+    private static Int32 _testAssemblyCount;
+    private static CSharpCompilationOptions CreateCompilationOptions()
+    {
+        String[] args = ["/warnaserror"];
+#pragma warning disable RS1035 // Do not use APIs banned for analyzers (not an analyzer????)
+        var commandLineArguments = CSharpCommandLineParser.Default.Parse(args, baseDirectory: Environment.CurrentDirectory, sdkDirectory: Environment.CurrentDirectory);
+#pragma warning restore RS1035 // Do not use APIs banned for analyzers
+        var result = commandLineArguments.CompilationOptions
+            .WithOutputKind(OutputKind.DynamicallyLinkedLibrary);
+
+        return result;
+    }
+}

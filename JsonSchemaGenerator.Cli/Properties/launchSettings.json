@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "JsonSchemaGenerator.Cli": {
+      "commandName": "Project",
+      "commandLineArgs": "--AssemblyPath=\"F:\\dev\\git\\RhoMicro.CodeAnalysis\\TestApp\\bin\\Debug\\net8.0\\RhoMicro.CodeAnalysis.TestApp.dll\" --SchemataPath=\"F:\\dev\\git\\RhoMicro.CodeAnalysis\\TestApp\\schemata\""
+    }
+  }
+}

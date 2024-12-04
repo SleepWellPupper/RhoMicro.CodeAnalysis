@@ -1,6 +1,5 @@
 ﻿namespace RhoMicro.CodeAnalysis.Library.Text;
 
-using System.Threading;
 using System;
 
 readonly struct StringOrChar : IEquatable<StringOrChar>, IIndentedStringBuilderAppendable

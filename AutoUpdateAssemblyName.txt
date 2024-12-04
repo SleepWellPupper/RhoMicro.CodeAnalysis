@@ -1,7 +1,9 @@
-Generators/UtilityGenerators.Library.Tests
-Generators/UnionsGenerator.EndToEnd.Tests
-Generators/UnionsGenerator
-Generators/DslGenerator
-Applications/TestApp
-Applications/DslGenerator.TestApp
-Applications/IndentedStringBuilderTestApp
+# Generators/UtilityGenerators.Library.Tests
+# Generators/UnionsGenerator.EndToEnd.Tests
+# Generators/UnionsGenerator
+# Generators/DslGenerator
+# Generators/JsonSchemaGenerator
+# Generators/JsonSchemaGenerator.Cli
+# Applications/TestApp
+# Applications/DslGenerator.TestApp
+# Applications/IndentedStringBuilderTestApp

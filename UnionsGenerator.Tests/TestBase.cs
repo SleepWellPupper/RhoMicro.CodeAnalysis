@@ -6,7 +6,6 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Basic.Reference.Assemblies;
 using RhoMicro.CodeAnalysis.UnionsGenerator.Generators;
 using Microsoft.CodeAnalysis.Diagnostics;
-using System.Collections.Immutable;
 
 /// <summary>
 /// Base class for tests verifying <see cref="UnionsGenerator"/> outputs.

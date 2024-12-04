@@ -3,7 +3,6 @@
 namespace RhoMicro.CodeAnalysis.UnionsGenerator.EndToEnd.Tests;
 
 using System;
-using System.Numerics;
 
 public partial class RepresentableTypeConversionTests
 {

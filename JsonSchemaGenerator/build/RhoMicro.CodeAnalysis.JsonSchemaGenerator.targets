@@ -1,0 +1,30 @@
+﻿<Project>
+	<PropertyGroup>
+		<JsonSchemaGeneratorIntermediateOutputPath Condition=" '$(JsonSchemaGeneratorIntermediateOutputPath)' == '' ">$(IntermediateOutputPath)\JsonSchemaGeneratorSchemata</JsonSchemaGeneratorIntermediateOutputPath>
+		<JsonSchemaGeneratorOutputPath Condition=" '$(JsonSchemaGeneratorOutputPath)' == '' ">JsonSchemaGeneratorSchemata</JsonSchemaGeneratorOutputPath>
+	</PropertyGroup>
+
+	<Target Name="ExecuteJsonSchemaGeneratorTool">
+		<ItemGroup>
+			<JsonSchemaGeneratorTool Include="$(MSBuildThisFileDirectory)..\tool\RhoMicro.CodeAnalysis.JsonSchemaGenerator.Cli.*.dll"/>
+		</ItemGroup>
+		<Exec Command="dotnet exec @(JsonSchemaGeneratorTool) --AssemblyPath=&quot;@(IntermediateAssembly)&quot; --SchemataPath=&quot;$(JsonSchemaGeneratorIntermediateOutputPath)&quot;"/>
+		<ItemGroup>
+			<FileWrites Include="$(JsonSchemaGeneratorIntermediateOutputPath)\**\*"></FileWrites>
+		</ItemGroup>
+	</Target>
+
+	<PropertyGroup>
+		<GetCopyToOutputDirectoryItemsDependsOn>$(GetCopyToOutputDirectoryItemsDependsOn);IncludeJsonSchemaGeneratorIntermediateOutput</GetCopyToOutputDirectoryItemsDependsOn>
+	</PropertyGroup>
+
+	<Target Name="IncludeJsonSchemaGeneratorIntermediateOutput" BeforeTargets="_GetCopyToOutputDirectoryItemsFromTransitiveProjectReferences">
+		<ItemGroup>
+			<_JsonSchemaGeneratorFiles Include="$(JsonSchemaGeneratorIntermediateOutputPath)\**\*" />
+			<_NoneWithTargetPath Include="@(_JsonSchemaGeneratorFiles)" CopyToOutputDirectory="PreserveNewest">
+				<TargetPath>$(JsonSchemaGeneratorOutputPath)\$(AssemblyName)\%(RecursiveDir)%(Filename)%(Extension)</TargetPath>
+			</_NoneWithTargetPath>
+		</ItemGroup>
+	</Target>
+
+</Project>

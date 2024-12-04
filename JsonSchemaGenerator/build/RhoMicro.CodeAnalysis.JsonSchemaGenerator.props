@@ -1,0 +1,7 @@
+﻿<Project>
+	<PropertyGroup>
+		<TargetsTriggeredByCompilation>$(TargetsTriggeredByCompilation);ExecuteJsonSchemaGeneratorTool</TargetsTriggeredByCompilation>
+		<JsonSchemaGeneratorIntermediateOutputPath></JsonSchemaGeneratorIntermediateOutputPath>
+		<JsonSchemaGeneratorOutputPath></JsonSchemaGeneratorOutputPath>
+	</PropertyGroup>
+</Project>

@@ -1,7 +1,5 @@
 ﻿namespace RhoMicro.CodeAnalysis.UnionsGenerator.Analyzers;
 
-using System.Xml.Linq;
-
 using Microsoft.CodeAnalysis;
 
 using RhoMicro.CodeAnalysis.UnionsGenerator.Models;
