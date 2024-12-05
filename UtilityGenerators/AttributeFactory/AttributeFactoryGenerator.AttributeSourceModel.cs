@@ -64,9 +64,9 @@ public sealed partial class AttributeFactoryGenerator
             {
                 source = source.Replace(_typeCheckPlaceholder,
                     """
-                                if(data.AttributeClass != null &&
-                                   data.AttributeClass.MetadataName == "{METADATANAME}" &&
-                                   data.AttributeClass.ContainingNamespace.Name == "{NAMESPACE}")
+                                if(data.AttributeClass != null ||
+                                   data.AttributeClass.MetadataName != "{METADATANAME}" &&
+                                   data.AttributeClass.ContainingNamespace.Name != "{NAMESPACE}")
                                 {
                                     return false;
                                 }
