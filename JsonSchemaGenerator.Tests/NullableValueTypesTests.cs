@@ -32,9 +32,9 @@ public class NullableValueTypesTests : TestBase
             {
                 public global::System.Nullable<{{valueType}}> Prop { get; set; }
             }
-            """, new Dictionary<String, Object>()
+            """, n => new Dictionary<String, Object>()
             {
-                ["$id"] = "Schema",
+                ["$id"] = $"./{n}/Schema.json",
                 ["type"] = new[] { "object" },
                 ["properties"] = new
                 {

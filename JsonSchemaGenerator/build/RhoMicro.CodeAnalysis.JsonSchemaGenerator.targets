@@ -1,7 +1,7 @@
 ﻿<Project>
 	<PropertyGroup>
-		<JsonSchemaGeneratorIntermediateOutputPath Condition=" '$(JsonSchemaGeneratorIntermediateOutputPath)' == '' ">$(IntermediateOutputPath)\JsonSchemaGeneratorSchemata</JsonSchemaGeneratorIntermediateOutputPath>
-		<JsonSchemaGeneratorOutputPath Condition=" '$(JsonSchemaGeneratorOutputPath)' == '' ">JsonSchemaGeneratorSchemata</JsonSchemaGeneratorOutputPath>
+		<JsonSchemaGeneratorIntermediateOutputPath Condition=" '$(JsonSchemaGeneratorIntermediateOutputPath)' == '' ">$(IntermediateOutputPath)\JsonSchemata</JsonSchemaGeneratorIntermediateOutputPath>
+		<JsonSchemaGeneratorOutputPath Condition=" '$(JsonSchemaGeneratorOutputPath)' == '' ">JsonSchemata</JsonSchemaGeneratorOutputPath>
 	</PropertyGroup>
 
 	<Target Name="ExecuteJsonSchemaGeneratorTool">
@@ -22,7 +22,7 @@
 		<ItemGroup>
 			<_JsonSchemaGeneratorFiles Include="$(JsonSchemaGeneratorIntermediateOutputPath)\**\*" />
 			<_NoneWithTargetPath Include="@(_JsonSchemaGeneratorFiles)" CopyToOutputDirectory="PreserveNewest">
-				<TargetPath>$(JsonSchemaGeneratorOutputPath)\$(AssemblyName)\%(RecursiveDir)%(Filename)%(Extension)</TargetPath>
+				<TargetPath>$(JsonSchemaGeneratorOutputPath)\%(RecursiveDir)%(Filename)%(Extension)</TargetPath>
 			</_NoneWithTargetPath>
 		</ItemGroup>
 	</Target>

@@ -7,18 +7,28 @@
 		<Nullable>enable</Nullable>
 		<ImportDirectoryBuildProps>false</ImportDirectoryBuildProps>
 		<ImportDirectoryBuildTargets>false</ImportDirectoryBuildTargets>
-		<AssemblyName>$(MSBuildProjectName).$(AssemblyVersion)</AssemblyName>
+		<AssemblyName>$(MSBuildProjectName)</AssemblyName>
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="RhoMicro.CodeAnalysis.JsonSchemaGenerator" Version="1.0.0">
-	    <PrivateAssets>all</PrivateAssets>
-	    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-	  </PackageReference>
+		<PackageReference Include="RhoMicro.CodeAnalysis.JsonSchemaGenerator" Version="1.0.0">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\Library\Library.csproj" />
+		<ProjectReference Include="..\Library\Library.csproj" />
 	</ItemGroup>
+
+	<ItemGroup>
+		<None Update="appsettings.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
+
+	<Target Name="CopyAppsettingsJsonSchema" AfterTargets="Build">
+		<Copy SourceFiles="appsettings.schema.release.json" DestinationFiles="$(TargetDir)\appsettings.schema.json" />
+	</Target>
 
 </Project>

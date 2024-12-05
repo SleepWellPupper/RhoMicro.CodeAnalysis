@@ -13,9 +13,9 @@ public class RefTests : TestBase
             {
                 public Schema? Prop { get; set; }
             }
-            """, new Dictionary<String, Object>()
+            """, n => new Dictionary<String, Object>()
             {
-                ["$id"] = "Schema",
+                ["$id"] = $"./{n}/Schema.json",
                 ["type"] = new[] { "object" },
                 ["properties"] = new
                 {
@@ -23,7 +23,7 @@ public class RefTests : TestBase
                     {
                         oneOf = new Object[]
                         {
-                            new Dictionary<String, Object>() { ["$ref"] = "Schema" },
+                            new Dictionary<String, Object>() { ["$ref"] = $"{n}/Schema" },
                             new { type = new [] { "null" } }
                         }
                     }
@@ -44,16 +44,16 @@ public class RefTests : TestBase
             }
             [RhoMicro.CodeAnalysis.JsonSchema]
             class Dependency { }
-            """, new Dictionary<String, Object>()
+            """, n => new Dictionary<String, Object>()
             {
-                ["$id"] = "Schema",
+                ["$id"] = $"./{n}/Schema.json",
                 ["type"] = new[] { "object" },
                 ["properties"] = new
                 {
-                    Prop = new Dictionary<String, Object>() { ["$ref"] = "Dependency" },
+                    Prop = new Dictionary<String, Object>() { ["$ref"] = $"../{n}/Dependency.json", },
                 },
                 ["additionalProperties"] = false
-            }, id: "Schema");
+            }, n => $"./{n}/Schema.json");
     }
     [Fact]
     public void Generates_RefForComplexSchemaDependency()
@@ -71,16 +71,16 @@ public class RefTests : TestBase
             {
                 public int Prop { get; set; }
             }
-            """, new Dictionary<String, Object>()
+            """, n => new Dictionary<String, Object>()
             {
-                ["$id"] = "Schema",
+                ["$id"] = $"./{n}/Schema.json",
                 ["type"] = new[] { "object" },
                 ["properties"] = new
                 {
-                    Prop = new Dictionary<String, Object>() { ["$ref"] = "Dependency" },
+                    Prop = new Dictionary<String, Object>() { ["$ref"] = $"../{n}/Dependency.json", },
                 },
                 ["additionalProperties"] = false
-            }, id: "Schema");
+            }, n => $"./{n}/Schema.json");
 
         TestSchema(
             $$"""
@@ -95,9 +95,9 @@ public class RefTests : TestBase
             {
                 public int Prop { get; set; }
             }
-            """, new Dictionary<String, Object>()
+            """, n => new Dictionary<String, Object>()
             {
-                ["$id"] = "Dependency",
+                ["$id"] = $"./{n}/Dependency.json",
                 ["type"] = new[] { "object" },
                 ["properties"] = new
                 {
@@ -107,7 +107,7 @@ public class RefTests : TestBase
                     },
                 },
                 ["additionalProperties"] = false
-            }, id: "Dependency");
+            }, n => $"./{n}/Dependency.json");
     }
     [Fact]
     public void Generates_RequiredRefForRequiredSchemaDependency()
@@ -122,17 +122,17 @@ public class RefTests : TestBase
             }
             [RhoMicro.CodeAnalysis.JsonSchema]
             class Dependency { }
-            """, new Dictionary<String, Object>()
+            """, n => new Dictionary<String, Object>()
             {
-                ["$id"] = "Schema",
+                ["$id"] = $"./{n}/Schema.json",
                 ["type"] = new[] { "object" },
                 ["properties"] = new
                 {
-                    Prop = new Dictionary<String, Object>() { ["$ref"] = "Dependency" },
+                    Prop = new Dictionary<String, Object>() { ["$ref"] = $"../{n}/Dependency.json", },
                 },
                 ["additionalProperties"] = false,
                 ["required"] = new[] { "Prop" }
-            }, id: "Schema");
+            }, n => $"./{n}/Schema.json");
     }
     [Fact]
     public void Generates_NullableRefForSchemaDependency()
@@ -147,9 +147,9 @@ public class RefTests : TestBase
             }
             [RhoMicro.CodeAnalysis.JsonSchema]
             class Dependency { }
-            """, new Dictionary<String, Object>()
+            """, n => new Dictionary<String, Object>()
             {
-                ["$id"] = "Schema",
+                ["$id"] = $"./{n}/Schema.json",
                 ["type"] = new[] { "object" },
                 ["properties"] = new
                 {
@@ -157,12 +157,12 @@ public class RefTests : TestBase
                     {
                         oneOf = new Object[]
                         {
-                            new Dictionary<String, Object>() { ["$ref"] = "Dependency" },
+                            new Dictionary<String, Object>() { ["$ref"] = $"../{n}/Dependency.json", },
                             new { type = new[] { "null" } }
                         }
                     },
                 },
                 ["additionalProperties"] = false,
-            }, id: "Schema");
+            }, n => $"./{n}/Schema.json");
     }
 }

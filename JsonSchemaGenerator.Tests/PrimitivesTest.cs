@@ -20,9 +20,9 @@ public class PrimitivesTest : TestBase
             {
                 public {{type}} Prop { get; set; }
             }
-            """, new Dictionary<String, Object>()
+            """, n => new Dictionary<String, Object>()
             {
-                ["$id"] = "Schema",
+                ["$id"] = $"./{n}/Schema.json",
                 ["type"] = new[] { "object" },
                 ["properties"] = new
                 {
@@ -45,9 +45,9 @@ public class PrimitivesTest : TestBase
             {
                 public {{type}} Prop { get; set; }
             }
-            """, new Dictionary<String, Object>()
+            """, n => new Dictionary<String, Object>()
             {
-                ["$id"] = "Schema",
+                ["$id"] = $"./{n}/Schema.json",
                 ["type"] = new[] { "object" },
                 ["properties"] = new
                 {
@@ -71,9 +71,9 @@ public class PrimitivesTest : TestBase
             {
                 public {{type}} Prop { get; set; }
             }
-            """, new Dictionary<String, Object>()
+            """, n => new Dictionary<String, Object>()
             {
-                ["$id"] = "Schema",
+                ["$id"] = $"./{n}/Schema.json",
                 ["type"] = new[] { "object" },
                 ["properties"] = new
                 {
@@ -92,9 +92,9 @@ public class PrimitivesTest : TestBase
             {
                 public bool Prop { get; set; }
             }
-            """, new Dictionary<String, Object>()
+            """, n => new Dictionary<String, Object>()
             {
-                ["$id"] = "Schema",
+                ["$id"] = $"./{n}/Schema.json",
                 ["type"] = new[] { "object" },
                 ["properties"] = new
                 {
@@ -113,13 +113,39 @@ public class PrimitivesTest : TestBase
             {
                 public string Prop { get; set; }
             }
-            """, new Dictionary<String, Object>()
+            """, n => new Dictionary<String, Object>()
             {
-                ["$id"] = "Schema",
+                ["$id"] = $"./{n}/Schema.json",
                 ["type"] = new[] { "object" },
                 ["properties"] = new
                 {
                     Prop = new { type = new[] { "string" } }
+                },
+                ["additionalProperties"] = false
+            });
+    }
+    [Fact]
+    public void Generates_NullableObjectTypeForNullableObjectPrimitive()
+    {
+        TestSchema(
+            $$"""
+            #nullable enable
+            [RhoMicro.CodeAnalysis.JsonSchema]
+            class Schema
+            {
+                public object? Prop { get; set; }
+            }
+            """, n => new Dictionary<String, Object>()
+            {
+                ["$id"] = $"./{n}/Schema.json",
+                ["type"] = new[] { "object" },
+                ["properties"] = new
+                {
+                    Prop = new
+                    {
+                        type = new[] { "object", "null" },
+                        additionalProperties = false
+                    }
                 },
                 ["additionalProperties"] = false
             });
@@ -134,9 +160,9 @@ public class PrimitivesTest : TestBase
             {
                 public object Prop { get; set; }
             }
-            """, new Dictionary<String, Object>()
+            """, n => new Dictionary<String, Object>()
             {
-                ["$id"] = "Schema",
+                ["$id"] = $"./{n}/Schema.json",
                 ["type"] = new[] { "object" },
                 ["properties"] = new
                 {
@@ -156,9 +182,9 @@ public class PrimitivesTest : TestBase
             $$"""
                 [RhoMicro.CodeAnalysis.JsonSchema]
                 class Schema { }
-                """, new Dictionary<String, Object>()
+                """, n => new Dictionary<String, Object>()
             {
-                ["$id"] = "Schema",
+                ["$id"] = $"./{n}/Schema.json",
                 ["type"] = new[] { "object" },
                 ["additionalProperties"] = false
             });

@@ -8,21 +8,9 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <Compile Remove="NuGetTests\HelloWorld\bin\**" />
-	  <Compile Remove="NuGetTests\HelloWorld\obj\Debug\net6.0\refint\**" />
-	  <Compile Remove="NuGetTests\HelloWorld\obj\Debug\net6.0\ref\**" />
-	  <Compile Remove="NuGetTests\HelloWorld\obj\Release\net6.0\refint\**" />
-	  <Compile Remove="NuGetTests\HelloWorld\obj\Release\net6.0\ref\**" />
-	  <EmbeddedResource Remove="NuGetTests\HelloWorld\bin\**" />
-	  <EmbeddedResource Remove="NuGetTests\HelloWorld\obj\Debug\net6.0\refint\**" />
-	  <EmbeddedResource Remove="NuGetTests\HelloWorld\obj\Debug\net6.0\ref\**" />
-	  <EmbeddedResource Remove="NuGetTests\HelloWorld\obj\Release\net6.0\refint\**" />
-	  <EmbeddedResource Remove="NuGetTests\HelloWorld\obj\Release\net6.0\ref\**" />
-	  <None Remove="NuGetTests\HelloWorld\bin\**" />
-	  <None Remove="NuGetTests\HelloWorld\obj\Debug\net6.0\refint\**" />
-	  <None Remove="NuGetTests\HelloWorld\obj\Debug\net6.0\ref\**" />
-	  <None Remove="NuGetTests\HelloWorld\obj\Release\net6.0\refint\**" />
-	  <None Remove="NuGetTests\HelloWorld\obj\Release\net6.0\ref\**" />
+	  <Compile Remove="NuGetTests\**" />
+	  <EmbeddedResource Remove="NuGetTests\**" />
+	  <None Remove="NuGetTests\**" />
 	</ItemGroup>
 
 	<ItemGroup>

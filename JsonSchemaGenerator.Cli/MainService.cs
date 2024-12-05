@@ -25,6 +25,12 @@ internal class MainService(Settings settings, ILogger logger, IHostApplicationLi
     {
         stoppingToken.ThrowIfCancellationRequested();
 
+        if(Directory.Exists(settings.SchemataPath))
+        {
+            Directory.Delete(settings.SchemataPath, recursive: true);
+            _ = Directory.CreateDirectory(settings.SchemataPath);
+        }
+
         var dll = Assembly.LoadFrom(settings.AssemblyPath);
         var schemataAndIdNodes = dll
             .GetCustomAttributes()

@@ -28,10 +28,10 @@ public abstract class TestBase
     /// Tests a generated schema against an expected one.
     /// </summary>
     /// <param name="source"></param>
-    /// <param name="expectedSchema"></param>
-    /// <param name="id"></param>
-    public void TestSchema(String source, Object expectedSchema, String? id = null) =>
-        TestSchema(source, actual => AssertSchemataEqual(expectedSchema, actual), id);
+    /// <param name="expectedSchemaFactory"></param>
+    /// <param name="idFactory"></param>
+    public void TestSchema(String source, Func<String, Object> expectedSchemaFactory, Func<String, String>? idFactory = null) =>
+        TestSchema(source, (assemblyName, actual) => AssertSchemataEqual(expectedSchemaFactory.Invoke(assemblyName), actual), idFactory);
 
     protected static async Task AssertSchemataEqual(Object expectedSchema, String actualPath)
     {
@@ -60,8 +60,8 @@ public abstract class TestBase
     /// </summary>
     /// <param name="source"></param>
     /// <param name="assertion"></param>
-    /// <param name="id"></param>
-    public void TestSchema(String source, Action<JsonObject> assertion, String? id = null)
+    /// <param name="idFactory"></param>
+    public void TestSchema(String source, Action<String, JsonObject> assertion, Func<String, String>? idFactory = null)
     {
         _ = assertion ?? throw new ArgumentNullException(nameof(assertion));
 
@@ -80,15 +80,17 @@ public abstract class TestBase
 
         Assert.NotEmpty(schemata);
         JsonObject schema;
-        if(id is not null)
+        var assemblyName = compilation.Assembly.Name;
+        if(idFactory is not null)
         {
-            Assert.True(schemata.TryGetValue(id, out schema!));
+            var id = idFactory.Invoke(assemblyName);
+            Assert.True(schemata.TryGetValue(id, out schema!), $"Unable to locate schema with expected id '{id}' in test assembly schemata.");
         } else
         {
             schema = schemata.First().Value;
         }
 
-        assertion.Invoke(schema);
+        assertion.Invoke(assemblyName, schema);
     }
     /// <summary>
     /// Invokes an assertion on the result of running the generator once on a source.

@@ -13,9 +13,9 @@ public class NullableReferenceTypeTests : TestBase
             {
                 public string? Prop { get; set; }
             }
-            """, new Dictionary<String, Object>()
+            """, n => new Dictionary<String, Object>()
             {
-                ["$id"] = "Schema",
+                ["$id"] = $"./{n}/Schema.json",
                 ["type"] = new[] { "object" },
                 ["properties"] = new
                 {
@@ -35,9 +35,9 @@ public class NullableReferenceTypeTests : TestBase
             {
                 public object? Prop { get; set; }
             }
-            """, new Dictionary<String, Object>()
+            """, n => new Dictionary<String, Object>()
             {
-                ["$id"] = "Schema",
+                ["$id"] = $"./{n}/Schema.json",
                 ["type"] = new[] { "object" },
                 ["properties"] = new
                 {

@@ -23,9 +23,6 @@ sealed record JsonDynamicModel : JsonValueModel<JsonValueModel>
     public JsonBooleanModel Boolean => Value is JsonBooleanModel a
         ? a
         : (JsonBooleanModel)( Value = CreateBoolean() );
-    public JsonNullModel Null => Value is JsonNullModel a
-        ? a
-        : (JsonNullModel)( Value = CreateNull() );
 
     public override String ToString() => base.ToString();
     public Boolean Equals(JsonDynamicModel? other) => base.Equals(other);

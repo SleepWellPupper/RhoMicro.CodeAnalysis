@@ -23,7 +23,7 @@ sealed record JsonTypeModel : JsonValueModel<JsonType>
             JsonType.Number => "\"number\"",
             JsonType.Object => "\"object\"",
             JsonType.Array => "\"array\"",
-            JsonType.Null => "null",
+            JsonType.Null => "\"null\"",
             _ => throw new InvalidOperationException("unknown json type")
         });
     }

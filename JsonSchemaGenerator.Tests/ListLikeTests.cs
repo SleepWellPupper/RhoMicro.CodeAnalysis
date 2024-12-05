@@ -67,9 +67,9 @@ public class ListLikeTests : TestBase
             {
                 public {{listLikeType}} Prop { get; set; } = new {{initializationType}};
             }
-            """, new Dictionary<String, Object>()
+            """, n => new Dictionary<String, Object>()
             {
-                ["$id"] = "Schema",
+                ["$id"] = $"./{n}/Schema.json",
                 ["type"] = new[] { "object" },
                 ["properties"] = new
                 {
@@ -94,9 +94,9 @@ public class ListLikeTests : TestBase
             {
                 public {{listLikeType}} Prop { get; set; } = new {{initializationType}};
             }
-            """, new Dictionary<String, Object>()
+            """, n => new Dictionary<String, Object>()
             {
-                ["$id"] = "Schema",
+                ["$id"] = $"./{n}/Schema.json",
                 ["type"] = new[] { "object" },
                 ["properties"] = new
                 {

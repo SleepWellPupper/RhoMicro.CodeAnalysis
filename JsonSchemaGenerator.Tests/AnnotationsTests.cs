@@ -13,9 +13,9 @@ public class AnnotationsTests : TestBase
             {
                 public object Prop { get; set; }
             }
-            """, new Dictionary<String, Object>()
+            """, n => new Dictionary<String, Object>()
             {
-                ["$id"] = "Schema",
+                ["$id"] = $"./{n}/Schema.json",
                 ["type"] = new[] { "object" },
                 ["description"] = "foobar",
                 ["properties"] = new
@@ -39,9 +39,9 @@ public class AnnotationsTests : TestBase
             {
                 public object Prop { get; set; }
             }
-            """, new Dictionary<String, Object>()
+            """, n => new Dictionary<String, Object>()
             {
-                ["$id"] = "Schema",
+                ["$id"] = $"./{n}/Schema.json",
                 ["type"] = new[] { "object" },
                 ["title"] = "foobar",
                 ["properties"] = new
@@ -66,9 +66,9 @@ public class AnnotationsTests : TestBase
                 [RhoMicro.CodeAnalysis.JsonSchemaProperty(Description = "foobar")]
                 public object Prop { get; set; }
             }
-            """, new Dictionary<String, Object>()
+            """, n => new Dictionary<String, Object>()
             {
-                ["$id"] = "Schema",
+                ["$id"] = $"./{n}/Schema.json",
                 ["type"] = new[] { "object" },
                 ["properties"] = new
                 {
@@ -93,9 +93,9 @@ public class AnnotationsTests : TestBase
                 [RhoMicro.CodeAnalysis.JsonSchemaProperty(Title = "foobar")]
                 public object Prop { get; set; }
             }
-            """, new Dictionary<String, Object>()
+            """, n => new Dictionary<String, Object>()
             {
-                ["$id"] = "Schema",
+                ["$id"] = $"./{n}/Schema.json",
                 ["type"] = new[] { "object" },
                 ["properties"] = new
                 {

@@ -21,18 +21,6 @@ readonly struct SubSchemaModelBuilder
     {
         ct.ThrowIfCancellationRequested();
 
-        //if(Simple is
-        //    {
-        //        IsValueCreated: true,
-        //        Value: not
-        //        {
-        //            Additional.ModelOrSetDefault: JsonBooleanModel { Value: false },
-        //            Items.IsValueCreated: false,
-        //            Properties.Model.Value.Count: 0,
-        //            Required.Model.Value.Count: 0,
-        //            Type.Model.Value.Count: 0
-        //        }
-        //    })
         if(Simple is { IsValueCreated: true, Value: { } simple })
         {
             var simpleSchema = new Lazy<SimpleSchemaModel>(JsonValueModel.CreateSimpleSchema);
@@ -65,7 +53,7 @@ readonly struct SubSchemaModelBuilder
             if(simple.Annotations.Description.Value is { Length: > 0 } description)
                 simpleSchema.Value.String("description").Value = description;
 
-            if(includeId && simple.Id is { Value.Length: > 0 } id)
+            if(includeId && simple.GetId() is { Value.Length: > 0 } id)
                 simpleSchema.Value.SetProperty("$id", id);
 
             if(simpleSchema.IsValueCreated)
@@ -79,10 +67,11 @@ readonly struct SubSchemaModelBuilder
     }
 
     public void Populate(GeneratorAttributeSyntaxContext ctx, CancellationToken ct) =>
-        Populate(ctx.TargetSymbol, ctx.Attributes, [], populateNonProperties: false, ct);
-    private void Populate(ISymbol symbol, HashSet<String> idCache, CancellationToken ct) =>
-        Populate(symbol, symbol.GetAttributes(), idCache, populateNonProperties: true, ct);
+        Populate(rootId: null, ctx.TargetSymbol, ctx.Attributes, [], populateNonProperties: false, ct);
+    private void Populate(Id? rootId, ISymbol symbol, HashSet<String> idCache, CancellationToken ct) =>
+        Populate(rootId, symbol, symbol.GetAttributes(), idCache, populateNonProperties: true, ct);
     private void Populate(
+        Id? rootId,
         ISymbol symbol,
         ImmutableArray<AttributeData> attributes,
         HashSet<String> idCache,
@@ -94,27 +83,29 @@ readonly struct SubSchemaModelBuilder
         if(symbol is not INamedTypeSymbol target)
         {
             if(symbol is ITypeSymbol typeSymbol && populateNonProperties)
-                PopulateNonProperties(typeSymbol, idCache, isKnownToBeRef: false, ct);
+                PopulateNonProperties(rootId, typeSymbol, idCache, isKnownToBeRef: false, ct);
 
             return;
         }
 
         ct.ThrowIfCancellationRequested();
-        var id = GetId(attributes, target, out var attribute, ct);
+        var id = Id.Create(attributes, target, out var attribute, ct);
 
-        if(idCache.Contains(id))
+        if(rootId.HasValue && idCache.Contains(id.Value))
         {
-            Ref.Value.Ref(id);
+            Ref.Value.Ref(id, rootId.Value);
 
             if(populateNonProperties)
-                PopulateNonProperties(target, idCache, isKnownToBeRef: true, ct);
+                PopulateNonProperties(rootId, target, idCache, isKnownToBeRef: true, ct);
 
             return;
         }
+
+        rootId ??= id;
 
         ct.ThrowIfCancellationRequested();
         if(populateNonProperties)
-            PopulateNonProperties(target, idCache, isKnownToBeRef: false, ct);
+            PopulateNonProperties(rootId, target, idCache, isKnownToBeRef: false, ct);
 
         ct.ThrowIfCancellationRequested();
         if(Ref.IsValueCreated)
@@ -124,8 +115,8 @@ readonly struct SubSchemaModelBuilder
         // is schema?
         if(attribute is not null)
         {
-            Simple.Value.Id.Value = id;
-            _ = idCache.Add(id);
+            Simple.Value.SetId(id);
+            _ = idCache.Add(id.Value);
         }
 
         // annotations
@@ -156,7 +147,7 @@ readonly struct SubSchemaModelBuilder
 
             var propType = propSymbol.Type;
             var propSchema = Simple.Value.Properties.Add(propName).SubSchema();
-            propSchema.Populate(propType, idCache, ct);
+            propSchema.Populate(rootId, propType, idCache, ct);
 
             if(propSymbol.IsRequired)
                 Simple.Value.Required.Add(propName);
@@ -170,6 +161,7 @@ readonly struct SubSchemaModelBuilder
     }
 
     private void PopulateNonProperties(
+        Id? rootId,
         ITypeSymbol target,
         HashSet<String> idCache,
         Boolean isKnownToBeRef,
@@ -187,7 +179,7 @@ readonly struct SubSchemaModelBuilder
             ct.ThrowIfCancellationRequested();
             Simple.Value.Type.Add(JsonType.Null);
             if(typeArg is INamedTypeSymbol namedTypeArg)
-                PopulateNonProperties(namedTypeArg, idCache, isKnownToBeRef, ct);
+                PopulateNonProperties(rootId, namedTypeArg, idCache, isKnownToBeRef, ct);
             return;
         }
         // enum
@@ -204,7 +196,7 @@ readonly struct SubSchemaModelBuilder
                 Enum.Value.Add(definedConstantName);
             }
 
-            Populate(underlyingType, idCache, ct);
+            Populate(rootId, underlyingType, idCache, ct);
             return;
         }
         // reftype?
@@ -218,7 +210,7 @@ readonly struct SubSchemaModelBuilder
             return;
 
         ct.ThrowIfCancellationRequested();
-        var typeString = target.ToDisplayString(_fullyQualifiedNoGlobalNamespaceFormat);
+        var typeString = target.ToDisplayString(SymbolDisplayFormats.FullyQualifiedNoGlobalNamespaceFormat);
         // known type
         if(_builtInTypes.TryGetValue(typeString, out var builtinTypes))
         {
@@ -230,11 +222,11 @@ readonly struct SubSchemaModelBuilder
             }
         }
         // ref
-        else if(target.TryGetFirstJsonSchemaAttribute(out var a))
+        else if(rootId.HasValue && target.TryGetFirstJsonSchemaAttribute(out var a))
         {
             ct.ThrowIfCancellationRequested();
             // type is complex type w/ schema
-            Ref.Value.Ref(GetId(a, target, ct));
+            Ref.Value.Ref(Id.Create(a, target, ct), rootId.Value);
             return;
         }
         // list-like
@@ -249,7 +241,7 @@ readonly struct SubSchemaModelBuilder
                     or SpecialType.System_Collections_Generic_IReadOnlyList_T
                     or SpecialType.System_Collections_Generic_ICollection_T
                     or SpecialType.System_Collections_Generic_IReadOnlyCollection_T
-            } || _listLikeTypes.Contains(originalDefinition.ToDisplayString(_fullyQualifiedNoGlobalNamespaceFormat))
+            } || _listLikeTypes.Contains(originalDefinition.ToDisplayString(SymbolDisplayFormats.FullyQualifiedNoGlobalNamespaceFormat))
                 ? collectionElement
                 : null,
             _ => null
@@ -257,7 +249,7 @@ readonly struct SubSchemaModelBuilder
         {
             ct.ThrowIfCancellationRequested();
             // type is list-like type, items type is obtained recursively
-            Simple.Value.Items.Value.SubSchema().Populate(elementType, idCache, ct);
+            Simple.Value.Items.Value.SubSchema().Populate(rootId, elementType, idCache, ct);
             Simple.Value.Type.Add(JsonType.Array);
         }
         // map-like
@@ -265,11 +257,11 @@ readonly struct SubSchemaModelBuilder
         {
             OriginalDefinition: { } originalDefinition,
             TypeArguments: [{ } _, { } valueType]
-        } && _mapLikeTypes.Contains(originalDefinition.ToDisplayString(_fullyQualifiedNoGlobalNamespaceFormat)))
+        } && _mapLikeTypes.Contains(originalDefinition.ToDisplayString(SymbolDisplayFormats.FullyQualifiedNoGlobalNamespaceFormat)))
         {
             ct.ThrowIfCancellationRequested();
             // type is map-like type, values type is obtained recursively
-            Simple.Value.Additional.Schema.SubSchema().Populate(valueType, idCache, ct);
+            Simple.Value.Additional.Schema.SubSchema().Populate(rootId, valueType, idCache, ct);
             Simple.Value.Type.Add(JsonType.Object);
         } else
         {
@@ -279,41 +271,9 @@ readonly struct SubSchemaModelBuilder
         // type is not supported or of unknown schema
     }
 
-    private static String GetId(ImmutableArray<AttributeData> attributes, ISymbol target, out JsonSchemaAttribute? attribute, CancellationToken ct)
-    {
-        ct.ThrowIfCancellationRequested();
-        for(var i = 0; i < attributes.Length; i++)
-        {
-            ct.ThrowIfCancellationRequested();
-            if(JsonSchemaAttribute.TryCreate(attributes[i], out var a))
-            {
-                attribute = a;
-                return GetId(a, target, ct);
-            }
-        }
-
-        attribute = null;
-        return GetId(target, ct);
-    }
-    private static String GetId(JsonSchemaAttribute? attribute, ISymbol target, CancellationToken ct)
-    {
-        ct.ThrowIfCancellationRequested();
-        var id = attribute?.Id?.Trim();
-
-        if(String.IsNullOrWhiteSpace(id))
-            id = GetId(target, ct);
-
-        return id!;
-    }
-    private static String GetId(ISymbol target, CancellationToken ct)
-    {
-        ct.ThrowIfCancellationRequested();
-        var result = target.ToDisplayString(_fullyQualifiedNoGlobalNamespaceFormat).Replace('.', '/');
-        return result;
-    }
     private static Boolean IsKnownExcludedProperty(IPropertySymbol propSymbol) =>
         _knownExcludedProperties.TryGetValue(
-            propSymbol.ContainingType.OriginalDefinition.ToDisplayString(_fullyQualifiedNoGlobalNamespaceFormat),
+            propSymbol.ContainingType.OriginalDefinition.ToDisplayString(SymbolDisplayFormats.FullyQualifiedNoGlobalNamespaceFormat),
             out var excludedProperties)
         && excludedProperties.Contains(propSymbol.Name);
     private static readonly Dictionary<String, HashSet<String>> _knownExcludedProperties = new()
@@ -361,7 +321,13 @@ readonly struct SubSchemaModelBuilder
         ["System.DateOnly"] = [JsonType.String],
         ["System.DateTimeOffset"] = [JsonType.String]
     };
-    private static readonly SymbolDisplayFormat _fullyQualifiedNoGlobalNamespaceFormat = new(
+    public override Int32 GetHashCode() => throw new NotSupportedException("GetHashCode is not supported on this type. This indicates a bug or error, as instances of this typoe are not intended to be cached.");
+    public override Boolean Equals(Object? other) => throw new NotSupportedException("GetHashCode is not supported on this type. This indicates a bug or error, as instances of this typoe are not intended to be cached.");
+}
+
+static class SymbolDisplayFormats
+{
+    public static readonly SymbolDisplayFormat FullyQualifiedNoGlobalNamespaceFormat = new(
          SymbolDisplayGlobalNamespaceStyle.Omitted,
          SymbolDisplayFormat.FullyQualifiedFormat.TypeQualificationStyle,
          SymbolDisplayFormat.FullyQualifiedFormat.GenericsOptions,
@@ -373,6 +339,4 @@ readonly struct SubSchemaModelBuilder
          SymbolDisplayFormat.FullyQualifiedFormat.LocalOptions,
          SymbolDisplayFormat.FullyQualifiedFormat.KindOptions,
          SymbolDisplayFormat.FullyQualifiedFormat.MiscellaneousOptions);
-    public override Int32 GetHashCode() => throw new NotSupportedException("GetHashCode is not supported on this type. This indicates a bug or error, as instances of this typoe are not intended to be cached.");
-    public override Boolean Equals(Object? other) => throw new NotSupportedException("GetHashCode is not supported on this type. This indicates a bug or error, as instances of this typoe are not intended to be cached.");
 }

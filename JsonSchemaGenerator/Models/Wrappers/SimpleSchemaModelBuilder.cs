@@ -3,7 +3,8 @@
 readonly record struct SimpleSchemaModelBuilder(SimpleSchemaModel Model)
 {
     public TypeSetModel Type => new(Model.Set("type"));
-    public JsonStringModel Id => Model.String("$id");
+    public void SetId(Id id) => GetId().Value = id.Absolute;
+    public JsonStringModel GetId() => Model.String("$id");
     public StringArrayModel Required => new(Model.Array("required"));
     public PropertiesModel Properties => new(Model.Object("properties"));
     public AdditionalPropertiesModel Additional { get; } = new(Model.Dynamic("additionalProperties", JsonBooleanModel.False));

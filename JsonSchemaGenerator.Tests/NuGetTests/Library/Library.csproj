@@ -6,7 +6,7 @@
 		<Nullable>enable</Nullable>
 		<ImportDirectoryBuildProps>false</ImportDirectoryBuildProps>
 		<ImportDirectoryBuildTargets>false</ImportDirectoryBuildTargets>
-		<AssemblyName>$(MSBuildProjectName).$(AssemblyVersion)</AssemblyName>
+		<AssemblyName>$(MSBuildProjectName)</AssemblyName>
 	</PropertyGroup>
 
 	<ItemGroup>

@@ -22,7 +22,6 @@ abstract record JsonValueModel
     public static JsonBooleanModel CreateBoolean() => CreateBoolean(false);
     public static JsonTypeModel CreateType(JsonType value) => new(value);
     public static JsonTypeModel CreateType() => CreateType(JsonType.Object);
-    public static JsonNullModel CreateNull() => JsonNullModel.Instance;
     public static JsonObjectModel CreateObject() => CreateObject([]);
     public static JsonObjectModel CreateObject(Dictionary<String, JsonValueModel> value) => new(value);
     public static SimpleSchemaModel CreateSimpleSchema() => new();

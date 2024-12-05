@@ -27,9 +27,9 @@ public class CliTests : TestBase
             {
                 public object Prop { get; set; }
             }
-            """, new Dictionary<String, Object>()
+            """, n => new Dictionary<String, Object>()
             {
-                ["$id"] = "Schema",
+                ["$id"] = $"./{n}/Schema.json",
                 ["type"] = new[] { "object" },
                 ["properties"] = new
                 {
@@ -57,9 +57,9 @@ public class CliTests : TestBase
             {
                 public object Prop { get; set; }
             }
-            """, new Dictionary<String, Object>()
+            """, n => new Dictionary<String, Object>()
             {
-                ["$id"] = "Schema1",
+                ["$id"] = $"./{n}/Schema1.json",
                 ["type"] = new[] { "object" },
                 ["properties"] = new
                 {
@@ -70,9 +70,9 @@ public class CliTests : TestBase
                     }
                 },
                 ["additionalProperties"] = false
-            }, new Dictionary<String, Object>()
+            }, n => new Dictionary<String, Object>()
             {
-                ["$id"] = "Schema2",
+                ["$id"] = $"./{n}/Schema2.json",
                 ["type"] = new[] { "object" },
                 ["properties"] = new
                 {
@@ -100,21 +100,21 @@ public class CliTests : TestBase
             {
                 public object Prop { get; set; }
             }
-            """, new Dictionary<String, Object>()
+            """, n => new Dictionary<String, Object>()
             {
-                ["$id"] = "Schema1",
+                ["$id"] = $"./{n}/Schema1.json",
                 ["type"] = new[] { "object" },
                 ["properties"] = new
                 {
                     Prop = new Dictionary<String, Object>()
                     {
-                        ["$ref"] = "Schema2"
+                        ["$ref"] = $"../{n}/Schema2.json"
                     }
                 },
                 ["additionalProperties"] = false
-            }, new Dictionary<String, Object>()
+            }, n => new Dictionary<String, Object>()
             {
-                ["$id"] = "Schema2",
+                ["$id"] = $"./{n}/Schema2.json",
                 ["type"] = new[] { "object" },
                 ["properties"] = new
                 {
@@ -128,9 +128,9 @@ public class CliTests : TestBase
             });
     }
 
-    private async Task TestCli(String source, params Object[] expectedSchemata)
+    private async Task TestCli(String source, params Func<String, Object>[] expectedSchemaFactories)
     {
-        var settings = CreateSettings(source);
+        var settings = CreateSettings(source, out var assemblyName);
         using(var service = CreateMainService(settings))
         {
             await service.StartAsync(default).ConfigureAwait(ConfigureAwaitOptions.None);
@@ -138,10 +138,11 @@ public class CliTests : TestBase
 
         var schemataPaths = Directory.EnumerateFiles(settings.SchemataPath, "*.json", SearchOption.AllDirectories).ToArray();
 
-        if(schemataPaths.Length != expectedSchemata.Length)
-            Assert.Fail($"Expected {expectedSchemata.Length} schemata but found {schemataPaths.Length}.");
+        if(schemataPaths.Length != expectedSchemaFactories.Length)
+            Assert.Fail($"Expected {expectedSchemaFactories.Length} schemata but found {schemataPaths.Length}.");
 
-        var parsedExpectedSchemata = expectedSchemata
+        var parsedExpectedSchemata = expectedSchemaFactories
+            .Select(f => f.Invoke(assemblyName))
             .Select(s => JsonNode.Parse(JsonSerializer.Serialize(s)) as JsonObject)
             .OfType<JsonObject>()
             .Select(s => (id: s.TryGetPropertyValue("$id", out var id) ? id as JsonValue : null, s))
@@ -156,7 +157,7 @@ public class CliTests : TestBase
             Assert.NotNull(actualSchema);
             Assert.True(actualSchema.TryGetPropertyValue("$id", out var i));
             var id = Assert.IsAssignableFrom<JsonValue>(i);
-            Assert.True(parsedExpectedSchemata.Remove(id.ToString(), out var expectedSchema));
+            Assert.True(parsedExpectedSchemata.Remove(id.ToString(), out var expectedSchema), $"Unable to locate expected schema with id '{id}'. It might have already been handled.");
 
             actualSchema.AssertEquality(expectedSchema);
         }
@@ -168,7 +169,7 @@ public class CliTests : TestBase
     private MainService CreateMainService(Settings settings) =>
         new(settings, NullLogger.Instance, HostApplicationLifetimeFake.Instance);
 
-    private Settings CreateSettings(String source)
+    private Settings CreateSettings(String source, out String assemblyName)
     {
         var dir = Directory.CreateTempSubdirectory(typeof(CliTests).FullName!.Replace('.', '_')).FullName;
         var assemblyPath = Path.Combine(dir, "TestAssembly.dll");
@@ -185,7 +186,9 @@ public class CliTests : TestBase
             _ = RunGenerator(ref compilation);
             var emitResult = compilation.Emit(peStream);
             Assert.True(emitResult.Success, "emit error");
+            assemblyName = compilation.Assembly.Name;
         }
+
 
         return settings;
     }
