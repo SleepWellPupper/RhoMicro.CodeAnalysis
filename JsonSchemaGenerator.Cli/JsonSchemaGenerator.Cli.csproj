@@ -13,10 +13,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<InternalsVisibleTo Include="RhoMicro.CodeAnalysis.JsonSchemaGenerator.Tests.1.0.0" />
-	</ItemGroup>
-	
-	<ItemGroup>
 		<PackageReference Include="IKVM.Core.MSBuild" Version="0.1.103">
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

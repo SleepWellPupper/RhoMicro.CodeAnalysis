@@ -10,17 +10,46 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-internal class MainService(Settings settings, ILogger logger, IHostApplicationLifetime lifetime) : BackgroundService
+/// <summary>
+/// Inspects an assembly for <see cref="GeneratedJsonSchemaAttribute"/>
+/// annotations and emits the json schemata provided by them to a directory.
+/// </summary>
+/// <param name="settings">
+/// The object providing settings to the service.
+/// </param>
+/// <param name="logger">
+/// The logger to use when logging progress.
+/// </param>
+/// <param name="lifetime">
+/// The lifetime of the application hosting the service. When done, the service
+/// will stop the application via this object.
+/// </param>
+public sealed class MainService(Settings settings, ILogger logger, IHostApplicationLifetime lifetime) : BackgroundService
 {
     private static readonly JsonSerializerOptions _schemaSerializationOptions = new(JsonSerializerDefaults.General)
     {
         WriteIndented = true,
         PropertyNamingPolicy = null
     };
-
+    /// <summary>
+    /// Creates a new instance of the service.
+    /// </summary>
+    /// <param name="settings">
+    /// The object providing settings to the service.
+    /// </param>
+    /// <param name="loggerFactory">
+    /// The factory to use when creating a logger to use when logging progress.
+    /// </param>
+    /// <param name="lifetime">
+    /// The lifetime of the application hosting the service. When done, the
+    /// service will stop the application via this object.
+    /// </param>
+    /// <returns>
+    /// A new service instance.
+    /// </returns>
     public static MainService Create(Settings settings, ILoggerFactory loggerFactory, IHostApplicationLifetime lifetime) =>
         new(settings, loggerFactory.CreateLogger<MainService>(), lifetime);
-
+    /// <inheritdoc/>
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         stoppingToken.ThrowIfCancellationRequested();
