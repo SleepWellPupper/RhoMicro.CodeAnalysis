@@ -1,4 +1,4 @@
-![icon](https://raw.githubusercontent.com/PaulBraetz/RhoMicro.CodeAnalysis/refs/heads/release/JsonSchemaGenerator/docs/logo_128.png)
+![icon](https://raw.githubusercontent.com/PaulBraetz/RhoMicro.CodeAnalysis/refs/heads/release/JsonSchemaGenerator/docs/logo_256.png)
 
 # JsonSchemaGenerator
 
