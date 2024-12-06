@@ -1,5 +1,11 @@
 ﻿namespace RhoMicro.CodeAnalysis.UnionsGenerator.Tests;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+using Microsoft.CodeAnalysis;
 
 public class JsonConverterTests() : TestBase(Basic.Reference.Assemblies.Net60.References.All)
 {

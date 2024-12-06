@@ -1,4 +1,6 @@
 ﻿namespace RhoMicro.CodeAnalysis.Library.Text;
+using System;
+
 using RhoMicro.CodeAnalysis.UnionsGenerator.Models;
 
 partial record CommentBuilder

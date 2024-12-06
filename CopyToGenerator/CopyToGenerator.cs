@@ -6,6 +6,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 using RhoMicro.CodeAnalysis.CopyToGenerator.ExpansionProviders;
+using RhoMicro.CodeAnalysis.Library;
 
 using System;
 using System.Linq;

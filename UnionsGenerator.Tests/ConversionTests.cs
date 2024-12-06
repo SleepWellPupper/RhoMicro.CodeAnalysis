@@ -1,5 +1,7 @@
 ﻿namespace RhoMicro.CodeAnalysis.UnionsGenerator.Tests;
 
+using System.Security.Cryptography.X509Certificates;
+
 using Microsoft.CodeAnalysis;
 
 public class ConversionTests : TestBase

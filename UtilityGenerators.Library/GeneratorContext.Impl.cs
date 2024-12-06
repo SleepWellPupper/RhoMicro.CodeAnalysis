@@ -4,6 +4,7 @@ using Microsoft.CodeAnalysis;
 
 using System;
 using System.Collections.Generic;
+using System.Net.Http.Headers;
 
 partial class GeneratorContext
 {

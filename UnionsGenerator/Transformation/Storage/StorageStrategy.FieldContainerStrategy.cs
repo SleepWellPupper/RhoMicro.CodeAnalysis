@@ -1,7 +1,9 @@
 ﻿namespace RhoMicro.CodeAnalysis.UnionsGenerator.Models.Storage;
 
-using System;
+using RhoMicro.CodeAnalysis.Library.Text;
+using static RhoMicro.CodeAnalysis.Library.Text.IndentedStringBuilder.Appendables;
 
+using System;
 using RhoMicro.CodeAnalysis.UnionsGenerator.Transformation.Storage;
 
 partial class StorageStrategy

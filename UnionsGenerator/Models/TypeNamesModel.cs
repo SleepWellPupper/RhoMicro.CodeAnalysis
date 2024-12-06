@@ -1,6 +1,8 @@
 ﻿namespace RhoMicro.CodeAnalysis.UnionsGenerator.Models;
 
 using System;
+using System.Data.SqlTypes;
+using System.Security.AccessControl;
 
 using Microsoft.CodeAnalysis;
 

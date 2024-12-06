@@ -3,6 +3,9 @@ namespace RhoMicro.CodeAnalysis.EnumConstStringGenerator.Generators;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
+using RhoMicro.CodeAnalysis.Library;
+using RhoMicro.CodeAnalysis.Library.Text;
+
 /// <summary>
 /// Generates constant string values for enum members.
 /// </summary>

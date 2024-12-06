@@ -2,7 +2,10 @@
 
 using System;
 
+using RhoMicro.CodeAnalysis.Library.Text;
 using RhoMicro.CodeAnalysis.UnionsGenerator.Transformation.Storage;
+
+using static RhoMicro.CodeAnalysis.Library.Text.IndentedStringBuilder.Appendables;
 
 abstract partial class StorageStrategy
 {

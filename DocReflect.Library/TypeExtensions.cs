@@ -2,6 +2,8 @@
 
 using DocReflect.Infrastructure;
 
+using System.Collections.Concurrent;
+using System.ComponentModel;
 using System.Reflection;
 
 /// <summary>

@@ -7,6 +7,7 @@ using RhoMicro.CodeAnalysis.UnionsGenerator.Transformation.Visitors;
 using RhoMicro.CodeAnalysis.UnionsGenerator.Utils;
 
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 
 internal record PartialUnionTypeModel(

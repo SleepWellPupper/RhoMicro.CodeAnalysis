@@ -1,4 +1,7 @@
 ﻿namespace RhoMicro.CodeAnalysis.DslGenerator.Lexing;
+
+using System.Text.RegularExpressions;
+
 #if DSL_GENERATOR
 [IncludeFile]
 #endif

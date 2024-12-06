@@ -1,12 +1,16 @@
 ﻿namespace RhoMicro.CodeAnalysis.UnionsGenerator.Transformation.Storage;
 
+using RhoMicro.CodeAnalysis.Library;
 using RhoMicro.CodeAnalysis.Library.Text;
+using static RhoMicro.CodeAnalysis.Library.Text.IndentedStringBuilder.Appendables;
 
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using RhoMicro.CodeAnalysis.UnionsGenerator.Models;
 using RhoMicro.CodeAnalysis.UnionsGenerator.Models.Storage;
+using RhoMicro.CodeAnalysis.UnionsGenerator.Utils;
+using System.Reflection;
 
 sealed class StrategySourceHost(
     SettingsModel settings,

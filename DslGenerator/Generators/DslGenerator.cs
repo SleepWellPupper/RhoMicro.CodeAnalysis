@@ -1,6 +1,8 @@
 namespace RhoMicro.CodeAnalysis.DslGenerator.Generators;
 
 using Microsoft.CodeAnalysis;
+using RhoMicro.CodeAnalysis.Generated;
+using RhoMicro.CodeAnalysis.Library;
 using RhoMicro.CodeAnalysis.DslGenerator.Lexing;
 using RhoMicro.CodeAnalysis.DslGenerator.Parsing;
 using RhoMicro.CodeAnalysis.DslGenerator.Grammar;

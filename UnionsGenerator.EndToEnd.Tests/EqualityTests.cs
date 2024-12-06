@@ -1,5 +1,7 @@
 ﻿namespace RhoMicro.CodeAnalysis.UnionsGenerator.EndToEnd.Tests;
 
+using RhoMicro.CodeAnalysis;
+
 using System;
 
 public partial class EqualityTests

@@ -2,8 +2,11 @@
 namespace RhoMicro.CodeAnalysis.UnionsGenerator.Analyzers;
 
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.CodeAnalysis.Diagnostics;
 
+using RhoMicro.CodeAnalysis.Library;
 using RhoMicro.CodeAnalysis.UnionsGenerator.Models;
 using RhoMicro.CodeAnalysis.UnionsGenerator.Utils;
 

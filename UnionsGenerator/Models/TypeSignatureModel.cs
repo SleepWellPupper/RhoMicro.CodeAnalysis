@@ -3,8 +3,10 @@
 using Microsoft.CodeAnalysis;
 
 using RhoMicro.CodeAnalysis.UnionsGenerator.Transformation.Visitors;
+using RhoMicro.CodeAnalysis.Library;
 
 using System.Threading;
+using System.Reflection;
 
 /// <summary>
 /// Represents a types signature.
