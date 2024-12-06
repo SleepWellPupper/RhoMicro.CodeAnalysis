@@ -5,7 +5,7 @@ using System;
 /// <summary>
 /// Marks the targeted type for json schema generation.
 /// </summary>
-[AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
+[AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Interface, AllowMultiple = false, Inherited = false)]
 #if GENERATOR
 [IncludeFile]
 #endif
