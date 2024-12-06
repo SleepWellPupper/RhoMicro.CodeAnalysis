@@ -902,11 +902,11 @@ class Foo14
 
 8. Observe intellisense being available for the `appsettings.json` file:
 
-![intellisense](docs/intellisense.png)
+![intellisense](https://raw.githubusercontent.com/PaulBraetz/RhoMicro.CodeAnalysis/refs/heads/release/JsonSchemaGenerator/docs/intellisense.png)
 
 9. Observe schema validation being available for the `appsettings.json` file:
 
-![validation](docs/validation.png)
+![validation](https://raw.githubusercontent.com/PaulBraetz/RhoMicro.CodeAnalysis/refs/heads/release/JsonSchemaGenerator/docs/validation.png)
 
 Once the project is built, the generated schema will be referenced by the `appsettings.schema.json` schema and available in the `appsettings.json` file in the project directory. Also, the `appsettings.release.schema.json` file will have been copied
 to the output directory as `appsettings.schema.json` and reference the schemata as well, making them available to the `appsettings.json` file in that directory.
