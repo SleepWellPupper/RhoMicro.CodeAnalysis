@@ -11,11 +11,13 @@ readonly struct SubSchemaModelBuilder
     {
         Simple = new(() => new(JsonValueModel.CreateSimpleSchema()));
         Ref = new(() => new(JsonValueModel.CreateRefSchema()));
-        Enum = new(() => new(JsonValueModel.CreateEnumSchema()));
+        EnumNames = new(() => new(JsonValueModel.CreateEnumSchema()));
+        EnumValues = new(() => new(JsonValueModel.CreateEnumSchema()));
     }
     public Lazy<SimpleSchemaModelBuilder> Simple { get; }
     public Lazy<RefSchemaModelBuilder> Ref { get; }
-    public Lazy<EnumSchemaModelBuilder> Enum { get; }
+    public Lazy<EnumSchemaModelBuilder> EnumNames { get; }
+    public Lazy<EnumSchemaModelBuilder> EnumValues { get; }
 
     public void Build(List<JsonValueModel> result, Boolean includeId, CancellationToken ct)
     {
@@ -62,8 +64,10 @@ readonly struct SubSchemaModelBuilder
 
         if(Ref.IsValueCreated)
             result.Add(Ref.Value.Model);
-        if(Enum.IsValueCreated)
-            result.Add(Enum.Value.Model);
+        if(EnumNames.IsValueCreated)
+            result.Add(EnumNames.Value.Model);
+        if(EnumValues.IsValueCreated)
+            result.Add(EnumValues.Value.Model);
     }
 
     public void Populate(GeneratorAttributeSyntaxContext ctx, CancellationToken ct) =>
@@ -186,14 +190,28 @@ readonly struct SubSchemaModelBuilder
         else if(target is INamedTypeSymbol { TypeKind: TypeKind.Enum, EnumUnderlyingType: { } underlyingType })
         {
             ct.ThrowIfCancellationRequested();
-            var definedConstantNames = target.GetMembers()
+            var definedConstants = target.GetMembers()
                 .OfType<IFieldSymbol>()
-                .Select(f => f.Name);
+                .Select(f => (f.Name, f.ConstantValue));
 
-            foreach(var definedConstantName in definedConstantNames)
+            foreach(var (name, value) in definedConstants)
             {
                 ct.ThrowIfCancellationRequested();
-                Enum.Value.Add(definedConstantName);
+                EnumNames.Value.Add(name);
+                Double? strongValue = value switch
+                {
+                    SByte b => b,
+                    Int16 s => s,
+                    Int32 i => i,
+                    Int64 l => l,
+                    Byte ub => ub,
+                    UInt16 us => us,
+                    UInt32 ui => ui,
+                    UInt64 ul => ul,
+                    _ => null
+                };
+                if(strongValue.HasValue)
+                    EnumValues.Value.Add(strongValue.Value);
             }
 
             Populate(rootId, underlyingType, idCache, ct);

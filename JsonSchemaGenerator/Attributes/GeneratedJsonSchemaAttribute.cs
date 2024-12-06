@@ -7,7 +7,6 @@ using System;
 /// </summary>
 [AttributeUsage(AttributeTargets.Assembly, AllowMultiple = true, Inherited = false)]
 #if GENERATOR
-[GenerateFactory]
 [IncludeFile]
 #endif
 internal sealed partial class GeneratedJsonSchemaAttribute : Attribute

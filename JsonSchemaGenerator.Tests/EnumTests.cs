@@ -94,7 +94,7 @@ public class EnumTests : TestBase
 
     [Theory]
     [MemberData(nameof(Data))]
-    public void Generates_EnumNamesOrValuesOrIntegerForNonFlagsEnumType((String name, Int64 value)[] constants, String backingType)
+    public void Generates_EnumNamesOrValuesOrIntegerForEnumType((String name, Int64 value)[] constants, String backingType)
     {
         TestSchema(
             $$"""
@@ -129,7 +129,7 @@ public class EnumTests : TestBase
     }
     [Theory]
     [MemberData(nameof(Data))]
-    public void Generates_EnumNamesOrValuesOrIntegerForMultipleNonFlagsEnumTypeProperties((String name, Int64 value)[] constants, String backingType)
+    public void Generates_EnumNamesOrValuesOrIntegerForMultipleEnumTypeProperties((String name, Int64 value)[] constants, String backingType)
     {
         TestSchema(
             $$"""
@@ -184,7 +184,7 @@ public class EnumTests : TestBase
     }
     [Theory]
     [MemberData(nameof(Data))]
-    public void Generates_EnumNamesOrValuesOrIntegerOrNullForNullableNonFlagsEnumType((String name, Int64 value)[] constants, String backingType)
+    public void Generates_EnumNamesOrValuesOrIntegerOrNullForNullableEnumType((String name, Int64 value)[] constants, String backingType)
     {
         TestSchema(
             $$"""
@@ -219,7 +219,7 @@ public class EnumTests : TestBase
     }
     [Theory]
     [MemberData(nameof(Data))]
-    public void Generates_EnumNamesOrValuesOrIntegerOrNullForMultipleNullableNonFlagsEnumTypeProperties((String name, Int64 value)[] constants, String backingType)
+    public void Generates_EnumNamesOrValuesOrIntegerOrNullForMultipleNullableEnumTypeProperties((String name, Int64 value)[] constants, String backingType)
     {
         TestSchema(
             $$"""
@@ -266,182 +266,6 @@ public class EnumTests : TestBase
                             new { type = new[] { "integer", "null" } },
                             new { @enum = constants.Select(t=>t.name).ToArray() },
                             new { @enum = constants.Select(t=>t.value).ToArray() }
-                        }
-                    }
-                },
-                ["additionalProperties"] = false
-            });
-    }
-    [Theory]
-    [MemberData(nameof(Data))]
-    public void Generates_EnumNamesOrIntegerForFlagsEnumType((String name, Int64 value)[] constants, String backingType)
-    {
-        TestSchema(
-            $$"""
-            [global::System.Flags]
-            enum EnumerationType: {{backingType}}
-            {
-                {{String.Join(",\n\t", constants.Select(t => $"{t.name} = {t.value}"))}}
-            }
-
-            [RhoMicro.CodeAnalysis.JsonSchema]
-            class Schema
-            {
-                public EnumerationType Prop { get; set; }
-            }
-            """, n => new Dictionary<String, Object>()
-            {
-                ["$id"] = $"./{n}/Schema.json",
-                ["type"] = new[] { "object" },
-                ["properties"] = new
-                {
-                    Prop = new
-                    {
-                        oneOf = new Object[]
-                        {
-                            new { type = new[] { "integer" } },
-                            new { @enum = constants.Select(t=>t.name).ToArray() }
-                        }
-                    }
-                },
-                ["additionalProperties"] = false
-            });
-    }
-    [Theory]
-    [MemberData(nameof(Data))]
-    public void Generates_EnumNamesOrIntegerForMultipleFlagsEnumTypeProperties((String name, Int64 value)[] constants, String backingType)
-    {
-        TestSchema(
-            $$"""
-            [global::System.Flags]
-            enum EnumerationType: {{backingType}}
-            {
-                {{String.Join(",\n\t", constants.Select(t => $"{t.name} = {t.value}"))}}
-            }
-
-            [RhoMicro.CodeAnalysis.JsonSchema]
-            class Schema
-            {
-                public EnumerationType Prop1 { get; set; }
-                public EnumerationType Prop2 { get; set; }
-                public EnumerationType Prop3 { get; set; }
-            }
-            """, n => new Dictionary<String, Object>()
-            {
-                ["$id"] = $"./{n}/Schema.json",
-                ["type"] = new[] { "object" },
-                ["properties"] = new
-                {
-                    Prop1 = new
-                    {
-                        oneOf = new Object[]
-                        {
-                            new { type = new[] { "integer" } },
-                            new { @enum = constants.Select(t=>t.name).ToArray() }
-                        }
-                    },
-                    Prop2 = new
-                    {
-                        oneOf = new Object[]
-                        {
-                            new { type = new[] { "integer" } },
-                            new { @enum = constants.Select(t=>t.name).ToArray() }
-                        }
-                    },
-                    Prop3 = new
-                    {
-                        oneOf = new Object[]
-                        {
-                            new { type = new[] { "integer" } },
-                            new { @enum = constants.Select(t=>t.name).ToArray() }
-                        }
-                    }
-                },
-                ["additionalProperties"] = false
-            });
-    }
-    [Theory]
-    [MemberData(nameof(Data))]
-    public void Generates_EnumNamesOrIntegerOrNullForNullableFlagsEnumType((String name, Int64 value)[] constants, String backingType)
-    {
-        TestSchema(
-            $$"""
-            [global::System.Flags]
-            enum EnumerationType: {{backingType}}
-            {
-                {{String.Join(",\n\t", constants.Select(t => $"{t.name} = {t.value}"))}}
-            }
-
-            [RhoMicro.CodeAnalysis.JsonSchema]
-            class Schema
-            {
-                public EnumerationType? Prop { get; set; }
-            }
-            """, n => new Dictionary<String, Object>()
-            {
-                ["$id"] = $"./{n}/Schema.json",
-                ["type"] = new[] { "object" },
-                ["properties"] = new
-                {
-                    Prop = new
-                    {
-                        oneOf = new Object[]
-                        {
-                            new { type = new[] { "integer", "null" } },
-                            new { @enum = constants.Select(t=>t.name).ToArray() }
-                        }
-                    }
-                },
-                ["additionalProperties"] = false
-            });
-    }
-    [Theory]
-    [MemberData(nameof(Data))]
-    public void Generates_EnumNamesOrIntegerOrNullForMultipleNullableFlagsEnumTypeProperties((String name, Int64 value)[] constants, String backingType)
-    {
-        TestSchema(
-            $$"""
-            [global::System.Flags]
-            enum EnumerationType: {{backingType}}
-            {
-                {{String.Join(",\n\t", constants.Select(t => $"{t.name} = {t.value}"))}}
-            }
-
-            [RhoMicro.CodeAnalysis.JsonSchema]
-            class Schema
-            {
-                public EnumerationType? Prop1 { get; set; }
-                public EnumerationType? Prop2 { get; set; }
-                public EnumerationType? Prop3 { get; set; }
-            }
-            """, n => new Dictionary<String, Object>()
-            {
-                ["$id"] = $"./{n}/Schema.json",
-                ["type"] = new[] { "object" },
-                ["properties"] = new
-                {
-                    Prop1 = new
-                    {
-                        oneOf = new Object[]
-                        {
-                            new { type = new[] { "integer", "null" } },
-                            new { @enum = constants.Select(t=>t.name).ToArray() }
-                        }
-                    },
-                    Prop2 = new
-                    {
-                        oneOf = new Object[]
-                        {
-                            new { type = new[] { "integer", "null" } },
-                            new { @enum = constants.Select(t=>t.name).ToArray() }
-                        }
-                    },
-                    Prop3 = new
-                    {
-                        oneOf = new Object[]
-                        {
-                            new { type = new[] { "integer", "null" } },
-                            new { @enum = constants.Select(t=>t.name).ToArray() }
                         }
                     }
                 },
