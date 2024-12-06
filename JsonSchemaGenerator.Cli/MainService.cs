@@ -54,9 +54,8 @@ public sealed class MainService(Settings settings, ILogger logger, IHostApplicat
     {
         stoppingToken.ThrowIfCancellationRequested();
 
-        if(Directory.Exists(settings.SchemataPath))
+        if(!Directory.Exists(settings.SchemataPath))
         {
-            Directory.Delete(settings.SchemataPath, recursive: true);
             _ = Directory.CreateDirectory(settings.SchemataPath);
         }
 
