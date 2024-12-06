@@ -16,15 +16,12 @@
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<Description>Generates json schemata from class definitions.</Description>
 		<PackageTags>Source Generator;json schema;appsettings</PackageTags>
+		<PackageIcon>logo_256.png</PackageIcon>
 	</PropertyGroup>
 
 	<PropertyGroup>
 		<DefineConstants>$(DefineConstants);GENERATOR</DefineConstants>
 	</PropertyGroup>
-
-	<ItemGroup>
-		<None Remove="build\JsonSchemaGenerator.props~RF1fe5b6d.TMP" />
-	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Update="NETStandard.Library" PrivateAssets="all" />
@@ -48,8 +45,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<None Include="build\**\*" Pack="true" PackagePath="build\%(RecursiveDir)%(Filename)%(Extension)" />
-		<None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
+		<None Include="docs\logo_256.png" Pack="true" PackagePath="" />
+		<None Include="build\**\*" Pack="true"
+			PackagePath="build\%(RecursiveDir)%(Filename)%(Extension)" />
+		<None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true"
+			PackagePath="analyzers/dotnet/cs" Visible="false" />
 		<None Include="README.md" Pack="true" PackagePath="/" CopyToOutputDirectory="Always" />
 		<None Include="LICENSE.txt" Pack="true" PackagePath="/" CopyToOutputDirectory="Always" />
 	</ItemGroup>
