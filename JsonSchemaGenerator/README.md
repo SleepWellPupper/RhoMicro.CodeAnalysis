@@ -1,6 +1,6 @@
 # JsonSchemaGenerator
 
-Generate JSOn schemata from class definitions with ease.
+Generate json schemata from class definitions with ease.
 
 ## Licensing
 
