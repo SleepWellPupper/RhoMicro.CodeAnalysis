@@ -57,7 +57,7 @@
 	<ItemGroup>
 		<PublishProjectReference Include="../JsonSchemaGenerator.Cli/JsonSchemaGenerator.Cli.csproj">
 			<Pack>true</Pack>
-			<SetTargetFramework>TargetFramework=net6.0</SetTargetFramework>
+			<SetTargetFramework>TargetFramework=net9.0</SetTargetFramework>
 			<PublishTargetPath>tool</PublishTargetPath>
 			<PublishPackagePath>tool</PublishPackagePath>
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
