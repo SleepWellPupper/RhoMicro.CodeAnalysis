@@ -23,7 +23,7 @@ This source code generator and the included cli tool are licensed to you under t
 Package Reference:
 ```
 <ItemGroup>
-	<PackageReference Include="RhoMicro.CodeAnalysis.JsoNSchemaGenerator" Version="*">
+	<PackageReference Include="RhoMicro.CodeAnalysis.JsonSchemaGenerator" Version="*">
 	<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 	<PrivateAssets>all</PrivateAssets>
 	</PackageReference>
@@ -31,7 +31,7 @@ Package Reference:
 ```
 CLI:
 ```
-dotnet add package RhoMicro.CodeAnalysis.JsoNSchemaGenerator
+dotnet add package RhoMicro.CodeAnalysis.JsonSchemaGenerator
 ```
 
 ## How To Use
@@ -989,3 +989,5 @@ public class Foo
 */Library/Library/LibraryNamespace/Foo.json*
 
 ## Contributions
+
+Thanks to [wasabii](https://github.com/wasabii) for his help with the msbuild integration.
