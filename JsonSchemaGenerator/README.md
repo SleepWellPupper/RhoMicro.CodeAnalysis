@@ -1,3 +1,5 @@
+![icon](https://raw.githubusercontent.com/PaulBraetz/RhoMicro.CodeAnalysis/refs/heads/release/JsonSchemaGenerator/docs/logo_256_.png)
+
 # JsonSchemaGenerator
 
 Generate json schemata from class definitions with ease.
