@@ -116,7 +116,7 @@ public class EnumTests : TestBase
                 {
                     Prop = new
                     {
-                        oneOf = new Object[]
+                        anyOf = new Object[]
                         {
                             new { type = new[] { "integer" } },
                             new { @enum = constants.Select(t=>(Object)t.name).Concat(constants.Select(t=>(Object)t.value)).ToArray() }
@@ -152,7 +152,7 @@ public class EnumTests : TestBase
                 {
                     Prop1 = new
                     {
-                        oneOf = new Object[]
+                        anyOf = new Object[]
                         {
                             new { type = new[] { "integer" } },
                             new { @enum = constants.Select(t=>(Object)t.name).Concat(constants.Select(t=>(Object)t.value)).ToArray() }
@@ -160,7 +160,7 @@ public class EnumTests : TestBase
                     },
                     Prop2 = new
                     {
-                        oneOf = new Object[]
+                        anyOf = new Object[]
                         {
                             new { type = new[] { "integer" } },
                             new { @enum = constants.Select(t=>(Object)t.name).Concat(constants.Select(t=>(Object)t.value)).ToArray() }
@@ -168,7 +168,7 @@ public class EnumTests : TestBase
                     },
                     Prop3 = new
                     {
-                        oneOf = new Object[]
+                        anyOf = new Object[]
                         {
                             new { type = new[] { "integer" } },
                             new { @enum = constants.Select(t=>(Object)t.name).Concat(constants.Select(t=>(Object)t.value)).ToArray() }
@@ -202,7 +202,7 @@ public class EnumTests : TestBase
                 {
                     Prop = new
                     {
-                        oneOf = new Object[]
+                        anyOf = new Object[]
                         {
                             new { type = new[] { "integer", "null" } },
                             new { @enum = constants.Select(t=>(Object)t.name).Concat(constants.Select(t=>(Object)t.value)).ToArray() }
@@ -238,7 +238,7 @@ public class EnumTests : TestBase
                 {
                     Prop1 = new
                     {
-                        oneOf = new Object[]
+                        anyOf = new Object[]
                         {
                             new { type = new[] { "integer", "null" } },
                             new { @enum = constants.Select(t=>(Object)t.name).Concat(constants.Select(t=>(Object)t.value)).ToArray() }
@@ -246,7 +246,7 @@ public class EnumTests : TestBase
                     },
                     Prop2 = new
                     {
-                        oneOf = new Object[]
+                        anyOf = new Object[]
                         {
                             new { type = new[] { "integer", "null" } },
                             new { @enum = constants.Select(t=>(Object)t.name).Concat(constants.Select(t=>(Object)t.value)).ToArray() }
@@ -254,7 +254,7 @@ public class EnumTests : TestBase
                     },
                     Prop3 = new
                     {
-                        oneOf = new Object[]
+                        anyOf = new Object[]
                         {
                             new { type = new[] { "integer", "null" } },
                             new { @enum = constants.Select(t=>(Object)t.name).Concat(constants.Select(t=>(Object)t.value)).ToArray() }

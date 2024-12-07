@@ -662,7 +662,7 @@ class Foo9
 {
   "properties": {
     "EnumProperty": {
-      "oneOf": [
+      "anyOf": [
         {
           "type": [
             "integer"

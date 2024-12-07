@@ -190,7 +190,7 @@ public class AnnotationsTests : TestBase
                 {
                     Prop = new
                     {
-                        oneOf = new Object[]
+                        anyOf = new Object[]
                         {
                             new
                             {
@@ -233,7 +233,7 @@ public class AnnotationsTests : TestBase
                 {
                     Prop = new
                     {
-                        oneOf = new Object[]
+                        anyOf = new Object[]
                         {
                             new
                             {

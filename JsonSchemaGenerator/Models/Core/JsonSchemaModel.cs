@@ -61,20 +61,20 @@ sealed record JsonSchemaModel : JsonValueModel
         } else
         {
             ct.ThrowIfCancellationRequested();
-            var oneOf = new JsonObjectModel();
+            var anyOf = new JsonObjectModel();
             var hasSimple = false;
             foreach(var builtSchema in builtSchemata)
             {
                 ct.ThrowIfCancellationRequested();
-                oneOf.Array("oneOf").Value.Add(builtSchema);
+                anyOf.Array("anyOf").Value.Add(builtSchema);
                 //hasSimple |= builtSchema is SimpleSchemaModel;
             }
 
             if(!hasSimple)
-                return oneOf;
+                return anyOf;
 
             var result = new JsonObjectModel();
-            result.Array("allOf").Value.Add(oneOf);
+            result.Array("anyOf").Value.Add(anyOf);
 
             //var type = new JsonObjectModel();
             //_ = type.Set("type").Add(JsonType.Object);

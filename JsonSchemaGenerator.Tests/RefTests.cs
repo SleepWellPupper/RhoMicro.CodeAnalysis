@@ -21,7 +21,7 @@ public class RefTests : TestBase
                 {
                     Prop = new
                     {
-                        oneOf = new Object[]
+                        anyOf = new Object[]
                         {
                             new Dictionary<String, Object>() { ["$ref"] = $"../{n}/Schema.json" },
                             new { type = new [] { "null" } }
@@ -155,7 +155,7 @@ public class RefTests : TestBase
                 {
                     Prop = new
                     {
-                        oneOf = new Object[]
+                        anyOf = new Object[]
                         {
                             new Dictionary<String, Object>() { ["$ref"] = $"../{n}/Dependency.json", },
                             new { type = new[] { "null" } }
