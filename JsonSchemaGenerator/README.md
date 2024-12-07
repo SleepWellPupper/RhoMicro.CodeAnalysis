@@ -34,6 +34,8 @@ CLI:
 dotnet add package RhoMicro.CodeAnalysis.JsonSchemaGenerator
 ```
 
+The cli tool extracting generated schemata to directories in the output directory requires dotnet 9 to be installed.
+
 ## How To Use
 
 The generator is instructed via three attributes:
