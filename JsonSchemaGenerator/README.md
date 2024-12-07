@@ -34,6 +34,9 @@ CLI:
 dotnet add package RhoMicro.CodeAnalysis.JsonSchemaGenerator
 ```
 
+**Disclaimer**
+Due to the way the schema extraction tool is integrated into the build process, currently only `net9` is supported. The issue is being tracked here: #61
+
 ## How To Use
 
 The generator is instructed via three attributes:
