@@ -41,7 +41,7 @@ abstract record JsonListLikeModel<TList> : JsonValueModel<TList>
     }
 
     public JsonStringModel Add(String value) => Add(new JsonStringModel(value));
-    public JsonNumberModel Add(Double value) => Add(new JsonNumberModel(value));
+    public JsonNumberModel Add(Number value) => Add(new JsonNumberModel(value));
     public JsonBooleanModel Add(Boolean value) => Add(new JsonBooleanModel(value));
     public JsonTypeModel Add(JsonType value) => Add(new JsonTypeModel(value));
     public JsonObjectModel AddObject() => Add(new JsonObjectModel());

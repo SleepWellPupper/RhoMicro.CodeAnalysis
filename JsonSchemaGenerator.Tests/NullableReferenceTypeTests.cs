@@ -19,7 +19,7 @@ public class NullableReferenceTypeTests : TestBase
                 ["type"] = new[] { "object" },
                 ["properties"] = new
                 {
-                    Prop = new { type = new[] { "string", null } }
+                    Prop = new { type = new[] { "string", "null" } }
                 },
                 ["additionalProperties"] = false
             });

@@ -672,11 +672,7 @@ class Foo9
           "enum": [
             "None",
             "First",
-            "Second"
-          ]
-        },
-        {
-          "enum": [
+            "Second",
             0,
             1,
             42

@@ -78,7 +78,9 @@ public abstract class TestBase
             .Where(t => t.hasId)
             .ToDictionary(t => t.idNode!.AsValue().ToString(), t => t.s);
 
-        Assert.NotEmpty(schemata);
+        if(schemata.Count == 0)
+            Assert.Fail("no schemata found in assembly");
+
         JsonObject schema;
         var assemblyName = compilation.Assembly.Name;
         if(idFactory is not null)

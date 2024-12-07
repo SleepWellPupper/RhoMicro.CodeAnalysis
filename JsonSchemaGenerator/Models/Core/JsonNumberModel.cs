@@ -3,13 +3,17 @@
 using System.Globalization;
 using System.Text;
 
-sealed record JsonNumberModel : JsonValueModel<Double>
+sealed record JsonNumberModel : JsonValueModel<Number>
 {
-    public JsonNumberModel(Double value) : base(value) { }
+    public JsonNumberModel(Number value) : base(value) { }
+
     public override void AppendTo(StringBuilder sb, CancellationToken ct)
     {
         ct.ThrowIfCancellationRequested();
-        _ = sb.Append(Value.ToString("0.#", CultureInfo.InvariantCulture));
+        _ = sb.Append(Value.Match(
+            static d => d.ToString("0.#", CultureInfo.InvariantCulture),
+            static l => l.ToString("0.#", CultureInfo.InvariantCulture),
+            static ul => ul.ToString("0.#", CultureInfo.InvariantCulture)));
     }
 
     public override String ToString() => base.ToString();

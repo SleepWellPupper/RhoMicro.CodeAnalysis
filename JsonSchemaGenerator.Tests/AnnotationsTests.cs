@@ -131,8 +131,121 @@ public class AnnotationsTests : TestBase
                     Prop = new Dictionary<String, Object>()
                     {
                         ["$ref"] = $"../{n}/Dependency.json",
-                        ["additionalProperties"] = false,
                         ["title"] = "foobar"
+                    }
+                },
+                ["additionalProperties"] = false
+            });
+    }
+    [Fact]
+    public void Generates_DescriptionForRefProperty()
+    {
+        TestSchema(
+            $$"""
+            [RhoMicro.CodeAnalysis.JsonSchema]
+            class Schema
+            {
+                [RhoMicro.CodeAnalysis.JsonSchemaProperty(Description = "foobar")]
+                public Dependency Prop { get; set; }
+            }
+            [RhoMicro.CodeAnalysis.JsonSchema]
+            class Dependency;
+            """, n => new Dictionary<String, Object>()
+            {
+                ["$id"] = $"./{n}/Schema.json",
+                ["type"] = new[] { "object" },
+                ["properties"] = new
+                {
+                    Prop = new Dictionary<String, Object>()
+                    {
+                        ["$ref"] = $"../{n}/Dependency.json",
+                        ["description"] = "foobar"
+                    }
+                },
+                ["additionalProperties"] = false
+            });
+    }
+    [Fact]
+    public void Generates_TitleForEnumProperty()
+    {
+        TestSchema(
+            $$"""
+            enum MyEnum
+            {
+                None,
+                One,
+                Two
+            }
+            [RhoMicro.CodeAnalysis.JsonSchema]
+            class Schema
+            {
+                [RhoMicro.CodeAnalysis.JsonSchemaProperty(Title = "foobar")]
+                public MyEnum Prop { get; set; }
+            }
+            """, n => new Dictionary<String, Object>()
+            {
+                ["$id"] = $"./{n}/Schema.json",
+                ["type"] = new[] { "object" },
+                ["properties"] = new
+                {
+                    Prop = new
+                    {
+                        oneOf = new Object[]
+                        {
+                            new
+                            {
+                                @enum = new Object[] { "None", "One", "Two", 0, 1, 2},
+                                title = "foobar"
+                            },
+                            new
+                            {
+                                type= new[]{"integer" },
+                                title = "foobar"
+                            }
+                        }
+                    }
+                },
+                ["additionalProperties"] = false
+            });
+    }
+    [Fact]
+    public void Generates_DescriptionForEnumProperty()
+    {
+        TestSchema(
+            $$"""
+            enum MyEnum
+            {
+                None,
+                One,
+                Two
+            }
+            [RhoMicro.CodeAnalysis.JsonSchema]
+            class Schema
+            {
+                [RhoMicro.CodeAnalysis.JsonSchemaProperty(Description = "foobar")]
+                public MyEnum Prop { get; set; }
+            }
+            """, n => new Dictionary<String, Object>()
+            {
+                ["$id"] = $"./{n}/Schema.json",
+                ["type"] = new[] { "object" },
+                ["properties"] = new
+                {
+                    Prop = new
+                    {
+                        oneOf = new Object[]
+                        {
+                            new
+                            {
+                                @enum = new Object[] { "None", "One", "Two", 0, 1, 2},
+                                description = "foobar"
+                            },
+                            new
+                            {
+                                type= new[]{"integer" },
+                                description = "foobar"
+                            }
+                        }
                     }
                 },
                 ["additionalProperties"] = false

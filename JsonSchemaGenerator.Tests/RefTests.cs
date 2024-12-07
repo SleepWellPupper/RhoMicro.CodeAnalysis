@@ -23,7 +23,7 @@ public class RefTests : TestBase
                     {
                         oneOf = new Object[]
                         {
-                            new Dictionary<String, Object>() { ["$ref"] = $"{n}/Schema" },
+                            new Dictionary<String, Object>() { ["$ref"] = $"../{n}/Schema.json" },
                             new { type = new [] { "null" } }
                         }
                     }

@@ -41,7 +41,7 @@ static class Extensions
                 fail($"Expected '{actual.GetPath()}' to have {expectedArr.Count} items but found {actualArr.Count}");
 
             var orderedExpectedArr = expectedArr.OrderBy(n => n?.ToString()).ToArray();
-            var orderedActualArr = expectedArr.OrderBy(n => n?.ToString()).ToArray();
+            var orderedActualArr = actualArr.OrderBy(n => n?.ToString()).ToArray();
 
             for(var i = 0; i < orderedExpectedArr.Length; i++)
                 orderedActualArr[i].AssertEquality(orderedExpectedArr[i]);

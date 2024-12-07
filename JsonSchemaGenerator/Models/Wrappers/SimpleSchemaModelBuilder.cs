@@ -9,7 +9,6 @@ readonly record struct SimpleSchemaModelBuilder(SimpleSchemaModel Model)
     public PropertiesModel Properties => new(Model.Object("properties"));
     public AdditionalPropertiesModel Additional { get; } = new(Model.Dynamic("additionalProperties", JsonBooleanModel.False));
     public Lazy<JsonSchemaModel> Items { get; } = new(() => Model.Schema("items"));
-    public AnnotationsBuilder Annotations => new(Model);
 
     public override Int32 GetHashCode() => Model.GetHashCode();
     public Boolean Equals(SimpleSchemaModelBuilder other) => Model.Equals(other.Model);

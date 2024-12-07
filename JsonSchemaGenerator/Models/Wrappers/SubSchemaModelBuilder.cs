@@ -9,15 +9,15 @@ readonly struct SubSchemaModelBuilder
 {
     public SubSchemaModelBuilder()
     {
+        Annotations = new(JsonValueModel.CreateObject());
         Simple = new(() => new(JsonValueModel.CreateSimpleSchema()));
         Ref = new(() => new(JsonValueModel.CreateRefSchema()));
-        EnumNames = new(() => new(JsonValueModel.CreateEnumSchema()));
-        EnumValues = new(() => new(JsonValueModel.CreateEnumSchema()));
+        Enum = new(() => new(JsonValueModel.CreateEnumSchema()));
     }
-    public Lazy<SimpleSchemaModelBuilder> Simple { get; }
-    public Lazy<RefSchemaModelBuilder> Ref { get; }
-    public Lazy<EnumSchemaModelBuilder> EnumNames { get; }
-    public Lazy<EnumSchemaModelBuilder> EnumValues { get; }
+    private AnnotationsBuilder Annotations { get; }
+    private Lazy<SimpleSchemaModelBuilder> Simple { get; }
+    private Lazy<RefSchemaModelBuilder> Ref { get; }
+    private Lazy<EnumSchemaModelBuilder> Enum { get; }
 
     public void Build(List<JsonValueModel> result, Boolean includeId, CancellationToken ct)
     {
@@ -50,24 +50,28 @@ readonly struct SubSchemaModelBuilder
 
             if(simple.Type.Model.Value.Any(t => t is JsonTypeModel { Value: JsonType.Object }))
                 simpleSchema.Value.SetProperty("additionalProperties", simple.Additional.ModelOrSetDefault);
-            if(simple.Annotations.Title.Value is { Length: > 0 } title)
-                simpleSchema.Value.String("title").Value = title;
-            if(simple.Annotations.Description.Value is { Length: > 0 } description)
-                simpleSchema.Value.String("description").Value = description;
 
             if(includeId && simple.GetId() is { Value.Length: > 0 } id)
                 simpleSchema.Value.SetProperty("$id", id);
 
-            if(simpleSchema.IsValueCreated)
-                result.Add(simpleSchema.Value);
+            if(simpleSchema is { IsValueCreated: true, Value: { } schema })
+            {
+                Annotations.CopyTo(schema);
+                result.Add(schema);
+            }
         }
 
-        if(Ref.IsValueCreated)
-            result.Add(Ref.Value.Model);
-        if(EnumNames.IsValueCreated)
-            result.Add(EnumNames.Value.Model);
-        if(EnumValues.IsValueCreated)
-            result.Add(EnumValues.Value.Model);
+        if(Ref is { IsValueCreated: true, Value.Model: { } @ref })
+        {
+            Annotations.CopyTo(@ref);
+            result.Add(@ref);
+        }
+
+        if(Enum is { IsValueCreated: true, Value.Model: { } @enum })
+        {
+            Annotations.CopyTo(@enum);
+            result.Add(@enum);
+        }
     }
 
     public void Populate(GeneratorAttributeSyntaxContext ctx, CancellationToken ct) =>
@@ -126,8 +130,8 @@ readonly struct SubSchemaModelBuilder
         // annotations
         if(attribute is not null)
         {
-            Simple.Value.Annotations.Description.Value = attribute.Description;
-            Simple.Value.Annotations.Title.Value = attribute.Title;
+            Annotations.Description.Value = attribute.Description;
+            Annotations.Title.Value = attribute.Title;
         }
 
         // properties
@@ -158,8 +162,8 @@ readonly struct SubSchemaModelBuilder
 
             if(propSymbol.TryGetFirstJsonSchemaPropertyAttribute(out var a))
             {
-                propSchema.Simple.Value.Annotations.Description.Value = a.Description;
-                propSchema.Simple.Value.Annotations.Title.Value = a.Title;
+                propSchema.Annotations.Description.Value = a.Description;
+                propSchema.Annotations.Title.Value = a.Title;
             }
         }
     }
@@ -197,21 +201,21 @@ readonly struct SubSchemaModelBuilder
             foreach(var (name, value) in definedConstants)
             {
                 ct.ThrowIfCancellationRequested();
-                EnumNames.Value.Add(name);
-                Double? strongValue = value switch
+                Enum.Value.Add(name);
+                Number? strongValue = value switch
                 {
                     SByte b => b,
                     Int16 s => s,
                     Int32 i => i,
                     Int64 l => l,
-                    Byte ub => ub,
-                    UInt16 us => us,
-                    UInt32 ui => ui,
+                    Byte ub => (UInt64)ub,
+                    UInt16 us => (UInt64)us,
+                    UInt32 ui => (UInt64)ui,
                     UInt64 ul => ul,
                     _ => null
                 };
                 if(strongValue.HasValue)
-                    EnumValues.Value.Add(strongValue.Value);
+                    Enum.Value.Add(strongValue.Value);
             }
 
             Populate(rootId, underlyingType, idCache, ct);
