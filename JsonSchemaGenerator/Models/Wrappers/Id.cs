@@ -44,7 +44,7 @@ readonly record struct Id(String Value, Int32 Depth)
     private static Id Create(ISymbol target, CancellationToken ct)
     {
         ct.ThrowIfCancellationRequested();
-        var result = $"{target.ContainingAssembly.Name}/{target.ToDisplayString(SymbolDisplayFormats.FullyQualifiedNoGlobalNamespaceFormat)}".Replace('.', '/');
+        var result = $"{target.ContainingAssembly.Name}/{target.ToDisplayString(SymbolDisplayFormats.FullyQualifiedNoGlobalNamespaceFormat).Replace('.', '/')}";
 
         return Create(result);
     }
