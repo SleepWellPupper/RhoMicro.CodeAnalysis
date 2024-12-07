@@ -109,4 +109,33 @@ public class AnnotationsTests : TestBase
                 ["additionalProperties"] = false
             });
     }
+    [Fact]
+    public void Generates_TitleForRefProperty()
+    {
+        TestSchema(
+            $$"""
+            [RhoMicro.CodeAnalysis.JsonSchema]
+            class Schema
+            {
+                [RhoMicro.CodeAnalysis.JsonSchemaProperty(Title = "foobar")]
+                public Dependency Prop { get; set; }
+            }
+            [RhoMicro.CodeAnalysis.JsonSchema]
+            class Dependency;
+            """, n => new Dictionary<String, Object>()
+            {
+                ["$id"] = $"./{n}/Schema.json",
+                ["type"] = new[] { "object" },
+                ["properties"] = new
+                {
+                    Prop = new Dictionary<String, Object>()
+                    {
+                        ["$ref"] = $"../{n}/Dependency.json",
+                        ["additionalProperties"] = false,
+                        ["title"] = "foobar"
+                    }
+                },
+                ["additionalProperties"] = false
+            });
+    }
 }
