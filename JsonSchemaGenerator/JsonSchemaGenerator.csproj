@@ -15,7 +15,7 @@
 		<IsPackable>true</IsPackable>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<Description>Generates json schemata from class definitions.</Description>
-		<PackageTags>Source Generator;json schema;appsettings</PackageTags>
+		<PackageTags>Source Generator;json schema;json;jsonschema;appsettings</PackageTags>
 		<PackageIcon>logo_256.png</PackageIcon>
 	</PropertyGroup>
 

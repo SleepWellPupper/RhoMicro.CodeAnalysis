@@ -1,8 +1,10 @@
-# Rhomicro.CodeAnalysis
+# RhoMicro.CodeAnalysis
 
 This repository contains my explorations on c# source code generation and analysis.
 
 The [UnionsGenerator](UnionsGenerator) generator enables the use of union types in C#.
+
+The [JsonSchemaGenerator](JsonSchemaGenerator) generator generates json schemata from C# class definitions.
 
 The [UtilityGenerators](UtilityGenerators) generator helps you write code generators and analyzers.
 
