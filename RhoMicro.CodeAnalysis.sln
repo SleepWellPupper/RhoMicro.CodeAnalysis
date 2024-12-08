@@ -58,6 +58,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JsonSchemaGenerator.Tests",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JsonSchemaGenerator.Cli", "JsonSchemaGenerator.Cli\JsonSchemaGenerator.Cli.csproj", "{8076F7EE-7474-42A6-96E6-60CF266008BA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UtilityGenerators.Tests", "UtilityGenerators.Tests\UtilityGenerators.Tests.csproj", "{EA3DD18A-2DA3-494D-8019-B0E36F4B318F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -152,6 +154,10 @@ Global
 		{8076F7EE-7474-42A6-96E6-60CF266008BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8076F7EE-7474-42A6-96E6-60CF266008BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8076F7EE-7474-42A6-96E6-60CF266008BA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EA3DD18A-2DA3-494D-8019-B0E36F4B318F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA3DD18A-2DA3-494D-8019-B0E36F4B318F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA3DD18A-2DA3-494D-8019-B0E36F4B318F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA3DD18A-2DA3-494D-8019-B0E36F4B318F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -179,6 +185,7 @@ Global
 		{40A4A78F-A784-4F79-9C9F-F065AD64255F} = {96BBB21A-F476-4234-97AF-D79F88CE0644}
 		{6F3EB5CA-3DC7-4DF5-97DA-2E7C519C011F} = {96BBB21A-F476-4234-97AF-D79F88CE0644}
 		{8076F7EE-7474-42A6-96E6-60CF266008BA} = {96BBB21A-F476-4234-97AF-D79F88CE0644}
+		{EA3DD18A-2DA3-494D-8019-B0E36F4B318F} = {96BBB21A-F476-4234-97AF-D79F88CE0644}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8A219ED5-5120-4C5F-8EB4-FFF44FFCE2CF}

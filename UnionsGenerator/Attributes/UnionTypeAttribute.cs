@@ -172,6 +172,7 @@ namespace RhoMicro.CodeAnalysis
         /// </summary>
         public virtual StorageOption Storage { get; set; }
     }
+
     [AttributeUsage(( (AttributeTargets)( -1 ) ))]
 #if UNIONS_GENERATOR
     [GenerateFactory(OmitTypeCheck = true)]
