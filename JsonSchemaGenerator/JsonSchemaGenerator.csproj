@@ -30,7 +30,7 @@
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="Microsoft.CodeAnalysis" Version="*" />
-		<PackageReference Include="PolySharp" Version="*">
+		<PackageReference Include="PolySharp" Version="1.15.0">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
@@ -46,10 +46,8 @@
 
 	<ItemGroup>
 		<None Include="docs\logo_256.png" Pack="true" PackagePath="" />
-		<None Include="build\**\*" Pack="true"
-			PackagePath="build\%(RecursiveDir)%(Filename)%(Extension)" />
-		<None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true"
-			PackagePath="analyzers/dotnet/cs" Visible="false" />
+		<None Include="build\**\*" Pack="true" PackagePath="build\%(RecursiveDir)%(Filename)%(Extension)" />
+		<None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
 		<None Include="README.md" Pack="true" PackagePath="/" CopyToOutputDirectory="Always" />
 		<None Include="LICENSE.txt" Pack="true" PackagePath="/" CopyToOutputDirectory="Always" />
 	</ItemGroup>

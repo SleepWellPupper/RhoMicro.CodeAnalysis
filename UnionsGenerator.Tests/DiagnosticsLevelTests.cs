@@ -11,7 +11,7 @@ using Microsoft.CodeAnalysis;
 
 public class DiagnosticsLevelTests : TestBase
 {
-    public DiagnosticsLevelTests() : base(Net60.References.All) { }
+    public DiagnosticsLevelTests() : base(Net80.References.All) { }
 
     [Theory]
     [InlineData(

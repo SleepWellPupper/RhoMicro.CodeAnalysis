@@ -16,9 +16,12 @@
 
 	<ItemGroup>
 		<PackageReference Update="NETStandard.Library" PrivateAssets="all" />
-		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.8.0" />
+		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.12.0" />
 
-		<PackageReference Include="PolySharp" Version="1.14.1" />
+		<PackageReference Include="PolySharp" Version="1.15.0">
+		  <PrivateAssets>all</PrivateAssets>
+		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
 
 		<ProjectReference Include="..\UtilityGenerators\UtilityGenerators.csproj" ReferenceOutputAssembly="false" />
 	</ItemGroup>

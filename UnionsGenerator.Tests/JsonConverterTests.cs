@@ -5,9 +5,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using Basic.Reference.Assemblies;
+
 using Microsoft.CodeAnalysis;
 
-public class JsonConverterTests() : TestBase(Basic.Reference.Assemblies.Net60.References.All)
+public class JsonConverterTests() : TestBase(Net80.References.All)
 {
     [Theory]
     [InlineData(
