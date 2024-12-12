@@ -366,3 +366,4 @@ FodyWeavers.xsd
 /feed
 /dist
 !/dist/dev
+!/dist/dev/*
