@@ -7,6 +7,7 @@
 		<developmentDependency>true</developmentDependency>
 		<NoPackageAnalysis>true</NoPackageAnalysis>
 		<IsRoslynComponent>true</IsRoslynComponent>
+		<EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
 	</PropertyGroup>
 
 	<PropertyGroup>
@@ -19,41 +20,25 @@
 	</PropertyGroup>
 
 	<PropertyGroup>
-		<DefineConstants>$(DefineConstants);GENERATOR</DefineConstants>
+		<DefineConstants>$(DefineConstants);GENERATOR;UTILITYGENERATORS</DefineConstants>
 	</PropertyGroup>
 	
 	<ItemGroup>
 		<PackageReference Update="NETStandard.Library" PrivateAssets="all" />
+		<PackageReference Include="Microsoft.Bcl.HashCode" Version="6.0.0" />
 		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.12.0" />
 		<PackageReference Include="PolySharp" Version="1.15.0">
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
+		<PackageReference Include="RhoMicro.CodeAnalysis.UtilityGenerators.Dev" Version="*">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
 	</ItemGroup>
-
+	
 	<ItemGroup>
 		<None Remove=".editorconfig"></None>
-	</ItemGroup>
-
-	<ItemGroup>
-	  <None Remove="bin\Debug\netstandard2.0\\RhoMicro.CodeAnalysis.UtilityGenerators.12.0.10.340.dll" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <Compile Include="..\UtilityGenerators.Library\Text\Block.cs" Link="Meta\Library\Text\Block.cs" />
-	  <Compile Include="..\UtilityGenerators.Library\Text\Blocks.cs" Link="Meta\Library\Text\Blocks.cs" />
-	  <Compile Include="..\UtilityGenerators.Library\Text\BlockScope.cs" Link="Meta\Library\Text\BlockScope.cs" />
-	  <Compile Include="..\UtilityGenerators.Library\Text\BlockScopeCollection.cs" Link="Meta\Library\Text\BlockScopeCollection.cs" />
-	  <Compile Include="..\UtilityGenerators.Library\Text\CommentBlocks.cs" Link="Meta\Library\Text\CommentBlocks.cs" />
-	  <Compile Include="..\UtilityGenerators.Library\Text\CommentBuilder.cs" Link="Meta\Library\Text\CommentBuilder.cs" />
-	  <Compile Include="..\UtilityGenerators.Library\Text\IIndentedStringBuilderAppendable.cs" Link="Meta\Library\Text\IIndentedStringBuilderAppendable.cs" />
-	  <Compile Include="..\UtilityGenerators.Library\Text\IndentedStringBuilder.cs" Link="Meta\Library\Text\IndentedStringBuilder.cs" />
-	  <Compile Include="..\UtilityGenerators.Library\Text\IndentedStringBuilder.OperatorsDecorator.cs" Link="Meta\Library\Text\IndentedStringBuilder.OperatorsDecorator.cs" />
-	  <Compile Include="..\UtilityGenerators.Library\Text\IndentedStringBuilderAppendable.cs" Link="Meta\Library\Text\IndentedStringBuilderAppendable.cs" />
-	  <Compile Include="..\UtilityGenerators.Library\Text\IndentedStringBuilderOptions.cs" Link="Meta\Library\Text\IndentedStringBuilderOptions.cs" />
-	  <Compile Include="..\UtilityGenerators.Library\Text\IndentScope.cs" Link="Meta\Library\Text\IndentScope.cs" />
-	  <Compile Include="..\UtilityGenerators.Library\Text\StringOrChar.cs" Link="Meta\Library\Text\StringOrChar.cs" />
-	  <Compile Include="..\UtilityGenerators.Library\Text\Utils.cs" Link="Meta\Library\Text\Utils.cs" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -61,16 +46,5 @@
 		<None Include="README.md" Pack="true" PackagePath="/" CopyToOutputDirectory="Always" />
 		<None Include="LICENSE.txt" Pack="true" PackagePath="/" CopyToOutputDirectory="Always" />
 	</ItemGroup>
-
-	<!--<ItemGroup>
-		<Compile Remove="Library\Generator\**" />
-		<EmbeddedResource Remove="Library\Generator\**" />
-		<None Remove="Library\Generator\**" />
-	</ItemGroup>-->
-	
-	<!--TODO: write build task from generator using RoslynCodeTaskFactory; see https://github.com/ikvmnet/ikvm/blob/main/src/IKVM.MSBuild/buildTransitive/IKVM.MSBuild.NoTasks.targets-->
-	<!--<Target Name="PreBuild" BeforeTargets="PreBuildEvent">
-	  <Exec Command="Library\Generator\UtilityGenerators.Library.Generator.exe ../UtilityGenerators.Library Library/LibraryGenerator.g.cs" ConsoleToMsBuild="true" />
-	</Target>-->
 
 </Project>

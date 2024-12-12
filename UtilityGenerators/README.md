@@ -102,3 +102,7 @@ The generated extension method `OfTestGeneratorTargetAttribute` will return all 
 The generated extension method `TryGetFirstTestGeneratorTargetAttribute` attempts to retrieve the first instance of `TestGeneratorTargetAttribute` found on the symbol.
 
 The generated extension method `ForTestGeneratorTargetAttribute` makes use of the efficient `FAWMN` api.
+
+# Building The Project
+
+To build the project, run the `build.ps1` script.
