@@ -362,8 +362,8 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 /UtilityGenerators/Library/LibraryGenerator.g.cs
-/UnionsGenerator/.~lock.Logo_Explorations.odg#
+
 /feed
-/dist
+/dist/*
 !/dist/dev
 !/dist/dev/*
