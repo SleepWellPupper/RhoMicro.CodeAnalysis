@@ -38,14 +38,14 @@
 	</PropertyGroup>
 	
 	<Target Name="MovePackageToDistDev" AfterTargets="GenerateNuspec">
-		<Copy SourceFiles="$(PackageOutputPath)\$(PackageName).nupkg" 
-			  DestinationFiles="$(PackageOutputPath)\..\dev\$(AssemblyNameWithoutVersion).1.0.0.nupkg"/>
+		<Copy SourceFiles="$(PackageOutputPath)\$(PackageName).nupkg" DestinationFiles="$(PackageOutputPath)\..\dev\$(AssemblyNameWithoutVersion).1.0.0.nupkg" />
 	</Target>
 
 	<ItemGroup>
 		<Compile Include="..\UtilityGenerators\AttributeFactory\obj\Debug\netstandard2.0\generated\**\*" Link="Generated\%(RecursiveDir)%(Filename)%(Extension)" />
 		<Compile Include="..\UtilityGenerators\AttributeFactory\AttributeFactoryGenerator.cs" Link="AttributeFactoryGenerator.cs" />
 		<Compile Include="..\UtilityGenerators\AttributeFactory\AttributeFactoryModel.cs" Link="AttributeFactoryModel.cs" />
+		<Compile Include="..\UtilityGenerators\AttributeFactory\Constants.cs" Link="Constants.cs" />
 		<Compile Include="..\UtilityGenerators\AttributeFactory\ConstructorModel.cs" Link="ConstructorModel.cs" />
 		<Compile Include="..\UtilityGenerators\AttributeFactory\DefaultValueAttribute.cs" Link="DefaultValueAttribute.cs" />
 		<Compile Include="..\UtilityGenerators\AttributeFactory\GenerateFactoryAttribute.cs" Link="GenerateFactoryAttribute.cs" />
@@ -56,7 +56,8 @@
 		<Compile Include="..\UtilityGenerators\AttributeFactory\SourceBuildingContext.cs" Link="SourceBuildingContext.cs" />
 		<Compile Include="..\UtilityGenerators\FileInclusion\FileInclusionGenerator.cs" Link="FileInclusionGenerator.cs" />
 		<Compile Include="..\UtilityGenerators\FileInclusion\IncludeFileAttribute.cs" Link="IncludeFileAttribute.cs" />
-		<Compile Include="..\UtilityGenerators\Library\Extensions.cs" Link="Library\Extensions.cs" />
+		<Compile Include="..\UtilityGenerators\Library\Extensions\KeyValuePairExtensions.cs" Link="Library\KeyValuePairExtensions.cs" />
+		<Compile Include="..\UtilityGenerators\Library\Extensions\TypedConstantsExtensions.cs" Link="Library\TypedConstantsExtensions.cs" />
 		<Compile Include="..\UtilityGenerators\Library\Models\Collections\DictionaryEqualityComparer.cs" Link="Library\DictionaryEqualityComparer.cs" />
 		<Compile Include="..\UtilityGenerators\Library\Models\Collections\EnumerableEqualityComparer.cs" Link="Library\EnumerableEqualityComparer.cs" />
 		<Compile Include="..\UtilityGenerators\Library\Models\Collections\EqualityComparerFactory.cs" Link="Library\EqualityComparerFactory.cs" />

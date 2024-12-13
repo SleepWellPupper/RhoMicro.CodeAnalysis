@@ -1,0 +1,9 @@
+﻿namespace RhoMicro.CodeAnalysis;
+using System;
+
+using RhoMicro.CodeAnalysis.Library.Text;
+
+internal readonly record struct SourceBuildingContext(IndentedStringBuilder SourceBuilder, AttributeFactoryModel Model, String DisplayString, CancellationToken CancellationToken)
+{
+    public void ThrowIfCancellationRequested() => CancellationToken.ThrowIfCancellationRequested();
+}

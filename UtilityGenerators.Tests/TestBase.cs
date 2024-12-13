@@ -1,4 +1,4 @@
-﻿namespace RhoMicro.CodeAnalysis.JsonSchemaGenerator.Tests;
+﻿namespace RhoMicro.CodeAnalysis.UtilityGenerators.Tests;
 
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis;
@@ -7,10 +7,11 @@ using Microsoft.CodeAnalysis.Diagnostics;
 using System.Text.Json.Nodes;
 using System.Text.Json;
 
-/// <summary>
-/// Base class for tests verifying <see cref="UnionsGenerator"/> outputs.
-/// </summary>
-public abstract class TestBase
+[AttributeUsage(AttributeTargets.Class)]
+internal sealed class UtilityGeneratorTestAssertion : Attribute;
+
+public abstract class TestBase<TGenerator>
+    where TGenerator : IIncrementalGenerator, new()
 {
     protected TestBase() : this(Net80.References.All.ToArray()) { }
     protected TestBase(IEnumerable<MetadataReference> references) =>
@@ -24,76 +25,17 @@ public abstract class TestBase
         new(languageVersion: _targetLanguageVersion,
             documentationMode: DocumentationMode.Diagnose,
             kind: SourceCodeKind.Regular);
-    
-    /// <summary>
-    /// Invokes an assertion on the json schema implementation generated from a source.
-    /// </summary>
-    /// <param name="source"></param>
-    /// <param name="assertion"></param>
-    /// <param name="idFactory"></param>
-    public void TestSchema(String source, Action<String, JsonObject> assertion, Func<String, String>? idFactory = null)
-    {
-        _ = assertion ?? throw new ArgumentNullException(nameof(assertion));
 
-        Compilation compilation = CreateCompilation(source, out var sourceTree);
+    protected void TestFactory(String source, String assertion)
+    {
+        Compilation compilation = CreateCompilation(source, assertion);
         var runResult = RunGenerator(ref compilation);
         Assert.Empty(runResult.Diagnostics.Where(d => d.IsWarningAsError || d.Severity is DiagnosticSeverity.Error));
 
-        var schemata = compilation.Assembly
-            .GetAttributes()
-            .OfGeneratedJsonSchemaAttribute()
-            .Select(a => JsonNode.Parse(a.Schema))
-            .OfType<JsonObject>()
-            .Select(s => (hasId: s.TryGetPropertyValue("$id", out var idNode), idNode, s))
-            .Where(t => t.hasId)
-            .ToDictionary(t => t.idNode!.AsValue().ToString(), t => t.s);
-
-        if(schemata.Count == 0)
-            Assert.Fail("no schemata found in assembly");
-
-        JsonObject schema;
-        var assemblyName = compilation.Assembly.Name;
-        if(idFactory is not null)
-        {
-            var id = idFactory.Invoke(assemblyName);
-            Assert.True(schemata.TryGetValue(id, out schema!), $"Unable to locate schema with expected id '{id}' in test assembly schemata.");
-        } else
-        {
-            schema = schemata.First().Value;
-        }
-
-        assertion.Invoke(assemblyName, schema);
-    }
-    /// <summary>
-    /// Invokes an assertion on the result of running the generator once on a source.
-    /// </summary>
-    /// <param name="source"></param>
-    /// <param name="assertion"></param>
-    public void TestDriverResult(String source, Action<GeneratorDriverRunResult> assertion)
-    {
-        _ = assertion ?? throw new ArgumentNullException(nameof(assertion));
-
-        Compilation compilation = CreateCompilation(source, out var _);
-        var result = RunGenerator(ref compilation);
-        assertion.Invoke(result);
-    }
-    public Task TestDiagnostics(String source, Func<CompilationWithAnalyzers, Task> assertion)
-    {
-        _ = assertion ?? throw new ArgumentNullException(nameof(assertion));
-
-        var compilation = CreateCompilation(source, out _);
-        var compilationWithDiagnostics = AttachAnalyzer(compilation);
-        return assertion.Invoke(compilationWithDiagnostics);
-    }
-    private CompilationWithAnalyzers AttachAnalyzer(Compilation compilation)
-    {
-        var result = compilation.WithAnalyzers([/*(DiagnosticAnalyzer)new Analyzers.Analyzer()*/]);
-
-        return result;
     }
     protected GeneratorDriverRunResult RunGenerator(ref Compilation compilation)
     {
-        var generator = new JsonSchemaGenerator.Generators.JsonSchemaGenerator();
+        var generator = new TGenerator();
 
         var driver = CSharpGeneratorDriver.Create(generator)
             .WithUpdatedParseOptions(_parseOptions);
@@ -102,27 +44,37 @@ public abstract class TestBase
         // (Note: the generator driver itself is immutable, and all calls return an updated version of the driver that you should use for subsequent calls)
         driver = driver.RunGeneratorsAndUpdateCompilation(compilation, out compilation, out var diagnostics);
 
-        // We can now assert things about the resulting compilation:
-        Assert.Empty(diagnostics); // there were no diagnostics created by the generators
+        if(!diagnostics.IsEmpty)
+            Assert.Fail("Generator produced diagnostics.");
+
         var aggregateDiagnostics = compilation
             .GetDiagnostics()
             .Where(d => d is { IsWarningAsError: true } or { Severity: DiagnosticSeverity.Error });
-        Assert.Empty(aggregateDiagnostics); // verify the compilation with the added source has no diagnostics
+
+        if(aggregateDiagnostics.Any())
+            Assert.Fail("Compilation with generated sources produced diagnostics.");
 
         // Or we can look at the results directly:
         var result = driver.GetRunResult();
 
-        // The runResult contains the combined results of all generators passed to the driver
-        Assert.Empty(result.Diagnostics);
+        if(!result.Diagnostics.IsEmpty)
+            Assert.Fail("Generator run result contains diagnostics.");
 
         return result;
     }
 
-    protected CSharpCompilation CreateCompilation(String source, out SyntaxTree sourceTree)
+    protected CSharpCompilation CreateCompilation(params String[] sources)
     {
         var options = CreateCompilationOptions();
-        sourceTree = CSharpSyntaxTree.ParseText(source, _parseOptions);
-        var attributeTree = CSharpSyntaxTree.ParseText(
+        var syntaxTrees = sources
+            .Append(
+            """
+            namespace RhoMicro.CodeAnalysis.UtilityGenerators.Tests;
+            [AttributeUsage(AttributeTargets.Class)]
+            internal sealed class UtilityGeneratorTestAssertion : Attribute;
+            """
+            )
+            .Append(
             """
             // <auto-generated/>
             #pragma warning disable
@@ -192,11 +144,12 @@ public abstract class TestBase
                     public string[] Members { get; }
                 }
             }
-            """, _parseOptions);
+            """)
+            .Select(s => CSharpSyntaxTree.ParseText(s, _parseOptions));
 
         var result = CSharpCompilation.Create(
             assemblyName: $"TestAssembly_{Interlocked.Increment(ref _testAssemblyCount)}",
-            syntaxTrees: [sourceTree, attributeTree],
+            syntaxTrees: syntaxTrees,
             references: [.. _references],
             options: options);
 

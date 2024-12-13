@@ -1,0 +1,57 @@
+﻿namespace RhoMicro.CodeAnalysis.Library.Text;
+
+[IncludeFile]
+internal static class CommentBlocks
+{
+    public static Block Multiline { get; } = new("/*\n", "*/", PlaceDelimitersOnNewLine: true);
+    public static Block SingleLine { get; } = new(
+        $"// ",
+        StringOrChar.Empty,
+        PlaceDelimitersOnNewLine: true,
+        Indentation: StringOrChar.CommentSlashes);
+
+    public static Block Summary { get; } = TopLevelDoc("summary");
+    public static Block Returns { get; } = TopLevelDoc("returns");
+    public static Block Remarks { get; } = TopLevelDoc("remarks");
+    public static Block Param(String name) => TopLevelDoc("param", "name", name);
+    public static Block TypeParam(String name) => TopLevelDoc("typeparam", "name", name);
+    public static Block TopLevelDoc(String name) => new(
+        $"/// <{name}>\n",
+        $"/// </{name}>\n",
+        PlaceDelimitersOnNewLine: true,
+        Indentation: StringOrChar.DocCommentSlashes);
+    public static Block TopLevelDoc(String name, String attributeName, String attributeValue)
+    {
+        var block = TopLevelDoc(name);
+        var resut = block with
+        {
+            OpeningDelimiter = $"/// <{name} {attributeName}=\"{attributeValue}\">\n"
+        };
+
+        return resut;
+    }
+
+    public static Block Item { get; } = Doc("item");
+    public static Block Term { get; } = Doc("term");
+    public static Block Description { get; } = Doc("description");
+    public static Block List(String type) => Doc("list", "type", type);
+    public static Block Paragraph { get; } = Doc("para");
+    public static Block Code { get; } = InlineDoc("c");
+    public static Block Emphasis { get; } = InlineDoc("em");
+    public static Block Bold { get; } = InlineDoc("b");
+    public static Block Doc(String name) => new(
+        $"<{name}>\n",
+        $"</{name}>\n",
+        PlaceDelimitersOnNewLine: true,
+        Indentation: StringOrChar.Empty);
+    public static Block InlineDoc(String name) => new(
+        $"<{name}>",
+        $"</{name}>",
+        PlaceDelimitersOnNewLine: false,
+        Indentation: StringOrChar.Empty);
+    public static Block Doc(String name, String attributeName, String attributeValue) =>
+        Doc(name) with
+        {
+            OpeningDelimiter = $"<{name} {attributeName}=\"{attributeValue}\">\n"
+        };
+}

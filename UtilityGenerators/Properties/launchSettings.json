@@ -15,6 +15,10 @@
     "IsbTestApp": {
       "commandName": "DebugRoslynComponent",
       "targetProject": "..\\IndentedStringBuilderTestApp\\IndentedStringBuilderTestApp.csproj"
+    },
+    "Profile 1": {
+      "commandName": "DebugRoslynComponent",
+      "targetProject": "..\\UtilityGenerators.Dev\\UtilityGenerators.Dev.csproj"
     }
   }
 }
