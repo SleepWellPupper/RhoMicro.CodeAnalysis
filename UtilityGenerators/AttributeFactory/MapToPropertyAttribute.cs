@@ -19,7 +19,7 @@ internal sealed partial class MapToPropertyAttribute : Attribute
     /// <param name="propertyName">
     /// The name of the property to map the targeted parameter onto.
     /// </param>
-    public MapToPropertyAttribute(String propertyName) => PropertyName = propertyName;
+    public MapToPropertyAttribute([MapToProperty(nameof(PropertyName))] String propertyName) => PropertyName = propertyName;
     /// <summary>
     /// Gets the name of the property to map the targeted parameter onto.
     /// </summary>

@@ -53,6 +53,7 @@
 		<Compile Include="..\UtilityGenerators\AttributeFactory\ParameterMapping.cs" Link="ParameterMapping.cs" />
 		<Compile Include="..\UtilityGenerators\AttributeFactory\ParameterModel.cs" Link="ParameterModel.cs" />
 		<Compile Include="..\UtilityGenerators\AttributeFactory\PropertyModel.cs" Link="PropertyModel.cs" />
+		<Compile Include="..\UtilityGenerators\AttributeFactory\PropertyTypeKind.cs" Link="PropertyTypeKind.cs" />
 		<Compile Include="..\UtilityGenerators\AttributeFactory\SourceBuildingContext.cs" Link="SourceBuildingContext.cs" />
 		<Compile Include="..\UtilityGenerators\FileInclusion\FileInclusionGenerator.cs" Link="FileInclusionGenerator.cs" />
 		<Compile Include="..\UtilityGenerators\FileInclusion\IncludeFileAttribute.cs" Link="IncludeFileAttribute.cs" />

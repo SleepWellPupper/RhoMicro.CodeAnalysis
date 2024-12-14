@@ -165,7 +165,7 @@ internal sealed record AttributeFactoryModel(
 
             ctorModels.Add(ctorModel);
 
-            foreach(var mapping in ctorModel.Mappings)
+            foreach(var mapping in ctorModel.Mappings.Values)
             {
                 ctx.ThrowIfCancellationRequested();
 

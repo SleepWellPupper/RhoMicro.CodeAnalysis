@@ -20,4 +20,4 @@ Write-Host -ForegroundColor Green "Building UtilityGenerators.Dev.csproj"
 dotnet build ../UtilityGenerators.Dev/UtilityGenerators.Dev.csproj -c $Configuration -v q -p:SolutionName="RhoMicro.CodeAnalysis"
 
 Write-Host -ForegroundColor Green "Building UtilityGenerators.csproj"
-dotnet restore --force #-c $Configuration -v q -p:SolutionName="RhoMicro.CodeAnalysis"
+dotnet restore --force

@@ -90,6 +90,7 @@ internal partial class IndentedStringBuilder
         return this;
     }
     public IndentedStringBuilder OpenBracketsBlock() => OpenBlock(Blocks.Brackets);
+    public IndentedStringBuilder OpenCollectionExprBlock() => OpenBlock(Blocks.CollectionExpr(Options.NewLine));
     public IndentedStringBuilder OpenIndentBlock() => OpenBlock(Blocks.Indent);
     public IndentedStringBuilder OpenBracesBlock() => OpenBlock(Blocks.Braces(Options.NewLine));
     public IndentedStringBuilder OpenParensBlock() => OpenBlock(Blocks.Parentheses);

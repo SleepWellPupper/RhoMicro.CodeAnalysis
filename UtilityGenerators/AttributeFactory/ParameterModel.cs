@@ -5,7 +5,13 @@ using System;
 using Microsoft.CodeAnalysis;
 
 using RhoMicro.CodeAnalysis.Library.Models;
-internal sealed record ParameterModel(String Name, String TypeDisplayString, Boolean IsArray, Int32 Index, String? MappedProperty, String Pattern)
+internal sealed record ParameterModel(
+    String Name,
+    String TypeDisplayString,
+    Boolean IsArray,
+    Int32 Index,
+    String? MappedProperty,
+    String Pattern)
 {
     public static ParameterModel Create(IParameterSymbol parameter, Int32 index, in ModelCreationContext ctx)
     {
@@ -20,8 +26,8 @@ internal sealed record ParameterModel(String Name, String TypeDisplayString, Boo
         ctx.ThrowIfCancellationRequested();
 
         var pattern = parameter.Type is IArrayTypeSymbol { ElementType: { } elementType }
-            ? $"{{ Type: IArrayTypeSymbol {{ ElementType: {getNonArrayPattern(elementType)} }} }}"
-            : getNonArrayPattern(parameter.Type);
+            ? $"{{ Type: global::Microsoft.CodeAnalysis.IArrayTypeSymbol {{ ElementType: {getNonArrayPattern(elementType)} }} }}"
+            : $"{{ Type: {getNonArrayPattern(parameter.Type)} }}";
         var name = parameter.Name;
         var displayString = parameter.Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
         var isArray = displayString is [.., '[', ']'];
@@ -32,7 +38,7 @@ internal sealed record ParameterModel(String Name, String TypeDisplayString, Boo
         {
             ctx.ThrowIfCancellationRequested();
 
-            if(attribute.IsMapToPropertyAttribute() && attribute.ConstructorArguments is [{ Value: String propertyName }])
+            if(attribute.GetMapToPropertyAttributeConstructorArgumentAccessor().TryGetPropertyName(out var propertyName))
             {
                 mappedProperty = propertyName;
             }

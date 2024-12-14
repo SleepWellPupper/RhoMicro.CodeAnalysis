@@ -285,6 +285,7 @@ internal sealed record TypeSignatureModel(
         }
 
         _ = displayStringBuilder.Append('.');
+        _ = hintNameBuilder.Append('_');
         _ = sourceBuilder.AppendLine(';');
     }
     private void AppendContainingTypes(StringBuilder hintNameBuilder, StringBuilder displayStringBuilder, IndentedStringBuilder sourceBuilder, CancellationToken ct)
