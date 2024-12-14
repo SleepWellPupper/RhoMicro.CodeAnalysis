@@ -60,9 +60,9 @@ internal sealed record ConstructorModel(
 
             var param = Parameters[i];
 
-            _ = ctx.SourceBuilder.Comment.SeeCRef(param.TypeDisplayString);
+            _ = ctx.SourceBuilder.Comment.SeeCRef(param.Type.ElementDisplayString);
 
-            if(param.IsArray)
+            if(param.Type.Kind.HasFlagFast(AttributeParameterTypeKind.Array))
                 ctx.SourceBuilder.AppendCore("[]");
 
             ctx.SourceBuilder.AppendCore(' ');
@@ -92,9 +92,9 @@ internal sealed record ConstructorModel(
 
             var param = Parameters[i];
 
-            _ = ctx.SourceBuilder.Append(param.TypeDisplayString);
+            _ = ctx.SourceBuilder.Append(param.Type.ElementDisplayString);
 
-            if(param.IsArray)
+            if(param.Type.Kind.HasFlagFast(AttributeParameterTypeKind.Array))
                 ctx.SourceBuilder.AppendCore("[]");
 
             ctx.SourceBuilder.AppendCore(' ');

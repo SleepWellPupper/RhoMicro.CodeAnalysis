@@ -13,6 +13,7 @@ using RhoMicro.CodeAnalysis.Library.Extensions;
 using System.Runtime.InteropServices.ComTypes;
 
 using static Constants;
+using RhoMicro.CodeAnalysis.Library.Models;
 
 /// <summary>
 /// Generates factories for parsing attributes from <see cref="AttributeData"/> instances.
@@ -97,7 +98,8 @@ public sealed partial class AttributeFactoryGenerator : IIncrementalGenerator
     {
         ctx.ThrowIfCancellationRequested();
 
-        _ = ctx.SourceBuilder.Comment
+        _ = ctx.SourceBuilder
+            .OpenRegionBlock("Property Id").Comment
             .OpenSummary()
             .Append("Provides strongly typed access to property ids of ").Comment.SeeCRef(ctx.DisplayString).Append(" properties.")
             .CloseBlock()
@@ -165,7 +167,9 @@ public sealed partial class AttributeFactoryGenerator : IIncrementalGenerator
                 ctx.SourceBuilder.Append(',').AppendLineCore();
         }
 
-        ctx.SourceBuilder.CloseBlock()
+        ctx.SourceBuilder
+            .CloseBlock()
+            .CloseBlock()
             .CloseBlockCore();
     }
     #endregion
@@ -173,12 +177,16 @@ public sealed partial class AttributeFactoryGenerator : IIncrementalGenerator
     private static void AppendConstructorAccessorType(in SourceBuildingContext ctx)
     {
         ctx.ThrowIfCancellationRequested();
+
+        _ = ctx.SourceBuilder.OpenRegionBlock("Constructor Accessor");
         OpenConstructorAccessorType(in ctx);
         AppendConstructorAccessorFieldsAndProperties(in ctx);
         AppendConstructorAccessorGeneralTryGet(in ctx);
         AppendConstructorAccessorSpecificTryGet(in ctx);
         AppendEquality(in ctx, ctx.Model.ConstructorArgumentAccessorTypeName);
-        ctx.SourceBuilder.CloseBlockCore();
+        ctx.SourceBuilder
+            .CloseBlock()
+            .CloseBlockCore();
     }
     private static void OpenConstructorAccessorType(in SourceBuildingContext ctx)
     {
@@ -986,22 +994,19 @@ public sealed partial class AttributeFactoryGenerator : IIncrementalGenerator
                 .Append("<see langword=\"true\"/> if a value for ").Comment.SeeCRef(mappedProperty.Name).Append(" could be found in the constructor arguments in <see cref=\"Data\"/>; otherwise, <see langword=\"false\"/>.")
                 .CloseBlock()
                 .AppendLine(AggressiveInliningAttributeSyntax)
-                .Append("public bool TryGet").Append(mappedProperty.Name).AppendCore('(');
-
-            if(!mappedProperty.TypeKind.HasFlagFast(PropertyTypeKind.Nullable))
-                ctx.SourceBuilder.AppendCore("[global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] ");
-            ctx.SourceBuilder
-                .Append("out ").Append(mappedProperty.Type).Append("? value)")
+                .Append("public bool TryGet").Append(mappedProperty.Name)
+                .Append("([global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out ")
+                .Append(mappedProperty.Type.NullableDisplayString).Append(" value)")
                 .OpenBracesBlock()
-                    .Append("var argIndex = _specificArgIndices[")
-                    .Append(i.ToString())
-                    .AppendLine("];")
-                    .Append("if(argIndex < 0)")
-                    .OpenBracesBlock()
-                        .AppendLine("value = null;")
-                        .AppendLine("return false;")
-                    .CloseBlock()
-                    .Append("return data.ConstructorArguments[argIndex].TryGet").Append(mappedProperty.TypeKind.ToStringFast()).Append("Value(out value);")
+                .Append("var argIndex = _specificArgIndices[")
+                .Append(i.ToString())
+                .AppendLine("];")
+                .Append("if(argIndex < 0)")
+                .OpenBracesBlock()
+                .AppendLine("value = null;")
+                .AppendLine("return false;")
+                .CloseBlock()
+                .Append("return data.ConstructorArguments[argIndex].TryGet").Append(mappedProperty.Type.KindString).Append("Value(out value);")
                 .CloseBlockCore();
         }
 
@@ -1029,12 +1034,9 @@ public sealed partial class AttributeFactoryGenerator : IIncrementalGenerator
                 .Append("<see langword=\"true\"/> if a value for ").Comment.SeeCRef(unmappedProperty.Name).Append(" could be found in the constructor arguments in <see cref=\"Data\"/>; otherwise, <see langword=\"false\"/>.")
                 .CloseBlock()
                 .AppendLine(AggressiveInliningAttributeSyntax)
-                .Append("public bool TryGet").Append(unmappedProperty.Name).AppendCore('(');
-
-            if(!unmappedProperty.TypeKind.HasFlagFast(PropertyTypeKind.Nullable))
-                ctx.SourceBuilder.AppendCore("[global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] ");
-
-            ctx.SourceBuilder.Append("out ").Append(unmappedProperty.Type).Append("? value)")
+                .Append("public bool TryGet").Append(unmappedProperty.Name)
+                .Append("([global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out ")
+                .Append(unmappedProperty.Type.NullableDisplayString).Append(" value)")
                 .OpenBracesBlock()
                 .AppendLine("value = null;")
                 .AppendLine("return false;")
@@ -1071,8 +1073,9 @@ public sealed partial class AttributeFactoryGenerator : IIncrementalGenerator
 
         using var _ = ctx.SourceBuilder.OpenRegionBlockScope("Property Accessor");
         OpenPropertyAccessor(in ctx);
-        //TODO: General TryGet Region
-        //TODO: Specific TryGet Region
+        AppendPropertyAccessorFieldsAndProperties(in ctx);
+        AppendPropertyAccessorGeneralTryGet(in ctx);
+        AppendPropertyAccessorSpecificTryGet(in ctx);
         //TODO: Get Region
         AppendEquality(in ctx, $"{ctx.DisplayString}.{ctx.Model.PropertyAccessorTypeName}");
         ctx.SourceBuilder.CloseBlockCore();
@@ -1100,6 +1103,821 @@ public sealed partial class AttributeFactoryGenerator : IIncrementalGenerator
             .Append("bool isTypeMatch")
             .Append(") : global::System.IEquatable<").Append(ctx.Model.PropertyAccessorTypeName).Append('>')
             .OpenBracesBlock();
+    }
+    private static void AppendPropertyAccessorFieldsAndProperties(in SourceBuildingContext ctx)
+    {
+        ctx.ThrowIfCancellationRequested();
+
+        _ = ctx.SourceBuilder
+            .OpenRegionBlock("Fields And Properties").Comment
+            .OpenSummary()
+            .Append("Gets the wrapped ").Comment.SeeCRef(AttributeDataDisplayString).Append(" instance.")
+            .CloseBlock()
+            .Append("public ").Append(AttributeDataDisplayString).AppendLine(" Data => data;")
+            .Append("private readonly ").Append(ctx.Model.ConstructorArgumentAccessorTypeName).AppendLine(" _constructor = new(data, isTypeMatch);")
+            .Append("private static readonly global::System.Collections.Immutable.ImmutableArray<string> _propertyNames =")
+            .OpenCollectionExprBlock();
+
+        if(ctx.Model.MappedProperties.Count > 0)
+        {
+            _ = ctx.SourceBuilder.OpenRegionBlock("Mapped Properties");
+
+            for(var i = 0; i < ctx.Model.MappedProperties.Count; i++)
+            {
+                ctx.ThrowIfCancellationRequested();
+
+                var property = ctx.Model.MappedProperties[i];
+
+                if(i > 0)
+                    ctx.SourceBuilder.Append(',').AppendLineCore();
+
+                ctx.SourceBuilder.Append("nameof(").Append(property.Name).AppendCore(')');
+            }
+
+            if(ctx.Model.UnmappedProperties.Count > 0)
+                ctx.SourceBuilder.Append(',').AppendLineCore();
+
+            ctx.SourceBuilder.CloseBlockCore();
+        }
+
+        if(ctx.Model.UnmappedProperties.Count > 0)
+        {
+            _ = ctx.SourceBuilder.OpenRegionBlock("Unmapped Properties");
+
+            for(var i = 0; i < ctx.Model.UnmappedProperties.Count; i++)
+            {
+                ctx.ThrowIfCancellationRequested();
+
+                var property = ctx.Model.UnmappedProperties[i];
+
+                if(i > 0)
+                    ctx.SourceBuilder.Append(',').AppendLineCore();
+
+                ctx.SourceBuilder.Append("nameof(").Append(property.Name).AppendCore(')');
+            }
+
+            ctx.SourceBuilder.CloseBlockCore();
+        }
+
+        _ = ctx.SourceBuilder
+            .CloseBlock()
+            .AppendLine(';')
+            .Append("private static readonly global::System.Collections.Immutable.ImmutableHashSet<").Append(ctx.Model.PropertyIdTypeName).Append("> _settableProperties =").OpenCollectionExprBlock();
+
+        var settablePropertiesCount = 0;
+        appendSettablePropertyNames(in ctx, ctx.Model.MappedProperties);
+        appendSettablePropertyNames(in ctx, ctx.Model.UnmappedProperties);
+
+        ctx.SourceBuilder
+            .CloseBlock()
+            .Append(';')
+            .CloseBlockCore();
+
+        void appendSettablePropertyNames(in SourceBuildingContext ctx, IList<PropertyModel> properties)
+        {
+            ctx.ThrowIfCancellationRequested();
+
+            foreach(var property in properties)
+            {
+                ctx.ThrowIfCancellationRequested();
+
+                if(property.HasSetter)
+                {
+                    if(settablePropertiesCount > 0)
+                        ctx.SourceBuilder.Append(',').AppendLineCore();
+
+                    ctx.SourceBuilder.Append(ctx.Model.PropertyIdTypeName).Append(".").AppendCore(property.Name);
+
+                    settablePropertiesCount++;
+                }
+            }
+        }
+    }
+    private static void AppendPropertyAccessorGeneralTryGet(in SourceBuildingContext ctx)
+    {
+        ctx.ThrowIfCancellationRequested();
+        ctx.SourceBuilder
+            .OpenRegionBlock("General TryGet")
+.Append(
+"""
+/// <summary>
+        /// Attempts to get the value of a property (reference type) as set in
+        /// named arguments or mapped from a constructor parameter in <see cref="Data"/>.
+        /// </summary>
+        /// <typeparam name="T">
+        /// The type of the property to retrieve.
+        /// </typeparam>
+        /// <param name="id">
+        /// The id of the property to retrieve.
+        /// </param>
+        /// <param name="value">
+        /// The value of the property, if one could be determined; otherwise,
+        /// <see langword="null"/>.
+        /// </param>
+        /// <returns>
+        /// <see langword="true"/> if a value could be determined; otherwise,
+        /// <see langword="false"/>.
+        /// </returns>
+        public bool TryGetReferenceTypeValue<T>(
+""").Append(ctx.Model.PropertyIdTypeName).Append(
+"""
+ id, [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out T? value)
+            where T : class
+        {
+            if(!isTypeMatch)
+            {
+                value = null;
+                return false;
+            }
+
+            if(_settableProperties.Contains(id))
+            {
+                var name = _propertyNames[(int)id];
+
+                foreach(var kvp in data.NamedArguments)
+                {
+                    if(kvp.Key == name && kvp.Value.TryGetReferenceTypeValue(out value))
+                        return true;
+                }
+            }
+
+            return _constructor.TryGetReferenceTypeValue(id, out value);
+        }
+        /// <summary>
+        /// Attempts to get the value of a property (nullable reference type) as set in
+        /// named arguments or mapped from a constructor parameter in <see cref="Data"/>.
+        /// </summary>
+        /// <typeparam name="T">
+        /// The type of the property to retrieve.
+        /// </typeparam>
+        /// <param name="id">
+        /// The id of the property to retrieve.
+        /// </param>
+        /// <param name="value">
+        /// The value of the property, if one could be determined; otherwise,
+        /// <see langword="null"/>.
+        /// </param>
+        /// <returns>
+        /// <see langword="true"/> if a value could be determined; otherwise,
+        /// <see langword="false"/>.
+        /// </returns>
+        public bool TryGetNullableReferenceTypeValue<T>(
+""").Append(ctx.Model.PropertyIdTypeName).Append(
+"""
+ id, out T? value)
+            where T : class
+        {
+            if(!isTypeMatch)
+            {
+                value = null;
+                return false;
+            }
+
+            if(_settableProperties.Contains(id))
+            {
+                var name = _propertyNames[(int)id];
+
+                foreach(var kvp in data.NamedArguments)
+                {
+                    if(kvp.Key == name && kvp.Value.TryGetNullableReferenceTypeValue(out value))
+                        return true;
+                }
+            }
+
+            return _constructor.TryGetNullableReferenceTypeValue(id, out value);
+        }
+        /// <summary>
+        /// Attempts to get the value of a property (array of reference types) as set in
+        /// named arguments or mapped from a constructor parameter in <see cref="Data"/>.
+        /// </summary>
+        /// <typeparam name="T">
+        /// The type of the property to retrieve.
+        /// </typeparam>
+        /// <param name="id">
+        /// The id of the property to retrieve.
+        /// </param>
+        /// <param name="value">
+        /// The value of the property, if one could be determined; otherwise,
+        /// <see langword="null"/>.
+        /// </param>
+        /// <returns>
+        /// <see langword="true"/> if a value could be determined; otherwise,
+        /// <see langword="false"/>.
+        /// </returns>
+        public bool TryGetReferenceTypeArrayValue<T>(
+""").Append(ctx.Model.PropertyIdTypeName).Append(
+"""
+ id, [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::System.Collections.Immutable.ImmutableArray<T>? value)
+            where T : class
+        {
+            if(!isTypeMatch)
+            {
+                value = null;
+                return false;
+            }
+
+            if(_settableProperties.Contains(id))
+            {
+                var name = _propertyNames[(int)id];
+
+                foreach(var kvp in data.NamedArguments)
+                {
+                    if(kvp.Key == name && kvp.Value.TryGetReferenceTypeArrayValue(out value))
+                        return true;
+                }
+            }
+
+            return _constructor.TryGetReferenceTypeArrayValue(id, out value);
+        }
+        /// <summary>
+        /// Attempts to get the value of a property (array of nullable reference
+        /// types) as set in
+        /// named arguments or mapped from a constructor parameter in <see cref="Data"/>.
+        /// </summary>
+        /// <typeparam name="T">
+        /// The type of the property to retrieve.
+        /// </typeparam>
+        /// <param name="id">
+        /// The id of the property to retrieve.
+        /// </param>
+        /// <param name="value">
+        /// The value of the property, if one could be determined; otherwise,
+        /// <see langword="null"/>.
+        /// </param>
+        /// <returns>
+        /// <see langword="true"/> if a value could be determined; otherwise,
+        /// <see langword="false"/>.
+        /// </returns>
+        public bool TryGetNullableReferenceTypeArrayValue<T>(
+""").Append(ctx.Model.PropertyIdTypeName).Append(
+"""
+ id, [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::System.Collections.Immutable.ImmutableArray<T?>? value)
+            where T : class
+        {
+            if(!isTypeMatch)
+            {
+                value = null;
+                return false;
+            }
+
+            if(_settableProperties.Contains(id))
+            {
+                var name = _propertyNames[(int)id];
+
+                foreach(var kvp in data.NamedArguments)
+                {
+                    if(kvp.Key == name && kvp.Value.TryGetNullableReferenceTypeArrayValue(out value))
+                        return true;
+                }
+            }
+
+            return _constructor.TryGetNullableReferenceTypeArrayValue(id, out value);
+        }
+        /// <summary>
+        /// Attempts to get the value of a property (nullable array of nullable
+        /// reference types) as set in
+        /// named arguments or mapped from a constructor parameter in <see cref="Data"/>.
+        /// </summary>
+        /// <typeparam name="T">
+        /// The type of the property to retrieve.
+        /// </typeparam>
+        /// <param name="id">
+        /// The id of the property to retrieve.
+        /// </param>
+        /// <param name="value">
+        /// The value of the property, if one could be determined; otherwise,
+        /// <see langword="null"/>.
+        /// </param>
+        /// <returns>
+        /// <see langword="true"/> if a value could be determined; otherwise,
+        /// <see langword="false"/>.
+        /// </returns>
+        public bool TryGetNullableReferenceTypeNullableArrayValue<T>(
+""").Append(ctx.Model.PropertyIdTypeName).Append(
+"""
+ id, out global::System.Collections.Immutable.ImmutableArray<T?>? value)
+            where T : class
+        {
+            if(!isTypeMatch)
+            {
+                value = null;
+                return false;
+            }
+
+            if(_settableProperties.Contains(id))
+            {
+                var name = _propertyNames[(int)id];
+
+                foreach(var kvp in data.NamedArguments)
+                {
+                    if(kvp.Key == name && kvp.Value.TryGetNullableReferenceTypeNullableArrayValue(out value))
+                        return true;
+                }
+            }
+
+            return _constructor.TryGetNullableReferenceTypeNullableArrayValue(id, out value);
+        }
+        /// <summary>
+        /// Attempts to get the value of a property (nullable array of reference
+        /// types) as set in
+        /// named arguments or mapped from a constructor parameter in <see cref="Data"/>.
+        /// </summary>
+        /// <typeparam name="T">
+        /// The type of the property to retrieve.
+        /// </typeparam>
+        /// <param name="id">
+        /// The id of the property to retrieve.
+        /// </param>
+        /// <param name="value">
+        /// The value of the property, if one could be determined; otherwise,
+        /// <see langword="null"/>.
+        /// </param>
+        /// <returns>
+        /// <see langword="true"/> if a value could be determined; otherwise,
+        /// <see langword="false"/>.
+        /// </returns>
+        public bool TryGetReferenceTypeNullableArrayValue<T>(
+""").Append(ctx.Model.PropertyIdTypeName).Append(
+"""
+ id, out global::System.Collections.Immutable.ImmutableArray<T>? value)
+            where T : class
+        {
+            if(!isTypeMatch)
+            {
+                value = null;
+                return false;
+            }
+
+            if(_settableProperties.Contains(id))
+            {
+                var name = _propertyNames[(int)id];
+
+                foreach(var kvp in data.NamedArguments)
+                {
+                    if(kvp.Key == name && kvp.Value.TryGetReferenceTypeNullableArrayValue(out value))
+                        return true;
+                }
+            }
+
+            return _constructor.TryGetReferenceTypeNullableArrayValue(id, out value);
+        }
+        /// <summary>
+        /// Attempts to get the value of a property (Type) as set in
+        /// named arguments or mapped from a constructor parameter in <see cref="Data"/>.
+        /// </summary>
+        /// <param name="id">
+        /// The id of the property to retrieve.
+        /// </param>
+        /// <param name="value">
+        /// The value of the property, if one could be determined; otherwise,
+        /// <see langword="null"/>.
+        /// </param>
+        /// <returns>
+        /// <see langword="true"/> if a value could be determined; otherwise,
+        /// <see langword="false"/>.
+        /// </returns>
+        public bool TryGetTypeValue(
+""").Append(ctx.Model.PropertyIdTypeName).Append(
+"""
+ id, [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::Microsoft.CodeAnalysis.ITypeSymbol? value)
+        {
+            if(!isTypeMatch)
+            {
+                value = null;
+                return false;
+            }
+
+            if(_settableProperties.Contains(id))
+            {
+                var name = _propertyNames[(int)id];
+
+                foreach(var kvp in data.NamedArguments)
+                {
+                    if(kvp.Key == name && kvp.Value.TryGetTypeValue(out value))
+                        return true;
+                }
+            }
+
+            return _constructor.TryGetTypeValue(id, out value);
+        }
+        /// <summary>
+        /// Attempts to get the value of a property (nullable Type) as set in
+        /// named arguments or mapped from a constructor parameter in <see cref="Data"/>.
+        /// </summary>
+        /// <param name="id">
+        /// The id of the property to retrieve.
+        /// </param>
+        /// <param name="value">
+        /// The value of the property, if one could be determined; otherwise,
+        /// <see langword="null"/>.
+        /// </param>
+        /// <returns>
+        /// <see langword="true"/> if a value could be determined; otherwise,
+        /// <see langword="false"/>.
+        /// </returns>
+        public bool TryGetNullableTypeValue(
+""").Append(ctx.Model.PropertyIdTypeName).Append(
+"""
+ id, out global::Microsoft.CodeAnalysis.ITypeSymbol? value)
+        {
+            if(!isTypeMatch)
+            {
+                value = null;
+                return false;
+            }
+
+            if(_settableProperties.Contains(id))
+            {
+                var name = _propertyNames[(int)id];
+
+                foreach(var kvp in data.NamedArguments)
+                {
+                    if(kvp.Key == name && kvp.Value.TryGetNullableTypeValue(out value))
+                        return true;
+                }
+            }
+
+            return _constructor.TryGetNullableTypeValue(id, out value);
+        }
+        /// <summary>
+        /// Attempts to get the value of a property (array of Types) as set in
+        /// named arguments or mapped from a constructor parameter in <see cref="Data"/>.
+        /// </summary>
+        /// <param name="id">
+        /// The id of the property to retrieve.
+        /// </param>
+        /// <param name="value">
+        /// The value of the property, if one could be determined; otherwise,
+        /// <see langword="null"/>.
+        /// </param>
+        /// <returns>
+        /// <see langword="true"/> if a value could be determined; otherwise,
+        /// <see langword="false"/>.
+        /// </returns>
+        public bool TryGetTypeArrayValue(
+""").Append(ctx.Model.PropertyIdTypeName).Append(
+"""
+ id, [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::System.Collections.Immutable.ImmutableArray<global::Microsoft.CodeAnalysis.ITypeSymbol>? value)
+        {
+            if(!isTypeMatch)
+            {
+                value = null;
+                return false;
+            }
+
+            if(_settableProperties.Contains(id))
+            {
+                var name = _propertyNames[(int)id];
+
+                foreach(var kvp in data.NamedArguments)
+                {
+                    if(kvp.Key == name && kvp.Value.TryGetTypeArrayValue(out value))
+                        return true;
+                }
+            }
+
+            return _constructor.TryGetTypeArrayValue(id, out value);
+        }
+        /// <summary>
+        /// Attempts to get the value of a property (array of nullable Types) as set in
+        /// named arguments or mapped from a constructor parameter in <see cref="Data"/>.
+        /// </summary>
+        /// <param name="id">
+        /// The id of the property to retrieve.
+        /// </param>
+        /// <param name="value">
+        /// The value of the property, if one could be determined; otherwise,
+        /// <see langword="null"/>.
+        /// </param>
+        /// <returns>
+        /// <see langword="true"/> if a value could be determined; otherwise,
+        /// <see langword="false"/>.
+        /// </returns>
+        public bool TryGetNullableTypeArrayValue(
+""").Append(ctx.Model.PropertyIdTypeName).Append(
+"""
+ id, [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::System.Collections.Immutable.ImmutableArray<global::Microsoft.CodeAnalysis.ITypeSymbol?>? value)
+        {
+            if(!isTypeMatch)
+            {
+                value = null;
+                return false;
+            }
+
+            if(_settableProperties.Contains(id))
+            {
+                var name = _propertyNames[(int)id];
+
+                foreach(var kvp in data.NamedArguments)
+                {
+                    if(kvp.Key == name && kvp.Value.TryGetNullableTypeArrayValue(out value))
+                        return true;
+                }
+            }
+
+            return _constructor.TryGetNullableTypeArrayValue(id, out value);
+        }
+        /// <summary>
+        /// Attempts to get the value of a property (nullable array of nullable
+        /// Types) as set in
+        /// named arguments or mapped from a constructor parameter in <see cref="Data"/>.
+        /// </summary>
+        /// <param name="id">
+        /// The id of the property to retrieve.
+        /// </param>
+        /// <param name="value">
+        /// The value of the property, if one could be determined; otherwise,
+        /// <see langword="null"/>.
+        /// </param>
+        /// <returns>
+        /// <see langword="true"/> if a value could be determined; otherwise,
+        /// <see langword="false"/>.
+        /// </returns>
+        public bool TryGetNullableTypeNullableArrayValue(
+""").Append(ctx.Model.PropertyIdTypeName).Append(
+"""
+ id, out global::System.Collections.Immutable.ImmutableArray<global::Microsoft.CodeAnalysis.ITypeSymbol?>? value)
+        {
+            if(!isTypeMatch)
+            {
+                value = null;
+                return false;
+            }
+
+            if(_settableProperties.Contains(id))
+            {
+                var name = _propertyNames[(int)id];
+
+                foreach(var kvp in data.NamedArguments)
+                {
+                    if(kvp.Key == name && kvp.Value.TryGetNullableTypeNullableArrayValue(out value))
+                        return true;
+                }
+            }
+
+            return _constructor.TryGetNullableTypeNullableArrayValue(id, out value);
+        }
+        /// <summary>
+        /// Attempts to get the value of a property (nullable array of Types) as set in
+        /// named arguments or mapped from a constructor parameter in <see cref="Data"/>.
+        /// </summary>
+        /// <param name="id">
+        /// The id of the property to retrieve.
+        /// </param>
+        /// <param name="value">
+        /// The value of the property, if one could be determined; otherwise,
+        /// <see langword="null"/>.
+        /// </param>
+        /// <returns>
+        /// <see langword="true"/> if a value could be determined; otherwise,
+        /// <see langword="false"/>.
+        /// </returns>
+        public bool TryGetTypeNullableArrayValue(
+""").Append(ctx.Model.PropertyIdTypeName).Append(
+"""
+ id, out global::System.Collections.Immutable.ImmutableArray<global::Microsoft.CodeAnalysis.ITypeSymbol>? value)
+        {
+            if(!isTypeMatch)
+            {
+                value = null;
+                return false;
+            }
+
+            if(_settableProperties.Contains(id))
+            {
+                var name = _propertyNames[(int)id];
+
+                foreach(var kvp in data.NamedArguments)
+                {
+                    if(kvp.Key == name && kvp.Value.TryGetTypeNullableArrayValue(out value))
+                        return true;
+                }
+            }
+
+            return _constructor.TryGetTypeNullableArrayValue(id, out value);
+        }
+        /// <summary>
+        /// Attempts to get the value of a property (value type) as set in
+        /// named arguments or mapped from a constructor parameter in <see cref="Data"/>.
+        /// </summary>
+        /// <typeparam name="T">
+        /// The type of the property to retrieve.
+        /// </typeparam>
+        /// <param name="id">
+        /// The id of the property to retrieve.
+        /// </param>
+        /// <param name="value">
+        /// The value of the property, if one could be determined; otherwise,
+        /// <see langword="null"/>.
+        /// </param>
+        /// <returns>
+        /// <see langword="true"/> if a value could be determined; otherwise,
+        /// <see langword="false"/>.
+        /// </returns>
+        public bool TryGetValueTypeValue<T>(
+""").Append(ctx.Model.PropertyIdTypeName).Append(
+"""
+ id, [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out T? value)
+            where T : struct
+        {
+            if(!isTypeMatch)
+            {
+                value = null;
+                return false;
+            }
+
+            if(_settableProperties.Contains(id))
+            {
+                var name = _propertyNames[(int)id];
+
+                foreach(var kvp in data.NamedArguments)
+                {
+                    if(kvp.Key == name && kvp.Value.TryGetValueTypeValue(out value))
+                        return true;
+                }
+            }
+
+            return _constructor.TryGetValueTypeValue(id, out value);
+        }
+        /// <summary>
+        /// Attempts to get the value of a property (array of value types) as set in
+        /// named arguments or mapped from a constructor parameter in <see cref="Data"/>.
+        /// </summary>
+        /// <typeparam name="T">
+        /// The type of the property to retrieve.
+        /// </typeparam>
+        /// <param name="id">
+        /// The id of the property to retrieve.
+        /// </param>
+        /// <param name="value">
+        /// The value of the property, if one could be determined; otherwise,
+        /// <see langword="null"/>.
+        /// </param>
+        /// <returns>
+        /// <see langword="true"/> if a value could be determined; otherwise,
+        /// <see langword="false"/>.
+        /// </returns>
+        public bool TryGetValueTypeArrayValue<T>(
+""").Append(ctx.Model.PropertyIdTypeName).Append(
+"""
+ id, [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out global::System.Collections.Immutable.ImmutableArray<T>? value)
+            where T : struct
+        {
+            if(!isTypeMatch)
+            {
+                value = null;
+                return false;
+            }
+
+            if(_settableProperties.Contains(id))
+            {
+                var name = _propertyNames[(int)id];
+
+                foreach(var kvp in data.NamedArguments)
+                {
+                    if(kvp.Key == name && kvp.Value.TryGetValueTypeArrayValue(out value))
+                        return true;
+                }
+            }
+
+            return _constructor.TryGetValueTypeArrayValue(id, out value);
+        }
+        /// <summary>
+        /// Attempts to get the value of a property (nullable array of value
+        /// types) as set in
+        /// named arguments or mapped from a constructor parameter in <see cref="Data"/>.
+        /// </summary>
+        /// <typeparam name="T">
+        /// The type of the property to retrieve.
+        /// </typeparam>
+        /// <param name="id">
+        /// The id of the property to retrieve.
+        /// </param>
+        /// <param name="value">
+        /// The value of the property, if one could be determined; otherwise,
+        /// <see langword="null"/>.
+        /// </param>
+        /// <returns>
+        /// <see langword="true"/> if a value could be determined; otherwise,
+        /// <see langword="false"/>.
+        /// </returns>
+        public bool TryGetValueTypeNullableArrayValue<T>(
+""").Append(ctx.Model.PropertyIdTypeName).Append(
+"""
+ id, out global::System.Collections.Immutable.ImmutableArray<T>? value)
+            where T : struct
+        {
+            if(!isTypeMatch)
+            {
+                value = null;
+                return false;
+            }
+
+            if(_settableProperties.Contains(id))
+            {
+                var name = _propertyNames[(int)id];
+
+                foreach(var kvp in data.NamedArguments)
+                {
+                    if(kvp.Key == name && kvp.Value.TryGetValueTypeNullableArrayValue(out value))
+                        return true;
+                }
+            }
+
+            return _constructor.TryGetValueTypeNullableArrayValue(id, out value);
+        }
+""")
+            .CloseBlockCore();
+    }
+    private static void AppendPropertyAccessorSpecificTryGet(in SourceBuildingContext ctx)
+    {
+        ctx.ThrowIfCancellationRequested();
+
+        _ = ctx.SourceBuilder.OpenRegionBlock("Specific TryGet");
+
+        appendTryGet(in ctx, ctx.Model.MappedProperties);
+        appendTryGet(in ctx, ctx.Model.UnmappedProperties);
+
+        ctx.SourceBuilder.CloseBlockCore();
+
+        static void appendTryGet(in SourceBuildingContext ctx, IList<PropertyModel> properties)
+        {
+            foreach(var property in properties)
+            {
+                var hasSetter = property.HasSetter;
+                var hasMappings = property.Mappings.Count > 0;
+
+                ctx.SourceBuilder.Comment
+                    .OpenSummary()
+                    .Append("Attempts to retrieve the value for ").Comment.SeeCRef(property.Name).Append(" from <see cref=\"Data\"/>.")
+                    .CloseBlockCore();
+
+                if(!hasSetter && !hasMappings)
+                {
+                    ctx.SourceBuilder.Comment
+                        .OpenRemarks()
+                        .Append("Because setter or no constructor parameter mapping could be determined for ").Comment
+                        .SeeCRef(property.Name)
+                        .Append(", this method will always return <see langword=\"false\"/>. It is generated nonetheless to allow for new parameter mappings and setters to be non-breaking.")
+                        .CloseBlockCore();
+                }
+
+                _ = ctx.SourceBuilder.Comment
+                    .OpenParam("value")
+                    .Append("The value obtained for ").Comment.SeeCRef(property.Name).Append(", if one could be found in <see cref=\"Data\"/>; otherwise, <see langword=\"null\"/>.")
+                    .CloseBlock().Comment
+                    .OpenReturns()
+                    .Append("<see langword=\"true\"/> if a value for ").Comment.SeeCRef(property.Name).Append(" could be found in <see cref=\"Data\"/>; otherwise, <see langword=\"false\"/>.")
+                    .CloseBlock()
+                    .Append("public bool TryGet").Append(property.Name)
+                    .Append("([global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out ")
+                    .Append(property.Type.NullableDisplayString)
+                    .Append(" value)")
+                    .OpenBracesBlock();
+
+                if(!hasSetter && !hasMappings)
+                {
+                    ctx.SourceBuilder
+                        .AppendLine("value = null;")
+                        .Append("return false;").AppendLineCore();
+                } else
+                {
+
+                    ctx.SourceBuilder
+                        .Append("if(!isTypeMatch)")
+                        .OpenBracesBlock()
+                        .AppendLine("value = null;")
+                        .AppendLine("return false;")
+                        .CloseBlockCore();
+
+                    if(hasSetter)
+                    {
+                        ctx.SourceBuilder
+                            .Append("foreach(var kvp in data.NamedArguments)")
+                            .OpenBracesBlock()
+                                .Append("if(kvp.Key == nameof(").Append(property.Name)
+                                .Append(") && kvp.Value.TryGet").Append(property.Type.KindString)
+                                .AppendLine("Value(out value))")
+                                .Indent()
+                                    .Append("return true;")
+                                .Detent()
+                            .CloseBlockCore();
+                    }
+
+                    if(hasMappings)
+                    {
+                        ctx.SourceBuilder.Append("return _constructor.TryGet").Append(property.Name).Append("(out value);").AppendLineCore();
+                    } else
+                    {
+                        ctx.SourceBuilder
+                            .AppendLine("value = null;")
+                            .Append("return false;").AppendLineCore();
+                    }
+                }
+
+                ctx.SourceBuilder.CloseBlockCore();
+            }
+        }
     }
     #endregion
     #region Extensions
@@ -1264,6 +2082,8 @@ internal sealed partial class __TestAttribute__Attribute : Attribute
 
     [DefaultValue(42)]
     public Int32 __GetSetInt32Property__ { get; set; }
+
+    public Int32 __GetInt32Property__ { get; } = 0;
 
     public Type __GetSetTypeProperty__ { get; set; } = null!;
     public Type? __GetSetNrtTypeProperty__ { get; set; }
@@ -1442,6 +2262,8 @@ internal partial class __TestAttribute__Attribute
         public String? __GetSetNrtStringProperty__ { get; private set; }
 
         public Int32 __GetSetInt32Property__ { get; private set; }
+
+        public Int32 __GetInt32Property__ { get; } = 0;
 
         public ITypeSymbol __GetSetTypeProperty__ { get; private set; }
         public ITypeSymbol? __GetSetNrtTypeProperty__ { get; private set; }

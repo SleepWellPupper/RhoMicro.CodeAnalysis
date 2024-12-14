@@ -1,6 +1,6 @@
 <Project>
   <PropertyGroup>
-    <AutoIncrementedAssemblyRevision>1807</AutoIncrementedAssemblyRevision>
+    <AutoIncrementedAssemblyRevision>1857</AutoIncrementedAssemblyRevision>
   </PropertyGroup>
   <PropertyGroup Condition="$(MSBuildProjectName.EndsWith('.Tests'))">
     <IsTestProject>true</IsTestProject>

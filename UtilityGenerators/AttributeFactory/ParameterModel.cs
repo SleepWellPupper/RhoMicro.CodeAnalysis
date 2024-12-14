@@ -7,9 +7,8 @@ using Microsoft.CodeAnalysis;
 using RhoMicro.CodeAnalysis.Library.Models;
 internal sealed record ParameterModel(
     String Name,
-    String TypeDisplayString,
-    Boolean IsArray,
     Int32 Index,
+    AttributeParameterTypeModel Type,
     String? MappedProperty,
     String Pattern)
 {
@@ -29,9 +28,7 @@ internal sealed record ParameterModel(
             ? $"{{ Type: global::Microsoft.CodeAnalysis.IArrayTypeSymbol {{ ElementType: {getNonArrayPattern(elementType)} }} }}"
             : $"{{ Type: {getNonArrayPattern(parameter.Type)} }}";
         var name = parameter.Name;
-        var displayString = parameter.Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
-        var isArray = displayString is [.., '[', ']'];
-        var typeDisplayString = isArray ? displayString[..^2] : displayString;
+        var type = AttributeParameterTypeModel.Create(parameter.Type, in ctx);
         String? mappedProperty = null;
 
         foreach(var attribute in parameter.GetAttributes())
@@ -46,9 +43,8 @@ internal sealed record ParameterModel(
 
         var result = new ParameterModel(
             Name: name,
-            TypeDisplayString: typeDisplayString,
-            isArray,
             index,
+            type,
             MappedProperty: mappedProperty,
             Pattern: pattern);
 
