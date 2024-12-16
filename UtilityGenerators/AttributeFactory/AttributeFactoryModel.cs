@@ -85,6 +85,8 @@ internal sealed record AttributeFactoryModel(
         generateModelTypeAsStruct = GenerateFactoryAttribute.DefaultGenerateModelTypeAsStruct;
         extensionsTypeName = $"{target.Name}Extensions";
 
+        var model = attribute.GetGenerateFactoryAttributeModel();
+
         foreach(var (name, value) in attribute.NamedArguments)
         {
             ctx.ThrowIfCancellationRequested();

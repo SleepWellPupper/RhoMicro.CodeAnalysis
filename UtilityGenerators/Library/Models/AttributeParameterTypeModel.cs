@@ -162,9 +162,9 @@ internal sealed record AttributeParameterTypeModel(AttributeParameterTypeKind Ki
 
         var kindString = kind.ToStringFast();
         var nullableDisplayString =
-            kind.HasFlagFast(AttributeParameterTypeKind.NullableArray)
-            || !kind.HasFlagFast(AttributeParameterTypeKind.Array)
-            && kind.HasFlagFast(AttributeParameterTypeKind.Nullable)
+            kind.HasFlagsFast(AttributeParameterTypeKind.NullableArray)
+            || !kind.HasFlagsFast(AttributeParameterTypeKind.Array)
+            && kind.HasFlagsFast(AttributeParameterTypeKind.Nullable)
             ? displayString
             : $"{displayString}?";
 

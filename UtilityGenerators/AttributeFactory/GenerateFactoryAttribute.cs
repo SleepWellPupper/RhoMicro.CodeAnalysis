@@ -41,28 +41,33 @@ internal sealed partial class GenerateFactoryAttribute : Attribute
     /// access to individual target attribute properties from <see
     /// cref="AttributeData"/> instance.
     /// </summary>
+    [DefaultValue(DefaultPropertyAccessorTypeName)]
     public String PropertyAccessorTypeName { get; set; } = DefaultPropertyAccessorTypeName;
     /// <summary>
     /// The name of the generated type providing strongly typed access to
     /// individual target attribute properties mapped from constructor
     /// parameters from <see cref="AttributeData"/> instances.
     /// </summary>
+    [DefaultValue(DefaultConstructorArgumentAccessorTypeName)]
     public String ConstructorArgumentAccessorTypeName { get; set; } = DefaultConstructorArgumentAccessorTypeName;
     /// <summary>
     /// Gets the name of the generated type providing strongly typed access to
     /// target attribute property ids.
     /// </summary>
+    [DefaultValue(DefaultPropertyIdTypeName)]
     public String PropertyIdTypeName { get; set; } = DefaultPropertyIdTypeName;
     /// <summary>
     /// Gets the name of the generated type providing strongly typed access
     /// to all target attribute properties.
     /// </summary>
+    [DefaultValue(DefaultModelTypeName)]
     public String ModelTypeName { get; set; } = DefaultModelTypeName;
     /// <summary>
     /// Gets the name of the generated type providing extensions for attribute
     /// usage. If set to <see langword="null"/>, a name will be generated based
     /// using the name of the target attribute.
     /// </summary>
+    [DefaultValue((String?)null)]
     public String? ExtensionsTypeName { get; set; }
     /// <summary>
     /// Gets or sets a value indicating whether to generate the model type as a
@@ -71,5 +76,6 @@ internal sealed partial class GenerateFactoryAttribute : Attribute
     /// Otherwise, a <see langword="sealed"/> <see langword="class"/> will be
     /// generated.
     /// </summary>
+    [DefaultValue(DefaultGenerateModelTypeAsStruct)]
     public Boolean GenerateModelTypeAsStruct { get; set; } = DefaultGenerateModelTypeAsStruct;
 }

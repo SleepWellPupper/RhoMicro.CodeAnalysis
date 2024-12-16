@@ -20,6 +20,13 @@ internal sealed partial class DefaultValueAttribute : Attribute
     /// <param name="defaultValue">
     /// The default value to use for the targeted property.
     /// </param>
+    public DefaultValueAttribute(Boolean defaultValue) => DefaultValue = defaultValue;
+    /// <summary>
+    /// Initializes a new instance.
+    /// </summary>
+    /// <param name="defaultValue">
+    /// The default value to use for the targeted property.
+    /// </param>
     public DefaultValueAttribute(Single defaultValue) => DefaultValue = defaultValue;
     /// <summary>
     /// Initializes a new instance.
@@ -90,14 +97,6 @@ internal sealed partial class DefaultValueAttribute : Attribute
     /// <param name="defaultValue">
     /// The default value to use for the targeted property.
     /// </param>
-    [OverloadResolutionPriority(1)]
-    public DefaultValueAttribute(Object? defaultValue) => DefaultValue = defaultValue;
-    /// <summary>
-    /// Initializes a new instance.
-    /// </summary>
-    /// <param name="defaultValue">
-    /// The default value to use for the targeted property.
-    /// </param>
     public DefaultValueAttribute(Single[]? defaultValue) => DefaultValue = defaultValue;
     /// <summary>
     /// Initializes a new instance.
@@ -162,6 +161,13 @@ internal sealed partial class DefaultValueAttribute : Attribute
     /// The default value to use for the targeted property.
     /// </param>
     public DefaultValueAttribute(UInt64[]? defaultValue) => DefaultValue = defaultValue;
+    /// <summary>
+    /// Initializes a new instance.
+    /// </summary>
+    /// <param name="defaultValue">
+    /// The default value to use for the targeted property.
+    /// </param>
+    public DefaultValueAttribute(String? defaultValue) => DefaultValue = defaultValue;
 
     /// <summary>
     /// Gets the default value to use for the targeted property.

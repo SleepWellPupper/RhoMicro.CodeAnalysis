@@ -34,7 +34,17 @@ internal enum AttributeParameterTypeKind
 internal static class AttributeArgumentTypeKindExtensions
 {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Boolean HasFlagFast(this AttributeParameterTypeKind value, AttributeParameterTypeKind flag) => ( value & flag ) == flag;
+    public static Boolean HasFlagsFast(this AttributeParameterTypeKind value, params ReadOnlySpan<AttributeParameterTypeKind> flags)
+    {
+        foreach(var flag in flags)
+        {
+            if(( value & flag ) == flag)
+                return true;
+        }
+
+        return false;
+    }
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static String ToStringFast(this AttributeParameterTypeKind value) => value switch
     {

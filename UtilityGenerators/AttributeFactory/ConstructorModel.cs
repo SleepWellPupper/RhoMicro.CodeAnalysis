@@ -62,7 +62,7 @@ internal sealed record ConstructorModel(
 
             _ = ctx.SourceBuilder.Comment.SeeCRef(param.Type.ElementDisplayString);
 
-            if(param.Type.Kind.HasFlagFast(AttributeParameterTypeKind.Array))
+            if(param.Type.Kind.HasFlagsFast(AttributeParameterTypeKind.Array))
                 ctx.SourceBuilder.AppendCore("[]");
 
             ctx.SourceBuilder.AppendCore(' ');
@@ -94,7 +94,7 @@ internal sealed record ConstructorModel(
 
             _ = ctx.SourceBuilder.Append(param.Type.ElementDisplayString);
 
-            if(param.Type.Kind.HasFlagFast(AttributeParameterTypeKind.Array))
+            if(param.Type.Kind.HasFlagsFast(AttributeParameterTypeKind.Array))
                 ctx.SourceBuilder.AppendCore("[]");
 
             ctx.SourceBuilder.AppendCore(' ');

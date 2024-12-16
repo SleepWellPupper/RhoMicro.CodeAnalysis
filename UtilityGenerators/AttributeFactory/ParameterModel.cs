@@ -53,6 +53,8 @@ internal sealed record ParameterModel(
         static String getNonArrayPattern(ITypeSymbol type) =>
             type switch
             {
+                { SpecialType: SpecialType.System_Boolean } =>
+                    "{ SpecialType: global::Microsoft.CodeAnalysis.SpecialType.System_Boolean }",
                 { SpecialType: SpecialType.System_String } =>
                     "{ SpecialType: global::Microsoft.CodeAnalysis.SpecialType.System_String }",
                 { SpecialType: SpecialType.System_Single } =>
