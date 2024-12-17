@@ -5,16 +5,18 @@ using System;
 using Microsoft.CodeAnalysis;
 
 using RhoMicro.CodeAnalysis.Library.Models;
+using RhoMicro.CodeAnalysis.Library.Models.Collections;
+
 /// <summary>
 /// 
 /// </summary>
 /// <param name="Index"></param>
 /// <param name="Parameters"></param>
 /// <param name="Mappings">Maps property names onto parameter mappings related to this constructor.</param>
-internal sealed record ConstructorModel(
+internal readonly record struct ConstructorModel(
     Int32 Index,
-    IList<ParameterModel> Parameters,
-    IDictionary<String, ParameterMapping?> Mappings)
+    EquatableList<ParameterModel> Parameters,
+    LazyEquatableDictionary<String, ParameterMapping?> Mappings)
 {
     public static ConstructorModel Create(
         IMethodSymbol ctor,
@@ -23,8 +25,10 @@ internal sealed record ConstructorModel(
     {
         ctx.ThrowIfCancellationRequested();
 
-        var parameters = ctx.CollectionFactory.CreateList<ParameterModel>();
-        var mappings = ctx.CollectionFactory.CreateLazyDictionary<String, ParameterMapping?>();
+        var mutabilityContext = new MutabilityContext();
+
+        var parameters = ctx.CollectionFactory.CreateList<ParameterModel>(mutabilityContext);
+        var mappings = ctx.CollectionFactory.CreateLazyDictionary<String, ParameterMapping?>(mutabilityContext);
 
         for(var parameterIndex = 0; parameterIndex < ctor.Parameters.Length; parameterIndex++)
         {
@@ -39,6 +43,8 @@ internal sealed record ConstructorModel(
 
             parameters.Add(model);
         }
+
+        mutabilityContext.SetImmutable();
 
         var result = new ConstructorModel(index, parameters, mappings);
 

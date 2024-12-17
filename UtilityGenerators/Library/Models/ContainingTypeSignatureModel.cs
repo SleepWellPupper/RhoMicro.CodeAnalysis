@@ -4,8 +4,13 @@ using System.Collections.Generic;
 
 using Microsoft.CodeAnalysis;
 
+using RhoMicro.CodeAnalysis.Library.Models.Collections;
+
 [IncludeFile]
-internal readonly record struct ContainingTypeSignatureModel(PartialTypeKindModel Kind, String Name, IList<String> TypeArguments)
+internal readonly record struct ContainingTypeSignatureModel(
+    PartialTypeKindModel Kind,
+    String Name,
+    EquatableList<String> TypeArguments)
 {
     public static ContainingTypeSignatureModel Create(INamedTypeSymbol containingType, in ModelCreationContext ctx)
     {
@@ -23,6 +28,7 @@ internal readonly record struct ContainingTypeSignatureModel(PartialTypeKindMode
 
         var kind = PartialTypeKindModel.Create(containingType, in ctx);
 
+        typeArguments.MutabilityContext.SetImmutable();
         var result = new ContainingTypeSignatureModel(kind, name, typeArguments);
 
         return result;

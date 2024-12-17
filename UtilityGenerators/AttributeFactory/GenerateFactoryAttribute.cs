@@ -15,6 +15,18 @@ using Microsoft.CodeAnalysis;
 #endif
 internal sealed partial class GenerateFactoryAttribute : Attribute
 {
+#if GENERATOR
+    public partial record Model
+    {
+        [InitializationMethod]
+        private void Init(INamedTypeSymbol target, CancellationToken ct)
+        {
+            ct.ThrowIfCancellationRequested();
+
+            ExtensionsTypeName ??= $"{target.Name}Extensions";
+        }
+    }
+#endif
     /// <summary>
     /// The default value for <see cref="PropertyAccessorTypeName"/>.
     /// </summary>

@@ -14,14 +14,6 @@ internal sealed record ParameterModel(
 {
     public static ParameterModel Create(IParameterSymbol parameter, Int32 index, in ModelCreationContext ctx)
     {
-        // we only support explicit mapping for now
-        // ctor param mapping resolution:
-        // - attribute (duplicates: last declared wins)
-        // TODO later (maybe)
-        // - assignment to prop in ctor
-        // - call to this(): transitive map => memoize to avoid SOE
-        // - constant value assignment to property
-
         ctx.ThrowIfCancellationRequested();
 
         var pattern = parameter.Type is IArrayTypeSymbol { ElementType: { } elementType }
@@ -29,17 +21,7 @@ internal sealed record ParameterModel(
             : $"{{ Type: {getNonArrayPattern(parameter.Type)} }}";
         var name = parameter.Name;
         var type = AttributeParameterTypeModel.Create(parameter.Type, in ctx);
-        String? mappedProperty = null;
-
-        foreach(var attribute in parameter.GetAttributes())
-        {
-            ctx.ThrowIfCancellationRequested();
-
-            if(attribute.GetMapToPropertyAttributeConstructorArgumentAccessor().TryGetPropertyName(out var propertyName))
-            {
-                mappedProperty = propertyName;
-            }
-        }
+        var mappedProperty = parameter.GetAttributes().OfMapToPropertyAttribute(ctx.CancellationToken).FirstOrDefault().PropertyName;
 
         var result = new ParameterModel(
             Name: name,

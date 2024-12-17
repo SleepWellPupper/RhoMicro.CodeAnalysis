@@ -3,43 +3,50 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 [IncludeFile]
-internal sealed record EquatableDictionary<TKey, TValue> : IDictionary<TKey, TValue>
+internal sealed record EquatableDictionary<TKey, TValue> : EquatableCollection<KeyValuePair<TKey, TValue>, IDictionary<TKey, TValue>>, IDictionary<TKey, TValue>
 {
-    public EquatableDictionary(IDictionary<TKey, TValue> dictionary, IEqualityComparer<IDictionary<TKey, TValue>> comparer)
+    public EquatableDictionary(
+        IDictionary<TKey, TValue> collection,
+        IEqualityComparer<IDictionary<TKey, TValue>> comparer,
+        EquatableCollectionFactory collectionFactory,
+        MutabilityContext mutabilityContext) 
+        : base(collection, comparer, collectionFactory, mutabilityContext)
     {
-        _dictionary = dictionary;
-        _comparer = comparer;
+        Keys = new MutableCollection<TKey>(collection.Keys, mutabilityContext);
+        Values = new MutableCollection<TValue>(collection.Values, mutabilityContext);
     }
 
-    private readonly IDictionary<TKey, TValue> _dictionary;
-    private readonly IEqualityComparer<IDictionary<TKey, TValue>> _comparer;
+    public Boolean Equals(EquatableDictionary<TKey, TValue> other) => base.Equals(other);
+    public override Int32 GetHashCode() => base.GetHashCode();
 
-    public Boolean Equals(EquatableDictionary<TKey, TValue> other) => _comparer.Equals(_dictionary, other._dictionary);
-    public override Int32 GetHashCode() => _comparer.GetHashCode(_dictionary);
+    public void Add(TKey key, TValue value)
+    {
+        MutabilityContext.ThrowIfReadOnly();
+        Collection.Add(key, value);
+    }
 
-    public void Add(TKey key, TValue value) => _dictionary.Add(key, value);
-    public Boolean ContainsKey(TKey key) => _dictionary.ContainsKey(key);
-    public Boolean Remove(TKey key) => _dictionary.Remove(key);
-    public Boolean TryGetValue(TKey key, out TValue value) => _dictionary.TryGetValue(key, out value);
+    public Boolean ContainsKey(TKey key) => Collection.ContainsKey(key);
+    public Boolean Remove(TKey key)
+    {
+        MutabilityContext.ThrowIfReadOnly();
+        return Collection.Remove(key);
+    }
 
-    public TValue this[TKey key] { get => _dictionary[key]; set => _dictionary[key] = value; }
+    public Boolean TryGetValue(TKey key, out TValue value) => Collection.TryGetValue(key, out value);
 
-    public ICollection<TKey> Keys => _dictionary.Keys;
+    public TValue this[TKey key]
+    {
+        get => Collection[key];
+        set
+        {
+            MutabilityContext.ThrowIfReadOnly();
+            Collection[key] = value;
+        }
+    }
 
-    public ICollection<TValue> Values => _dictionary.Values;
-
-    public void Add(KeyValuePair<TKey, TValue> item) => _dictionary.Add(item);
-    public void Clear() => _dictionary.Clear();
-    public Boolean Contains(KeyValuePair<TKey, TValue> item) => _dictionary.Contains(item);
-    public void CopyTo(KeyValuePair<TKey, TValue>[] array, Int32 arrayIndex) => _dictionary.CopyTo(array, arrayIndex);
-    public Boolean Remove(KeyValuePair<TKey, TValue> item) => _dictionary.Remove(item);
-
-    public Int32 Count => _dictionary.Count;
-
-    public Boolean IsReadOnly => _dictionary.IsReadOnly;
-
-    public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator() => _dictionary.GetEnumerator();
-    IEnumerator IEnumerable.GetEnumerator() => ( (IEnumerable)_dictionary ).GetEnumerator();
+    public ICollection<TKey> Keys { get; }
+    public ICollection<TValue> Values { get; }
 }

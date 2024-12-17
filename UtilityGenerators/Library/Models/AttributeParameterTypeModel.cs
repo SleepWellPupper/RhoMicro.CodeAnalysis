@@ -5,7 +5,13 @@ using System.Text;
 
 using Microsoft.CodeAnalysis;
 
-internal sealed record AttributeParameterTypeModel(AttributeParameterTypeKind Kind, String KindString, String DisplayString, String ElementDisplayString, String NullableDisplayString)
+[IncludeFile]
+internal sealed record AttributeParameterTypeModel(
+    AttributeParameterTypeKind Kind,
+    String KindString,
+    String DisplayString,
+    String ElementDisplayString,
+    String NullableDisplayString)
 {
     private const String _typeSymbolDisplayString = "global::Microsoft.CodeAnalysis.ITypeSymbol";
     private const String _nullableTypeSymbolDisplayString = "global::Microsoft.CodeAnalysis.ITypeSymbol?";

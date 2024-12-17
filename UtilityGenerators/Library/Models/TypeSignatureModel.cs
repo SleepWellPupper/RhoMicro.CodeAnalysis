@@ -5,15 +5,16 @@ using System.Text;
 
 using Microsoft.CodeAnalysis;
 
+using RhoMicro.CodeAnalysis.Library.Models.Collections;
 using RhoMicro.CodeAnalysis.Library.Text;
 
 [IncludeFile]
 internal sealed record TypeSignatureModel(
-    IList<String> NamespaceParts,
-    IList<ContainingTypeSignatureModel> ContainingTypes,
+    EquatableList<String> NamespaceParts,
+    EquatableList<ContainingTypeSignatureModel> ContainingTypes,
     PartialTypeKindModel Kind,
     String Name,
-    IList<String> TypeArguments)
+    EquatableList<String> TypeArguments)
 {
     private readonly record struct AppendTokenInfo(String SeparatorToken, String OpenToken, String ArgumentSeparatorToken, String CloseToken, Boolean SeparateParts);
     public static TypeSignatureModel Create(INamedTypeSymbol type, in ModelCreationContext ctx)
@@ -35,12 +36,16 @@ internal sealed record TypeSignatureModel(
         var kind = PartialTypeKindModel.Create(type, in ctx);
         var name = type.Name;
 
+        namespaceParts.MutabilityContext.SetImmutable();
+        containingTypes.MutabilityContext.SetImmutable();
+        typeArguments.MutabilityContext.SetImmutable();
+
         var result = new TypeSignatureModel(namespaceParts, containingTypes, kind, name, typeArguments);
 
         return result;
     }
 
-    private static void AddNamespaceParts(INamespaceSymbol? @namespace, IList<String> parts, in ModelCreationContext ctx)
+    private static void AddNamespaceParts(INamespaceSymbol? @namespace, EquatableList<String> parts, in ModelCreationContext ctx)
     {
         ctx.ThrowIfCancellationRequested();
 
@@ -51,7 +56,7 @@ internal sealed record TypeSignatureModel(
 
         parts.Add(@namespace.Name);
     }
-    private static void AddContainingTypes(INamedTypeSymbol? containingType, IList<ContainingTypeSignatureModel> containingTypes, in ModelCreationContext ctx)
+    private static void AddContainingTypes(INamedTypeSymbol? containingType, EquatableList<ContainingTypeSignatureModel> containingTypes, in ModelCreationContext ctx)
     {
         ctx.ThrowIfCancellationRequested();
 
@@ -103,6 +108,10 @@ internal sealed record TypeSignatureModel(
     {
         AppendNamespace(resultBuilder, in tokenInfo, ct);
         AppendContainingTypes(resultBuilder, in tokenInfo, ct);
+        
+        if(ContainingTypes.Count > 0 || NamespaceParts.Count > 0)
+            _ = resultBuilder.Append(tokenInfo.SeparatorToken);
+        
         AppendName(resultBuilder, Name, ct);
         AppendTypeArguments(resultBuilder, TypeArguments, in tokenInfo, ct);
     }
@@ -158,7 +167,7 @@ internal sealed record TypeSignatureModel(
 
         _ = resultBuilder.Append(name);
     }
-    private static void AppendTypeArguments(StringBuilder resultBuilder, IList<String> typeArguments, in AppendTokenInfo tokenInfo, CancellationToken ct)
+    private static void AppendTypeArguments(StringBuilder resultBuilder, EquatableList<String> typeArguments, in AppendTokenInfo tokenInfo, CancellationToken ct)
     {
         ct.ThrowIfCancellationRequested();
 
@@ -323,7 +332,7 @@ internal sealed record TypeSignatureModel(
             _ = hintNameBuilder.Append('_');
         }
     }
-    private static void AppendTypeArguments(StringBuilder hintNameBuilder, StringBuilder displayStringBuilder, IndentedStringBuilder sourceBuilder, IList<String> typeArguments, CancellationToken ct)
+    private static void AppendTypeArguments(StringBuilder hintNameBuilder, StringBuilder displayStringBuilder, IndentedStringBuilder sourceBuilder, EquatableList<String> typeArguments, CancellationToken ct)
     {
         ct.ThrowIfCancellationRequested();
 

@@ -3,64 +3,81 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Net.NetworkInformation;
 
 [IncludeFile]
-internal sealed record LazyEquatableDictionary<TKey, TState, TValue> : IDictionary<TKey, TValue>
+internal sealed record LazyEquatableDictionary<TKey, TValue> : LazyEquatableDictionary<TKey, TValue, LazyEquatableDictionary<TKey, TValue>>
 {
     public LazyEquatableDictionary(
-        IDictionary<TKey, TValue> dictionary,
+        IDictionary<TKey, TValue> collection,
         IEqualityComparer<IDictionary<TKey, TValue>> comparer,
+        Func<TKey, LazyEquatableDictionary<TKey, TValue>, TValue> factory,
+        EquatableCollectionFactory collectionFactory,
+        MutabilityContext mutabilityContext)
+        : base(collection, comparer, factory, null!, collectionFactory, mutabilityContext)
+        => State = this;
+
+    public Boolean Equals(LazyEquatableDictionary<TKey, TValue> other) => base.Equals(other);
+    public override Int32 GetHashCode() => base.GetHashCode();
+}
+internal record LazyEquatableDictionary<TKey, TValue, TState> : EquatableCollection<KeyValuePair<TKey, TValue>, IDictionary<TKey, TValue>>, IDictionary<TKey, TValue>
+{
+    public LazyEquatableDictionary(
+        IDictionary<TKey, TValue> collection,
+        IEqualityComparer<IDictionary<TKey, TValue>> comparer,
+        Func<TKey, TState, TValue> factory,
         TState state,
-        Func<TKey, TState, TValue> factory)
+        EquatableCollectionFactory collectionFactory,
+        MutabilityContext mutabilityContext)
+        : base(collection, comparer, collectionFactory, mutabilityContext)
     {
-        _factory = factory;
-        _dictionary = dictionary;
-        _comparer = comparer;
-        _state = state;
+        Factory = factory;
+        State = state;
+        Keys = new MutableCollection<TKey>(collection.Keys, mutabilityContext);
+        Values = new MutableCollection<TValue>(collection.Values, mutabilityContext);
     }
 
-    private readonly Func<TKey, TState, TValue> _factory;
-    private readonly TState _state;
-    private readonly IDictionary<TKey, TValue> _dictionary;
-    private readonly IEqualityComparer<IDictionary<TKey, TValue>> _comparer;
+    public Func<TKey, TState, TValue> Factory { get; }
+    public TState State { get; protected init; }
 
-    public Boolean Equals(LazyEquatableDictionary<TKey, TState, TValue> other) => _comparer.Equals(_dictionary, other._dictionary);
-    public override Int32 GetHashCode() => _comparer.GetHashCode(_dictionary);
+    public virtual Boolean Equals(LazyEquatableDictionary<TKey, TValue, TState> other) => base.Equals(other);
+    public override Int32 GetHashCode() => base.GetHashCode();
 
-    public void Add(TKey key, TValue value) => _dictionary.Add(key, value);
-    public Boolean ContainsKey(TKey key) => true;
-    public Boolean Remove(TKey key) => _dictionary.Remove(key);
-    public Boolean TryGetValue(TKey key, out TValue value)
+    public void Add(TKey key, TValue value)
     {
-        value = this[key];
-        return true;
+        MutabilityContext.ThrowIfReadOnly();
+        Collection.Add(key, value);
     }
+
+    public Boolean ContainsKey(TKey key) => Collection.ContainsKey(key);
+    public Boolean Remove(TKey key)
+    {
+        MutabilityContext.ThrowIfReadOnly();
+        return Collection.Remove(key);
+    }
+
+    public Boolean TryGetValue(TKey key, out TValue value) => Collection.TryGetValue(key, out value);
 
     public TValue this[TKey key]
     {
         get
         {
-            if(!_dictionary.TryGetValue(key, out var value))
-                _dictionary[key] = value = _factory.Invoke(key, _state);
+            if(!Collection.TryGetValue(key, out var value))
+            {
+                MutabilityContext.ThrowIfReadOnly();
+                Collection[key] = value = Factory.Invoke(key, State);
+            }
+
             return value;
         }
-        set => _dictionary[key] = value;
+        set
+        {
+            MutabilityContext.ThrowIfReadOnly();
+            Collection[key] = value;
+        }
     }
 
-    public ICollection<TKey> Keys => _dictionary.Keys;
+    public ICollection<TKey> Keys { get; }
 
-    public ICollection<TValue> Values => _dictionary.Values;
-
-    public void Add(KeyValuePair<TKey, TValue> item) => _dictionary.Add(item);
-    public void Clear() => _dictionary.Clear();
-    public Boolean Contains(KeyValuePair<TKey, TValue> item) => _dictionary.Contains(item);
-    public void CopyTo(KeyValuePair<TKey, TValue>[] array, Int32 arrayIndex) => _dictionary.CopyTo(array, arrayIndex);
-    public Boolean Remove(KeyValuePair<TKey, TValue> item) => _dictionary.Remove(item);
-
-    public Int32 Count => _dictionary.Count;
-
-    public Boolean IsReadOnly => _dictionary.IsReadOnly;
-
-    public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator() => _dictionary.GetEnumerator();
-    IEnumerator IEnumerable.GetEnumerator() => ( (IEnumerable)_dictionary ).GetEnumerator();
+    public ICollection<TValue> Values { get; }
 }

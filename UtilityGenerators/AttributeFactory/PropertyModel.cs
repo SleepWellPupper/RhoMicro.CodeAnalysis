@@ -6,15 +6,16 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 
 using RhoMicro.CodeAnalysis.Library.Models;
+using RhoMicro.CodeAnalysis.Library.Models.Collections;
 
 internal sealed record PropertyModel(
     String Name,
     String? DefaultValueExpression,
     AttributeParameterTypeModel Type,
     Boolean HasSetter,
-    IList<ParameterMapping> Mappings)
+    EquatableList<ParameterMapping> Mappings)
 {
-    public static PropertyModel Create(IPropertySymbol property, IDictionary<String, IList<ParameterMapping>> propertyMappings, in ModelCreationContext ctx)
+    public static PropertyModel Create(IPropertySymbol property, LazyEquatableDictionary<String, EquatableList<ParameterMapping>> propertyMappings, in ModelCreationContext ctx)
     {
         ctx.ThrowIfCancellationRequested();
 
@@ -34,6 +35,9 @@ internal sealed record PropertyModel(
                 defaultValueExpression = defaultValue.ToCSharpString();
             }
         }
+
+        // we do not set mappings list to immutable here, as we do not own it;
+        // it is linked to its containing dictionary and managed by our caller
 
         var result = new PropertyModel(
             Name: name,

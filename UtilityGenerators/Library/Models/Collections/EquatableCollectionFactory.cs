@@ -1,6 +1,7 @@
 ﻿namespace RhoMicro.CodeAnalysis.Library.Models.Collections;
 
 using System.Collections.Generic;
+using System.Net.NetworkInformation;
 
 [NonEquatable]
 [IncludeFile]
@@ -8,61 +9,85 @@ internal sealed partial class EquatableCollectionFactory(EqualityComparerFactory
 {
     public static EquatableCollectionFactory Default { get; } = new(EqualityComparerFactory.Default);
 
-    public ISet<T> CreateSet<T>()
+    public EqualityComparerFactory ComparerFactory { get; } = comparerFactory;
+
+    public EquatableSet<T> CreateSet<T>(MutabilityContext? mutabilityContext = null)
     {
-        var elementComparer = comparerFactory.CreateEqualityComparer<T>();
+        var elementComparer = ComparerFactory.CreateEqualityComparer<T>();
         var set = new HashSet<T>(elementComparer);
         var comparer = new SetEqualityComparer<T>(elementComparer);
-        var result = new EquatableSet<T>(set, comparer);
+        mutabilityContext ??= new MutabilityContext();
+        var result = new EquatableSet<T>(set, comparer, this, mutabilityContext);
 
         return result;
     }
 
-    public IList<T> CreateList<T>()
+    public EquatableList<T> CreateList<T>(MutabilityContext? mutabilityContext = null)
     {
-        var elementComparer = comparerFactory.CreateEqualityComparer<T>();
+        var elementComparer = ComparerFactory.CreateEqualityComparer<T>();
         var set = new List<T>();
         var comparer = new EnumerableEqualityComparer<T>(elementComparer);
-        var result = new EquatableList<T>(set, comparer);
+        mutabilityContext ??= new MutabilityContext();
+        var result = new EquatableList<T>(set, comparer, this, mutabilityContext);
 
         return result;
     }
 
-    public IList<T> CreateLazyList<T, TState>(Func<Int32, TState, T> factory, TState state)
+    public EquatableDictionary<TKey, TValue> CreateDictionary<TKey, TValue>(MutabilityContext? mutabilityContext = null)
     {
-        var elementComparer = comparerFactory.CreateEqualityComparer<T>();
+        var keyComparer = ComparerFactory.CreateEqualityComparer<TKey>();
+        var valueComparer = ComparerFactory.CreateEqualityComparer<TValue>();
+        var dictionary = new Dictionary<TKey, TValue>(keyComparer);
+        var comparer = new DictionaryEqualityComparer<TKey, TValue>(keyComparer, valueComparer);
+        mutabilityContext ??= new MutabilityContext();
+        var result = new EquatableDictionary<TKey, TValue>(dictionary, comparer, this, mutabilityContext);
+
+        return result;
+    }
+
+    public LazyEquatableList<T, TState> CreateLazyList<T, TState>(Func<Int32, LazyEquatableList<T, TState>, T> factory, TState state, MutabilityContext? mutabilityContext = null)
+    {
+        var elementComparer = ComparerFactory.CreateEqualityComparer<T>();
         var set = new List<T>();
         var comparer = new EnumerableEqualityComparer<T>(elementComparer);
-        var result = new LazyEquatableList<T, TState>(set, comparer, state, factory);
+        mutabilityContext ??= new MutabilityContext();
+        var result = new LazyEquatableList<T, TState>(set, comparer, factory, state, this, mutabilityContext);
 
         return result;
     }
-    public IList<T> CreateLazyList<T>(Func<Int32, EquatableCollectionFactory, T> factory) => CreateLazyList(factory, this);
-    public IList<T?> CreateLazyList<T>() => CreateLazyList(static (_, _) => default(T), this);
-
-    public IDictionary<TKey, TValue> CreateDictionary<TKey, TValue>()
+    public LazyEquatableList<T> CreateLazyList<T>(Func<Int32, LazyEquatableList<T, LazyEquatableList<T>>, T> factory, MutabilityContext? mutabilityContext = null)
     {
-        var keyComparer = comparerFactory.CreateEqualityComparer<TKey>();
-        var valueComparer = comparerFactory.CreateEqualityComparer<TValue>();
+        var elementComparer = ComparerFactory.CreateEqualityComparer<T>();
+        var set = new List<T>();
+        var comparer = new EnumerableEqualityComparer<T>(elementComparer);
+        mutabilityContext ??= new MutabilityContext();
+        var result = new LazyEquatableList<T>(set, comparer, factory, this, mutabilityContext);
+
+        return result;
+    }
+    public LazyEquatableList<T?> CreateLazyList<T>(MutabilityContext? mutabilityContext = null) => CreateLazyList<T?>(static (_, _) => default, mutabilityContext);
+
+    public LazyEquatableDictionary<TKey, TValue, TState> CreateLazyDictionary<TKey, TValue, TState>(Func<TKey, TState, TValue> factory, TState state, MutabilityContext? mutabilityContext = null)
+    {
+        var keyComparer = ComparerFactory.CreateEqualityComparer<TKey>();
+        var valueComparer = ComparerFactory.CreateEqualityComparer<TValue>();
         var dictionary = new Dictionary<TKey, TValue>(keyComparer);
         var comparer = new DictionaryEqualityComparer<TKey, TValue>(keyComparer, valueComparer);
-        var result = new EquatableDictionary<TKey, TValue>(dictionary, comparer);
+        mutabilityContext ??= new MutabilityContext();
+        var result = new LazyEquatableDictionary<TKey, TValue, TState>(dictionary, comparer, factory, state, this, mutabilityContext);
 
         return result;
     }
-
-    public IDictionary<TKey, TValue> CreateLazyDictionary<TKey, TState, TValue>(
-        Func<TKey, TState, TValue> factory,
-        TState state)
+    public LazyEquatableDictionary<TKey, TValue> CreateLazyDictionary<TKey, TValue>(Func<TKey, LazyEquatableDictionary<TKey, TValue>, TValue> factory, MutabilityContext? mutabilityContext = null)
     {
-        var keyComparer = comparerFactory.CreateEqualityComparer<TKey>();
-        var valueComparer = comparerFactory.CreateEqualityComparer<TValue>();
+        var keyComparer = ComparerFactory.CreateEqualityComparer<TKey>();
+        var valueComparer = ComparerFactory.CreateEqualityComparer<TValue>();
         var dictionary = new Dictionary<TKey, TValue>(keyComparer);
         var comparer = new DictionaryEqualityComparer<TKey, TValue>(keyComparer, valueComparer);
-        var result = new LazyEquatableDictionary<TKey, TState, TValue>(dictionary, comparer, state, factory);
+        mutabilityContext ??= new MutabilityContext();
+        var result = new LazyEquatableDictionary<TKey, TValue>(dictionary, comparer, factory, this, mutabilityContext);
 
         return result;
     }
-    public IDictionary<TKey, TValue> CreateLazyDictionary<TKey, TValue>(Func<TKey, EquatableCollectionFactory, TValue> factory) => CreateLazyDictionary(factory, this);
-    public IDictionary<TKey, TValue?> CreateLazyDictionary<TKey, TValue>() => CreateLazyDictionary<TKey, TValue?>(static (_, _) => default);
+    public LazyEquatableDictionary<TKey, TValue?> CreateLazyDictionary<TKey, TValue>(MutabilityContext? mutabilityContext = null) => CreateLazyDictionary<TKey, TValue?>(static (_, _) => default, mutabilityContext);
 }

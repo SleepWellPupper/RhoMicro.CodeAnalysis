@@ -5,11 +5,11 @@ using System;
 /// <summary>
 /// Maps the target constructor parameter onto a property.
 /// </summary>
-[AttributeUsage(AttributeTargets.Parameter, AllowMultiple = true, Inherited = false)]
+[AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false, Inherited = false)]
 #if GENERATOR
 [NonEquatable]
 [IncludeFile]
-[GenerateFactory]
+[GenerateFactory(GenerateModelTypeAsStruct = true)]
 #endif
 internal sealed partial class MapToPropertyAttribute : Attribute
 {

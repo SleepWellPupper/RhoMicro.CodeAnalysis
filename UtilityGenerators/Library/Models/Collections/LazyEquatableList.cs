@@ -3,69 +3,77 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Net.NetworkInformation;
 
 [IncludeFile]
-internal sealed record LazyEquatableList<T, TState> : IList<T>
+internal sealed record LazyEquatableList<T> : LazyEquatableList<T, LazyEquatableList<T>>
 {
     public LazyEquatableList(
-        IList<T> list,
+        IList<T> collection,
         IEqualityComparer<IList<T>> comparer,
+        Func<Int32, LazyEquatableList<T, LazyEquatableList<T>>, T> factory,
+        EquatableCollectionFactory collectionFactory,
+        MutabilityContext mutabilityContext)
+        : base(collection, comparer, factory, null!, collectionFactory, mutabilityContext) 
+        => State = this;
+
+    public Boolean Equals(LazyEquatableList<T> other) => base.Equals(other);
+    public override Int32 GetHashCode() => base.GetHashCode();
+}
+internal record LazyEquatableList<T, TState> : EquatableCollection<T, IList<T>>, IList<T>
+{
+    public LazyEquatableList(
+        IList<T> collection,
+        IEqualityComparer<IList<T>> comparer,
+        Func<Int32, LazyEquatableList<T, TState>, T> factory,
         TState state,
-        Func<Int32, TState, T> factory)
+        EquatableCollectionFactory collectionFactory,
+        MutabilityContext mutabilityContext)
+        : base(collection, comparer, collectionFactory, mutabilityContext)
     {
-        _list = list;
-        _comparer = comparer;
-        _state = state;
-        _factory = factory;
+        State = state;
+        Factory = factory;
     }
 
-    private readonly TState _state;
-    private readonly Func<Int32, TState, T> _factory;
-    private readonly IList<T> _list;
-    private readonly IEqualityComparer<IList<T>> _comparer;
+    public TState State { get; protected init; }
+    private Func<Int32, LazyEquatableList<T, TState>, T> Factory { get; }
 
-    public Boolean Equals(LazyEquatableList<T, TState> other) => _comparer.Equals(other._list, _list);
-    public override Int32 GetHashCode() => _comparer.GetHashCode(_list);
+    public virtual Boolean Equals(LazyEquatableList<T, TState> other) => base.Equals(other);
+    public override Int32 GetHashCode() => base.GetHashCode();
 
-    public Int32 IndexOf(T item) => _list.IndexOf(item);
+    public Int32 IndexOf(T item) => Collection.IndexOf(item);
     public void Insert(Int32 index, T item)
     {
+        MutabilityContext.ThrowIfReadOnly();
         FillUpToIndex(index - 1);
-        _list.Insert(index, item);
+        Collection.Insert(index, item);
     }
 
-    public void RemoveAt(Int32 index) => _list.RemoveAt(index);
+    public void RemoveAt(Int32 index)
+    {
+        MutabilityContext.ThrowIfReadOnly();
+        Collection.RemoveAt(index);
+    }
 
     public T this[Int32 index]
     {
         get
         {
             FillUpToIndex(index);
-            return _list[index];
+            return Collection[index];
         }
         set
         {
+            MutabilityContext.ThrowIfReadOnly();
             FillUpToIndex(index);
-            _list[index] = value;
+            Collection[index] = value;
         }
     }
 
     private void FillUpToIndex(Int32 index)
     {
+        MutabilityContext.ThrowIfReadOnly();
         while(Count <= index)
-            Add(_factory.Invoke(Count, _state));
+            Add(Factory.Invoke(Count, this));
     }
-
-    public void Add(T item) => _list.Add(item);
-    public void Clear() => _list.Clear();
-    public Boolean Contains(T item) => _list.Contains(item);
-    public void CopyTo(T[] array, Int32 arrayIndex) => _list.CopyTo(array, arrayIndex);
-    public Boolean Remove(T item) => _list.Remove(item);
-
-    public Int32 Count => _list.Count;
-
-    public Boolean IsReadOnly => _list.IsReadOnly;
-
-    public IEnumerator<T> GetEnumerator() => _list.GetEnumerator();
-    IEnumerator IEnumerable.GetEnumerator() => ( (IEnumerable)_list ).GetEnumerator();
 }

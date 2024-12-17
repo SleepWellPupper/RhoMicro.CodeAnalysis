@@ -49,6 +49,10 @@
 		<Compile Include="..\UtilityGenerators\AttributeFactory\ConstructorModel.cs" Link="ConstructorModel.cs" />
 		<Compile Include="..\UtilityGenerators\AttributeFactory\DefaultValueAttribute.cs" Link="DefaultValueAttribute.cs" />
 		<Compile Include="..\UtilityGenerators\AttributeFactory\GenerateFactoryAttribute.cs" Link="GenerateFactoryAttribute.cs" />
+		<Compile Include="..\UtilityGenerators\AttributeFactory\InitializationMethodAttribute.cs" Link="InitializationMethodAttribute.cs" />
+		<Compile Include="..\UtilityGenerators\AttributeFactory\InitializationMethodModel.cs" Link="InitializationMethodModel.cs" />
+		<Compile Include="..\UtilityGenerators\AttributeFactory\InitializationMethodParameterModel.cs" Link="InitializationMethodParameterModel.cs" />
+		<Compile Include="..\UtilityGenerators\AttributeFactory\InitializationMethodPipelineData.cs" Link="InitializationMethodPipelineData.cs" />
 		<Compile Include="..\UtilityGenerators\AttributeFactory\MapToPropertyAttribute.cs" Link="MapToPropertyAttribute.cs" />
 		<Compile Include="..\UtilityGenerators\AttributeFactory\ParameterMapping.cs" Link="ParameterMapping.cs" />
 		<Compile Include="..\UtilityGenerators\AttributeFactory\ParameterModel.cs" Link="ParameterModel.cs" />
@@ -63,6 +67,7 @@
 		<Compile Include="..\UtilityGenerators\Library\Models\Collections\DictionaryEqualityComparer.cs" Link="Library\DictionaryEqualityComparer.cs" />
 		<Compile Include="..\UtilityGenerators\Library\Models\Collections\EnumerableEqualityComparer.cs" Link="Library\EnumerableEqualityComparer.cs" />
 		<Compile Include="..\UtilityGenerators\Library\Models\Collections\EqualityComparerFactory.cs" Link="Library\EqualityComparerFactory.cs" />
+		<Compile Include="..\UtilityGenerators\Library\Models\Collections\EquatableCollection.cs" Link="Library\EquatableCollection.cs" />
 		<Compile Include="..\UtilityGenerators\Library\Models\Collections\EquatableCollectionFactory.cs" Link="Library\EquatableCollectionFactory.cs" />
 		<Compile Include="..\UtilityGenerators\Library\Models\Collections\EquatableDictionary.cs" Link="Library\EquatableDictionary.cs" />
 		<Compile Include="..\UtilityGenerators\Library\Models\Collections\EquatableList.cs" Link="Library\EquatableList.cs" />
@@ -70,6 +75,8 @@
 		<Compile Include="..\UtilityGenerators\Library\Models\Collections\KeyValuePairEqualityComparer.cs" Link="Library\KeyValuePairEqualityComparer.cs" />
 		<Compile Include="..\UtilityGenerators\Library\Models\Collections\LazyEquatableDictionary.cs" Link="Library\LazyEquatableDictionary.cs" />
 		<Compile Include="..\UtilityGenerators\Library\Models\Collections\LazyEquatableList.cs" Link="Library\LazyEquatableList.cs" />
+		<Compile Include="..\UtilityGenerators\Library\Models\Collections\MutabilityContext.cs" Link="Library\MutabilityContext.cs" />
+		<Compile Include="..\UtilityGenerators\Library\Models\Collections\MutableCollection.cs" Link="Library\MutableCollection.cs" />
 		<Compile Include="..\UtilityGenerators\Library\Models\Collections\SetEqualityComparer.cs" Link="Library\SetEqualityComparer.cs" />
 		<Compile Include="..\UtilityGenerators\Library\Models\ContainingTypeModel.cs" Link="Library\ContainingTypeModel.cs" />
 		<Compile Include="..\UtilityGenerators\Library\Models\ContainingTypeSignatureModel.cs" Link="Library\ContainingTypeSignatureModel.cs" />
