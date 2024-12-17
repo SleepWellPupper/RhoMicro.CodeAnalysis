@@ -6,8 +6,10 @@ using System.Collections.Immutable;
 using System.Linq;
 using System.Runtime.CompilerServices;
 
-[NonEquatable]
+#if UTILITYGENERATORS
 [IncludeFile]
+[NonEquatable]
+#endif
 internal sealed partial class SetEqualityComparer<T>(IEqualityComparer<T> elementComparer) : IEqualityComparer<ISet<T>>
 {
     public static SetEqualityComparer<T> Default { get; } = new(EqualityComparer<T>.Default);

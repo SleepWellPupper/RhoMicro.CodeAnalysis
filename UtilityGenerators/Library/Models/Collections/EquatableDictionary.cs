@@ -5,14 +5,16 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
+#if UTILITYGENERATORS
 [IncludeFile]
-internal sealed record EquatableDictionary<TKey, TValue> : EquatableCollection<KeyValuePair<TKey, TValue>, IDictionary<TKey, TValue>>, IDictionary<TKey, TValue>
+#endif
+internal sealed record EquatableDictionary<TKey, TValue> : EquatableCollection<KeyValuePair<TKey, TValue>, IDictionary<TKey, TValue>>, IDictionary<TKey, TValue>, IReadOnlyDictionary<TKey, TValue>
 {
     public EquatableDictionary(
         IDictionary<TKey, TValue> collection,
         IEqualityComparer<IDictionary<TKey, TValue>> comparer,
         EquatableCollectionFactory collectionFactory,
-        MutabilityContext mutabilityContext) 
+        MutabilityContext mutabilityContext)
         : base(collection, comparer, collectionFactory, mutabilityContext)
     {
         Keys = new MutableCollection<TKey>(collection.Keys, mutabilityContext);
@@ -49,4 +51,7 @@ internal sealed record EquatableDictionary<TKey, TValue> : EquatableCollection<K
 
     public ICollection<TKey> Keys { get; }
     public ICollection<TValue> Values { get; }
+
+    IEnumerable<TKey> IReadOnlyDictionary<TKey, TValue>.Keys => Keys;
+    IEnumerable<TValue> IReadOnlyDictionary<TKey, TValue>.Values => Values;
 }

@@ -1,7 +1,9 @@
 ﻿namespace RhoMicro.CodeAnalysis.Library.Text;
 
-[NonEquatable]
+#if UTILITYGENERATORS
 [IncludeFile]
+[NonEquatable]
+#endif
 internal readonly partial struct BlockScope(IndentedStringBuilder builder) : IDisposable
 {
     private readonly IndentedStringBuilder _builder = builder;

@@ -2,8 +2,10 @@
 
 using System.Runtime.CompilerServices;
 
-[NonEquatable]
+#if UTILITYGENERATORS
 [IncludeFile]
+[NonEquatable]
+#endif
 internal partial class CommentBuilder(IndentedStringBuilder builder)
 {
     public IndentedStringBuilder Builder => builder;

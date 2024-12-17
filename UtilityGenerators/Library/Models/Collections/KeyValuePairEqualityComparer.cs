@@ -3,8 +3,10 @@
 using System;
 using System.Collections.Generic;
 
-[NonEquatable]
+#if UTILITYGENERATORS
 [IncludeFile]
+[NonEquatable]
+#endif
 internal sealed partial class KeyValuePairEqualityComparer<TKey, TValue>(IEqualityComparer<TKey> keyComparer, IEqualityComparer<TValue> valueComparer) : IEqualityComparer<KeyValuePair<TKey, TValue>>
 {
     public KeyValuePairEqualityComparer(IEqualityComparer<TValue> valueComparer) : this(EqualityComparer<TKey>.Default, valueComparer) { }

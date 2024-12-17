@@ -4,8 +4,10 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
-[NonEquatable]
+#if UTILITYGENERATORS
 [IncludeFile]
+[NonEquatable]
+#endif
 internal sealed partial class DictionaryEqualityComparer<TKey, TValue>(IEqualityComparer<TKey> keyComparer, IEqualityComparer<TValue> valueComparer) : IEqualityComparer<IDictionary<TKey, TValue>>
 {
     public DictionaryEqualityComparer(IEqualityComparer<TValue> valueComparer) : this(EqualityComparer<TKey>.Default, valueComparer) { }

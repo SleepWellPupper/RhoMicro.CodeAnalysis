@@ -2,8 +2,10 @@
 
 using RhoMicro.CodeAnalysis.Library.Models.Collections;
 
-[NonEquatable]
+#if UTILITYGENERATORS
 [IncludeFile]
+[NonEquatable]
+#endif
 internal readonly partial struct ModelCreationContext(EquatableCollectionFactory collectionFactory, CancellationToken cancellationToken)
 {
     public EquatableCollectionFactory CollectionFactory { get; } = collectionFactory;

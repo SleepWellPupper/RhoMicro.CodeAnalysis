@@ -1,6 +1,8 @@
 ﻿namespace RhoMicro.CodeAnalysis.Library.Text;
 
+#if UTILITYGENERATORS
 [IncludeFile]
+#endif
 internal static partial class Blocks
 {
     public static Block Indent { get; } = new();

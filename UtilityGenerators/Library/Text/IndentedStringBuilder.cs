@@ -4,8 +4,10 @@ using System.Collections.Immutable;
 using System.Runtime.CompilerServices;
 using System.Text;
 
-[NonEquatable]
+#if UTILITYGENERATORS
 [IncludeFile]
+[NonEquatable]
+#endif
 internal partial class IndentedStringBuilder
 {
     public IndentedStringBuilder(IndentedStringBuilderOptions options)

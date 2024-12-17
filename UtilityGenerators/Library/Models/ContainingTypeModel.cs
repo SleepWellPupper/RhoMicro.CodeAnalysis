@@ -9,7 +9,9 @@ using RhoMicro.CodeAnalysis;
 using RhoMicro.CodeAnalysis.Library.Models.Collections;
 using RhoMicro.CodeAnalysis.Library.Text;
 
+#if UTILITYGENERATORS
 [IncludeFile]
+#endif
 internal readonly record struct ContainingTypeModel(
     String Accessibility,
     String TypeModifier,

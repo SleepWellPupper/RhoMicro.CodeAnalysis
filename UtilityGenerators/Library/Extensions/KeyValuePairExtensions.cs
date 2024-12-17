@@ -7,7 +7,9 @@ using Microsoft.CodeAnalysis;
 
 using RhoMicro.CodeAnalysis;
 
+#if UTILITYGENERATORS
 [IncludeFile]
+#endif
 internal static class KeyValuePairExtensions
 {
     [OverloadResolutionPriority(1)]

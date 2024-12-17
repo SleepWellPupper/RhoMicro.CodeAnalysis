@@ -1,6 +1,8 @@
 ﻿namespace RhoMicro.CodeAnalysis.Library.Text;
 
+#if UTILITYGENERATORS
 [IncludeFile]
+#endif
 internal static class CommentBlocks
 {
     public static Block Multiline { get; } = new("/*\n", "*/", PlaceDelimitersOnNewLine: true);

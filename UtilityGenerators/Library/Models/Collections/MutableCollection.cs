@@ -4,7 +4,9 @@ using System;
 using System.Collections;
 using System.Runtime.CompilerServices;
 
+#if UTILITYGENERATORS
 [IncludeFile]
+#endif
 internal abstract partial record MutableCollection(MutabilityContext MutabilityContext)
 {
     public MutableCollection() : this(new MutabilityContext()) { }
@@ -14,7 +16,9 @@ internal abstract partial record MutableCollection(MutabilityContext MutabilityC
     public virtual Boolean Equals(MutableCollection other) => throw new NotSupportedException($"{typeof(MutableCollection)}.Equals({typeof(MutableCollection)}) is not supported.");
 }
 
+#if GENERATOR
 [NonEquatable]
+#endif
 internal partial class MutableCollection<T>(ICollection<T> wrapped, MutabilityContext mutabilityContext) : ICollection<T>
 {
     public void Add(T item)

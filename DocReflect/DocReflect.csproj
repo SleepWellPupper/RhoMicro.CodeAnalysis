@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<!--AutoUpdateAssemblyName-->
-		
+
 	<PropertyGroup>
 		<TargetFramework>netstandard2.0</TargetFramework>
 		<IncludeBuildOutput>false</IncludeBuildOutput>
@@ -23,37 +23,42 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <Compile Include="..\DocReflect.Library\Comments\CommentContents.cs" Link="Library\Comments\CommentContents.cs" />
-	  <Compile Include="..\DocReflect.Library\Comments\DocumentationComment.cs" Link="Library\Comments\DocumentationComment.cs" />
-	  <Compile Include="..\DocReflect.Library\Comments\Empty.cs" Link="Library\Comments\Empty.cs" />
-	  <Compile Include="..\DocReflect.Library\Comments\Example.cs" Link="Library\Comments\Example.cs" />
-	  <Compile Include="..\DocReflect.Library\Comments\Param.cs" Link="Library\Comments\Param.cs" />
-	  <Compile Include="..\DocReflect.Library\Comments\Remarks.cs" Link="Library\Comments\Remarks.cs" />
-	  <Compile Include="..\DocReflect.Library\Comments\Returns.cs" Link="Library\Comments\Returns.cs" />
-	  <Compile Include="..\DocReflect.Library\Comments\Summary.cs" Link="Library\Comments\Summary.cs" />
-	  <Compile Include="..\DocReflect.Library\Comments\Typeparam.cs" Link="Library\Comments\Typeparam.cs" />
-	  <Compile Include="..\DocReflect.Library\Documentation.cs" Link="Library\Documentation.cs" />
-	  <Compile Include="..\DocReflect.Library\EnumerableExtensions.Internal.cs" Link="Library\EnumerableExtensions.Internal.cs" />
-	  <Compile Include="..\DocReflect.Library\Infrastructure\DocumentationProviderAttribute.cs" Link="Library\Infrastructure\DocumentationProviderAttribute.cs" />
-	  <Compile Include="..\DocReflect.Library\Infrastructure\IDocumentationProvider.cs" Link="Library\Infrastructure\IDocumentationProvider.cs" />
-	  <Compile Include="..\DocReflect.Library\MethodDocumentation.cs" Link="Library\MethodDocumentation.cs" />
-	  <Compile Include="..\DocReflect.Library\PropertyDocumentation.cs" Link="Library\PropertyDocumentation.cs" />
-	  <Compile Include="..\DocReflect.Library\TypeDocumentation.cs" Link="Library\TypeDocumentation.cs" />
-	  <Compile Include="..\DocReflect.Library\TypeExtensions.cs" Link="Library\TypeExtensions.cs" />
-	  <Compile Include="..\DocReflect.Library\TypeExtensions.KeyValuePairComparer.cs" Link="Library\TypeExtensions.KeyValuePairComparer.cs" />
+		<Compile Include="..\DocReflect.Library\Comments\CommentContents.cs" Link="Library\Comments\CommentContents.cs" />
+		<Compile Include="..\DocReflect.Library\Comments\DocumentationComment.cs" Link="Library\Comments\DocumentationComment.cs" />
+		<Compile Include="..\DocReflect.Library\Comments\Empty.cs" Link="Library\Comments\Empty.cs" />
+		<Compile Include="..\DocReflect.Library\Comments\Example.cs" Link="Library\Comments\Example.cs" />
+		<Compile Include="..\DocReflect.Library\Comments\Param.cs" Link="Library\Comments\Param.cs" />
+		<Compile Include="..\DocReflect.Library\Comments\Remarks.cs" Link="Library\Comments\Remarks.cs" />
+		<Compile Include="..\DocReflect.Library\Comments\Returns.cs" Link="Library\Comments\Returns.cs" />
+		<Compile Include="..\DocReflect.Library\Comments\Summary.cs" Link="Library\Comments\Summary.cs" />
+		<Compile Include="..\DocReflect.Library\Comments\Typeparam.cs" Link="Library\Comments\Typeparam.cs" />
+		<Compile Include="..\DocReflect.Library\Documentation.cs" Link="Library\Documentation.cs" />
+		<Compile Include="..\DocReflect.Library\EnumerableExtensions.Internal.cs" Link="Library\EnumerableExtensions.Internal.cs" />
+		<Compile Include="..\DocReflect.Library\Infrastructure\DocumentationProviderAttribute.cs" Link="Library\Infrastructure\DocumentationProviderAttribute.cs" />
+		<Compile Include="..\DocReflect.Library\Infrastructure\IDocumentationProvider.cs" Link="Library\Infrastructure\IDocumentationProvider.cs" />
+		<Compile Include="..\DocReflect.Library\MethodDocumentation.cs" Link="Library\MethodDocumentation.cs" />
+		<Compile Include="..\DocReflect.Library\PropertyDocumentation.cs" Link="Library\PropertyDocumentation.cs" />
+		<Compile Include="..\DocReflect.Library\TypeDocumentation.cs" Link="Library\TypeDocumentation.cs" />
+		<Compile Include="..\DocReflect.Library\TypeExtensions.cs" Link="Library\TypeExtensions.cs" />
+		<Compile Include="..\DocReflect.Library\TypeExtensions.KeyValuePairComparer.cs" Link="Library\TypeExtensions.KeyValuePairComparer.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="../UtilityGenerators/UtilityGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Update="NETStandard.Library" PrivateAssets="all" />
+		<PackageReference Include="Microsoft.Bcl.HashCode" Version="6.0.0" />
 		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.12.0" />
 		<PackageReference Include="PolySharp" Version="1.15.0">
-		  <PrivateAssets>all</PrivateAssets>
-		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
-		<PackageReference Include="RhoMicro.CodeAnalysis.UtilityGenerators" Version="*">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <None Remove="bin\Debug\netstandard2.0\\RhoMicro.CodeAnalysis.DocReflect.1.0.0.2038.dll" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -64,7 +69,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Library\Infrastructure\" />
+		<Folder Include="Library\Infrastructure\" />
 	</ItemGroup>
 
 </Project>

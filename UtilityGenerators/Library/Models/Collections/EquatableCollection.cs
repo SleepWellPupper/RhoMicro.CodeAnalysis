@@ -3,7 +3,9 @@
 using System.Collections;
 using System.Collections.Generic;
 
+#if UTILITYGENERATORS
 [IncludeFile]
+#endif
 internal sealed record EquatableCollection<T> : EquatableCollection<T, ICollection<T>>
 {
     public EquatableCollection(

@@ -1,6 +1,8 @@
 ﻿namespace RhoMicro.CodeAnalysis.Library.Text;
 
+#if UTILITYGENERATORS
 [IncludeFile]
+#endif
 internal sealed record class IndentedStringBuilderOptions
 {
     public StringOrChar DefaultIndentation { get; init; } = StringOrChar.Tab;

@@ -2,7 +2,9 @@
 
 using Microsoft.CodeAnalysis;
 
+#if UTILITYGENERATORS
 [IncludeFile]
+#endif
 internal static partial class Utils
 {
     public static String GetTypeModifiers(INamedTypeSymbol symbol) =>

@@ -9,7 +9,9 @@ using Microsoft.CodeAnalysis;
 
 using RhoMicro.CodeAnalysis;
 
+#if UTILITYGENERATORS
 [IncludeFile]
+#endif
 internal static class TypedConstantsExtensions
 {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

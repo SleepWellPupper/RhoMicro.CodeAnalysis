@@ -8,7 +8,9 @@ using Microsoft.CodeAnalysis;
 using RhoMicro.CodeAnalysis.Library.Models.Collections;
 using RhoMicro.CodeAnalysis.Library.Text;
 
+#if UTILITYGENERATORS
 [IncludeFile]
+#endif
 internal sealed record TypeSignatureModel(
     EquatableList<String> NamespaceParts,
     EquatableList<ContainingTypeSignatureModel> ContainingTypes,

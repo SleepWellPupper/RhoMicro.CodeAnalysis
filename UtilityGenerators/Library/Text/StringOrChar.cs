@@ -2,7 +2,9 @@
 
 using System;
 
+#if UTILITYGENERATORS
 [IncludeFile]
+#endif
 internal readonly partial struct StringOrChar : IEquatable<StringOrChar>, IIndentedStringBuilderAppendable
 {
     private readonly Char _charValue;

@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 internal partial class Program
 {
     [RhoMicro.CodeAnalysis.NonEquatable]
-    partial class Foo;
+    public partial class Foo;
 
     private static void Main(String[] _0)
     {

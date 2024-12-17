@@ -4,7 +4,9 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
+#if UTILITYGENERATORS
 [IncludeFile]
+#endif
 internal static class EnumerableEqualityComparer
 {
     public static Int32 GetHashCode<TEnumerable, T>(TEnumerable obj, IEqualityComparer<T> elementComparer)
@@ -19,7 +21,9 @@ internal static class EnumerableEqualityComparer
     }
 }
 
+#if GENERATOR
 [NonEquatable]
+#endif
 internal sealed partial class EnumerableEqualityComparer<T>(IEqualityComparer<T> elementComparer) : IEqualityComparer<IEnumerable<T>>
 {
     public static EnumerableEqualityComparer<T> Default { get; } = new(EqualityComparer<T>.Default);

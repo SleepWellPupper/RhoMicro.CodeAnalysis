@@ -5,7 +5,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Net.NetworkInformation;
 
+#if UTILITYGENERATORS
 [IncludeFile]
+#endif
 internal sealed record LazyEquatableList<T> : LazyEquatableList<T, LazyEquatableList<T>>
 {
     public LazyEquatableList(
@@ -14,13 +16,13 @@ internal sealed record LazyEquatableList<T> : LazyEquatableList<T, LazyEquatable
         Func<Int32, LazyEquatableList<T, LazyEquatableList<T>>, T> factory,
         EquatableCollectionFactory collectionFactory,
         MutabilityContext mutabilityContext)
-        : base(collection, comparer, factory, null!, collectionFactory, mutabilityContext) 
+        : base(collection, comparer, factory, null!, collectionFactory, mutabilityContext)
         => State = this;
 
     public Boolean Equals(LazyEquatableList<T> other) => base.Equals(other);
     public override Int32 GetHashCode() => base.GetHashCode();
 }
-internal record LazyEquatableList<T, TState> : EquatableCollection<T, IList<T>>, IList<T>
+internal record LazyEquatableList<T, TState> : EquatableCollection<T, IList<T>>, IList<T>, IReadOnlyList<T>
 {
     public LazyEquatableList(
         IList<T> collection,

@@ -1,6 +1,8 @@
 ﻿namespace RhoMicro.CodeAnalysis.Library;
 
-static partial class EnumerableExtensions
+using RhoMicro.CodeAnalysis.Library.Models.Collections;
+
+internal static partial class EnumerableExtensions
 {
 	public static IReadOnlyDictionary<String, TValue> ToEquatableNameMap<TValue>(
 		this IEnumerable<TValue> elements,
@@ -9,7 +11,7 @@ static partial class EnumerableExtensions
 	{
 		_ = elements ?? throw new ArgumentNullException(elementsName);
 
-		var map = new Dictionary<String, TValue>();
+		var map = EquatableCollectionFactory.Default.CreateDictionary<String, TValue>();
 
 		foreach(var element in elements)
 		{
@@ -24,8 +26,8 @@ static partial class EnumerableExtensions
 			map.Add(name, element);
 		}
 
-		var result = map.AsEquatable();
+        map.MutabilityContext.SetImmutable();
 
-		return result;
+		return map;
 	}
 }

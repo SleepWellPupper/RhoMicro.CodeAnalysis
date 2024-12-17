@@ -7,7 +7,7 @@ using static RhoMicro.CodeAnalysis.Library.Text.IndentedStringBuilder.Appendable
 partial class Documentation : IIndentedStringBuilderAppendable
 {
     void IIndentedStringBuilderAppendable.AppendTo(IndentedStringBuilder builder) => _ = builder.Operators +
-        "new " + GetType().FullName + OpenBlock(Blocks.Parens with
+        "new " + GetType().FullName + OpenBlock(Blocks.Parentheses with
         {
             Indentation = builder.Options.DefaultIndentation,
             PlaceDelimitersOnNewLine = true

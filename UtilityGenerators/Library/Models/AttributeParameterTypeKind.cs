@@ -3,7 +3,9 @@
 using System.Runtime.CompilerServices;
 
 [Flags]
+#if UTILITYGENERATORS
 [IncludeFile]
+#endif
 internal enum AttributeParameterTypeKind
 {
     ReferenceType = 1,

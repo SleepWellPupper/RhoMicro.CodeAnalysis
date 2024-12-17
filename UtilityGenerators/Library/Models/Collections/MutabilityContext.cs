@@ -3,8 +3,10 @@
 using System;
 using System.Runtime.CompilerServices;
 
+#if UTILITYGENERATORS
 [IncludeFile]
 [NonEquatable]
+#endif
 internal sealed partial class MutabilityContext
 {
     private Int32 _mutable;

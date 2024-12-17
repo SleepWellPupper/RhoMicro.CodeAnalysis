@@ -4,7 +4,9 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
+#if UTILITYGENERATORS
 [IncludeFile]
+#endif
 internal sealed record EquatableSet<T> : EquatableCollection<T, ISet<T>>, ISet<T>
 {
     public EquatableSet(

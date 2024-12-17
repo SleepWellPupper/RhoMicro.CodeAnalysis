@@ -2,8 +2,10 @@
 
 using System.Collections.Generic;
 
-[NonEquatable]
+#if UTILITYGENERATORS
 [IncludeFile]
+[NonEquatable]
+#endif
 internal partial class EqualityComparerFactory
 {
     public static EqualityComparerFactory Default { get; } = new();

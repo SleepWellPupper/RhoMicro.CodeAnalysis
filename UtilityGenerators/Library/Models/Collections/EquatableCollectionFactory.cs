@@ -3,8 +3,10 @@
 using System.Collections.Generic;
 using System.Net.NetworkInformation;
 
-[NonEquatable]
+#if UTILITYGENERATORS
 [IncludeFile]
+[NonEquatable]
+#endif
 internal sealed partial class EquatableCollectionFactory(EqualityComparerFactory comparerFactory)
 {
     public static EquatableCollectionFactory Default { get; } = new(EqualityComparerFactory.Default);

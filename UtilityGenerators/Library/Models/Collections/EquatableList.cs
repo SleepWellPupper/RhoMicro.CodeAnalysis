@@ -4,8 +4,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
+#if UTILITYGENERATORS
 [IncludeFile]
-internal sealed record EquatableList<T> : EquatableCollection<T, IList<T>>, IList<T>
+#endif
+internal sealed record EquatableList<T> : EquatableCollection<T, IList<T>>, IList<T>, IReadOnlyList<T>
 {
     public EquatableList(
         IList<T> collection,

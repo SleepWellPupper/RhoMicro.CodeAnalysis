@@ -1,7 +1,9 @@
 ﻿namespace RhoMicro.CodeAnalysis.Library.Text;
 
-[NonEquatable]
+#if UTILITYGENERATORS
 [IncludeFile]
+[NonEquatable]
+#endif
 internal sealed partial class BlockScopeCollection : IDisposable
 {
     private readonly List<BlockScope> _scopes = [];

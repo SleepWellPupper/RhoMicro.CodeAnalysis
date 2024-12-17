@@ -6,7 +6,7 @@ using static RhoMicro.CodeAnalysis.Library.Text.IndentedStringBuilder.Appendable
 
 internal class Program
 {
-    static void Main(String[] _0)
+    public static void Main(String[] _0)
     {
         //confusing: mutating operand instead of returning mutated instance
         var operators = new IndentedStringBuilder().Operators +

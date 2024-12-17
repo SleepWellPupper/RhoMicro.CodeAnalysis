@@ -1,7 +1,7 @@
 ﻿namespace RhoMicro.CodeAnalysis.DocReflect;
 
 using RhoMicro.CodeAnalysis.DocReflect.Comments;
-using RhoMicro.CodeAnalysis.Library;
+using RhoMicro.CodeAnalysis.Library.Models.Collections;
 
 using System;
 
@@ -18,7 +18,7 @@ public partial class Documentation : IEquatable<Documentation?>
     {
         _ = topLevelComments ?? throw new ArgumentNullException(nameof(topLevelComments));
 
-        var tlcList = new List<DocumentationComment>();
+        var tlcList = EquatableCollectionFactory.Default.CreateList<DocumentationComment>();
 
         foreach(var tlc in topLevelComments)
         {
@@ -32,7 +32,9 @@ public partial class Documentation : IEquatable<Documentation?>
             tlcList.Add(tlc);
         }
 
-        TopLevelComments = tlcList.AsEquatable();
+        tlcList.MutabilityContext.SetImmutable();
+
+        TopLevelComments = tlcList;
     }
 
     /// <summary>

@@ -1,10 +1,12 @@
 # Generators/UtilityGenerators.Tests
-Generators/UtilityGenerators.Dev
+# Generators/UtilityGenerators.Dev
 # Generators/UtilityGenerators
 # Generators/UtilityGenerators.Library.Tests
 # Generators/UnionsGenerator.EndToEnd.Tests
 # Generators/UnionsGenerator
 # Generators/DslGenerator
+# Generators/DocReflect.Library
+# Generators/DocReflect
 # Generators/JsonSchemaGenerator
 # Generators/JsonSchemaGenerator.Cli
 # Applications/TestApp

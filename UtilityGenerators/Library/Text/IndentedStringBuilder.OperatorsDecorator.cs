@@ -4,8 +4,10 @@
 partial class IndentedStringBuilder
 #pragma warning restore IDE0040 // Add accessibility modifiers
 {
-    [NonEquatable]
+#if UTILITYGENERATORS
     [IncludeFile]
+    [NonEquatable]
+#endif
     public sealed partial class OperatorsDecorator(IndentedStringBuilder builder)
     {
         public IndentedStringBuilder Builder => builder;

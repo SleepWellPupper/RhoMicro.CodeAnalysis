@@ -3,7 +3,9 @@ using System;
 
 using Microsoft.CodeAnalysis;
 
+#if UTILITYGENERATORS
 [IncludeFile]
+#endif
 internal readonly record struct PartialTypeKindModel(String Value)
 {
     public static PartialTypeKindModel Class => new("class");

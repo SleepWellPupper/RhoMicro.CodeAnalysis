@@ -1,7 +1,9 @@
 ﻿namespace RhoMicro.CodeAnalysis.Library.Text;
 
-[NonEquatable]
+#if UTILITYGENERATORS
 [IncludeFile]
+[NonEquatable]
+#endif
 #pragma warning disable IDE0040 // Add accessibility modifiers
 sealed partial class IndentedStringBuilderAppendable(Action<IndentedStringBuilder> strategy) : IIndentedStringBuilderAppendable
 #pragma warning restore IDE0040 // Add accessibility modifiers

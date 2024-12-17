@@ -5,7 +5,9 @@ using System.Text;
 
 using Microsoft.CodeAnalysis;
 
+#if UTILITYGENERATORS
 [IncludeFile]
+#endif
 internal sealed record AttributeParameterTypeModel(
     AttributeParameterTypeKind Kind,
     String KindString,
