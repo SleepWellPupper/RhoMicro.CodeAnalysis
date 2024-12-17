@@ -180,7 +180,7 @@ public class LazyEquatableDictionaryTests
             _ = dict.Remove(firstKey);
 
             // Assert
-            Assert.True(dict.ContainsKey(firstKey));
+            Assert.False(dict.ContainsKey(firstKey));
         } else
         {
             // Assert

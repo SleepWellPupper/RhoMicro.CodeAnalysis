@@ -69,7 +69,7 @@ public class TokenizerTests
 
     [Theory(Timeout = 5000)]
     [MemberData(nameof(TokenizerData))]
-    public void TokenizesCorrectly(String source, String[] rawTokens, Int32[] expectedDiagnosticIds)
+    public async Task TokenizesCorrectly(String source, String[] rawTokens, Int32[] expectedDiagnosticIds)
     {
         //Arrange
         var expectedTokens = rawTokens.Select(t => t.Split(':', 2))
