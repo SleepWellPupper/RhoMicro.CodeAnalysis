@@ -16,9 +16,13 @@
       "commandName": "DebugRoslynComponent",
       "targetProject": "..\\IndentedStringBuilderTestApp\\IndentedStringBuilderTestApp.csproj"
     },
-    "Profile 1": {
+    "Dev": {
       "commandName": "DebugRoslynComponent",
       "targetProject": "..\\UtilityGenerators.Dev\\UtilityGenerators.Dev.csproj"
+    },
+    "TestApp": {
+      "commandName": "DebugRoslynComponent",
+      "targetProject": "..\\TestApp\\TestApp.csproj"
     }
   }
 }

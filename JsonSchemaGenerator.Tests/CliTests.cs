@@ -189,7 +189,6 @@ public class CliTests : TestBase
             assemblyName = compilation.Assembly.Name;
         }
 
-
         return settings;
     }
 }

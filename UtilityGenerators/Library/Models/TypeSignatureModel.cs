@@ -21,11 +21,14 @@ internal sealed record TypeSignatureModel(
     {
         ctx.ThrowIfCancellationRequested();
 
-        var namespaceParts = ctx.CollectionFactory.CreateList<String>();
+        var mutabilityContext = new MutabilityContext();
+
+        var namespaceParts = ctx.CollectionFactory.CreateList<String>(mutabilityContext);
+        var containingTypes = ctx.CollectionFactory.CreateList<ContainingTypeSignatureModel>(mutabilityContext);
+        var typeArguments = ctx.CollectionFactory.CreateList<String>(mutabilityContext);
+
         AddNamespaceParts(type.ContainingNamespace, namespaceParts, in ctx);
-        var containingTypes = ctx.CollectionFactory.CreateList<ContainingTypeSignatureModel>();
         AddContainingTypes(type.ContainingType, containingTypes, in ctx);
-        var typeArguments = ctx.CollectionFactory.CreateList<String>();
 
         foreach(var typeArgument in type.TypeArguments)
         {
@@ -36,9 +39,7 @@ internal sealed record TypeSignatureModel(
         var kind = PartialTypeKindModel.Create(type, in ctx);
         var name = type.Name;
 
-        namespaceParts.MutabilityContext.SetImmutable();
-        containingTypes.MutabilityContext.SetImmutable();
-        typeArguments.MutabilityContext.SetImmutable();
+        mutabilityContext.SetImmutable();
 
         var result = new TypeSignatureModel(namespaceParts, containingTypes, kind, name, typeArguments);
 
@@ -108,10 +109,10 @@ internal sealed record TypeSignatureModel(
     {
         AppendNamespace(resultBuilder, in tokenInfo, ct);
         AppendContainingTypes(resultBuilder, in tokenInfo, ct);
-        
-        if(ContainingTypes.Count > 0 || NamespaceParts.Count > 0)
+
+        if(!tokenInfo.SeparateParts && ( ContainingTypes.Count > 0 || NamespaceParts.Count > 0 ))
             _ = resultBuilder.Append(tokenInfo.SeparatorToken);
-        
+
         AppendName(resultBuilder, Name, ct);
         AppendTypeArguments(resultBuilder, TypeArguments, in tokenInfo, ct);
     }
@@ -308,9 +309,6 @@ internal sealed record TypeSignatureModel(
         {
             ct.ThrowIfCancellationRequested();
 
-            if(i != 0)
-                _ = displayStringBuilder.Append('.');
-
             var containingType = ContainingTypes[i];
 
             AppendName(
@@ -330,6 +328,7 @@ internal sealed record TypeSignatureModel(
 
             _ = sourceBuilder.OpenBracesBlock();
             _ = hintNameBuilder.Append('_');
+            _ = displayStringBuilder.Append('.');
         }
     }
     private static void AppendTypeArguments(StringBuilder hintNameBuilder, StringBuilder displayStringBuilder, IndentedStringBuilder sourceBuilder, EquatableList<String> typeArguments, CancellationToken ct)

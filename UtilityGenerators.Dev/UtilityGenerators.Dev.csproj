@@ -10,7 +10,7 @@
 	</PropertyGroup>
 
 	<PropertyGroup>
-		<DefineConstants>$(DefineConstants);GENERATOR</DefineConstants>
+		<DefineConstants>$(DefineConstants);GENERATOR;EXCLUDELIBRARYFILES</DefineConstants>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -42,24 +42,22 @@
 	</Target>
 
 	<ItemGroup>
-		<Compile Include="..\UtilityGenerators\AttributeFactory\obj\Debug\netstandard2.0\generated\**\*" Link="Generated\%(RecursiveDir)%(Filename)%(Extension)" />
 		<Compile Include="..\UtilityGenerators\AttributeFactory\AttributeFactoryGenerator.cs" Link="AttributeFactoryGenerator.cs" />
 		<Compile Include="..\UtilityGenerators\AttributeFactory\AttributeFactoryModel.cs" Link="AttributeFactoryModel.cs" />
 		<Compile Include="..\UtilityGenerators\AttributeFactory\Constants.cs" Link="Constants.cs" />
 		<Compile Include="..\UtilityGenerators\AttributeFactory\ConstructorModel.cs" Link="ConstructorModel.cs" />
-		<Compile Include="..\UtilityGenerators\AttributeFactory\DefaultValueAttribute.cs" Link="DefaultValueAttribute.cs" />
-		<Compile Include="..\UtilityGenerators\AttributeFactory\GenerateFactoryAttribute.cs" Link="GenerateFactoryAttribute.cs" />
-		<Compile Include="..\UtilityGenerators\AttributeFactory\InitializationMethodAttribute.cs" Link="InitializationMethodAttribute.cs" />
 		<Compile Include="..\UtilityGenerators\AttributeFactory\InitializationMethodModel.cs" Link="InitializationMethodModel.cs" />
 		<Compile Include="..\UtilityGenerators\AttributeFactory\InitializationMethodParameterModel.cs" Link="InitializationMethodParameterModel.cs" />
 		<Compile Include="..\UtilityGenerators\AttributeFactory\InitializationMethodPipelineData.cs" Link="InitializationMethodPipelineData.cs" />
-		<Compile Include="..\UtilityGenerators\AttributeFactory\MapToPropertyAttribute.cs" Link="MapToPropertyAttribute.cs" />
 		<Compile Include="..\UtilityGenerators\AttributeFactory\ParameterMapping.cs" Link="ParameterMapping.cs" />
 		<Compile Include="..\UtilityGenerators\AttributeFactory\ParameterModel.cs" Link="ParameterModel.cs" />
 		<Compile Include="..\UtilityGenerators\AttributeFactory\PropertyModel.cs" Link="PropertyModel.cs" />
 		<Compile Include="..\UtilityGenerators\AttributeFactory\SourceBuildingContext.cs" Link="SourceBuildingContext.cs" />
 		<Compile Include="..\UtilityGenerators\FileInclusion\FileInclusionGenerator.cs" Link="FileInclusionGenerator.cs" />
-		<Compile Include="..\UtilityGenerators\FileInclusion\IncludeFileAttribute.cs" Link="IncludeFileAttribute.cs" />
+		<Compile Include="..\UtilityGenerators\NonEquatable\NonEquatableGenerator.cs" Link="NonEquatableGenerator.cs" />
+	</ItemGroup>
+	
+	<ItemGroup Condition="False">
 		<Compile Include="..\UtilityGenerators\Library\Extensions\KeyValuePairExtensions.cs" Link="Library\KeyValuePairExtensions.cs" />
 		<Compile Include="..\UtilityGenerators\Library\Extensions\TypedConstantsExtensions.cs" Link="Library\TypedConstantsExtensions.cs" />
 		<Compile Include="..\UtilityGenerators\Library\Models\AttributeParameterTypeKind.cs" Link="Library\AttributeParameterTypeKind.cs" />
@@ -83,7 +81,6 @@
 		<Compile Include="..\UtilityGenerators\Library\Models\ModelCreationContext.cs" Link="Library\ModelCreationContext.cs" />
 		<Compile Include="..\UtilityGenerators\Library\Models\PartialTypeKindModel.cs" Link="Library\PartialTypeKindModel.cs" />
 		<Compile Include="..\UtilityGenerators\Library\Models\TypeSignatureModel.cs" Link="Library\TypeSignatureModel.cs" />
-		<Compile Include="..\UtilityGenerators\Library\Text\AggregateStringBuilder.cs" Link="Library\AggregateStringBuilder.cs" />
 		<Compile Include="..\UtilityGenerators\Library\Text\Block.cs" Link="Library\Block.cs" />
 		<Compile Include="..\UtilityGenerators\Library\Text\Blocks.cs" Link="Library\Blocks.cs" />
 		<Compile Include="..\UtilityGenerators\Library\Text\BlockScope.cs" Link="Library\BlockScope.cs" />
@@ -92,17 +89,12 @@
 		<Compile Include="..\UtilityGenerators\Library\Text\CommentBuilder.cs" Link="Library\CommentBuilder.cs" />
 		<Compile Include="..\UtilityGenerators\Library\Text\IIndentedStringBuilderAppendable.cs" Link="Library\IIndentedStringBuilderAppendable.cs" />
 		<Compile Include="..\UtilityGenerators\Library\Text\IndentedStringBuilder.cs" Link="Library\IndentedStringBuilder.cs" />
-		<Compile Include="..\UtilityGenerators\Library\Text\IndentedStringBuilder.IStringBuilderImpl.cs" Link="Library\IndentedStringBuilder.IStringBuilderImpl.cs" />
 		<Compile Include="..\UtilityGenerators\Library\Text\IndentedStringBuilder.OperatorsDecorator.cs" Link="Library\IndentedStringBuilder.OperatorsDecorator.cs" />
 		<Compile Include="..\UtilityGenerators\Library\Text\IndentedStringBuilderAppendable.cs" Link="Library\IndentedStringBuilderAppendable.cs" />
 		<Compile Include="..\UtilityGenerators\Library\Text\IndentedStringBuilderOptions.cs" Link="Library\IndentedStringBuilderOptions.cs" />
 		<Compile Include="..\UtilityGenerators\Library\Text\IndentScope.cs" Link="Library\IndentScope.cs" />
-		<Compile Include="..\UtilityGenerators\Library\Text\IStringBuilder.cs" Link="Library\IStringBuilder.cs" />
-		<Compile Include="..\UtilityGenerators\Library\Text\StringBuilderAdapter.cs" Link="Library\StringBuilderAdapter.cs" />
 		<Compile Include="..\UtilityGenerators\Library\Text\StringOrChar.cs" Link="Library\StringOrChar.cs" />
 		<Compile Include="..\UtilityGenerators\Library\Text\Utils.cs" Link="Library\Utils.cs" />
-		<Compile Include="..\UtilityGenerators\NonEquatable\NonEquatableAttribute.cs" Link="NonEquatableAttribute.cs" />
-		<Compile Include="..\UtilityGenerators\NonEquatable\NonEquatableGenerator.cs" Link="NonEquatableGenerator.cs" />
 	</ItemGroup>
 
 </Project>

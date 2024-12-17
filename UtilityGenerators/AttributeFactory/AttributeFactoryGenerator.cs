@@ -1120,24 +1120,6 @@ public sealed partial class AttributeFactoryGenerator : IIncrementalGenerator
     #region PropertyAccessor
     private static void AppendPropertyAccessorType(in SourceBuildingContext ctx)
     {
-        //use NNW + NRT for reference prop types
-        //use NRT for NRT prop types 
-        //use value type for value prop types
-        //use NNW + NRT + symbol for type prop types
-        //use NRT + symbol for NRT prop types 
-        //(use NNW + NVT for NVT prop types) => attribute disallows NVT
-
-        //get-only props require some modeling of available constructors, map
-        //ctor params to props via attribute? if such a mapping is provided,
-        //named arg extraction methods should also inspect ctor args on data
-        //TODO: add comment to remarks that explains this fallback mechanism
-        //(fallback) => always check ctor args first, then named args; as value
-        //should reflect reassign via property after ctor invocation
-        //example: [Foo(prop = "bar", Prop = "foobar")] => Prop is "foobar"
-
-        //TODO: only generate named args iteration if prop is settable
-        //TODO: only generate ctor fallback if prop is mapped
-
         ctx.ThrowIfCancellationRequested();
 
         using var _ = ctx.SourceBuilder.OpenRegionBlockScope("Property Accessor");

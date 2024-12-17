@@ -29,6 +29,7 @@ internal readonly record struct ContainingTypeSignatureModel(
         var kind = PartialTypeKindModel.Create(containingType, in ctx);
 
         typeArguments.MutabilityContext.SetImmutable();
+
         var result = new ContainingTypeSignatureModel(kind, name, typeArguments);
 
         return result;

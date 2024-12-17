@@ -26,11 +26,11 @@ public sealed class DocReflect : IIncrementalGenerator
             .Select(FinalStep);
     }
 
-    static ParseStepResult ParseStep(ExtractCommentStepResult result, CancellationToken cancellationToken)
+    private static ParseStepResult ParseStep(ExtractCommentStepResult result, CancellationToken cancellationToken)
     {
         throw new NotImplementedException();
     }
-    static FinalStepResult FinalStep(ImmutableArray<ParseStepResult> results, CancellationToken cancellationToken)
+    private static FinalStepResult FinalStep(ImmutableArray<ParseStepResult> results, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
@@ -63,7 +63,7 @@ public sealed class DocReflect : IIncrementalGenerator
 
         return result;
     }
-    static ExtractCommentStepResult ExtractCommentStep(GeneratorSyntaxContext context, CancellationToken cancellationToken)
+    private static ExtractCommentStepResult ExtractCommentStep(GeneratorSyntaxContext context, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
         var targetSymbol = context.SemanticModel.GetSymbolInfo(context.Node, cancellationToken).Symbol;

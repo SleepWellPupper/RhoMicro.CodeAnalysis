@@ -3,6 +3,7 @@
 using System.Runtime.CompilerServices;
 
 [Flags]
+[IncludeFile]
 internal enum AttributeParameterTypeKind
 {
     ReferenceType = 1,

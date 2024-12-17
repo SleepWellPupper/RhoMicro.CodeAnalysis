@@ -145,8 +145,8 @@ public sealed class FileInclusionGenerator : IIncrementalGenerator
             });
 
         context.RegisterSourceOutput(sourceProvider, (ctx, sourceText) => ctx.AddSource(_hintName, sourceText));
-#if UTILITYGENERATORS
-        //Generated.IncludedFileSources.RegisterToContext(context);
+#if INCLUDELIBRARYFILES && !EXCLUDELIBRARYFILES
+        Generated.IncludedFileSources.RegisterToContext(context);
 #endif
     }
 

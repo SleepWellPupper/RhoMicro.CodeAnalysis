@@ -20,7 +20,7 @@
 	</PropertyGroup>
 
 	<PropertyGroup>
-		<DefineConstants>$(DefineConstants);GENERATOR;UTILITYGENERATORS</DefineConstants>
+		<DefineConstants>$(DefineConstants);GENERATOR;INCLUDELIBRARYFILES</DefineConstants>
 	</PropertyGroup>
 	
 	<ItemGroup>

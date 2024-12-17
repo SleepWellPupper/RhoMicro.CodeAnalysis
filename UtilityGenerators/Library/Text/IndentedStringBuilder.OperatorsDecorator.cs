@@ -1,12 +1,14 @@
 ﻿namespace RhoMicro.CodeAnalysis.Library.Text;
 
-[IncludeFile]
 #pragma warning disable IDE0040 // Add accessibility modifiers
 partial class IndentedStringBuilder
 #pragma warning restore IDE0040 // Add accessibility modifiers
 {
-    public record OperatorsDecorator(IndentedStringBuilder Builder)
+    [NonEquatable]
+    [IncludeFile]
+    public sealed partial class OperatorsDecorator(IndentedStringBuilder builder)
     {
+        public IndentedStringBuilder Builder => builder;
         public static OperatorsDecorator operator +(OperatorsDecorator operators, String value)
         {
             operators.Builder.AppendCore(value);
@@ -23,9 +25,5 @@ partial class IndentedStringBuilder
             return operators;
         }
         public override String ToString() => Builder.ToString();
-        public virtual Boolean Equals(OperatorsDecorator? other) =>
-            other != null &&
-            other.Builder.Equals(Builder);
-        public override Int32 GetHashCode() => Builder.GetHashCode();
     }
 }
