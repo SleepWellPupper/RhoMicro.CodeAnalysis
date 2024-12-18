@@ -32,7 +32,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="RhoMicro.CodeAnalysis.UtilityGenerators" Version="15.*">
+		<PackageReference Include="RhoMicro.CodeAnalysis.UtilityGenerators" Version="15.3.4">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
