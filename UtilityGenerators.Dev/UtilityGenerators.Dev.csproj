@@ -11,8 +11,12 @@
 	</PropertyGroup>
 
 	<PropertyGroup>
-		<DefineConstants>$(DefineConstants);GENERATOR;EXCLUDELIBRARYFILES</DefineConstants>
+		<DefineConstants>$(DefineConstants);GENERATOR;RHOMICRO_CODEANALYSIS_UTILITYGENERATORS_DEV</DefineConstants>
 	</PropertyGroup>
+
+	<ItemGroup>
+	  <None Remove="bin\Debug\netstandard2.0\\RhoMicro.CodeAnalysis.UtilityGenerators.Dev.1.0.0.2107.dll" />
+	</ItemGroup>
 
 	<ItemGroup>
 		<None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
@@ -55,46 +59,6 @@
 		<Compile Include="..\UtilityGenerators\AttributeFactory\SourceBuildingContext.cs" Link="SourceBuildingContext.cs" />
 		<Compile Include="..\UtilityGenerators\FileInclusion\FileInclusionGenerator.cs" Link="FileInclusionGenerator.cs" />
 		<Compile Include="..\UtilityGenerators\NonEquatable\NonEquatableGenerator.cs" Link="NonEquatableGenerator.cs" />
-	</ItemGroup>
-	
-	<ItemGroup Condition="False">
-		<Compile Include="..\UtilityGenerators\Library\Extensions\KeyValuePairExtensions.cs" Link="Library\KeyValuePairExtensions.cs" />
-		<Compile Include="..\UtilityGenerators\Library\Extensions\TypedConstantsExtensions.cs" Link="Library\TypedConstantsExtensions.cs" />
-		<Compile Include="..\UtilityGenerators\Library\Models\AttributeParameterTypeKind.cs" Link="Library\AttributeParameterTypeKind.cs" />
-		<Compile Include="..\UtilityGenerators\Library\Models\AttributeParameterTypeModel.cs" Link="Library\AttributeParameterTypeModel.cs" />
-		<Compile Include="..\UtilityGenerators\Library\Models\Collections\DictionaryEqualityComparer.cs" Link="Library\DictionaryEqualityComparer.cs" />
-		<Compile Include="..\UtilityGenerators\Library\Models\Collections\EnumerableEqualityComparer.cs" Link="Library\EnumerableEqualityComparer.cs" />
-		<Compile Include="..\UtilityGenerators\Library\Models\Collections\EqualityComparerFactory.cs" Link="Library\EqualityComparerFactory.cs" />
-		<Compile Include="..\UtilityGenerators\Library\Models\Collections\EquatableCollection.cs" Link="Library\EquatableCollection.cs" />
-		<Compile Include="..\UtilityGenerators\Library\Models\Collections\EquatableCollectionFactory.cs" Link="Library\EquatableCollectionFactory.cs" />
-		<Compile Include="..\UtilityGenerators\Library\Models\Collections\EquatableDictionary.cs" Link="Library\EquatableDictionary.cs" />
-		<Compile Include="..\UtilityGenerators\Library\Models\Collections\EquatableList.cs" Link="Library\EquatableList.cs" />
-		<Compile Include="..\UtilityGenerators\Library\Models\Collections\EquatableSet.cs" Link="Library\EquatableSet.cs" />
-		<Compile Include="..\UtilityGenerators\Library\Models\Collections\KeyValuePairEqualityComparer.cs" Link="Library\KeyValuePairEqualityComparer.cs" />
-		<Compile Include="..\UtilityGenerators\Library\Models\Collections\LazyEquatableDictionary.cs" Link="Library\LazyEquatableDictionary.cs" />
-		<Compile Include="..\UtilityGenerators\Library\Models\Collections\LazyEquatableList.cs" Link="Library\LazyEquatableList.cs" />
-		<Compile Include="..\UtilityGenerators\Library\Models\Collections\MutabilityContext.cs" Link="Library\MutabilityContext.cs" />
-		<Compile Include="..\UtilityGenerators\Library\Models\Collections\MutableCollection.cs" Link="Library\MutableCollection.cs" />
-		<Compile Include="..\UtilityGenerators\Library\Models\Collections\SetEqualityComparer.cs" Link="Library\SetEqualityComparer.cs" />
-		<Compile Include="..\UtilityGenerators\Library\Models\ContainingTypeModel.cs" Link="Library\ContainingTypeModel.cs" />
-		<Compile Include="..\UtilityGenerators\Library\Models\ContainingTypeSignatureModel.cs" Link="Library\ContainingTypeSignatureModel.cs" />
-		<Compile Include="..\UtilityGenerators\Library\Models\ModelCreationContext.cs" Link="Library\ModelCreationContext.cs" />
-		<Compile Include="..\UtilityGenerators\Library\Models\PartialTypeKindModel.cs" Link="Library\PartialTypeKindModel.cs" />
-		<Compile Include="..\UtilityGenerators\Library\Models\TypeSignatureModel.cs" Link="Library\TypeSignatureModel.cs" />
-		<Compile Include="..\UtilityGenerators\Library\Text\Block.cs" Link="Library\Block.cs" />
-		<Compile Include="..\UtilityGenerators\Library\Text\Blocks.cs" Link="Library\Blocks.cs" />
-		<Compile Include="..\UtilityGenerators\Library\Text\BlockScope.cs" Link="Library\BlockScope.cs" />
-		<Compile Include="..\UtilityGenerators\Library\Text\BlockScopeCollection.cs" Link="Library\BlockScopeCollection.cs" />
-		<Compile Include="..\UtilityGenerators\Library\Text\CommentBlocks.cs" Link="Library\CommentBlocks.cs" />
-		<Compile Include="..\UtilityGenerators\Library\Text\CommentBuilder.cs" Link="Library\CommentBuilder.cs" />
-		<Compile Include="..\UtilityGenerators\Library\Text\IIndentedStringBuilderAppendable.cs" Link="Library\IIndentedStringBuilderAppendable.cs" />
-		<Compile Include="..\UtilityGenerators\Library\Text\IndentedStringBuilder.cs" Link="Library\IndentedStringBuilder.cs" />
-		<Compile Include="..\UtilityGenerators\Library\Text\IndentedStringBuilder.OperatorsDecorator.cs" Link="Library\IndentedStringBuilder.OperatorsDecorator.cs" />
-		<Compile Include="..\UtilityGenerators\Library\Text\IndentedStringBuilderAppendable.cs" Link="Library\IndentedStringBuilderAppendable.cs" />
-		<Compile Include="..\UtilityGenerators\Library\Text\IndentedStringBuilderOptions.cs" Link="Library\IndentedStringBuilderOptions.cs" />
-		<Compile Include="..\UtilityGenerators\Library\Text\IndentScope.cs" Link="Library\IndentScope.cs" />
-		<Compile Include="..\UtilityGenerators\Library\Text\StringOrChar.cs" Link="Library\StringOrChar.cs" />
-		<Compile Include="..\UtilityGenerators\Library\Text\Utils.cs" Link="Library\Utils.cs" />
 	</ItemGroup>
 
 </Project>

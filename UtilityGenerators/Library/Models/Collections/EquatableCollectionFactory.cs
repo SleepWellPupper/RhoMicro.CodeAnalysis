@@ -3,8 +3,10 @@
 using System.Collections.Generic;
 using System.Net.NetworkInformation;
 
-#if UTILITYGENERATORS
+#if RHOMICRO_CODEANALYSIS_UTILITYGENERATORS
 [IncludeFile]
+#endif
+#if GENERATOR
 [NonEquatable]
 #endif
 internal sealed partial class EquatableCollectionFactory(EqualityComparerFactory comparerFactory)

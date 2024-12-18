@@ -3,7 +3,7 @@
 using RhoMicro.CodeAnalysis.Library.Text;
 using RhoMicro.CodeAnalysis.UnionsGenerator.Models;
 
-sealed class SourceTextVisitor(IndentedStringBuilder builder) : IVisitor<UnionTypeModel>
+internal sealed class SourceTextVisitor(IndentedStringBuilder builder) : IVisitor<UnionTypeModel>
 {
     private readonly IndentedStringBuilder _builder = builder;
 

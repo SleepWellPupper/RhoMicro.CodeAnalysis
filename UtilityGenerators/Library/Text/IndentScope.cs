@@ -1,7 +1,9 @@
 ﻿namespace RhoMicro.CodeAnalysis.Library.Text;
 
-#if UTILITYGENERATORS
+#if RHOMICRO_CODEANALYSIS_UTILITYGENERATORS
 [IncludeFile]
+#endif
+#if GENERATOR
 [NonEquatable]
 #endif
 internal readonly partial struct IndentScope(IndentedStringBuilder builder) : IDisposable

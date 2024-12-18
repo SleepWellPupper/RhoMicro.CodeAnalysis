@@ -4,6 +4,7 @@ using System;
 
 #if DSL_GENERATOR
 [IncludeFile]
+internal
 #endif
 readonly struct RuleListBuilder
 {

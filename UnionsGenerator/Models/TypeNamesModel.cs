@@ -25,7 +25,7 @@ using RhoMicro.CodeAnalysis.UnionsGenerator.Utils;
 /// <param name="commentRefStringLazy"></param>
 /// <param name="name"></param>
 /// <param name="namespace"></param>
-sealed class TypeNamesModel(
+internal sealed class TypeNamesModel(
     Lazy<String> containingTypesStringLazy,
     Lazy<String> fullGenericNameLazy,
     Lazy<String> fullGenericNullableNameLazy,

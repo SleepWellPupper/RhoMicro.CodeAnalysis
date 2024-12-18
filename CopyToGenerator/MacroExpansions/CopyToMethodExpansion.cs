@@ -4,7 +4,7 @@ using RhoMicro.CodeAnalysis.Library;
 using RhoMicro.CodeAnalysis.CopyToGenerator;
 using RhoMicro.CodeAnalysis.CopyToGenerator.MacroExpansions;
 
-sealed class CopyToMethodExpansion(Model model) : MacroExpansionBase(model, Macro.CopyTo)
+internal sealed class CopyToMethodExpansion(Model model) : MacroExpansionBase(model, Macro.CopyTo)
 {
     public override void Expand(IExpandingMacroStringBuilder<Macro> builder, CancellationToken cancellationToken)
     {

@@ -19,7 +19,7 @@ using System.Threading;
 /// <param name="Signature"></param>
 /// <param name="OmitConversionOperators"></param>
 /// <param name="IsBaseClassToUnionType"></param>
-record PartialRepresentableTypeModel(
+internal record PartialRepresentableTypeModel(
     String Alias,
     String FactoryName,
     UnionTypeOptions Options,

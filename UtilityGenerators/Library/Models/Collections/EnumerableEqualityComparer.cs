@@ -4,7 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
-#if UTILITYGENERATORS
+#if RHOMICRO_CODEANALYSIS_UTILITYGENERATORS
 [IncludeFile]
 #endif
 internal static class EnumerableEqualityComparer
@@ -21,7 +21,7 @@ internal static class EnumerableEqualityComparer
     }
 }
 
-#if GENERATOR
+#if RHOMICRO_CODEANALYSIS_UTILITYGENERATORS
 [NonEquatable]
 #endif
 internal sealed partial class EnumerableEqualityComparer<T>(IEqualityComparer<T> elementComparer) : IEqualityComparer<IEnumerable<T>>

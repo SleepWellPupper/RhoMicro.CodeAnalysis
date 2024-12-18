@@ -53,7 +53,7 @@ namespace System
     // xxHash32 is used for the hash code.
     // https://github.com/Cyan4973/xxHash
 
-#if UTILITYGENERATORS
+#if RHOMICRO_CODEANALYSIS_UTILITYGENERATORS
     [RhoMicro.CodeAnalysis.IncludeFile]
 #endif
     internal struct HashCode

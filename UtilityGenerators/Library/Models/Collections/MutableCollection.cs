@@ -4,7 +4,7 @@ using System;
 using System.Collections;
 using System.Runtime.CompilerServices;
 
-#if UTILITYGENERATORS
+#if RHOMICRO_CODEANALYSIS_UTILITYGENERATORS
 [IncludeFile]
 #endif
 internal abstract partial record MutableCollection(MutabilityContext MutabilityContext)
@@ -16,7 +16,7 @@ internal abstract partial record MutableCollection(MutabilityContext MutabilityC
     public virtual Boolean Equals(MutableCollection other) => throw new NotSupportedException($"{typeof(MutableCollection)}.Equals({typeof(MutableCollection)}) is not supported.");
 }
 
-#if GENERATOR
+#if RHOMICRO_CODEANALYSIS_UTILITYGENERATORS
 [NonEquatable]
 #endif
 internal partial class MutableCollection<T>(ICollection<T> wrapped, MutabilityContext mutabilityContext) : ICollection<T>

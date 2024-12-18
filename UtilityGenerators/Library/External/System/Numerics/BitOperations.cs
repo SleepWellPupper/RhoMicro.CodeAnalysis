@@ -10,7 +10,7 @@ namespace System.Numerics
 {
     // NOTE: This class is a copy from src\Common\src\CoreLib\System\Numerics\BitOperations.cs only for HashCode purposes.
     // Any changes to the BitOperations class should be done in there instead.
-#if UTILITYGENERATORS
+#if RHOMICRO_CODEANALYSIS_UTILITYGENERATORS
     [RhoMicro.CodeAnalysis.IncludeFile]
 #endif
     internal static class BitOperations

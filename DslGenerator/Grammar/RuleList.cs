@@ -7,7 +7,7 @@ using System.Linq;
 [IncludeFile]
 #endif
 [DebuggerDisplay("{ToDisplayString()}")]
-record RuleList(IReadOnlyList<RuleDefinition> Definitions) : SyntaxNode
+internal record RuleList(IReadOnlyList<RuleDefinition> Definitions) : SyntaxNode
 {
     public override String ToString() => base.ToString();
     public virtual Boolean Equals(RuleList other) =>

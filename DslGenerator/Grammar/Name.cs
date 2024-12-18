@@ -8,7 +8,7 @@ using System.Diagnostics;
 [IncludeFile]
 #endif
 [DebuggerDisplay("{ToDisplayString()}")]
-sealed partial record Name : SyntaxNode
+internal sealed partial record Name : SyntaxNode
 {
     public Name(Token token) : this(token.Lexeme) { }
     public Name(Lexeme lexeme) : this(lexeme.ToString() ?? String.Empty) { }

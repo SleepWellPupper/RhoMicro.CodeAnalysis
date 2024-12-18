@@ -8,7 +8,7 @@ using RhoMicro.CodeAnalysis.CopyToGenerator.MacroExpansions;
 
 using System.Text;
 
-sealed class AvoidCopyExpansion(Model model) : MacroExpansionBase(model, Macro.AvoidCopy)
+internal sealed class AvoidCopyExpansion(Model model) : MacroExpansionBase(model, Macro.AvoidCopy)
 {
     public override void Expand(
         IExpandingMacroStringBuilder<Macro> sourceTextBuilder,

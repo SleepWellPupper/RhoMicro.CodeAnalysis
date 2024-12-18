@@ -1,7 +1,7 @@
 ﻿namespace RhoMicro.CodeAnalysis.JsonSchemaGenerator.Models;
 using System.Text;
 
-abstract record JsonListLikeModel<TList> : JsonValueModel<TList>
+internal abstract record JsonListLikeModel<TList> : JsonValueModel<TList>
     where TList : ICollection<JsonValueModel>, new()
 {
     public JsonListLikeModel(TList value, Object equalityContract)

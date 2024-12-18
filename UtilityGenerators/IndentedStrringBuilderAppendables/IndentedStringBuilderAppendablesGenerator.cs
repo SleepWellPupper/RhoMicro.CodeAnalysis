@@ -36,7 +36,6 @@ public sealed partial class IndentedStringBuilderAppendablesGenerator : IIncreme
             ctx.AddSource($"IndentedStringBuilder.Appendables.g.cs", source));
     }
 
-    private const String _backingFieldsTypeName = "BackingFields";
     private static readonly ImmutableArray<Signature> _emptySignaturesArray = ImmutableArray.Create<Signature>();
     private static readonly EquatableCollectionFactory _collectionFactory = EquatableCollectionFactory.Default;
     private static readonly SymbolDisplayFormat _fullyQualifiedFormat = SymbolDisplayFormat.FullyQualifiedFormat.WithGlobalNamespaceStyle(SymbolDisplayGlobalNamespaceStyle.Omitted);

@@ -3,6 +3,7 @@ using System;
 
 #if DSL_GENERATOR
 [IncludeFile]
+internal
 #endif
 readonly record struct DiagnosticDescriptor(Int32 Id, String Title, String Message)
 {

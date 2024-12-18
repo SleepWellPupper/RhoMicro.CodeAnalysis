@@ -14,12 +14,12 @@ public partial class RelatedTypeConversionTests
     [Relation<SubsetUnion>]
     [Relation<SupersetUnion>]
     [Relation<IntersectionUnion>]
-    readonly partial struct Union;
+    private readonly partial struct Union;
 
     [UnionType<Double>]
     [UnionType<DateTime>]
     [UnionType<String>]
-    sealed partial class CongruentUnion;
+    private sealed partial class CongruentUnion;
 
     [Fact]
     public void StringUnionToCongruent()
@@ -74,7 +74,7 @@ public partial class RelatedTypeConversionTests
 
     [UnionType<DateTime>]
     [UnionType<String>]
-    partial class SubsetUnion;
+    private partial class SubsetUnion;
 
     [Fact]
     public void StringUnionToSubset()
@@ -121,7 +121,7 @@ public partial class RelatedTypeConversionTests
     [UnionType<String>]
     [UnionType<Double>]
     [UnionType<Int32>]
-    readonly partial struct SupersetUnion;
+    private readonly partial struct SupersetUnion;
 
     [Fact]
     public void StringUnionToSuperset()
@@ -185,7 +185,7 @@ public partial class RelatedTypeConversionTests
     [UnionType<String>]
     [UnionType<Double>]
     [UnionType<List<Byte>>]
-    partial class IntersectionUnion;
+    private partial class IntersectionUnion;
 
     [Fact]
     public void Int16IntersectionToUnion()

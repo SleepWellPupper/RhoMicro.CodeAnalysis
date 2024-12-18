@@ -1,6 +1,6 @@
 ﻿namespace RhoMicro.CodeAnalysis.CopyToGenerator;
 
-enum Macro
+internal enum Macro
 {
     Head,
     CopyTo,

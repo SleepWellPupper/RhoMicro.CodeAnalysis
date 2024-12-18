@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 public partial class FactoryTests
 {
     [UnionType<Int32>(FactoryName = "MyFactory")]
-    partial class NamedFactoryUnion;
+    private partial class NamedFactoryUnion;
 
     [Fact]
     public void UsesProvidedFactoryName()
@@ -17,7 +17,7 @@ public partial class FactoryTests
     }
 
     [UnionType<Int32>]
-    partial class UnnamedFactoryUnion;
+    private partial class UnnamedFactoryUnion;
 
     [Fact]
     public void UsesDefaultFactoryName()

@@ -2,7 +2,7 @@
 
 using RhoMicro.CodeAnalysis.JsonSchemaGenerator.Models;
 
-partial class IndentedStringBuilder
+internal partial class IndentedStringBuilder
 {
     public IndentedStringBuilder AppendModel(JsonValueModel model)
     {

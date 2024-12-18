@@ -12,7 +12,7 @@ using RhoMicro.CodeAnalysis.UnionsGenerator.Models.Storage;
 using RhoMicro.CodeAnalysis.UnionsGenerator.Utils;
 using System.Reflection;
 
-sealed class StrategySourceHost(
+internal sealed class StrategySourceHost(
     SettingsModel settings,
     TypeSignatureModel unionTypeSignature,
     Boolean unionTypeIsGeneric,

@@ -3,7 +3,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-#if UTILITYGENERATORS
+#if RHOMICRO_CODEANALYSIS_UTILITYGENERATORS
 [IncludeFile]
 #endif
 internal sealed record EquatableCollection<T> : EquatableCollection<T, ICollection<T>>

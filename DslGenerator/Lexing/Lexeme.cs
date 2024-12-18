@@ -9,7 +9,7 @@ using System.Text.RegularExpressions;
 [UnionTypeSettings(
     ToStringSetting = ToStringSetting.Simple,
     Miscellaneous = MiscellaneousSettings.Default | MiscellaneousSettings.EmitGeneratedSourceCode)]
-readonly partial struct Lexeme : IEquatable<String>, IEquatable<Char>, IEquatable<StringSlice>
+internal readonly partial struct Lexeme : IEquatable<String>, IEquatable<Char>, IEquatable<StringSlice>
 {
     public Int32 Length => Match(
         s => s.Length,

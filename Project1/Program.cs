@@ -12,7 +12,8 @@ internal class Program
         //TestIntersectionMapping();
         TestDefaultValues();
     }
-    static void TestDefaultValues()
+
+    private static void TestDefaultValues()
     {
         //var tree = CSharpSyntaxTree.ParseText(
         //    """
@@ -44,7 +45,8 @@ internal class Program
 
         //Console.WriteLine(String.Join("\n", defaults));
     }
-    static String? GetDefaultValue(IParameterSymbol parameter)
+
+    private static String? GetDefaultValue(IParameterSymbol parameter)
     {
         var result =
             parameter.HasExplicitDefaultValue ?
@@ -57,7 +59,8 @@ internal class Program
 
         return result;
     }
-    static void TestIntersectionMapping()
+
+    private static void TestIntersectionMapping()
     {
         var tree = CSharpSyntaxTree.ParseText(
             """
@@ -100,7 +103,8 @@ internal class Program
                     SymbolDisplayFormat.FullyQualifiedFormat.MiscellaneousOptions &
                     ( SymbolDisplayMiscellaneousOptions.UseSpecialTypes ^ (SymbolDisplayMiscellaneousOptions)Int32.MaxValue ))
                     .WithGenericsOptions(SymbolDisplayGenericsOptions.IncludeTypeParameters);
-    static String GetSignatureString(IMethodSymbol symbol)
+
+    private static String GetSignatureString(IMethodSymbol symbol)
     {
         var builder = new StringBuilder();
         AppendSignature(builder, symbol);
@@ -108,7 +112,8 @@ internal class Program
 
         return result;
     }
-    static void AppendSignature(StringBuilder builder, IMethodSymbol symbol)
+
+    private static void AppendSignature(StringBuilder builder, IMethodSymbol symbol)
     {
         if(symbol.DeclaredAccessibility != Accessibility.Public ||
            symbol.IsStatic)
@@ -161,7 +166,8 @@ internal class Program
 
         _ = builder.Append(')');
     }
-    static void AppendParameter(StringBuilder builder, IParameterSymbol symbol)
+
+    private static void AppendParameter(StringBuilder builder, IParameterSymbol symbol)
     {
         if(symbol.IsParams)
         {

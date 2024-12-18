@@ -2,7 +2,7 @@
 
 using System;
 
-#if UTILITYGENERATORS
+#if RHOMICRO_CODEANALYSIS_UTILITYGENERATORS
 [IncludeFile]
 #endif
 internal readonly partial struct StringOrChar : IEquatable<StringOrChar>, IIndentedStringBuilderAppendable

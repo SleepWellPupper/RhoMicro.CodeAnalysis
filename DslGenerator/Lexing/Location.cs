@@ -2,6 +2,7 @@
 
 #if DSL_GENERATOR
 [IncludeFile]
+internal
 #endif
 sealed record Location(
     TextSpan TextSpan,
@@ -37,21 +38,23 @@ sealed record Location(
 #endif
 }
 
-readonly record struct LinePosition(Int32 Line, Int32 Character)
+internal readonly record struct LinePosition(Int32 Line, Int32 Character)
 {
 #if DSL_GENERATOR
     public Microsoft.CodeAnalysis.Text.LinePosition ToMsLinePosition() =>
         new(Line, Character);
 #endif
 }
-readonly record struct LinePositionSpan(LinePosition Start, LinePosition End)
+
+internal readonly record struct LinePositionSpan(LinePosition Start, LinePosition End)
 {
 #if DSL_GENERATOR
     public Microsoft.CodeAnalysis.Text.LinePositionSpan ToMsLinePositionSpan() =>
         new(Start.ToMsLinePosition(), End.ToMsLinePosition());
 #endif
 }
-readonly record struct TextSpan(Int32 Position, Int32 Length)
+
+internal readonly record struct TextSpan(Int32 Position, Int32 Length)
 {
 #if DSL_GENERATOR
     public Microsoft.CodeAnalysis.Text.TextSpan ToMsTextSpan() =>

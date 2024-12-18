@@ -1,6 +1,6 @@
 ﻿namespace RhoMicro.CodeAnalysis.JsonSchemaGenerator.Models;
 
-readonly record struct AdditionalPropertiesModel(JsonDynamicModel Model)
+internal readonly record struct AdditionalPropertiesModel(JsonDynamicModel Model)
 {
     public void False() => Model.Boolean.Value = false;
     public StringArrayModel Names => new(Model.Array);

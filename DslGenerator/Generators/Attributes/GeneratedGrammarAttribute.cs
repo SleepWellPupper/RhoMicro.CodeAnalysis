@@ -6,4 +6,4 @@ using System;
 [GenerateFactory]
 #endif
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, AllowMultiple = false, Inherited = false)]
-sealed partial class GeneratedGrammarAttribute : Attribute;
+internal sealed partial class GeneratedGrammarAttribute : Attribute;

@@ -105,4 +105,4 @@ The generated extension method `ForTestGeneratorTargetAttribute` makes use of th
 
 # Building The Project
 
-To build the project, run the `build.ps1` script.
+This project is running the generators contained against itself. To do this, run the `bootstrap.ps1` script.

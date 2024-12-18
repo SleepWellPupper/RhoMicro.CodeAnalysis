@@ -4,7 +4,7 @@ using Microsoft.CodeAnalysis;
 
 using System.Collections.Generic;
 
-readonly struct PropertyModel : IEquatable<PropertyModel>
+internal readonly struct PropertyModel : IEquatable<PropertyModel>
 {
     private PropertyModel(String name, Boolean isListAssignable, String? itemType, Boolean isMarked)
     {

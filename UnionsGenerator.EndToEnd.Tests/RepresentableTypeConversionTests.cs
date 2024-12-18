@@ -8,7 +8,7 @@ using System.Numerics;
 public partial class RepresentableTypeConversionTests
 {
     [UnionType<String>(Alias = "ErrorMessage")]
-    readonly partial struct Result<[UnionType(Alias = "Result")] T>;
+    private readonly partial struct Result<[UnionType(Alias = "Result")] T>;
 
     [Fact]
     public void IsImplicitlyConvertibleFromString()

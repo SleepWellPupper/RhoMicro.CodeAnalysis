@@ -8,7 +8,7 @@ public partial class TryAsFunctionsTests
 {
     [UnionType<Int32>(Alias = "Int")]
     [UnionType<List<String>>]
-    partial class Union<[UnionType] T>;
+    private partial class Union<[UnionType] T>;
 
     [Fact]
     public void IsIntWhenRepresentingInt32()

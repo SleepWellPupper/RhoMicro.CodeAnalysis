@@ -9,7 +9,7 @@ using RhoMicro.CodeAnalysis.UnionsGenerator.Utils;
 
 using static Library.Text.IndentedStringBuilder.Appendables;
 
-sealed partial class AppendableSourceText(UnionTypeModel target) : IIndentedStringBuilderAppendable
+internal sealed partial class AppendableSourceText(UnionTypeModel target) : IIndentedStringBuilderAppendable
 {
     /// <inheritdoc/>
     public void AppendTo(IndentedStringBuilder builder)

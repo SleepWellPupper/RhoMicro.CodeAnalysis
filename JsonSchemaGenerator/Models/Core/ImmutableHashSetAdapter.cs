@@ -3,7 +3,7 @@
 using System.Collections;
 using System.Collections.Immutable;
 
-sealed class ImmutableHashSetAdapter<T>(HashSet<T> decorated) : IImmutableSet<T>
+internal sealed class ImmutableHashSetAdapter<T>(HashSet<T> decorated) : IImmutableSet<T>
 {
     public Int32 Count { get; }
 

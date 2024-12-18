@@ -8,7 +8,7 @@ public partial class AsPropertyTests
 {
     [UnionType<Int32>(Alias = "Int")]
     [UnionType<List<String>>]
-    partial class Union<[UnionType(Alias = "ValueT")] T>
+    private partial class Union<[UnionType(Alias = "ValueT")] T>
         where T : struct;
 
     [Fact]

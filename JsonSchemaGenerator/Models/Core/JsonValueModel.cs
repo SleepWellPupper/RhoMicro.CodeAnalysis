@@ -1,7 +1,7 @@
 ﻿namespace RhoMicro.CodeAnalysis.JsonSchemaGenerator.Models;
 using System.Text;
 
-abstract record JsonValueModel<T> : JsonValueModel
+internal abstract record JsonValueModel<T> : JsonValueModel
 {
     public JsonValueModel(T value) => Value = value;
     public T Value { get; set; }
@@ -10,7 +10,7 @@ abstract record JsonValueModel<T> : JsonValueModel
     public override String ToString() => base.ToString();
 }
 
-abstract record JsonValueModel
+internal abstract record JsonValueModel
 {
     public abstract void AppendTo(StringBuilder sb, CancellationToken ct);
     public override String ToString() => new StringBuilder().AppendModel(this, ct: default).ToString();

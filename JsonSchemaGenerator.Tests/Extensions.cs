@@ -1,7 +1,7 @@
 ﻿namespace RhoMicro.CodeAnalysis.JsonSchemaGenerator.Tests;
 using System.Text.Json.Nodes;
 
-static class Extensions
+internal static class Extensions
 {
     public static void AssertEquality(this JsonNode? actual, JsonNode? expected)
     {

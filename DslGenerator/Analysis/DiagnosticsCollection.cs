@@ -8,6 +8,7 @@ using System.Collections.Generic;
 
 #if DSL_GENERATOR
 [IncludeFile]
+internal
 #endif
 sealed class DiagnosticsCollection : IReadOnlyList<Diagnostic>
 {

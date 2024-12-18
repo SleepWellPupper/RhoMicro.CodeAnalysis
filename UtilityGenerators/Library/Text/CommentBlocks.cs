@@ -1,6 +1,6 @@
 ﻿namespace RhoMicro.CodeAnalysis.Library.Text;
 
-#if UTILITYGENERATORS
+#if RHOMICRO_CODEANALYSIS_UTILITYGENERATORS
 [IncludeFile]
 #endif
 internal static class CommentBlocks

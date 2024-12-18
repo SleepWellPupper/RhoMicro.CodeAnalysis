@@ -1,6 +1,6 @@
 ﻿namespace RhoMicro.CodeAnalysis.JsonSchemaGenerator.Models;
 
-enum JsonType
+internal enum JsonType
 {
     String,
     Number,

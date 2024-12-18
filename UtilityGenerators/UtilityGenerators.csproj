@@ -20,7 +20,7 @@
 	</PropertyGroup>
 
 	<PropertyGroup>
-		<DefineConstants>$(DefineConstants);GENERATOR;UTILITYGENERATORS;INCLUDELIBRARYFILES</DefineConstants>
+		<DefineConstants>$(DefineConstants);GENERATOR;RHOMICRO_CODEANALYSIS_UTILITYGENERATORS</DefineConstants>
 	</PropertyGroup>
 	
 	<ItemGroup>
@@ -30,7 +30,7 @@
 		  <PrivateAssets>all</PrivateAssets>
 		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="RhoMicro.CodeAnalysis.UtilityGenerators.Dev" Version="*">
+		<PackageReference Include="RhoMicro.CodeAnalysis.UtilityGenerators.Dev" Version="1.0.0.*">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>

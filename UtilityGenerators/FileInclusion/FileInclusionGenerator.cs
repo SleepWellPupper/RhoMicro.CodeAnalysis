@@ -145,7 +145,7 @@ public sealed class FileInclusionGenerator : IIncrementalGenerator
             });
 
         context.RegisterSourceOutput(sourceProvider, (ctx, sourceText) => ctx.AddSource(_hintName, sourceText));
-#if INCLUDELIBRARYFILES && !EXCLUDELIBRARYFILES
+#if RHOMICRO_CODEANALYSIS_UTILITYGENERATORS
         Generated.IncludedFileSources.RegisterToContext(context);
 #endif
     }

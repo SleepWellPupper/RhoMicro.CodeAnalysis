@@ -8,7 +8,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-static class Extensions
+internal static class Extensions
 {
     public static Boolean IsCopyable(this ITypeSymbol symbol) =>
         symbol.IsMarked() ||

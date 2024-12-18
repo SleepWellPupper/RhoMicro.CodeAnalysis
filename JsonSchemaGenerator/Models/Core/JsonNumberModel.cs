@@ -3,7 +3,7 @@
 using System.Globalization;
 using System.Text;
 
-sealed record JsonNumberModel : JsonValueModel<Number>
+internal sealed record JsonNumberModel : JsonValueModel<Number>
 {
     public JsonNumberModel(Number value) : base(value) { }
 

@@ -3,9 +3,14 @@
 using System;
 
 [AttributeUsage(AttributeTargets.Assembly | AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Enum | AttributeTargets.Interface | AttributeTargets.Delegate, AllowMultiple = true, Inherited = false)]
+#if RHOMICRO_CODEANALYSIS_UTILITYGENERATORS && !RHOMICRO_CODEANALYSIS_UTILITYGENERATORS_DEV
+[IncludeFile]
+#endif
 #if GENERATOR
 [NonEquatable]
-[IncludeFile]
+#endif
+#if RHOMICRO_CODEANALYSIS_UTILITYGENERATORS || RHOMICRO_CODEANALYSIS_UTILITYGENERATORS_DEV
+[GenerateFactory(GenerateModelTypeAsStruct = true)]
 #endif
 internal sealed partial class IncludeFileAttribute : Attribute
 {

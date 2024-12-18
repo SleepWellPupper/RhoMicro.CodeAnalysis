@@ -5,7 +5,7 @@ using System.Text;
 
 using Microsoft.CodeAnalysis;
 
-#if UTILITYGENERATORS
+#if RHOMICRO_CODEANALYSIS_UTILITYGENERATORS
 [IncludeFile]
 #endif
 internal sealed record AttributeParameterTypeModel(

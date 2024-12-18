@@ -1,12 +1,12 @@
 ﻿namespace RhoMicro.CodeAnalysis.Library.Text;
 
-#if UTILITYGENERATORS
+#if RHOMICRO_CODEANALYSIS_UTILITYGENERATORS
 [IncludeFile]
+#endif
+#if GENERATOR
 [NonEquatable]
 #endif
-#pragma warning disable IDE0040 // Add accessibility modifiers
-sealed partial class IndentedStringBuilderAppendable(Action<IndentedStringBuilder> strategy) : IIndentedStringBuilderAppendable
-#pragma warning restore IDE0040 // Add accessibility modifiers
+internal sealed partial class IndentedStringBuilderAppendable(Action<IndentedStringBuilder> strategy) : IIndentedStringBuilderAppendable
 {
     public void AppendTo(IndentedStringBuilder builder) => strategy.Invoke(builder);
 }

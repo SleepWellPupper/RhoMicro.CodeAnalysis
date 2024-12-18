@@ -1,6 +1,6 @@
 ﻿namespace RhoMicro.CodeAnalysis.JsonSchemaGenerator.Models;
 
-readonly record struct SimpleSchemaModelBuilder(SimpleSchemaModel Model)
+internal readonly record struct SimpleSchemaModelBuilder(SimpleSchemaModel Model)
 {
     public TypeSetModel Type => new(Model.Set("type"));
     public void SetId(Id id) => GetId().Value = id.Absolute;

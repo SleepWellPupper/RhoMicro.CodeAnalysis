@@ -6,7 +6,7 @@ using static RhoMicro.CodeAnalysis.Library.Text.IndentedStringBuilder.Appendable
 using System;
 using RhoMicro.CodeAnalysis.UnionsGenerator.Transformation.Storage;
 
-partial class StorageStrategy
+internal partial class StorageStrategy
 {
     private sealed class FieldContainerStrategy(
         SettingsModel settings,

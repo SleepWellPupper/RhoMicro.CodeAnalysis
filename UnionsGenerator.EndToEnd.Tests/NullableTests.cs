@@ -5,12 +5,12 @@ using System;
 public partial class NullableTests
 {
     [UnionType<Boolean?>]
-    readonly partial struct NullableBoolUnion;
+    private readonly partial struct NullableBoolUnion;
 
     [UnionType<Int32?>(Alias = "Int", Options = UnionTypeOptions.Nullable)]
-    readonly partial struct PedroUnion;
+    private readonly partial struct PedroUnion;
     [UnionType<Int64, Int64?>]
-    readonly partial struct PedroLongUnion;
+    private readonly partial struct PedroLongUnion;
 
     [Fact]
     public void NullableBoolTrueFactoryCall()

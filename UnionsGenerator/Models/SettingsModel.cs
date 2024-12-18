@@ -9,7 +9,7 @@ using RhoMicro.CodeAnalysis.UnionsGenerator.Generators;
 using RhoMicro.CodeAnalysis.UnionsGenerator.Transformation.Visitors;
 using RhoMicro.CodeAnalysis.UnionsGenerator.Utils;
 
-sealed record SettingsModel(
+internal sealed record SettingsModel(
 #region Settings
     ToStringSetting ToStringSetting,
     LayoutSetting Layout,

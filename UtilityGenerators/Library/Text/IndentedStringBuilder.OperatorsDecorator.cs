@@ -1,11 +1,11 @@
 ﻿namespace RhoMicro.CodeAnalysis.Library.Text;
 
-#pragma warning disable IDE0040 // Add accessibility modifiers
-partial class IndentedStringBuilder
-#pragma warning restore IDE0040 // Add accessibility modifiers
+internal partial class IndentedStringBuilder
 {
-#if UTILITYGENERATORS
+#if RHOMICRO_CODEANALYSIS_UTILITYGENERATORS
     [IncludeFile]
+#endif
+#if GENERATOR
     [NonEquatable]
 #endif
     public sealed partial class OperatorsDecorator(IndentedStringBuilder builder)

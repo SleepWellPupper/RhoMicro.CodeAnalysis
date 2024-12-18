@@ -1,6 +1,6 @@
 ﻿namespace RhoMicro.CodeAnalysis.DslGenerator.Grammar;
 
-abstract class SyntaxNodeVisitor
+internal abstract class SyntaxNodeVisitor
 {
     public abstract void Visit(Name name);
     public abstract void Visit(NamedRuleList namedRuleList);

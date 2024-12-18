@@ -5,6 +5,7 @@ using RhoMicro.CodeAnalysis.DslGenerator.Lexing;
 
 #if DSL_GENERATOR
 [IncludeFile]
+internal
 #endif
 sealed record Diagnostic(DiagnosticDescriptor Descriptor, Location Location, IReadOnlyCollection<Object> MessageArgs)
 {

@@ -3,7 +3,7 @@
 using System.Runtime.CompilerServices;
 
 [Flags]
-#if UTILITYGENERATORS
+#if RHOMICRO_CODEANALYSIS_UTILITYGENERATORS
 [IncludeFile]
 #endif
 internal enum AttributeParameterTypeKind

@@ -5,7 +5,7 @@ using System;
 using RhoMicro.CodeAnalysis.Library.Text;
 using RhoMicro.CodeAnalysis.UnionsGenerator.Transformation.Storage;
 
-partial class StorageStrategy
+internal partial class StorageStrategy
 {
     private sealed class ValueContainerStrategy(
         SettingsModel settings,

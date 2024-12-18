@@ -7,7 +7,7 @@ using Microsoft.CodeAnalysis;
 using RhoMicro.CodeAnalysis.UnionsGenerator.Transformation.Visitors;
 using RhoMicro.CodeAnalysis.UnionsGenerator.Utils;
 
-sealed record FactoryModel(
+internal sealed record FactoryModel(
     Boolean RequiresGeneration,
     String Name,
     TypeSignatureModel Parameter,

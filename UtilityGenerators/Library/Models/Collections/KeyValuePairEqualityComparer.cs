@@ -3,8 +3,10 @@
 using System;
 using System.Collections.Generic;
 
-#if UTILITYGENERATORS
+#if RHOMICRO_CODEANALYSIS_UTILITYGENERATORS
 [IncludeFile]
+#endif
+#if GENERATOR
 [NonEquatable]
 #endif
 internal sealed partial class KeyValuePairEqualityComparer<TKey, TValue>(IEqualityComparer<TKey> keyComparer, IEqualityComparer<TValue> valueComparer) : IEqualityComparer<KeyValuePair<TKey, TValue>>

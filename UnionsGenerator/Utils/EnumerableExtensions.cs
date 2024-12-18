@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-static class EnumerableExtensions
+internal static class EnumerableExtensions
 {
     public static IEnumerable<T> DistinctBy<T, TDiscriminator>(this IEnumerable<T> values, Func<T, TDiscriminator> discriminatorSelector)
     {

@@ -8,7 +8,7 @@ using System.Diagnostics;
 [IncludeFile]
 #endif
 [DebuggerDisplay("{ToDisplayString()}")]
-record NamedRuleList(Name Name, IReadOnlyList<RuleDefinition> Definitions) : RuleList(Definitions)
+internal record NamedRuleList(Name Name, IReadOnlyList<RuleDefinition> Definitions) : RuleList(Definitions)
 {
     public override String ToString() => base.ToString();
     public virtual Boolean Equals(NamedRuleList other) => Name.Equals(other.Name) && base.Equals(other);

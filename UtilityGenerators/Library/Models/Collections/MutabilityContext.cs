@@ -3,8 +3,10 @@
 using System;
 using System.Runtime.CompilerServices;
 
-#if UTILITYGENERATORS
+#if RHOMICRO_CODEANALYSIS_UTILITYGENERATORS
 [IncludeFile]
+#endif
+#if GENERATOR
 [NonEquatable]
 #endif
 internal sealed partial class MutabilityContext

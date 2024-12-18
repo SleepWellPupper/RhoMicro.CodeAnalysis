@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 public partial class JsonConverterTests
 {
     [UnionType<DateTime, Double, String, List<String>>]
-    readonly partial struct Union;
+    private readonly partial struct Union;
 
     [Fact]
     public void SerializesDateTimeUnion()

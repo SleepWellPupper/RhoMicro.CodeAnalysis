@@ -4,7 +4,7 @@ using RhoMicro.CodeAnalysis.Library.Text;
 
 using static RhoMicro.CodeAnalysis.Library.Text.IndentedStringBuilder.Appendables;
 
-partial class Documentation : IIndentedStringBuilderAppendable
+public partial class Documentation : IIndentedStringBuilderAppendable
 {
     void IIndentedStringBuilderAppendable.AppendTo(IndentedStringBuilder builder) => _ = builder.Operators +
         "new " + GetType().FullName + OpenBlock(Blocks.Parentheses with

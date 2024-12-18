@@ -3,7 +3,7 @@ using System;
 
 using RhoMicro.CodeAnalysis.UnionsGenerator.Models;
 
-partial record CommentBuilder
+internal partial record CommentBuilder
 {
     public IndentedStringBuilder SeeRef(UnionTypeModel model) =>
         SeeRef(model.Signature);

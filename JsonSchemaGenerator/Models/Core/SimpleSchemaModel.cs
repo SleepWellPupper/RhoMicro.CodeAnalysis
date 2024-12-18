@@ -1,3 +1,3 @@
 ﻿namespace RhoMicro.CodeAnalysis.JsonSchemaGenerator.Models;
 
-sealed record SimpleSchemaModel:JsonObjectModel;
+internal sealed record SimpleSchemaModel:JsonObjectModel;

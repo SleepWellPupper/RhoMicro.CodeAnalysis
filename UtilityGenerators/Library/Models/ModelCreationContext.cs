@@ -2,8 +2,10 @@
 
 using RhoMicro.CodeAnalysis.Library.Models.Collections;
 
-#if UTILITYGENERATORS
+#if RHOMICRO_CODEANALYSIS_UTILITYGENERATORS
 [IncludeFile]
+#endif
+#if GENERATOR
 [NonEquatable]
 #endif
 internal readonly partial struct ModelCreationContext(EquatableCollectionFactory collectionFactory, CancellationToken cancellationToken)

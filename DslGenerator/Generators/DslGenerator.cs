@@ -16,12 +16,12 @@ using RhoMicro.CodeAnalysis.Library.Text;
 [Generator(LanguageNames.CSharp)]
 public sealed class DslGenerator : IIncrementalGenerator
 {
-    const String _grammarFileExtension = ".rmbnf";
-    static readonly IEqualityComparer<(String source, DiagnosticsCollection diagnostics)> _sourceDiagnosticsTupleComparer =
+    private const String _grammarFileExtension = ".rmbnf";
+    private static readonly IEqualityComparer<(String source, DiagnosticsCollection diagnostics)> _sourceDiagnosticsTupleComparer =
         new EqualityComparerStrategy<(String source, DiagnosticsCollection diagnostics)>(
                 (x, y) => x.source == y.source,
                 obj => obj.source.GetHashCode());
-    static readonly IEqualityComparer<ImmutableArray<(String source, DiagnosticsCollection diagnostics)>> _sourceDiagnosticsTupleArrayComparer =
+    private static readonly IEqualityComparer<ImmutableArray<(String source, DiagnosticsCollection diagnostics)>> _sourceDiagnosticsTupleArrayComparer =
         new ImmutableArrayCollectionEqualityComparer<(String source, DiagnosticsCollection diagnostics)>(_sourceDiagnosticsTupleComparer);
 
     /// <inheritdoc/>

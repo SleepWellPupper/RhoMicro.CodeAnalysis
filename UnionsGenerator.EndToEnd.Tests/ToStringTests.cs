@@ -9,7 +9,7 @@ public partial class ToStringTests
 {
     [UnionType<String>]
     [UnionTypeSettings(ToStringSetting = ToStringSetting.None)]
-    partial class NoToStringUnionType;
+    private partial class NoToStringUnionType;
 
     [Fact]
     public void UsesDefaultToString()
@@ -22,7 +22,7 @@ public partial class ToStringTests
     }
 
     [UnionType<String>]
-    partial class CustomToStringUnionType
+    private partial class CustomToStringUnionType
     {
         public override String ToString() => "Foo";
     }

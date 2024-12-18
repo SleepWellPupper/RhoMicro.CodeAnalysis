@@ -4,6 +4,7 @@ using System.Diagnostics;
 
 #if DSL_GENERATOR
 [IncludeFile]
+internal
 #endif
 abstract partial record RuleDefinition
 {

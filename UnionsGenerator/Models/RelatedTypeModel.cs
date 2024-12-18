@@ -6,7 +6,7 @@ using RhoMicro.CodeAnalysis.UnionsGenerator.Models.Storage;
 using RhoMicro.CodeAnalysis.UnionsGenerator.Transformation.Visitors;
 using RhoMicro.CodeAnalysis.UnionsGenerator.Utils;
 
-sealed record RelatedTypeModel(TypeSignatureModel Signature, EquatableSet<TypeSignatureModel> RepresentableTypeSignatures) : IModel<RelatedTypeModel>
+internal sealed record RelatedTypeModel(TypeSignatureModel Signature, EquatableSet<TypeSignatureModel> RepresentableTypeSignatures) : IModel<RelatedTypeModel>
 {
     public static RelatedTypeModel Create(INamedTypeSymbol relationSymbol, CancellationToken cancellationToken)
     {

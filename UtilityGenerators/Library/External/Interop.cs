@@ -8,8 +8,11 @@ using System;
 using System.Runtime.InteropServices;
 using System.Security.Cryptography;
 
-#if UTILITYGENERATORS
+#if RHOMICRO_CODEANALYSIS_UTILITYGENERATORS
 [RhoMicro.CodeAnalysis.IncludeFile]
+#endif
+#if GENERATOR
+[RhoMicro.CodeAnalysis.NonEquatable]
 #endif
 internal partial class Interop
 {

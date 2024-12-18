@@ -4,6 +4,7 @@ using System.Linq;
 
 #if DSL_GENERATOR
 [IncludeFile]
+internal
 #endif
 static class ListExtensions
 {

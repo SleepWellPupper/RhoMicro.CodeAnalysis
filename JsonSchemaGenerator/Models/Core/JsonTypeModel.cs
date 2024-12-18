@@ -2,7 +2,7 @@
 
 using System.Text;
 
-sealed record JsonTypeModel : JsonValueModel<JsonType>
+internal sealed record JsonTypeModel : JsonValueModel<JsonType>
 {
     public JsonTypeModel(JsonType value) : base(value) { }
     public static JsonTypeModel String => new(JsonType.String);

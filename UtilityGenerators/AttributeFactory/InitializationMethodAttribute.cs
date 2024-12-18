@@ -12,9 +12,13 @@ using System;
 /// type <see cref="CancellationToken"/>.
 /// </summary>
 [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = false)]
+#if RHOMICRO_CODEANALYSIS_UTILITYGENERATORS && !RHOMICRO_CODEANALYSIS_UTILITYGENERATORS_DEV
+[IncludeFile]
+#endif
 #if GENERATOR
 [NonEquatable]
-[IncludeFile]
+#endif
+#if RHOMICRO_CODEANALYSIS_UTILITYGENERATORS || RHOMICRO_CODEANALYSIS_UTILITYGENERATORS_DEV
 [GenerateFactory(GenerateModelTypeAsStruct = true)]
 #endif
 internal sealed partial class InitializationMethodAttribute : Attribute

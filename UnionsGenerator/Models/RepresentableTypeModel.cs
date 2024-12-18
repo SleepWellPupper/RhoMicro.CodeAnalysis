@@ -21,7 +21,7 @@ using RhoMicro.CodeAnalysis.UnionsGenerator.Utils;
 /// <param name="StorageStrategy"></param>
 /// <param name="OmitConversionOperators"></param>
 /// <param name="IsBaseClassToUnionType"></param>
-sealed record RepresentableTypeModel(
+internal sealed record RepresentableTypeModel(
     String Alias,
     String FactoryName,
     UnionTypeOptions Options,

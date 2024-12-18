@@ -4,7 +4,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 
-#if UTILITYGENERATORS
+#if RHOMICRO_CODEANALYSIS_UTILITYGENERATORS
 [IncludeFile]
 #endif
 internal sealed record EquatableList<T> : EquatableCollection<T, IList<T>>, IList<T>, IReadOnlyList<T>

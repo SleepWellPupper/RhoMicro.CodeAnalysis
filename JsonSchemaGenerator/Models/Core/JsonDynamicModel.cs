@@ -1,7 +1,7 @@
 ﻿namespace RhoMicro.CodeAnalysis.JsonSchemaGenerator.Models;
 using System.Text;
 
-sealed record JsonDynamicModel : JsonValueModel<JsonValueModel>
+internal sealed record JsonDynamicModel : JsonValueModel<JsonValueModel>
 {
     public JsonDynamicModel() : base(CreateArray()) { }
     public override void AppendTo(StringBuilder sb, CancellationToken ct) => Value.AppendTo(sb, ct);

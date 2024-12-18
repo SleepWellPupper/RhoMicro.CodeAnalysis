@@ -8,11 +8,12 @@ using static Lexemes;
 
 #if DSL_GENERATOR
 [IncludeFile]
+internal
 #endif
 partial class Tokenizer
 {
     [UnionType<Token, TokenType>]
-    readonly partial struct TokenOrType;
+    private readonly partial struct TokenOrType;
     public static Tokenizer Instance { get; } = new();
     
     public TokenizeResult Tokenize(SourceText sourceText, CancellationToken cancellationToken

@@ -21,7 +21,7 @@ using System.Collections.Immutable;
 /// <param name="IsEqualsRequired"></param>
 /// <param name="IsToStringRequired"></param>
 /// <param name="Locations"></param>
-sealed record UnionTypeModel(
+internal sealed record UnionTypeModel(
     TypeSignatureModel Signature,
     EquatableList<RepresentableTypeModel> RepresentableTypes,
     EquatableList<RelationModel> Relations,

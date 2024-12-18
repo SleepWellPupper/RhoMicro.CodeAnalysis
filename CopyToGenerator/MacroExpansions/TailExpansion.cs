@@ -8,7 +8,7 @@ using RhoMicro.CodeAnalysis.CopyToGenerator.MacroExpansions;
 
 using System.Text;
 
-sealed class TailExpansion(Model model) : MacroExpansionBase(model, Macro.Tail)
+internal sealed class TailExpansion(Model model) : MacroExpansionBase(model, Macro.Tail)
 {
     public override void Expand(IExpandingMacroStringBuilder<Macro> builder, CancellationToken cancellationToken)
     {

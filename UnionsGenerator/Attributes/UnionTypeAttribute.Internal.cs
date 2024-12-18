@@ -4,7 +4,7 @@ using Microsoft.CodeAnalysis;
 
 using RhoMicro.CodeAnalysis.UnionsGenerator.Models;
 
-partial class AliasedUnionTypeBaseAttribute
+internal partial class AliasedUnionTypeBaseAttribute
 {
     internal PartialRepresentableTypeModel GetPartialModel(TypeOrTypeParameterType representableType, INamedTypeSymbol unionType, CancellationToken ct)
     {

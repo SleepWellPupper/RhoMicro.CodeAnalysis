@@ -1,6 +1,6 @@
 ﻿namespace RhoMicro.CodeAnalysis.UnionsGenerator.Transformation.Storage;
 
-enum StorageSelectionViolation
+internal enum StorageSelectionViolation
 {
     None,
     /// <summary>

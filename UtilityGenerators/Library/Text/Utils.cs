@@ -2,7 +2,7 @@
 
 using Microsoft.CodeAnalysis;
 
-#if UTILITYGENERATORS
+#if RHOMICRO_CODEANALYSIS_UTILITYGENERATORS
 [IncludeFile]
 #endif
 internal static partial class Utils

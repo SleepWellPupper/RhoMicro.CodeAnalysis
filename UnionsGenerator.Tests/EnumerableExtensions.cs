@@ -2,7 +2,7 @@
 
 using Microsoft.CodeAnalysis;
 
-static class EnumerableExtensions
+internal static class EnumerableExtensions
 {
     public static Boolean None<T>(this IEnumerable<T> enumeration)
         => !enumeration.Any();

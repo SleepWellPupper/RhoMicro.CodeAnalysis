@@ -6,7 +6,7 @@ Console.WriteLine(TestNamespace.FooStrings.Baz);
 namespace TestNamespace
 {
     [RhoMicro.CodeAnalysis.GenerateMemberStringConstants]
-    enum Foo: Int64
+    internal enum Foo: Int64
     {
         Foo,
         FooBar,

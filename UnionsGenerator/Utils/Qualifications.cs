@@ -8,7 +8,7 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Threading;
 
-static class Qualifications
+internal static class Qualifications
 {
     public const String NonGenericFullMetadataName = MetadataNamespace + "." + NonGenericMetadataName;
     public const String NonGenericMetadataName = "UnionTypeAttribute";

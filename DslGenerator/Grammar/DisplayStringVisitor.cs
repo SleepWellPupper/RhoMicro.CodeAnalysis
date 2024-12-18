@@ -1,7 +1,7 @@
 ﻿namespace RhoMicro.CodeAnalysis.DslGenerator.Grammar;
 using System;
 
-sealed class DisplayStringVisitor(IndentedStringBuilder builder) : SyntaxNodeVisitor
+internal sealed class DisplayStringVisitor(IndentedStringBuilder builder) : SyntaxNodeVisitor
 {
     public DisplayStringVisitor() : this(new()) { }
     private readonly IndentedStringBuilder _builder = builder;

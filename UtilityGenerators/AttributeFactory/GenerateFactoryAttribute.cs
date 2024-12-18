@@ -8,25 +8,17 @@ using Microsoft.CodeAnalysis;
 /// extensions for working with the target type will be generated.
 /// </summary>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = false, Inherited = false)]
+#if RHOMICRO_CODEANALYSIS_UTILITYGENERATORS && !RHOMICRO_CODEANALYSIS_UTILITYGENERATORS_DEV
+[IncludeFile]
+#endif
 #if GENERATOR
 [NonEquatable]
-[IncludeFile]
-[GenerateFactory]
+#endif
+#if RHOMICRO_CODEANALYSIS_UTILITYGENERATORS || RHOMICRO_CODEANALYSIS_UTILITYGENERATORS_DEV
+[GenerateFactory(GenerateModelTypeAsStruct = false)]
 #endif
 internal sealed partial class GenerateFactoryAttribute : Attribute
 {
-#if GENERATOR
-    public partial record Model
-    {
-        [InitializationMethod]
-        private void Init(INamedTypeSymbol target, CancellationToken ct)
-        {
-            ct.ThrowIfCancellationRequested();
-
-            ExtensionsTypeName ??= $"{target.Name}Extensions";
-        }
-    }
-#endif
     /// <summary>
     /// The default value for <see cref="PropertyAccessorTypeName"/>.
     /// </summary>

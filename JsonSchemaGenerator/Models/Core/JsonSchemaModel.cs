@@ -2,7 +2,7 @@
 
 using System.Text;
 
-sealed record JsonSchemaModel : JsonValueModel
+internal sealed record JsonSchemaModel : JsonValueModel
 {
     private readonly List<SubSchemaModelBuilder> _subSchemata = [];
     private JsonObjectModel? _result;

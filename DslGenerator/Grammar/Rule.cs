@@ -6,7 +6,7 @@ using System.Diagnostics;
 [IncludeFile]
 #endif
 [DebuggerDisplay("{ToDisplayString()}")]
-abstract partial record Rule : SyntaxNode
+internal abstract partial record Rule : SyntaxNode
 {
     public override String ToString() => base.ToString();
 }

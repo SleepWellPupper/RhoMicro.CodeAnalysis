@@ -2,7 +2,7 @@
 
 using System.Collections.Generic;
 
-readonly struct ParseStepResult(String typeMetadataName, String rawComment, TypeDocumentation documentation) : IEquatable<ParseStepResult>
+internal readonly struct ParseStepResult(String typeMetadataName, String rawComment, TypeDocumentation documentation) : IEquatable<ParseStepResult>
 {
     public readonly String TypeMetadataName { get; } = typeMetadataName;
     private readonly String _rawComment = rawComment;

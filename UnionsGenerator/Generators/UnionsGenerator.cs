@@ -61,7 +61,7 @@ public class UnionsGenerator : IIncrementalGenerator
         context.RegisterPostInitializationOutput(RegisterConstantSources);
     }
     #region Transformations
-    static SourceTextProvider CreateSourceTextProvider(IncrementalValuesProvider<UnionTypeModel> provider) =>
+    private static SourceTextProvider CreateSourceTextProvider(IncrementalValuesProvider<UnionTypeModel> provider) =>
         provider
         .Select((model, ct) =>
         {

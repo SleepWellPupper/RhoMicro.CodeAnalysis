@@ -15,7 +15,7 @@ public partial class ReadMeAssertions
 {
     [UnionType<Int32>]
     [UnionType<String>]
-    partial struct IntOrString;
+    private partial struct IntOrString;
     [Fact]
     public void TypeDeclarationTarget()
     {
@@ -23,7 +23,7 @@ public partial class ReadMeAssertions
         u = 32; //implicitly converted
     }
 
-    partial struct GenericUnion<[UnionType] T0, [UnionType] T1>;
+    private partial struct GenericUnion<[UnionType] T0, [UnionType] T1>;
     [Fact]
     public void TypeParameterTarget()
     {
@@ -33,7 +33,7 @@ public partial class ReadMeAssertions
 
     [UnionType<List<String>>(Alias = "MultipleNames")]
     [UnionType<String>(Alias = "SingleName")]
-    partial struct Names;
+    private partial struct Names;
     [Fact]
     public void AliasExample()
     {
@@ -48,7 +48,7 @@ public partial class ReadMeAssertions
     }
 
     [UnionType<Int32>(Options = UnionTypeOptions.ImplicitConversionIfSolitary)]
-    partial struct Int32Alias;
+    private partial struct Int32Alias;
     [Fact]
     public void Solitary()
     {
@@ -57,7 +57,7 @@ public partial class ReadMeAssertions
         i = u;
     }
 
-    partial struct GenericConvertableUnion<[UnionType] T>;
+    private partial struct GenericConvertableUnion<[UnionType] T>;
     [Fact]
     public void SupersetOfParameter()
     {
@@ -68,7 +68,7 @@ public partial class ReadMeAssertions
 #pragma warning disable CS8604 // Possible null reference argument.
     [UnionType<String>(Options = UnionTypeOptions.Nullable)]
     [UnionType<List<String>>]
-    partial struct NullableStringUnion;
+    private partial struct NullableStringUnion;
     [Fact]
     public void NullableUnion()
     {
@@ -81,7 +81,7 @@ public partial class ReadMeAssertions
 
     [UnionType<Int32, Single>(Groups = ["Number"])]
     [UnionType<String, Char>(Groups = ["Text"])]
-    partial struct GroupedUnion;
+    private partial struct GroupedUnion;
     [Fact]
     public void GroupedUnions()
     {

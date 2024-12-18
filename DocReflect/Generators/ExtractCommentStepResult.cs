@@ -3,7 +3,7 @@
 using System.Collections.Generic;
 using System.Xml;
 
-readonly struct ExtractCommentStepResult(String typeMetadataName, String rawComment, XmlDocument parsedComment)
+internal readonly struct ExtractCommentStepResult(String typeMetadataName, String rawComment, XmlDocument parsedComment)
     : IEquatable<ExtractCommentStepResult>
 {
     public readonly String TypeMetadataName { get; } = typeMetadataName;

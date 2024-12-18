@@ -2,7 +2,7 @@
 
 using System.Text;
 
-sealed record JsonStringModel : JsonValueModel<String>
+internal sealed record JsonStringModel : JsonValueModel<String>
 {
     public JsonStringModel(String value) : base(value) { }
     public override void AppendTo(StringBuilder sb, CancellationToken ct)

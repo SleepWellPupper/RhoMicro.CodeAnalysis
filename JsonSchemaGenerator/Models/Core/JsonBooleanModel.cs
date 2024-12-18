@@ -2,7 +2,7 @@
 
 using System.Text;
 
-sealed record JsonBooleanModel : JsonValueModel<Boolean>
+internal sealed record JsonBooleanModel : JsonValueModel<Boolean>
 {
     public JsonBooleanModel(Boolean value) : base(value) { }
     public static JsonBooleanModel False => new(false);

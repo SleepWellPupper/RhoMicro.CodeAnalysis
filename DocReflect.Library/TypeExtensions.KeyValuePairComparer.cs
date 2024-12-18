@@ -1,7 +1,7 @@
 ﻿namespace RhoMicro.CodeAnalysis.DocReflect;
 public static partial class Extensions
 {
-    sealed class KeyValuePairComparer<TKey, TValue> : IEqualityComparer<KeyValuePair<TKey, TValue>>
+    private sealed class KeyValuePairComparer<TKey, TValue> : IEqualityComparer<KeyValuePair<TKey, TValue>>
     {
         public KeyValuePairComparer() { }
 

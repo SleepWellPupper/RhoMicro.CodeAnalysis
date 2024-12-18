@@ -6,7 +6,7 @@ using System.Diagnostics;
 [IncludeFile]
 #endif
 [DebuggerDisplay("{DebuggerDisplayString()}")]
-readonly record struct StringSlice(String Source, Int32 Start, Int32 Length) : IEquatable<String>, IEquatable<Char>
+internal readonly record struct StringSlice(String Source, Int32 Start, Int32 Length) : IEquatable<String>, IEquatable<Char>
 {
     public override String ToString() => Source.Substring(Start, Length);
     private String DebuggerDisplayString() => ToString().Replace("\n", "\\n").Replace("\r", "\\r");

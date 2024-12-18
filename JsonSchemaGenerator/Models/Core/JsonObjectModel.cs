@@ -5,7 +5,7 @@ using System.Text;
 
 using RhoMicro.CodeAnalysis.Library;
 
-record JsonObjectModel : JsonValueModel<Dictionary<String, JsonValueModel>>
+internal record JsonObjectModel : JsonValueModel<Dictionary<String, JsonValueModel>>
 {
     public JsonObjectModel(Dictionary<String, JsonValueModel> value) : base(value) => _properties = new(Value);
     public JsonObjectModel() : this([]) { }

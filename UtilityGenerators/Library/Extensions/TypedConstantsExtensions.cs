@@ -9,7 +9,7 @@ using Microsoft.CodeAnalysis;
 
 using RhoMicro.CodeAnalysis;
 
-#if UTILITYGENERATORS
+#if RHOMICRO_CODEANALYSIS_UTILITYGENERATORS
 [IncludeFile]
 #endif
 internal static class TypedConstantsExtensions

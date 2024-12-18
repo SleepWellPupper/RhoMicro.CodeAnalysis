@@ -6,7 +6,7 @@ using Microsoft.CodeAnalysis;
 
 using RhoMicro.CodeAnalysis.Library;
 
-readonly record struct Id(String Value, Int32 Depth)
+internal readonly record struct Id(String Value, Int32 Depth)
 {
     public String Absolute => $"./{Value}.json";
     public String Relative(Id to) => $"{String.Concat(Enumerable.Repeat("../", to.Depth))}{Value}.json";

@@ -5,7 +5,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Net.NetworkInformation;
 
-#if UTILITYGENERATORS
+#if RHOMICRO_CODEANALYSIS_UTILITYGENERATORS
 [IncludeFile]
 #endif
 internal sealed record LazyEquatableList<T> : LazyEquatableList<T, LazyEquatableList<T>>

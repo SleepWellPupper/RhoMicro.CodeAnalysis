@@ -8,6 +8,7 @@ using static Rule;
 
 #if DSL_GENERATOR
 [IncludeFile]
+internal
 #endif
 readonly struct RuleBuilder
 {

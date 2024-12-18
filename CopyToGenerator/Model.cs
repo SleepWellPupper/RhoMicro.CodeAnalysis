@@ -4,7 +4,7 @@ using Microsoft.CodeAnalysis;
 
 using System.Linq;
 
-readonly struct Model : IEquatable<Model>
+internal readonly struct Model : IEquatable<Model>
 {
     private Model(String @namespace, String name, Boolean isInGlobalNamespace, IReadOnlyList<PropertyModel> properties)
     {

@@ -7,7 +7,7 @@ using System.Text;
 [IncludeFile]
 #endif
 [UnionType<String, Stream>]
-readonly partial struct SourceText : IDisposable
+internal readonly partial struct SourceText : IDisposable
 {
     public String ToString(CancellationToken cancellationToken) =>
         Match(

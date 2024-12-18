@@ -5,6 +5,7 @@ using RhoMicro.CodeAnalysis.DslGenerator.Grammar;
 
 #if DSL_GENERATOR
 [IncludeFile]
+internal
 #endif
 readonly record struct ParseResult(RuleList RuleList, DiagnosticsCollection Diagnostics)
 {

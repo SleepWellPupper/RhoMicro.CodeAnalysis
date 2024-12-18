@@ -6,7 +6,7 @@ using System.Diagnostics;
 [IncludeFile]
 #endif
 [DebuggerDisplay("{ToDisplayString()}")]
-abstract partial record RuleDefinition(Name Name, Rule Rule) : SyntaxNode
+internal abstract partial record RuleDefinition(Name Name, Rule Rule) : SyntaxNode
 {
     public override String ToString() => base.ToString();
     protected override void AppendCtorArgs(IndentedStringBuilder builder, CancellationToken cancellationToken)

@@ -45,21 +45,21 @@ internal class GeneratedRuleListGenerator : IIncrementalGenerator
             ctx.AddSource($"{nameof(GeneratedRuleListAttribute)}.g.cs", GeneratedRuleListAttribute.SourceText));
     }
 
-    static readonly EqualityComparerStrategy<ImplTypeStepResult> _implTypeStepResultComparer = new(
+    private static readonly EqualityComparerStrategy<ImplTypeStepResult> _implTypeStepResultComparer = new(
             (x, y) => x.implTypeSourceText == y.implTypeSourceText &&
                    x.partialTypeSourceText == y.partialTypeSourceText,
             obj => (obj.implTypeSourceText, obj.partialTypeSourceText).GetHashCode());
-    static readonly ImmutableArrayCollectionEqualityComparer<ImplTypeStepResult> _implTypeStepResultArrayComparer =
+    private static readonly ImmutableArrayCollectionEqualityComparer<ImplTypeStepResult> _implTypeStepResultArrayComparer =
         new(_implTypeStepResultComparer);
-    static readonly EqualityComparerStrategy<FinalStepResult> _finalStepResultComparer = new(
+    private static readonly EqualityComparerStrategy<FinalStepResult> _finalStepResultComparer = new(
             (x, y) => x.source == y.source,
             obj => obj.source.GetHashCode());
-    static readonly SymbolDisplayFormat _typeSignatureNameFormat =
+    private static readonly SymbolDisplayFormat _typeSignatureNameFormat =
         SymbolDisplayFormat.MinimallyQualifiedFormat.WithGenericsOptions(SymbolDisplayGenericsOptions.IncludeTypeParameters);
-    static readonly SymbolDisplayFormat _namespaceFormat =
+    private static readonly SymbolDisplayFormat _namespaceFormat =
         SymbolDisplayFormat.FullyQualifiedFormat.WithGlobalNamespaceStyle(SymbolDisplayGlobalNamespaceStyle.Omitted);
 
-    static Boolean IsGeneratorTarget(Microsoft.CodeAnalysis.SyntaxNode node, CancellationToken cancellationToken)
+    private static Boolean IsGeneratorTarget(Microsoft.CodeAnalysis.SyntaxNode node, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
@@ -96,7 +96,8 @@ internal class GeneratedRuleListGenerator : IIncrementalGenerator
 
         return result;
     }
-    static InitialStepResult InitialStep(GeneratorAttributeSyntaxContext context, CancellationToken cancellationToken)
+
+    private static InitialStepResult InitialStep(GeneratorAttributeSyntaxContext context, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
@@ -118,7 +119,8 @@ internal class GeneratedRuleListGenerator : IIncrementalGenerator
 
         return result;
     }
-    static TokenizeStepResult TokenizeStep(InitialStepResult previous, CancellationToken cancellationToken)
+
+    private static TokenizeStepResult TokenizeStep(InitialStepResult previous, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
@@ -126,7 +128,8 @@ internal class GeneratedRuleListGenerator : IIncrementalGenerator
 
         return (tokenizeResult, previous.implTypeName, previous.partialTypeSourceText);
     }
-    static ParseStepResult ParseStep(TokenizeStepResult previous, CancellationToken cancellationToken)
+
+    private static ParseStepResult ParseStep(TokenizeStepResult previous, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
@@ -134,7 +137,8 @@ internal class GeneratedRuleListGenerator : IIncrementalGenerator
 
         return (parseResult, previous.implTypeName, previous.partialTypeSourceText);
     }
-    static ImplTypeStepResult ImplTypeStep(ParseStepResult previous, CancellationToken cancellationToken)
+
+    private static ImplTypeStepResult ImplTypeStep(ParseStepResult previous, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
@@ -149,7 +153,8 @@ internal class GeneratedRuleListGenerator : IIncrementalGenerator
 
         return (implTypeSourceText, previous.partialTypeSourceText, previous.parseResult.Diagnostics);
     }
-    static FinalStepResult FinalStep(ImmutableArray<ImplTypeStepResult> results, CancellationToken cancellationToken)
+
+    private static FinalStepResult FinalStep(ImmutableArray<ImplTypeStepResult> results, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
@@ -172,7 +177,7 @@ internal class GeneratedRuleListGenerator : IIncrementalGenerator
         return (sourceText, diagnosticsAccumulator);
     }
 
-    static String GetPartialTypeSourceText(IMethodSymbol target, String implTypeName, CancellationToken cancellationToken)
+    private static String GetPartialTypeSourceText(IMethodSymbol target, String implTypeName, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
@@ -189,7 +194,8 @@ internal class GeneratedRuleListGenerator : IIncrementalGenerator
         var result = builder.ToString();
         return result;
     }
-    static void AppendMethodImplementation(IMethodSymbol target, String implTypeName, StringBuilder builder, CancellationToken cancellationToken)
+
+    private static void AppendMethodImplementation(IMethodSymbol target, String implTypeName, StringBuilder builder, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
@@ -201,7 +207,8 @@ internal class GeneratedRuleListGenerator : IIncrementalGenerator
             .Append(implTypeName)
             .AppendLine(".Instance;");
     }
-    static void AppendTail(StringBuilder builder, INamedTypeSymbol containingType, CancellationToken cancellationToken)
+
+    private static void AppendTail(StringBuilder builder, INamedTypeSymbol containingType, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
@@ -219,7 +226,8 @@ internal class GeneratedRuleListGenerator : IIncrementalGenerator
             _ = builder.AppendLine("}");
         }
     }
-    static void AppendHead(INamedTypeSymbol parent, StringBuilder builder, CancellationToken cancellationToken)
+
+    private static void AppendHead(INamedTypeSymbol parent, StringBuilder builder, CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
@@ -248,7 +256,8 @@ internal class GeneratedRuleListGenerator : IIncrementalGenerator
             .AppendLine(parent.ToDisplayString(_typeSignatureNameFormat))
             .AppendLine("{");
     }
-    static String GetImplTypeName(CancellationToken cancellationToken)
+
+    private static String GetImplTypeName(CancellationToken cancellationToken)
     {
         cancellationToken.ThrowIfCancellationRequested();
 

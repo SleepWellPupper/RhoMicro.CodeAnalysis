@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 
 #if DSL_GENERATOR
 [IncludeFile]
+internal
 #endif
 abstract record SyntaxNode
 {

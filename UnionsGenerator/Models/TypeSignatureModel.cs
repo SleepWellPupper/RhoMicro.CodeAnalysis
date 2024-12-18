@@ -23,7 +23,7 @@ using System.Reflection;
 /// <param name="Nature"></param>
 /// <param name="IsNullableAnnotated"></param>
 /// <param name="Names"></param>
-sealed record TypeSignatureModel(
+internal sealed record TypeSignatureModel(
     EquatableList<TypeSignatureModel> ContainingTypes,
     EquatableList<TypeSignatureModel> TypeArgs,
     String DeclarationKeyword,
@@ -166,7 +166,7 @@ sealed record TypeSignatureModel(
         }
     }
 
-    void Reify()
+    private void Reify()
     {
         if(Interlocked.CompareExchange(ref _reifiedState, 1, 0) != 0)
             return;

@@ -5,7 +5,7 @@ using System.Collections.Immutable;
 
 using RhoMicro.CodeAnalysis.UnionsGenerator.Transformation.Visitors;
 
-sealed class GroupsModel : IModel<GroupsModel>
+internal sealed class GroupsModel : IModel<GroupsModel>
 {
     private GroupsModel(EquatableDictionary<String, GroupModel> map) => _map = map;
     private readonly EquatableDictionary<String, GroupModel> _map;

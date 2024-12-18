@@ -4,6 +4,7 @@ using RhoMicro.CodeAnalysis.DslGenerator.Grammar;
 
 #if DSL_GENERATOR
 [IncludeFile]
+internal
 #endif
 partial class IndentedStringBuilder
 {

@@ -4,7 +4,7 @@
     using RhoMicro.CodeAnalysis.Library.Text;
     using RhoMicro.CodeAnalysis.UnionsGenerator.Models;
 
-    sealed class StructuralRepresentationVisitor(IndentedStringBuilder builder) : IVisitor<UnionTypeModel>
+    internal sealed class StructuralRepresentationVisitor(IndentedStringBuilder builder) : IVisitor<UnionTypeModel>
     {
         private readonly IndentedStringBuilder _builder = builder;
 
@@ -22,11 +22,12 @@ namespace RhoMicro.CodeAnalysis.Library.Text
     using RhoMicro.CodeAnalysis.UnionsGenerator.Models;
     using RhoMicro.CodeAnalysis.UnionsGenerator.Models.Storage;
 
-    partial class Blocks
+    internal partial class Blocks
     {
         public static Block SameLineBraces = new('{', '}');
     }
-    partial class IndentedStringBuilder
+
+    internal partial class IndentedStringBuilder
     {
         private IndentedStringBuilder OpenSameLineBracesBlock() => OpenBlock(Blocks.SameLineBraces);
         private IndentedStringBuilder CloseSameLineBracesBlock() => CloseBlock();

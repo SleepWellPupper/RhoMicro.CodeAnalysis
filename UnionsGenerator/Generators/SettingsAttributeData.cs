@@ -11,7 +11,7 @@ using System;
 using System.Collections.Immutable;
 using System.Reflection;
 
-sealed class SettingsAttributeData : AttributeData, IEquatable<SettingsAttributeData?>
+internal sealed class SettingsAttributeData : AttributeData, IEquatable<SettingsAttributeData?>
 {
     #region Constructors
     private SettingsAttributeData(
@@ -87,7 +87,7 @@ sealed class SettingsAttributeData : AttributeData, IEquatable<SettingsAttribute
         return result;
     }
 
-    static Dictionary<String, TypedConstant> MapProperties(AttributeData data) =>
+    private static Dictionary<String, TypedConstant> MapProperties(AttributeData data) =>
         data.NamedArguments
             .Where(kvp => kvp.Key != null)
             .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);

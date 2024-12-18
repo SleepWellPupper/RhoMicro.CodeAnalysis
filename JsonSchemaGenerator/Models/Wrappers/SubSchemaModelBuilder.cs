@@ -5,7 +5,7 @@ using System.Collections.Immutable;
 
 using Microsoft.CodeAnalysis;
 
-readonly struct SubSchemaModelBuilder
+internal readonly struct SubSchemaModelBuilder
 {
     public SubSchemaModelBuilder()
     {
@@ -347,7 +347,7 @@ readonly struct SubSchemaModelBuilder
     public override Boolean Equals(Object? other) => throw new NotSupportedException("GetHashCode is not supported on this type. This indicates a bug or error, as instances of this typoe are not intended to be cached.");
 }
 
-static class SymbolDisplayFormats
+internal static class SymbolDisplayFormats
 {
     public static readonly SymbolDisplayFormat FullyQualifiedNoGlobalNamespaceFormat = new(
          SymbolDisplayGlobalNamespaceStyle.Omitted,

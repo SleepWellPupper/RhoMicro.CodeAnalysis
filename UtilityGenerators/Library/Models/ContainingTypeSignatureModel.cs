@@ -6,7 +6,7 @@ using Microsoft.CodeAnalysis;
 
 using RhoMicro.CodeAnalysis.Library.Models.Collections;
 
-#if UTILITYGENERATORS
+#if RHOMICRO_CODEANALYSIS_UTILITYGENERATORS
 [IncludeFile]
 #endif
 internal readonly record struct ContainingTypeSignatureModel(

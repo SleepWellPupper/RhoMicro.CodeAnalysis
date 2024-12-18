@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 
-static class StringExtensions
+internal static class StringExtensions
 {
     //source: https://stackoverflow.com/a/58853591
     private static readonly Regex _camelCasePattern =

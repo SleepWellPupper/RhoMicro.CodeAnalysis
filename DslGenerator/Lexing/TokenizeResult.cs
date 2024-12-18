@@ -4,6 +4,7 @@ using RhoMicro.CodeAnalysis.DslGenerator.Analysis;
 
 #if DSL_GENERATOR
 [IncludeFile]
+internal
 #endif
 readonly record struct TokenizeResult(IReadOnlyList<Token> Tokens, DiagnosticsCollection Diagnostics)
 {

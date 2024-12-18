@@ -4,8 +4,10 @@ using System;
 using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
-#if UTILITYGENERATORS
+#if RHOMICRO_CODEANALYSIS_UTILITYGENERATORS
 [IncludeFile]
+#endif
+#if GENERATOR
 [NonEquatable]
 #endif
 internal sealed partial class DictionaryEqualityComparer<TKey, TValue>(IEqualityComparer<TKey> keyComparer, IEqualityComparer<TValue> valueComparer) : IEqualityComparer<IDictionary<TKey, TValue>>

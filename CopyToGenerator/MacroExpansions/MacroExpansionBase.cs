@@ -3,7 +3,7 @@
 using RhoMicro.CodeAnalysis.CopyToGenerator;
 using RhoMicro.CodeAnalysis.Library;
 
-abstract class MacroExpansionBase(Model model, Macro macro)
+internal abstract class MacroExpansionBase(Model model, Macro macro)
     : MacroExpansion<Macro>(macro)
 {
     protected Model Model { get; } = model;

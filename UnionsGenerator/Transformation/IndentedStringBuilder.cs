@@ -5,7 +5,7 @@ using System.Collections.Immutable;
 using RhoMicro.CodeAnalysis.UnionsGenerator.Models;
 using RhoMicro.CodeAnalysis.UnionsGenerator.Utils;
 
-partial class IndentedStringBuilder
+internal partial class IndentedStringBuilder
 {
     public IndentedStringBuilder Typeof(TypeSignatureModel type, Boolean open = false) =>
         Append("typeof(").Append(type.IsTypeParameter ? type.Names.Name : open ? type.Names.FullOpenGenericName : type.Names.FullGenericName).Append(')');

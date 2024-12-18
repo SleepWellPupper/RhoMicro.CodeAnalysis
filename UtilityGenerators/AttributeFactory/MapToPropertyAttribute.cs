@@ -6,9 +6,13 @@ using System;
 /// Maps the target constructor parameter onto a property.
 /// </summary>
 [AttributeUsage(AttributeTargets.Parameter, AllowMultiple = false, Inherited = false)]
+#if RHOMICRO_CODEANALYSIS_UTILITYGENERATORS && !RHOMICRO_CODEANALYSIS_UTILITYGENERATORS_DEV
+[IncludeFile]
+#endif
 #if GENERATOR
 [NonEquatable]
-[IncludeFile]
+#endif
+#if RHOMICRO_CODEANALYSIS_UTILITYGENERATORS || RHOMICRO_CODEANALYSIS_UTILITYGENERATORS_DEV
 [GenerateFactory(GenerateModelTypeAsStruct = true)]
 #endif
 internal sealed partial class MapToPropertyAttribute : Attribute

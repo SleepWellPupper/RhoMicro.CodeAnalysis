@@ -7,7 +7,7 @@ using Microsoft.CodeAnalysis;
 
 using RhoMicro.CodeAnalysis.UnionsGenerator.Models;
 
-static class Extensions
+internal static class Extensions
 {
     public static void AddRange(this IDiagnosticsAccumulator<UnionTypeModel> diagnostics, IEnumerable<Diagnostic> range)
     {

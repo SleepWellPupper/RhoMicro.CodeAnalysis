@@ -4,7 +4,7 @@ using Microsoft.Extensions.Hosting;
 
 using System.Threading;
 
-sealed class HostApplicationLifetimeFake : IHostApplicationLifetime
+internal sealed class HostApplicationLifetimeFake : IHostApplicationLifetime
 {
     public static HostApplicationLifetimeFake Instance { get; } = new();
     public void StopApplication() { }

@@ -47,10 +47,11 @@ Digit = "0"-"9" *Digit;
 
 #if DSL_GENERATOR
 [IncludeFile]
+internal
 #endif
 sealed class Parser
 {
-    sealed class ParseException : Exception { }
+    private sealed class ParseException : Exception { }
     public static Parser Instance { get; } = new();
     public ParseResult Parse(SourceText sourceText, CancellationToken cancellationToken
 #if DSL_GENERATOR

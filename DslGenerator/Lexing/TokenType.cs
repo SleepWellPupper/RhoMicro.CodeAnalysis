@@ -2,6 +2,7 @@
 
 #if DSL_GENERATOR
 [IncludeFile]
+internal
 #endif
 enum TokenType
 {

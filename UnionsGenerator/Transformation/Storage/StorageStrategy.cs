@@ -7,7 +7,7 @@ using RhoMicro.CodeAnalysis.UnionsGenerator.Transformation.Storage;
 
 using static RhoMicro.CodeAnalysis.Library.Text.IndentedStringBuilder.Appendables;
 
-abstract partial class StorageStrategy
+internal abstract partial class StorageStrategy
 {
     #region Constructor
     private StorageStrategy(
