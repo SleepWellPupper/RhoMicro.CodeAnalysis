@@ -29,16 +29,16 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="Microsoft.CodeAnalysis" Version="*" />
+		<PackageReference Include="Microsoft.CodeAnalysis" Version="4.12.0" />
 		<PackageReference Include="PolySharp" Version="1.15.0">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="RhoMicro.CodeAnalysis.UtilityGenerators" Version="*">
+		<PackageReference Include="RhoMicro.CodeAnalysis.UtilityGenerators" Version="15.*">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="RhoMicro.CodeAnalysis.UnionsGenerator" Version="*">
+		<PackageReference Include="RhoMicro.CodeAnalysis.UnionsGenerator" Version="15.*">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>

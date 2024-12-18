@@ -29,7 +29,7 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="RhoMicro.CodeAnalysis.UtilityGenerators" Version="*">
+		<PackageReference Include="RhoMicro.CodeAnalysis.UtilityGenerators" Version="15.*">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
