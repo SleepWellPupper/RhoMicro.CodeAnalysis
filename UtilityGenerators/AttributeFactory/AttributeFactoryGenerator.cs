@@ -28,8 +28,8 @@ public sealed partial class AttributeFactoryGenerator : IIncrementalGenerator
     {
         var initMethodProvider = context.SyntaxProvider.ForAttributeWithMetadataName(
             InitializationMethodAttributeMetadataName,
-            (_, _) => true,
-            (ctx, ct) =>
+            static (_, _) => true,
+            static (ctx, ct) =>
             {
                 ct.ThrowIfCancellationRequested();
 
@@ -65,9 +65,9 @@ public sealed partial class AttributeFactoryGenerator : IIncrementalGenerator
 
                 return result;
             })
-            .Where(m => m is not null)
+            .Where(static m => m is not null)
             .Collect()
-            .Select((data, ct) =>
+            .Select(static (data, ct) =>
             {
                 ct.ThrowIfCancellationRequested();
 
@@ -87,10 +87,11 @@ public sealed partial class AttributeFactoryGenerator : IIncrementalGenerator
 
                 return result;
             });
+
         var provider = context.SyntaxProvider.ForAttributeWithMetadataName(
             GenerateFactoryAttributeMetadataName,
-            (_, _) => true,
-            (ctx, ct) =>
+            static (_, _) => true,
+            static (ctx, ct) =>
             {
                 ct.ThrowIfCancellationRequested();
 
@@ -100,9 +101,9 @@ public sealed partial class AttributeFactoryGenerator : IIncrementalGenerator
                 var model = AttributeFactoryModel.Create(target, attribute, new(_collectionFactory, ct));
 
                 return model;
-            }).Where(m => m is not null)
+            }).Where(static m => m is not null)
             .Combine(initMethodProvider)
-            .Select((t, ct) =>
+            .Select(static (t, ct) =>
             {
                 ct.ThrowIfCancellationRequested();
 
@@ -116,7 +117,7 @@ public sealed partial class AttributeFactoryGenerator : IIncrementalGenerator
 
                 return result;
             })
-            .Select((m, ct) =>
+            .Select(static (m, ct) =>
             {
                 ct.ThrowIfCancellationRequested();
 

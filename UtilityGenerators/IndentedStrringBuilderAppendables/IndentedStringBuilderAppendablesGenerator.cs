@@ -27,9 +27,9 @@ public sealed partial class IndentedStringBuilderAppendablesGenerator : IIncreme
         var provider = context.SyntaxProvider.CreateSyntaxProvider(
                 Predicate,
                 GetSignaturesStep)
-            .SelectMany((s, _) => s)
+            .SelectMany(static (s, _) => s)
             .Collect()
-            .Select((s, _) => s.ToImmutableHashSet())
+            .Select(static (s, _) => s.ToImmutableHashSet())
             .Select(FinalStep);
 
         context.RegisterSourceOutput(provider, (ctx, source) =>

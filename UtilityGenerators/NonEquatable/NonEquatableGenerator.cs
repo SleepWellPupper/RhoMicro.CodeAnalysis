@@ -34,8 +34,8 @@ public sealed class NonEquatableGenerator : IIncrementalGenerator
 
                 return model;
             })
-            .Where(m => m is not null)
-            .Select((m, ct) =>
+            .Where(static m => m is not null)
+            .Select(static (m, ct) =>
             {
                 ct.ThrowIfCancellationRequested();
 

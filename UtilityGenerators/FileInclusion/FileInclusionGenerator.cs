@@ -28,8 +28,8 @@ public sealed class FileInclusionGenerator : IIncrementalGenerator
     {
         var sourceProvider = context.SyntaxProvider.ForAttributeWithMetadataName(
             _attributeMetadataName,
-            (node, ct) => true,
-            (ctx, ct) =>
+            static (_, _) => true,
+            static (ctx, ct) =>
             {
                 ct.ThrowIfCancellationRequested();
 
@@ -44,17 +44,13 @@ public sealed class FileInclusionGenerator : IIncrementalGenerator
 
                 return result;
             })
-            .Select((t, ct) =>
+            .Select(static (t, ct) =>
             {
                 ct.ThrowIfCancellationRequested();
 
-                var result = (hintName: t.hintName ?? $"IncludedSource_{Hash(t.sourceText, ct)}.g.cs", t.sourceText);
+                var hintName = t.hintName ?? $"IncludedSource_{Hash(t.sourceText, ct)}.g.cs";
+                var sourceText = t.sourceText;
 
-                return result;
-            })
-            .Select((t, ct) =>
-            {
-                var (hintName, sourceText) = t;
                 var rawDollarsCount = _rawStringLiteralBraces.Matches(sourceText)
                     .Cast<Match>()
                     .Select(m => m.Length)
@@ -68,7 +64,7 @@ public sealed class FileInclusionGenerator : IIncrementalGenerator
 
                 return (rawDollarsCount, rawQuotesCount, sourceText, hintName);
             })
-            .Select((t, ct) =>
+            .Select(static (t, ct) =>
             {
                 var (rawDollarsCount, rawQuotesCount, sourceText, hintName) = t;
 
@@ -93,7 +89,7 @@ public sealed class FileInclusionGenerator : IIncrementalGenerator
                 return addSourceStatement;
             })
             .Collect()
-            .Select((addSourceStatements, ct) =>
+            .Select(static (addSourceStatements, ct) =>
             {
                 var builder = new StringBuilder(
                     $$"""
