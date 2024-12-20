@@ -15,8 +15,6 @@ public sealed class NonEquatableGenerator : IIncrementalGenerator
 {
     private const String _attributeMetadataName = "RhoMicro.CodeAnalysis.NonEquatableAttribute";
 
-    private static readonly EquatableCollectionFactory _collectionFactory = EquatableCollectionFactory.Default;
-
     /// <inheritdoc/>
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
@@ -30,7 +28,8 @@ public sealed class NonEquatableGenerator : IIncrementalGenerator
                 if(ctx.TargetSymbol is not INamedTypeSymbol target)
                     return null;
 
-                var model = TypeSignatureModel.Create(target, new(_collectionFactory, ct));
+                using var modelCtx = ModelCreationContext.CreateDefault(ct);
+                var model = NamedTypeModel.Create(target, in modelCtx);
 
                 return model;
             })

@@ -9,7 +9,7 @@ using RhoMicro.CodeAnalysis.Library.Models.Collections;
 using RhoMicro.CodeAnalysis.Library.Extensions;
 
 internal sealed record AttributeFactoryModel(
-    TypeSignatureModel Signature,
+    NamedTypeModel Signature,
 
     EquatableList<PropertyModel> MappedProperties,
     EquatableList<PropertyModel> UnmappedProperties,
@@ -24,16 +24,14 @@ internal sealed record AttributeFactoryModel(
     {
         ctx.ThrowIfCancellationRequested();
 
-        var signature = TypeSignatureModel.Create(target, in ctx);
+        var signature = NamedTypeModel.Create(target, in ctx);
 
-        var mutabilityContext = new MutabilityContext();
-        var constructors = ctx.CollectionFactory.CreateList<ConstructorModel>(mutabilityContext);
-        var mappedProperties = ctx.CollectionFactory.CreateList<PropertyModel>(mutabilityContext);
-        var unmappedProperties = ctx.CollectionFactory.CreateList<PropertyModel>(mutabilityContext);
-        var initializationMethods = ctx.CollectionFactory.CreateList<InitializationMethodModel>(mutabilityContext);
+        var constructors = ctx.CollectionFactory.CreateList<ConstructorModel>();
+        var mappedProperties = ctx.CollectionFactory.CreateList<PropertyModel>();
+        var unmappedProperties = ctx.CollectionFactory.CreateList<PropertyModel>();
+        var initializationMethods = ctx.CollectionFactory.CreateList<InitializationMethodModel>();
         var propertyMappings = ctx.CollectionFactory.CreateLazyDictionary<String, EquatableList<ParameterMapping>>(
-            static (_, f) => f.CollectionFactory.CreateList<ParameterMapping>(f.MutabilityContext),
-            mutabilityContext);
+            static (_, f) => f.CollectionFactory.CreateList<ParameterMapping>());
 
         GetConstructorModels(
             target,
@@ -49,8 +47,6 @@ internal sealed record AttributeFactoryModel(
             in ctx);
 
         var attributeModel = attribute.GetGenerateFactoryAttributeModel(new(target), ctx.CancellationToken);
-
-        mutabilityContext.SetImmutable();
 
         var result = new AttributeFactoryModel(
             signature,

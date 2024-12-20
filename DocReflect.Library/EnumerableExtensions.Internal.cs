@@ -11,7 +11,9 @@ internal static partial class EnumerableExtensions
 	{
 		_ = elements ?? throw new ArgumentNullException(elementsName);
 
-		var map = EquatableCollectionFactory.Default.CreateDictionary<String, TValue>();
+        using var factory = EquatableCollectionFactory.CreateDefault();
+
+        var map = factory.CreateDictionary<String, TValue>();
 
 		foreach(var element in elements)
 		{
@@ -25,8 +27,6 @@ internal static partial class EnumerableExtensions
 
 			map.Add(name, element);
 		}
-
-        map.MutabilityContext.SetImmutable();
 
 		return map;
 	}

@@ -21,8 +21,6 @@ using RhoMicro.CodeAnalysis.Library.Models;
 [Generator(LanguageNames.CSharp)]
 public sealed partial class AttributeFactoryGenerator : IIncrementalGenerator
 {
-    private static readonly EquatableCollectionFactory _collectionFactory = EquatableCollectionFactory.Default;
-
     /// <inheritdoc/>
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
@@ -59,9 +57,9 @@ public sealed partial class AttributeFactoryGenerator : IIncrementalGenerator
                 if(attributeModel is null)
                     return null;
 
-                var modelCreationContext = new ModelCreationContext(_collectionFactory, ct);
+                using var modelCreationContext = ModelCreationContext.CreateDefault(ct);
                 var model = InitializationMethodModel.Create(target, attributeModel.Value, in modelCreationContext);
-                var result = new InitializationMethodPipelineData(model, TypeSignatureModel.Create(containingType, in modelCreationContext).GetDisplayString(ct));
+                var result = new InitializationMethodPipelineData(model, NamedTypeModel.Create(containingType, in modelCreationContext).GetDisplayString(ct));
 
                 return result;
             })
@@ -69,21 +67,21 @@ public sealed partial class AttributeFactoryGenerator : IIncrementalGenerator
             .Collect()
             .Select(static (data, ct) =>
             {
-                ct.ThrowIfCancellationRequested();
+                using var ctx = ModelCreationContext.CreateDefault(ct);
 
-                var result = _collectionFactory.CreateLazyDictionary<String, EquatableList<InitializationMethodModel>>(
-                    (_, d) => d.CollectionFactory.CreateList<InitializationMethodModel>(d.MutabilityContext));
+                ctx.ThrowIfCancellationRequested();
+
+                var result = ctx.CollectionFactory.CreateLazyDictionary<String, EquatableList<InitializationMethodModel>>(
+                    (_, d) => d.CollectionFactory.CreateList<InitializationMethodModel>());
 
                 foreach(var datum in data)
                 {
-                    ct.ThrowIfCancellationRequested();
+                    ctx.ThrowIfCancellationRequested();
 
                     var (model, key) = datum!;
 
                     result[key].Add(model);
                 }
-
-                result.MutabilityContext.SetImmutable();
 
                 return result;
             });
@@ -98,7 +96,8 @@ public sealed partial class AttributeFactoryGenerator : IIncrementalGenerator
                 if(ctx is not { Attributes: [{ } attribute], TargetSymbol: INamedTypeSymbol target })
                     return null;
 
-                var model = AttributeFactoryModel.Create(target, attribute, new(_collectionFactory, ct));
+                using var modelCreationContext = ModelCreationContext.CreateDefault(ct);
+                var model = AttributeFactoryModel.Create(target, attribute, in modelCreationContext);
 
                 return model;
             }).Where(static m => m is not null)

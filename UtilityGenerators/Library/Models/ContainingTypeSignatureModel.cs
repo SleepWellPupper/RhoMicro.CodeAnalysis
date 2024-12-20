@@ -12,25 +12,23 @@ using RhoMicro.CodeAnalysis.Library.Models.Collections;
 internal readonly record struct ContainingTypeSignatureModel(
     PartialTypeKindModel Kind,
     String Name,
-    EquatableList<String> TypeArguments)
+    EquatableList<TypeModel> TypeArguments)
 {
     public static ContainingTypeSignatureModel Create(INamedTypeSymbol containingType, in ModelCreationContext ctx)
     {
         ctx.ThrowIfCancellationRequested();
 
         var name = containingType.Name;
-        var typeArguments = ctx.CollectionFactory.CreateList<String>();
+        var typeArguments = ctx.CollectionFactory.CreateList<TypeModel>();
 
         foreach(var typeArgument in containingType.TypeArguments)
         {
             ctx.ThrowIfCancellationRequested();
-
-            typeArguments.Add(typeArgument.Name);
+            var model = TypeModel.Create(typeArgument, in ctx);
+            typeArguments.Add(model);
         }
 
         var kind = PartialTypeKindModel.Create(containingType, in ctx);
-
-        typeArguments.MutabilityContext.SetImmutable();
 
         var result = new ContainingTypeSignatureModel(kind, name, typeArguments);
 

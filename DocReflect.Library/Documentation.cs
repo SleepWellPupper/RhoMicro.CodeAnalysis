@@ -18,7 +18,9 @@ public partial class Documentation : IEquatable<Documentation?>
     {
         _ = topLevelComments ?? throw new ArgumentNullException(nameof(topLevelComments));
 
-        var tlcList = EquatableCollectionFactory.Default.CreateList<DocumentationComment>();
+        using var factory = EquatableCollectionFactory.CreateDefault();
+
+        var tlcList = factory.CreateList<DocumentationComment>();
 
         foreach(var tlc in topLevelComments)
         {
@@ -31,8 +33,6 @@ public partial class Documentation : IEquatable<Documentation?>
 
             tlcList.Add(tlc);
         }
-
-        tlcList.MutabilityContext.SetImmutable();
 
         TopLevelComments = tlcList;
     }

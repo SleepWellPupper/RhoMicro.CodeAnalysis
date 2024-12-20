@@ -25,10 +25,8 @@ internal readonly record struct ConstructorModel(
     {
         ctx.ThrowIfCancellationRequested();
 
-        var mutabilityContext = new MutabilityContext();
-
-        var parameters = ctx.CollectionFactory.CreateList<ParameterModel>(mutabilityContext);
-        var mappings = ctx.CollectionFactory.CreateLazyDictionary<String, ParameterMapping?>(mutabilityContext);
+        var parameters = ctx.CollectionFactory.CreateList<ParameterModel>();
+        var mappings = ctx.CollectionFactory.CreateLazyDictionary<String, ParameterMapping?>();
 
         for(var parameterIndex = 0; parameterIndex < ctor.Parameters.Length; parameterIndex++)
         {
@@ -43,8 +41,6 @@ internal readonly record struct ConstructorModel(
 
             parameters.Add(model);
         }
-
-        mutabilityContext.SetImmutable();
 
         var result = new ConstructorModel(index, parameters, mappings);
 
