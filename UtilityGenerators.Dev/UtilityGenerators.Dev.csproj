@@ -15,10 +15,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <None Remove="bin\Debug\netstandard2.0\\RhoMicro.CodeAnalysis.UtilityGenerators.Dev.1.0.0.2107.dll" />
-	</ItemGroup>
-
-	<ItemGroup>
 		<None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
 		<None Include="..\UtilityGenerators\README.md" Pack="true" PackagePath="/" CopyToOutputDirectory="Always" />
 		<None Include="..\UtilityGenerators\LICENSE.txt" Pack="true" PackagePath="/" CopyToOutputDirectory="Always" />
@@ -58,7 +54,13 @@
 		<Compile Include="..\UtilityGenerators\AttributeFactory\PropertyModel.cs" Link="PropertyModel.cs" />
 		<Compile Include="..\UtilityGenerators\AttributeFactory\SourceBuildingContext.cs" Link="SourceBuildingContext.cs" />
 		<Compile Include="..\UtilityGenerators\FileInclusion\FileInclusionGenerator.cs" Link="FileInclusionGenerator.cs" />
+		<Compile Include="..\UtilityGenerators\IndentedStrringBuilderAppendables\IndentedStringBuilderAppendablesGenerator.cs" Link="IndentedStringBuilderAppendablesGenerator.cs" />
 		<Compile Include="..\UtilityGenerators\NonEquatable\NonEquatableGenerator.cs" Link="NonEquatableGenerator.cs" />
+		<Compile Include="..\UtilityGenerators\TypeSymbolPattern\TypeSymbolPatternAttributeModel.cs" Link="TypeSymbolPatternAttributeModel.cs" />
+		<Compile Include="..\UtilityGenerators\TypeSymbolPattern\TypeSymbolPatternGenerator.cs" Link="TypeSymbolPatternGenerator.cs" />
+		<Compile Include="..\UtilityGenerators\TypeSymbolPattern\TypeSymbolPatternMethodModel.cs" Link="TypeSymbolPatternMethodModel.cs" />
+		<Compile Include="..\UtilityGenerators\TypeSymbolPattern\TypeSymbolPatternMethodsModel.cs" Link="TypeSymbolPatternMethodsModel.cs" />
+		<Compile Include="..\UtilityGenerators\TypeSymbolPattern\TypeSymbolPatternMethodsPartialModel.cs" Link="TypeSymbolPatternMethodsPartialModel.cs" />
 	</ItemGroup>
 
 </Project>

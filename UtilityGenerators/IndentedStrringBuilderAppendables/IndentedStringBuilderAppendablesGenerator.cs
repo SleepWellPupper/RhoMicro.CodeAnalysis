@@ -9,6 +9,7 @@ using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
+using RhoMicro.CodeAnalysis.Library.Models;
 using RhoMicro.CodeAnalysis.Library.Models.Collections;
 using RhoMicro.CodeAnalysis.Library.Text;
 
@@ -37,7 +38,6 @@ public sealed partial class IndentedStringBuilderAppendablesGenerator : IIncreme
     }
 
     private static readonly ImmutableArray<Signature> _emptySignaturesArray = ImmutableArray.Create<Signature>();
-    private static readonly EquatableCollectionFactory _collectionFactory = EquatableCollectionFactory.Default;
     private static readonly SymbolDisplayFormat _fullyQualifiedFormat = SymbolDisplayFormat.FullyQualifiedFormat.WithGlobalNamespaceStyle(SymbolDisplayGlobalNamespaceStyle.Omitted);
     private static readonly HashSet<String> _specialConstraints =
         ["class", "struct", "new()", "class?", "notnull", "default", "unmanaged"];
@@ -67,11 +67,11 @@ public sealed partial class IndentedStringBuilderAppendablesGenerator : IIncreme
     private static IList<String> GetConstraintsText(
         SyntaxList<TypeParameterConstraintClauseSyntax> clauses,
         SemanticModel semanticModel,
-        CancellationToken cancellationToken)
+        in ModelCreationContext ctx)
     {
-        cancellationToken.ThrowIfCancellationRequested();
+        ctx.ThrowIfCancellationRequested();
 
-        var result = _collectionFactory.CreateList<String>();
+        var result = ctx.CollectionFactory.CreateList<String>();
 
         if(clauses.Count == 0)
             return result;
@@ -80,7 +80,7 @@ public sealed partial class IndentedStringBuilderAppendablesGenerator : IIncreme
 
         for(var i = 0; i < clauses.Count; i++)
         {
-            cancellationToken.ThrowIfCancellationRequested();
+            ctx.ThrowIfCancellationRequested();
 
             var clause = clauses[i];
 
@@ -105,7 +105,7 @@ public sealed partial class IndentedStringBuilderAppendablesGenerator : IIncreme
 
             for(j = 1; j < constraints.Count; j++)
             {
-                cancellationToken.ThrowIfCancellationRequested();
+                ctx.ThrowIfCancellationRequested();
 
                 _ = constraintBuilder.Append(", ");
                 if(!tryAppend())
@@ -280,14 +280,15 @@ public sealed partial class IndentedStringBuilderAppendablesGenerator : IIncreme
 
         return result;
     }
-    private static ImmutableArray<Signature> GetSignaturesStep(GeneratorSyntaxContext context, CancellationToken cancellationToken)
+    private static ImmutableArray<Signature> GetSignaturesStep(GeneratorSyntaxContext context, CancellationToken ct)
     {
-        cancellationToken.ThrowIfCancellationRequested();
+        ct.ThrowIfCancellationRequested();
 
-        var symbol = context.SemanticModel.GetDeclaredSymbol(context.Node, cancellationToken);
+        var symbol = context.SemanticModel.GetDeclaredSymbol(context.Node, ct);
         if(!IsTargetSymbol(symbol))
             return _emptySignaturesArray;
 
+        using var ctx = ModelCreationContext.CreateDefault(ct);
         var cds = (ClassDeclarationSyntax)context.Node;
         var result = cds.Members
             .OfType<MethodDeclarationSyntax>()
@@ -297,8 +298,8 @@ public sealed partial class IndentedStringBuilderAppendablesGenerator : IIncreme
             .Select(mds => (
                 name: mds.Identifier.Text,
                 typeParameters: mds.TypeParameterList?.ToString() ?? String.Empty,
-                parameters: GetParametersText(mds.ParameterList, context.SemanticModel, cancellationToken),
-                constraints: GetConstraintsText(mds.ConstraintClauses, context.SemanticModel, cancellationToken),
+                parameters: GetParametersText(mds.ParameterList, context.SemanticModel, ct),
+                constraints: GetConstraintsText(mds.ConstraintClauses, context.SemanticModel, in ctx),
                 arguments: GetArgumentsText(mds.ParameterList)))
             .ToImmutableArray();
 

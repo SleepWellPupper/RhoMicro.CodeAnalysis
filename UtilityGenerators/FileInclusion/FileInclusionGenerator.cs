@@ -21,7 +21,6 @@ public sealed class FileInclusionGenerator : IIncrementalGenerator
 
     private static readonly Regex _rawStringLiteralBraces = new("({|})*", RegexOptions.Compiled);
     private static readonly Regex _rawStringLiteralQuotes = new("(\"*)", RegexOptions.Compiled);
-    private static readonly EquatableCollectionFactory _collectionFactory = EquatableCollectionFactory.Default;
 
     /// <inheritdoc/>
     public void Initialize(IncrementalGeneratorInitializationContext context)
@@ -35,9 +34,11 @@ public sealed class FileInclusionGenerator : IIncrementalGenerator
 
                 var sourceText = ctx.TargetNode.SyntaxTree.ToString();
 
+                using var modelCtx = ModelCreationContext.CreateDefault(ct);
+
                 var hintName = ctx.Attributes[0].NamedArguments.FirstOrDefault(a => a.Key == "Hint").Value.Value?.ToString()
                     ?? ( ctx.TargetSymbol is INamedTypeSymbol target
-                        ? TypeSignatureModel.Create(target, new(_collectionFactory, ct)).GetHintName(ct)
+                        ? NamedTypeModel.Create(target, in modelCtx).GetHintName(ct)
                         : null );
 
                 var result = (sourceText, hintName);

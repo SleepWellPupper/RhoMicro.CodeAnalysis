@@ -25,8 +25,6 @@ internal sealed record InitializationMethodModel(
 
         GetParameters(method, parameters, out var cancellationTokenParameterName, in ctx);
 
-        parameters.MutabilityContext.SetImmutable();
-
         var result = new InitializationMethodModel(
             parameters,
             Name: name,

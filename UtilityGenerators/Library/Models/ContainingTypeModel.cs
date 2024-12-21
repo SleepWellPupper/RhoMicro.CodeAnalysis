@@ -30,7 +30,6 @@ internal readonly record struct ContainingTypeModel(
         var typeModifier = Utils.GetTypeModifiers(symbol);
         var name = symbol.Name;
 
-        typeParameters.MutabilityContext.SetImmutable();
         var result = new ContainingTypeModel(
             accessibility,
             typeModifier,
