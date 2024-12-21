@@ -586,14 +586,25 @@ internal partial class IndentedStringBuilder
     #region Clear
     public IndentedStringBuilder Clear()
     {
+        ClearCore();
+        return this;
+    }
+    public void ClearCore()
+    {
         _indentations.Clear();
         _blocks.Clear();
         _ = _builder.Clear();
-        return this;
+        InitializeBuilder();
     }
     #endregion
     #region ToString
     public override String ToString() => _builder.ToString();
+    public String ToStringAndClear()
+    {
+        var result = ToString();
+        ClearCore();
+        return result;
+    }
     #endregion
     #region Cancellation
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
