@@ -102,7 +102,7 @@ public partial class TypeSymbolPatternGenerator : IIncrementalGenerator
             sourceBuilder.AppendCore(" static");
 
         sourceBuilder
-            .Append(" bool ").Append(method.MethodName).AppendCore("(global::Microsoft.CodeAnalysis.ITypeSymbol type, [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out ");
+            .Append(" bool ").Append(method.MethodName).AppendCore("(global::Microsoft.CodeAnalysis.ITypeSymbol? type, [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out ");
 
         AppendPatternTypeType(sourceBuilder, method, ct);
 
@@ -129,7 +129,7 @@ public partial class TypeSymbolPatternGenerator : IIncrementalGenerator
             sourceBuilder.AppendCore(" static");
 
         sourceBuilder
-            .Append(" partial bool ").Append(method.MethodName).AppendCore("(global::Microsoft.CodeAnalysis.ITypeSymbol type");
+            .Append(" partial bool ").Append(method.MethodName).AppendCore("(global::Microsoft.CodeAnalysis.ITypeSymbol? type");
 
         sourceBuilder
             .Append(')')
