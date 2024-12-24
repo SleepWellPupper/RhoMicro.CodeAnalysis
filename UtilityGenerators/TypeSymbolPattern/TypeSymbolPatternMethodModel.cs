@@ -1,6 +1,4 @@
 ﻿namespace RhoMicro.CodeAnalysis;
-using System.Collections.Immutable;
-
 using Microsoft.CodeAnalysis;
 
 using RhoMicro.CodeAnalysis.Library.Models;

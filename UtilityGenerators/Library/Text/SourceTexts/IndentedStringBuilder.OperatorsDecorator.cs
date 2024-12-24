@@ -1,4 +1,4 @@
-﻿namespace RhoMicro.CodeAnalysis.Library.Text;
+﻿namespace RhoMicro.CodeAnalysis.Library.Text.SourceTexts;
 
 internal partial class IndentedStringBuilder
 {

@@ -1,13 +1,15 @@
 ﻿namespace RhoMicro.CodeAnalysis.Library.Models.Collections;
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Net.NetworkInformation;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 
 #if RHOMICRO_CODEANALYSIS_UTILITYGENERATORS
 [IncludeFile]
 #endif
+[CollectionBuilder(typeof(Builder), "Create")]
+[DebuggerDisplay("Count: {Count}")]
 internal sealed record LazyEquatableList<T> : LazyEquatableList<T, LazyEquatableList<T>>
 {
     public LazyEquatableList(
@@ -77,5 +79,19 @@ internal record LazyEquatableList<T, TState> : EquatableCollection<T, IList<T>>,
         MutabilityContext.ThrowIfReadOnly();
         while(Count <= index)
             Add(Factory.Invoke(Count, this));
+    }
+}
+
+file static class Builder
+{
+    public static LazyEquatableList<T?> Create<T>(ReadOnlySpan<T> elements)
+    {
+        using var ctx = ModelCreationContext.CreateDefault(CancellationToken.None);
+        var result = ctx.CollectionFactory.CreateLazyList<T>();
+
+        foreach(var element in elements)
+            result.Add(element);
+
+        return result;
     }
 }

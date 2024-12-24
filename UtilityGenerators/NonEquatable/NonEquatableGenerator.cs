@@ -4,8 +4,7 @@ using System;
 using Microsoft.CodeAnalysis;
 
 using RhoMicro.CodeAnalysis.Library.Models;
-using RhoMicro.CodeAnalysis.Library.Models.Collections;
-using RhoMicro.CodeAnalysis.Library.Text;
+using RhoMicro.CodeAnalysis.Library.Text.SourceTexts;
 
 /// <summary>
 /// Generates members disallowing equality operations on types.

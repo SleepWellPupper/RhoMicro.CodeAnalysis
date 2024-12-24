@@ -1,12 +1,6 @@
 # What is this?
 
-This project contains generators and analyzers that help writing generators and analyzers.
-
-Currently, there are two generators contained within:
-- [`LibraryGenerator`](#RhoMicro.CodeAnalysis.LibraryGenerator)
-    - provides expanding macro string builders, diagnostics accumulators and more
-- [`AttributeFactoryGenerator`](#RhoMicro.CodeAnalysis.AttributeFactoryGenerator)
-    - automates parsing instructions from `AttributeData`
+This project contains generators and analyzers that help writing generators and analyzers:
 
 # Installation
 
@@ -17,91 +11,178 @@ Currently, there are two generators contained within:
 </PackageReference>
 ```
 
-# LibraryGenerator
+# Templating
 
-Generates types that help with source code generators & analyzers.
-A more detailed section is coming soon.
+A string templating engine is provided via the `TemplatingGenerator`.
+Templating is done via attributes on template types. A generator analyzes these and generates an implementation for rendering the template, similar to the ASP.Net razor engine.
 
-# AttributeFactoryGenerator
+> Notes:
+> - holes:
+> 	- Value (singleline, multiple): `§(foo)` for `builder.Append(foo);`
+> 		- builtin conversions to `ReadOnlySpan<Char>` for common types => `TemplateHelpers.GetCharSpan(foo)`
+> 		- detect template type and use `builder.Render` instead
+> 	- Code (multiline, multiple): `§{foreach(var bar in foo){§(bar)}}` for `foreach(var bar in foo){builder.Append(bar);}`
+> 	- -> unlike razor, we require explicit hole type when used in code blocks
+> 	- escape with `\`
+> - generated templates must always be generated using escaped source newlines, so we may efficiently use spans on a oneliner template constant
 
-Are you creating source generators for C#? Are you using attributes to allow your consumers to instruct your generator? Are you dissatisfied with the amount of boilerplate you have to write in order to extract those instructions from the roslyn api? 
+## Sample Usage
 
-Then this project could be of use to you!
 
-## Key Features & Limitations
-- Generate Factory for parsing attribute instance from `AttributeData`
-- Generate helper functions for retrieving instances of your attribute from an `IEnumerable<AttributeData>`
-- Parse type properties as `ITypeSymbol`s
-- Generate the attribute source text itself (no requirement for second attribute library)
-
-## How to use
-
-Add a compilation flag to your generator project:
-```xml
-<PropertyGroup>
-    <DefineConstants>$(DefineConstants);GENERATOR</DefineConstants>
-</PropertyGroup>
 ```
+namespace RhoMicro.CodeAnalysis.Foo;
 
-Declare an attribute like so:
-```cs
-[AttributeUsage(AttributeTargets.Class)]
-#if GENERATOR
-[RhoMicro.CodeAnalysis.GenerateFactory]
-#endif
-public partial class TestGeneratorTargetAttribute : Attribute
+[Template(
+"""
+// \§(escaped hole)
+// \\§(Name) (unescaped hole)
+public §(Accessibility) class §(Name)
+{§{
+	foreach(var member in Members)
+	{
+		$(member)
+	}
+}}
+""")]
+internal sealed partial class FooTemplate
 {
-#if GENERATOR
-    [ExcludeFromFactory]
-    private TestGeneratorTargetAttribute(System.Object typeSymbolContainer) =>
-        _typeSymbolContainer = typeSymbolContainer;
-#endif
-    public TestGeneratorTargetAttribute(String name, Int32[] ages)
-    {
-        Name = name;
-        Ages = ages;
-    }
-    public TestGeneratorTargetAttribute(Type type) => Type = type;
+	public FooTemplate(String accessibility, String name)
+	{
+		Accessibility = accessibility;
+		Name = name;
+	}
+	
+	public String Accessibility { get; }
+	public String Name { get; }
+	public List<MemberTemplate> Members { get; } = [];	
+}
+```
+should generate something like:
+```cs
+namespace RhoMicro.CodeAnalysis.Foo;
 
-    public String Name { get; }
-    public Int32[] Ages { get; }
-    public Type? Type { get; set; }
+partial class FooTemplate : global::RhoMicro.CodeAnalysis.Library.Text.Templating.Template
+{
+	public override void Render(global::RhoMicro.CodeAnalysis.Library.Text.Templating.BufferedStringBuilder builder)
+	{
+		// this should be a one-liner with source newlines
+		const string __template = 
+"""
+// \§(escaped hole)
+// \\§(Name) (unescaped hole)
+public §(Accessibility) class §(Name)
+{§{
+	foreach(var member in Members)
+	{
+		$(member)
+	}
+}}
+""";
+		builder.Append(__template.AsSpan()[..57]);
+		builder.Append(TemplateUtilities.GetCharSpan(Accessibility));
+		// append span of text part
+		builder.Append(TemplateUtilities.GetCharSpan(Name));
+		// append span of new line, open brace after Name
+		// insert newline, tab before each following line in code block
+		foreach(var member in Members)
+		{
+			$(member)
+		}		
+		// omit trailing whitespace in codeblock up to closing brace
+		// append closing brace from template
+	}
 }
 ```
 
-The constructor enclosed in the preprocessor condition is required in order to construct an instance when the consumer made use of a constructor taking at least one parameter of type `Type`.
+## Grammar
 
-For every constructor that takes at least one parameter of type `Type`, an equivalent factory constructor is required. These are expected to take an instance of `Object` instead of the type and assign it to the generated helper field.
+### Non-Terminals
 
-This way, a generated helper property of type `ITypeSymbol` may be used to retrieve the type used by the consumer in their `typeof` expression.
+#### Template
 
-
-Use the generated factory and helper methods like so:
-```cs
-ImmutableArray<AttributeData> attributes = 
-    symbol.GetAttributes();
-
-IEnumerable<TestGeneratorTargetAttribute> allParsed =
-    attributes.OfTestGeneratorTargetAttribute();
-
-TestGeneratorTargetAttribute singleParsed =
-    TestGeneratorTargetAttribute.TryCreate(attributes[0], out var a) ? 
-    a : 
-    null;
-
-singleParsed = 
-    symbol.TryGetFirstTestGeneratorTargetAttribute(out var a) ? 
-    a : 
-    null;
-
-context.RegisterPostInitializationOutput(
-    c => c.AddSource($"{nameof(TestGeneratorTargetAttribute)}.g.cs", TestGeneratorTargetAttribute.SourceText));
+```abnf
+template = *(text / hole)
 ```
-The generated extension method `OfTestGeneratorTargetAttribute` will return all instances of `TestGeneratorTargetAttribute` found in the symbols list of attributes.
 
-The generated extension method `TryGetFirstTestGeneratorTargetAttribute` attempts to retrieve the first instance of `TestGeneratorTargetAttribute` found on the symbol.
+#### Text
 
-The generated extension method `ForTestGeneratorTargetAttribute` makes use of the efficient `FAWMN` api.
+```abnf
+text = *(%x00-%x5B %x5D-%xA6 / %xA8-%xFF / escaped)
+```
+
+#### Escaped
+
+```abnf
+escaped = ESC (MRK / ESC)
+```
+
+#### Hole
+
+```abnf
+hole = value-hole / code-hole
+```
+
+#### Value Hole
+
+```abnf
+value-hole = MRK OPA identifier CPA
+```
+
+#### Code Hole
+
+```abnf
+code-hole = MRK OBR *(text / value-hole) CBR
+```
+
+#### Identifier
+
+```abnf
+identifier = ALPHA *(ALPHA / DIGIT / "_")
+```
+
+### Terminals
+
+#### Escape
+
+```abnf
+ESC = %x5C
+```
+> `%5C` = `\`
+
+#### Marker
+
+```abnf
+MRK = %xA7
+```
+> `%A7` = `§`
+
+#### Opening Curly Brace
+
+```abnf
+OBR = %x7B
+```
+> `%7B` = `{`
+
+#### Closing Curly Brace
+
+```abnf
+CBR = %x7D
+```
+> `%7D` = `}`
+
+#### Opening Parenthesis
+
+```abnf
+OPA = %x28
+```
+> `%28` = `(`
+
+#### Closing Parenthesis
+
+```abnf
+CPA = %x29
+```
+> `%29` = `)`
 
 # Building The Project
 

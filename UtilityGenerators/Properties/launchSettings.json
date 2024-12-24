@@ -23,6 +23,10 @@
     "TestApp": {
       "commandName": "DebugRoslynComponent",
       "targetProject": "..\\TestApp\\TestApp.csproj"
+    },
+    "E2E": {
+      "commandName": "DebugRoslynComponent",
+      "targetProject": "..\\UtilityGenerators.Tests.E2E\\UtilityGenerators.Tests.E2E.csproj"
     }
   }
 }

@@ -2,10 +2,12 @@
 
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 #if RHOMICRO_CODEANALYSIS_UTILITYGENERATORS
 [IncludeFile]
 #endif
+[DebuggerDisplay("Count: {Count}")]
 internal sealed record EquatableCollection<T> : EquatableCollection<T, ICollection<T>>
 {
     public EquatableCollection(

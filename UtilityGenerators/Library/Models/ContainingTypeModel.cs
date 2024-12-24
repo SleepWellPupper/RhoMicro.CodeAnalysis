@@ -1,13 +1,11 @@
 ﻿namespace RhoMicro.CodeAnalysis.Library.Models;
 
-using System.Collections.Immutable;
-
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 
 using RhoMicro.CodeAnalysis;
 using RhoMicro.CodeAnalysis.Library.Models.Collections;
-using RhoMicro.CodeAnalysis.Library.Text;
+using RhoMicro.CodeAnalysis.Library.Text.SourceTexts;
 
 #if RHOMICRO_CODEANALYSIS_UTILITYGENERATORS
 [IncludeFile]
@@ -39,7 +37,7 @@ internal readonly record struct ContainingTypeModel(
         return result;
     }
 
-    public void AppendTo(IndentedStringBuilder builder)
+    public void AppendTo(Text.SourceTexts.IndentedStringBuilder builder)
     {
         _ = builder.Append(Accessibility)
             .Append(' ')

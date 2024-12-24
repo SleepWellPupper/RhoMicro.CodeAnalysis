@@ -2,11 +2,12 @@
 
 using System;
 using System.Collections;
-using System.Runtime.CompilerServices;
+using System.Diagnostics;
 
 #if RHOMICRO_CODEANALYSIS_UTILITYGENERATORS
 [IncludeFile]
 #endif
+[DebuggerDisplay("Count: {Count}")]
 internal abstract partial record MutableCollection(MutabilityContext MutabilityContext)
 {
     public MutableCollection() : this(new MutabilityContext()) { }

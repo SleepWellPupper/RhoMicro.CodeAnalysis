@@ -1,6 +1,5 @@
 ﻿namespace RhoMicro.CodeAnalysis.Library.Models;
 using System;
-using System.Collections.Generic;
 
 using Microsoft.CodeAnalysis;
 

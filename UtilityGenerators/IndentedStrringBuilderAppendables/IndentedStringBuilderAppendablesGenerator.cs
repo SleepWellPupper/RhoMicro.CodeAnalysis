@@ -10,8 +10,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 using RhoMicro.CodeAnalysis.Library.Models;
-using RhoMicro.CodeAnalysis.Library.Models.Collections;
-using RhoMicro.CodeAnalysis.Library.Text;
+using RhoMicro.CodeAnalysis.Library.Text.SourceTexts;
 
 using Signature = (String name, String typeParameters, String parameters, IList<String> constraints, String arguments);
 
@@ -34,7 +33,7 @@ public sealed partial class IndentedStringBuilderAppendablesGenerator : IIncreme
             .Select(FinalStep);
 
         context.RegisterSourceOutput(provider, (ctx, source) =>
-            ctx.AddSource($"IndentedStringBuilder.Appendables.g.cs", source));
+            ctx.AddSource($"IndentedStringBuilder_Appendables.g.cs", source));
     }
 
     private static readonly ImmutableArray<Signature> _emptySignaturesArray = ImmutableArray.Create<Signature>();
@@ -222,10 +221,7 @@ public sealed partial class IndentedStringBuilderAppendablesGenerator : IIncreme
             GeneratorName = "RhoMicro.CodeAnalysis.IndentedStringBuilderAppendablesGenerator",
             AmbientCancellationToken = ct
         })
-            .AppendLine("using RhoMicro.CodeAnalysis.Library.Text;")
-            .AppendLine()
-            .Append("namespace RhoMicro.CodeAnalysis.Library.Text")
-            .OpenBracesBlock()
+            .AppendLine("namespace RhoMicro.CodeAnalysis.Library.Text.SourceTexts;")
             .Append("partial class IndentedStringBuilder")
             .OpenBracesBlock()
             .Append("public static partial class Appendables")

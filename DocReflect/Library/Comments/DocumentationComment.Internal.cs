@@ -1,6 +1,6 @@
 ﻿namespace RhoMicro.CodeAnalysis.DocReflect.Comments;
 
-using RhoMicro.CodeAnalysis.Library.Text;
+using RhoMicro.CodeAnalysis.Library.Text.SourceTexts;
 
 public partial record DocumentationComment : IIndentedStringBuilderAppendable
 {

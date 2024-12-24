@@ -1,7 +1,6 @@
 ﻿namespace RhoMicro.CodeAnalysis;
 
 using System;
-using System.Globalization;
 
 using Microsoft.CodeAnalysis;
 

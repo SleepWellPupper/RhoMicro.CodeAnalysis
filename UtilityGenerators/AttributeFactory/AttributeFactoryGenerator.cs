@@ -1,16 +1,11 @@
 ﻿namespace RhoMicro.CodeAnalysis;
 
 using System;
-using System.Collections.Immutable;
-using System.Diagnostics.CodeAnalysis;
-using System.Runtime.CompilerServices;
 
 using Microsoft.CodeAnalysis;
 
 using RhoMicro.CodeAnalysis.Library.Models.Collections;
-using RhoMicro.CodeAnalysis.Library.Text;
-using RhoMicro.CodeAnalysis.Library.Extensions;
-using System.Runtime.InteropServices.ComTypes;
+using RhoMicro.CodeAnalysis.Library.Text.SourceTexts;
 
 using static Constants;
 using RhoMicro.CodeAnalysis.Library.Models;

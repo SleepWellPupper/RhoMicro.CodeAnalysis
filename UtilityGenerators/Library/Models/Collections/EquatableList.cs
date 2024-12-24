@@ -1,12 +1,14 @@
 ﻿namespace RhoMicro.CodeAnalysis.Library.Models.Collections;
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
-
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 #if RHOMICRO_CODEANALYSIS_UTILITYGENERATORS
 [IncludeFile]
 #endif
+[CollectionBuilder(typeof(Builder), "Create")]
+[DebuggerDisplay("Count: {Count}")]
 internal sealed record EquatableList<T> : EquatableCollection<T, IList<T>>, IList<T>, IReadOnlyList<T>
 {
     public EquatableList(
@@ -41,5 +43,19 @@ internal sealed record EquatableList<T> : EquatableCollection<T, IList<T>>, ILis
             MutabilityContext.ThrowIfReadOnly();
             Collection[index] = value;
         }
+    }
+}
+
+file static class Builder
+{
+    public static EquatableList<T> Create<T>(ReadOnlySpan<T> elements)
+    {
+        using var ctx = ModelCreationContext.CreateDefault(CancellationToken.None);
+        var result = ctx.CollectionFactory.CreateList<T>();
+
+        foreach(var element in elements)
+            result.Add(element);
+
+        return result;
     }
 }

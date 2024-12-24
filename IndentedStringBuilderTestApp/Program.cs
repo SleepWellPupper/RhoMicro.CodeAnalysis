@@ -1,8 +1,8 @@
 ﻿namespace IndentedStringBuilderTestApp;
 
-using RhoMicro.CodeAnalysis.Library.Text;
+using RhoMicro.CodeAnalysis.Library.Text.SourceTexts;
 
-using static RhoMicro.CodeAnalysis.Library.Text.IndentedStringBuilder.Appendables;
+using static RhoMicro.CodeAnalysis.Library.Text.SourceTexts.IndentedStringBuilder.Appendables;
 
 internal class Program
 {

@@ -1,13 +1,13 @@
 namespace RhoMicro.CodeAnalysis.DocReflect.Generators;
 
-using RhoMicro.CodeAnalysis.Library.Text;
+using RhoMicro.CodeAnalysis.Library.Text.SourceTexts;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 using System.Collections.Immutable;
 using System.Xml;
 
-using static RhoMicro.CodeAnalysis.Library.Text.IndentedStringBuilder.Appendables;
+using static RhoMicro.CodeAnalysis.Library.Text.SourceTexts.IndentedStringBuilder.Appendables;
 
 /// <summary>
 /// Generates documentation providers for DocReflect.

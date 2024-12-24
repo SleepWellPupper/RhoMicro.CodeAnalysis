@@ -6,7 +6,6 @@ using Microsoft.CodeAnalysis;
 
 using RhoMicro.CodeAnalysis.Library.Models;
 using RhoMicro.CodeAnalysis.Library.Models.Collections;
-using RhoMicro.CodeAnalysis.Library.Extensions;
 
 internal sealed record AttributeFactoryModel(
     NamedTypeModel Signature,

@@ -1,12 +1,11 @@
 ﻿namespace RhoMicro.CodeAnalysis.Library.Models;
 using System;
-using System.Collections.Generic;
 using System.Text;
 
 using Microsoft.CodeAnalysis;
 
 using RhoMicro.CodeAnalysis.Library.Models.Collections;
-using RhoMicro.CodeAnalysis.Library.Text;
+using RhoMicro.CodeAnalysis.Library.Text.SourceTexts;
 
 #if RHOMICRO_CODEANALYSIS_UTILITYGENERATORS
 [IncludeFile]
@@ -193,6 +192,13 @@ internal sealed record NamedTypeModel(
         IndentedStringBuilder sourceBuilder,
         out String hintName,
         out String displayString,
+        CancellationToken ct) =>
+        BuildStrings(sourceBuilder, out hintName, out displayString, [], ct);
+    public void BuildStrings(
+        IndentedStringBuilder sourceBuilder,
+        out String hintName,
+        out String displayString,
+        ReadOnlySpan<String> superTypes,
         CancellationToken ct)
     {
         ct.ThrowIfCancellationRequested();
@@ -204,6 +210,7 @@ internal sealed record NamedTypeModel(
             hintNameBuilder: hintNameBuilder,
             displayStringBuilder: displayStringBuilder,
             sourceBuilder,
+            superTypes,
             ct);
 
         hintName = hintNameBuilder.Append(".g.cs").ToString();
@@ -213,6 +220,7 @@ internal sealed record NamedTypeModel(
         StringBuilder hintNameBuilder,
         StringBuilder displayStringBuilder,
         IndentedStringBuilder sourceBuilder,
+        ReadOnlySpan<String> superTypes,
         CancellationToken ct)
     {
         ct.ThrowIfCancellationRequested();
@@ -241,9 +249,37 @@ internal sealed record NamedTypeModel(
             hintNameBuilder: hintNameBuilder,
             displayStringBuilder: displayStringBuilder,
             sourceBuilder,
-            TypeArguments, ct);
+            TypeArguments,
+            ct);
+
+        AppendImplementedInterfaces(
+            sourceBuilder,
+            superTypes,
+            ct);
 
         _ = sourceBuilder.OpenBracesBlock();
+    }
+    private static void AppendImplementedInterfaces(
+        IndentedStringBuilder sourceBuilder,
+        ReadOnlySpan<String> superTypes,
+        CancellationToken ct)
+    {
+        ct.ThrowIfCancellationRequested();
+
+        if(superTypes.Length == 0)
+            return;
+
+        using var _ = sourceBuilder.Append(" :").AppendLine().OpenIndentBlockScope();
+
+        for(var i = 0; i < superTypes.Length; i++)
+        {
+            ct.ThrowIfCancellationRequested();
+
+            if(i != 0)
+                sourceBuilder.Append(',').AppendLineCore();
+
+            sourceBuilder.AppendCore(superTypes[i]);
+        }
     }
     private static void AppendName(
         StringBuilder hintNameBuilder,

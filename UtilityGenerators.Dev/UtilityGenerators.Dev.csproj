@@ -56,6 +56,16 @@
 		<Compile Include="..\UtilityGenerators\FileInclusion\FileInclusionGenerator.cs" Link="FileInclusionGenerator.cs" />
 		<Compile Include="..\UtilityGenerators\IndentedStrringBuilderAppendables\IndentedStringBuilderAppendablesGenerator.cs" Link="IndentedStringBuilderAppendablesGenerator.cs" />
 		<Compile Include="..\UtilityGenerators\NonEquatable\NonEquatableGenerator.cs" Link="NonEquatableGenerator.cs" />
+		<Compile Include="..\UtilityGenerators\Templating\CodeSyntaxModel.cs" Link="CodeSyntaxModel.cs" />
+		<Compile Include="..\UtilityGenerators\Templating\SourceSpanModel.cs" Link="SourceSpanModel.cs" />
+		<Compile Include="..\UtilityGenerators\Templating\SyntaxKind.cs" Link="SyntaxKind.cs" />
+		<Compile Include="..\UtilityGenerators\Templating\TemplateChildSyntaxModel.cs" Link="TemplateChildSyntaxModel.cs" />
+		<Compile Include="..\UtilityGenerators\Templating\TemplateSyntaxBaseModel.cs" Link="TemplateSyntaxBaseModel.cs" />
+		<Compile Include="..\UtilityGenerators\Templating\TemplateSyntaxModel.cs" Link="TemplateSyntaxModel.cs" />
+		<Compile Include="..\UtilityGenerators\Templating\TemplatingGenerator.cs" Link="TemplatingGenerator.cs" />
+		<Compile Include="..\UtilityGenerators\Templating\TextOrValueSyntaxModel.cs" Link="TextOrValueSyntaxModel.cs" />
+		<Compile Include="..\UtilityGenerators\Templating\TextSyntaxModel.cs" Link="TextSyntaxModel.cs" />
+		<Compile Include="..\UtilityGenerators\Templating\ValueSyntaxModel.cs" Link="ValueSyntaxModel.cs" />
 		<Compile Include="..\UtilityGenerators\TypeSymbolPattern\TypeSymbolPatternAttributeModel.cs" Link="TypeSymbolPatternAttributeModel.cs" />
 		<Compile Include="..\UtilityGenerators\TypeSymbolPattern\TypeSymbolPatternGenerator.cs" Link="TypeSymbolPatternGenerator.cs" />
 		<Compile Include="..\UtilityGenerators\TypeSymbolPattern\TypeSymbolPatternMethodModel.cs" Link="TypeSymbolPatternMethodModel.cs" />

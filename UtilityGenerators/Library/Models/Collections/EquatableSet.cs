@@ -1,12 +1,15 @@
 ﻿namespace RhoMicro.CodeAnalysis.Library.Models.Collections;
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 
 #if RHOMICRO_CODEANALYSIS_UTILITYGENERATORS
 [IncludeFile]
 #endif
+[CollectionBuilder(typeof(Builder), "Create")]
+[DebuggerDisplay("Count: {Count}")]
 internal sealed record EquatableSet<T> : EquatableCollection<T, ISet<T>>, ISet<T>
 {
     public EquatableSet(
@@ -50,5 +53,19 @@ internal sealed record EquatableSet<T> : EquatableCollection<T, ISet<T>>, ISet<T
     {
         MutabilityContext.ThrowIfReadOnly();
         return Collection.Add(item);
+    }
+}
+
+file static class Builder
+{
+    public static EquatableSet<T> Create<T>(ReadOnlySpan<T> elements)
+    {
+        using var ctx = ModelCreationContext.CreateDefault(CancellationToken.None);
+        var result = ctx.CollectionFactory.CreateSet<T>();
+
+        foreach(var element in elements)
+            _ = result.Add(element);
+
+        return result;
     }
 }

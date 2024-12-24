@@ -1,7 +1,6 @@
 ﻿namespace RhoMicro.CodeAnalysis.Library.Models.Collections;
 
 using System.Collections.Generic;
-using System.Net.NetworkInformation;
 
 #if RHOMICRO_CODEANALYSIS_UTILITYGENERATORS
 [IncludeFile]

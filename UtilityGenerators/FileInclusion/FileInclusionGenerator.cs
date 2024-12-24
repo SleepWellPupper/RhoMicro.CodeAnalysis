@@ -8,7 +8,6 @@ using System.Text.RegularExpressions;
 using Microsoft.CodeAnalysis;
 
 using RhoMicro.CodeAnalysis.Library.Models;
-using RhoMicro.CodeAnalysis.Library.Models.Collections;
 
 /// <summary>
 /// Generates static source texts from annotated source files for inclusion in both a generator as well as its target compilation.

@@ -27,6 +27,7 @@
 	  <Compile Include="..\UtilityGenerators\Library\Models\Collections\MutabilityContext.cs" Link="MutabilityContext.cs" />
 	  <Compile Include="..\UtilityGenerators\Library\Models\Collections\MutableCollection.cs" Link="MutableCollection.cs" />
 	  <Compile Include="..\UtilityGenerators\Library\Models\Collections\SetEqualityComparer.cs" Link="SetEqualityComparer.cs" />
+	  <Compile Include="..\UtilityGenerators\Library\Models\ModelCreationContext.cs" Link="ModelCreationContext.cs" />
 	</ItemGroup>
 
 

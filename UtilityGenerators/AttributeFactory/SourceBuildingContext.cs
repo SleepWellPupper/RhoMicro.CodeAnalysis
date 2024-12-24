@@ -1,7 +1,7 @@
 ﻿namespace RhoMicro.CodeAnalysis;
 using System;
 
-using RhoMicro.CodeAnalysis.Library.Text;
+using RhoMicro.CodeAnalysis.Library.Text.SourceTexts;
 
 internal readonly record struct SourceBuildingContext(IndentedStringBuilder SourceBuilder, AttributeFactoryModel Model, String DisplayString, CancellationToken CancellationToken)
 {

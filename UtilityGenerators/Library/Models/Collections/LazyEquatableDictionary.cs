@@ -1,13 +1,13 @@
 ﻿namespace RhoMicro.CodeAnalysis.Library.Models.Collections;
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Net.NetworkInformation;
+using System.Diagnostics;
 
 #if RHOMICRO_CODEANALYSIS_UTILITYGENERATORS
 [IncludeFile]
 #endif
+[DebuggerDisplay("Count: {Count}")]
 internal sealed record LazyEquatableDictionary<TKey, TValue> : LazyEquatableDictionary<TKey, TValue, LazyEquatableDictionary<TKey, TValue>>
 {
     public LazyEquatableDictionary(

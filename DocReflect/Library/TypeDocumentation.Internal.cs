@@ -1,8 +1,8 @@
 ﻿namespace RhoMicro.CodeAnalysis.DocReflect;
 
-using RhoMicro.CodeAnalysis.Library.Text;
+using RhoMicro.CodeAnalysis.Library.Text.SourceTexts;
 
-using static RhoMicro.CodeAnalysis.Library.Text.IndentedStringBuilder.Appendables;
+using static RhoMicro.CodeAnalysis.Library.Text.SourceTexts.IndentedStringBuilder.Appendables;
 
 public partial class Documentation : IIndentedStringBuilderAppendable
 {

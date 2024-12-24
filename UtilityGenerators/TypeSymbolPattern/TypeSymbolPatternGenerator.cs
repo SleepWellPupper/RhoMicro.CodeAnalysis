@@ -1,17 +1,11 @@
 ﻿namespace RhoMicro.CodeAnalysis;
-using System.Collections.Generic;
-using System.Runtime.InteropServices.ComTypes;
-using System.Security;
-using System.Text;
 
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
-using Microsoft.CodeAnalysis.Operations;
 
 using RhoMicro.CodeAnalysis.Library.Models;
-using RhoMicro.CodeAnalysis.Library.Models.Collections;
-using RhoMicro.CodeAnalysis.Library.Text;
+using RhoMicro.CodeAnalysis.Library.Text.SourceTexts;
 
 /// <summary>
 /// Generates implementations for partial methods for checking if an <see cref="ITypeSymbol"/> corresponds to a given type.

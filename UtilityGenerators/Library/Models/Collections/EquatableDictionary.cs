@@ -1,13 +1,13 @@
 ﻿namespace RhoMicro.CodeAnalysis.Library.Models.Collections;
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
+using System.Diagnostics;
 
 #if RHOMICRO_CODEANALYSIS_UTILITYGENERATORS
 [IncludeFile]
 #endif
+[DebuggerDisplay("Count: {Count}")]
 internal sealed record EquatableDictionary<TKey, TValue> : EquatableCollection<KeyValuePair<TKey, TValue>, IDictionary<TKey, TValue>>, IDictionary<TKey, TValue>, IReadOnlyDictionary<TKey, TValue>
 {
     public EquatableDictionary(

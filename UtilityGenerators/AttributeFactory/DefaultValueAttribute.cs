@@ -1,7 +1,6 @@
 ﻿namespace RhoMicro.CodeAnalysis;
 
 using System;
-using System.Runtime.CompilerServices;
 
 /// <summary>
 /// Defines the default value to use for the targeted property.
