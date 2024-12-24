@@ -127,16 +127,16 @@ public §(Accessibility) class §(Name)
 """,
                 s => [
                     new TextSyntaxModel(new(0,3, s)),
-                    new TextSyntaxModel(new(4,20, s)),
-                    new TextSyntaxModel(new(25,1, s)),
-                    new ValueSyntaxModel(new(26,7,s)),
-                    new TextSyntaxModel(new(33,26, s)),
-                    new ValueSyntaxModel(new(59,16,s)),
-                    new TextSyntaxModel(new(75,7, s)),
-                    new ValueSyntaxModel(new(82,7, s)),
-                    new TextSyntaxModel(new(89,3, s)),
-                    new CodeSyntaxModel(new(92,74,s),[new TextSyntaxModel(new(94,53,s)), new ValueSyntaxModel(new(147, 9,s)), new TextSyntaxModel(new(156,9,s))]),
-                    new TextSyntaxModel(new(166,1,s))
+                    new TextSyntaxModel(new(4,19, s)),
+                    new TextSyntaxModel(new(24,1, s)),
+                    new ValueSyntaxModel(new(25,7,s)),
+                    new TextSyntaxModel(new(32,25, s)),
+                    new ValueSyntaxModel(new(57,16,s)),
+                    new TextSyntaxModel(new(73,7, s)),
+                    new ValueSyntaxModel(new(80,7, s)),
+                    new TextSyntaxModel(new(87,2, s)),
+                    new CodeSyntaxModel(new(89,69,s),[new TextSyntaxModel(new(91,50,s)), new ValueSyntaxModel(new(141, 9,s)), new TextSyntaxModel(new(150,7,s))]),
+                    new TextSyntaxModel(new(158,1,s))
                     ]);
 
             return result;
