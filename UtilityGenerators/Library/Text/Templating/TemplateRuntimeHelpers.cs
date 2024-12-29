@@ -1,6 +1,7 @@
 ﻿namespace RhoMicro.CodeAnalysis.Library.Text.Templating;
 
 using System;
+using System.Runtime.CompilerServices;
 
 /// <summary>
 /// Provides helpers for writing data to a buffer of chars.
@@ -10,7 +11,11 @@ using System;
 #endif
 internal static class TemplateRuntimeHelpers
 {
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void Render(in String value, ref DynamicallyAllocatedBuffer<Char> buffer) => buffer.Add(value.AsSpan());
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static void Render(in Char value, ref DynamicallyAllocatedBuffer<Char> buffer) => buffer.Add(value);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static void Render<T>(in T value, ref DynamicallyAllocatedBuffer<Char> buffer)
         where T : ITemplate
         => value.Render(ref buffer);

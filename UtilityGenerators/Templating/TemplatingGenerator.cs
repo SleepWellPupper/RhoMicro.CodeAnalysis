@@ -76,7 +76,7 @@ public class TemplatingGenerator : IIncrementalGenerator
             sourceBuilder
                 .Append("public override unsafe string ToString()")
                 .OpenBracesBlock()
-                .AppendLine("var buffer = new global::RhoMicro.CodeAnalysis.Library.Text.Templating.DynamicallyAllocatedBuffer<char>();")
+                .AppendLine("using var buffer = new global::RhoMicro.CodeAnalysis.Library.Text.Templating.DynamicallyAllocatedBuffer<char>();")
                 .AppendLine("this.Render(ref buffer);")
                 .AppendLine("fixed(char* chars = buffer.Span)")
                 .Indent().AppendLine("return new(chars, 0, buffer.Span.Length);").Detent()
@@ -101,7 +101,7 @@ public class TemplatingGenerator : IIncrementalGenerator
             sourceBuilder.IndentCore();
 
         sourceBuilder.AppendLine()
-            .Append("System.ReadOnlySpan<char> __templateSpan = __template;").AppendLineCore();
+            .Append("System.ReadOnlySpan<char> __templateSpan = __template.AsSpan();").AppendLineCore();
 
         foreach(var templateChild in template.Children)
         {

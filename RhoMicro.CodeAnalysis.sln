@@ -9,6 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestApp", "TestApp\TestApp.
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{518E0314-5813-462C-AD0A-48491B32707D}"
 	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
 		AutoUpdateAssemblyName.txt = AutoUpdateAssemblyName.txt
 		Directory.Build.props = Directory.Build.props
 		global.json = global.json

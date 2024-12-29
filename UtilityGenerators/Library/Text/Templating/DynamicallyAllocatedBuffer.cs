@@ -8,7 +8,9 @@ using System.Runtime.InteropServices;
 
 /// <summary>
 /// Represents a dynamically allocated buffer that may be initially allocated on
-/// the stack and promoted to a heap allocated buffer if needed.
+/// the stack and promoted to a heap allocated buffer if needed. The allocated
+/// buffer will be rented from <see cref="ArrayPool{T}.Shared"/> and returned
+/// upon disposal of the <see cref="DynamicallyAllocatedBuffer{T}"/> instance.
 /// </summary>
 /// <typeparam name="T">
 /// The type of element managed.
@@ -16,7 +18,7 @@ using System.Runtime.InteropServices;
 #if RHOMICRO_CODEANALYSIS_UTILITYGENERATORS
 [IncludeFile]
 #endif
-internal ref struct DynamicallyAllocatedBuffer<T>
+internal ref struct DynamicallyAllocatedBuffer<T> : IDisposable
 {
     /// <summary>
     /// Allocates a new instance.
@@ -26,6 +28,7 @@ internal ref struct DynamicallyAllocatedBuffer<T>
     /// </param>
     public DynamicallyAllocatedBuffer(Span<T> initialBuffer) => _span = initialBuffer;
 
+    private T[]? _rented;
     private Span<T> _span;
     private Int32 _cursor;
 
@@ -111,9 +114,17 @@ internal ref struct DynamicallyAllocatedBuffer<T>
         if(delta > 0)
         {
             var newSize = checked((Int32)BitOperations.RoundUpToPowerOf2((UInt32)( _span.Length + delta )));
-            Span<T> newHeapAllocatedBuffer = new T[newSize];
+            _rented = ArrayPool<T>.Shared.Rent(newSize);
+            Span<T> newHeapAllocatedBuffer = _rented;
             _span.CopyTo(newHeapAllocatedBuffer);
             _span = newHeapAllocatedBuffer;
         }
+    }
+
+    /// <inheritdoc/>
+    public void Dispose()
+    {
+        if(_rented is not null)
+            ArrayPool<T>.Shared.Return(_rented);
     }
 }
