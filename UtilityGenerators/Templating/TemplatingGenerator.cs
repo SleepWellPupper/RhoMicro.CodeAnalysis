@@ -77,7 +77,7 @@ public class TemplatingGenerator : IIncrementalGenerator
                 .Append("public override unsafe string ToString()")
                 .OpenBracesBlock()
                 .AppendLine("using var buffer = new global::RhoMicro.CodeAnalysis.Library.Text.Templating.DynamicallyAllocatedBuffer<char>();")
-                .AppendLine("this.Render(ref buffer);")
+                .Append("try")
                 .AppendLine("fixed(char* chars = buffer.Span)")
                 .Indent().AppendLine("return new(chars, 0, buffer.Span.Length);").Detent()
                 .CloseBlockCore();
