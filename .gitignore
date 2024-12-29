@@ -365,5 +365,4 @@ FodyWeavers.xsd
 
 /feed
 /dist/*
-!/dist/dev
-!/dist/dev/*
+!/dist/dev/RhoMicro.CodeAnalysis.UtilityGenerators.Dev.1.0.0.nupkg
