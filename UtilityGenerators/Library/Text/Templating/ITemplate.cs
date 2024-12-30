@@ -11,10 +11,16 @@ using System;
 internal interface ITemplate
 {
     /// <summary>
-    /// Renders the template to a buffer.
+    /// Renders the template to a buffer, using the indentation provided.
     /// </summary>
     /// <param name="buffer">
     /// The buffer to render the templates characters to.
     /// </param>
-    void Render(ref DynamicallyAllocatedBuffer<Char> buffer);
+    /// <param name="indentation">
+    /// The indentation to apply to text appended.
+    /// </param>
+    /// <param name="cancellationToken">
+    /// The cancellation token used to request rendering to be cancelled.
+    /// </param>
+    void Render(ref DynamicallyAllocatedBuffer<Char> buffer, ReadOnlySpan<Char> indentation, CancellationToken cancellationToken);
 }

@@ -8,13 +8,15 @@ using Microsoft.CodeAnalysis.CSharp;
 using RhoMicro.CodeAnalysis.Library.Models;
 using RhoMicro.CodeAnalysis.Library.Models.Collections;
 
-internal sealed record PropertyModel(
+internal sealed partial record PropertyModel(
     String Name,
     String? DefaultValueExpression,
     AttributeParameterTypeModel Type,
     Boolean HasSetter,
     EquatableList<ParameterMapping> Mappings)
 {
+    [TypeSymbolPattern(typeof(String[]))]
+    private static partial Boolean IsStringArray(ITypeSymbol? type);
     public static PropertyModel Create(IPropertySymbol property, LazyEquatableDictionary<String, EquatableList<ParameterMapping>> propertyMappings, in ModelCreationContext ctx)
     {
         ctx.ThrowIfCancellationRequested();
@@ -32,7 +34,9 @@ internal sealed record PropertyModel(
 
             if(attribute.IsDefaultValueAttribute() && attribute.ConstructorArguments is [{ } defaultValue])
             {
-                defaultValueExpression = defaultValue.ToCSharpString();
+                defaultValueExpression = IsStringArray(defaultValue.Type)
+                    ? $"[{String.Join(", ", defaultValue.Values.Select(c => c.ToCSharpString()))}]"
+                    : defaultValue.ToCSharpString();
             }
         }
 

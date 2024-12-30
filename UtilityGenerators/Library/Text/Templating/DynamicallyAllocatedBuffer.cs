@@ -67,6 +67,9 @@ internal ref struct DynamicallyAllocatedBuffer<T> : IDisposable
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void Add(ReadOnlySpan<T> elements)
     {
+        if(elements.Length == 0)
+            return;
+
         var target = Reserve(elements.Length);
         elements.CopyTo(target);
     }

@@ -2220,7 +2220,7 @@ public sealed partial class AttributeFactoryGenerator : IIncrementalGenerator
                     .Append("if(kvp.Value.TryGet").Append(property.Type.KindString).Append("Value(out ").Append(property.Type.NullableDisplayString).AppendLine(" value))")
                     .Indent().Append(property.Name).AppendCore(" = value");
 
-                if(property.Type.Kind.HasFlagsFast(AttributeParameterTypeKind.ValueType, AttributeParameterTypeKind.Array))
+                if(property.Type.Kind.HasFlagsFast(AttributeParameterTypeKind.ValueType))
                     ctx.SourceBuilder.AppendCore(".Value");
 
                 ctx.SourceBuilder.AppendLine(';').Detent()
@@ -2249,7 +2249,7 @@ public sealed partial class AttributeFactoryGenerator : IIncrementalGenerator
 
                 if(property is { HasSetter: false, Mappings: [] })
                     continue;
-
+                
                 ctx.SourceBuilder.Comment
                     .OpenSummary()
                     .Append("Gets the value for the ").Comment.SeeCRef($"{ctx.DisplayString}.{property.Name}").Append(" property.")

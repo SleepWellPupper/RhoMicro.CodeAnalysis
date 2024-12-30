@@ -22,7 +22,7 @@ internal sealed partial class TemplateAttribute : Attribute
     /// <param name="templateString">
     /// The template string to generate a template class implementation from.
     /// </param>
-    public TemplateAttribute([MapToProperty(nameof(TemplateString))]String templateString) => TemplateString = templateString;
+    public TemplateAttribute([MapToProperty(nameof(TemplateString))] String templateString) => TemplateString = templateString;
     /// <summary>
     /// Gets the template string used for the targeted template class.
     /// </summary>
@@ -34,4 +34,11 @@ internal sealed partial class TemplateAttribute : Attribute
     /// </summary>
     [DefaultValue(true)]
     public Boolean GenerateToString { get; set; } = true;
+    /// <summary>
+    /// Gets or sets a value indicating whether to statically import the <see
+    /// cref="global::RhoMicro.CodeAnalysis.Library.Text.Templating.Indentations"/>
+    /// class. The default value is <see langword="true"/>.
+    /// </summary>
+    [DefaultValue(["static global::RhoMicro.CodeAnalysis.Library.Text.Templating.Indentations"])]
+    public String[] Usings { get; set; } = ["static global::RhoMicro.CodeAnalysis.Library.Text.Templating.Indentations"];
 }

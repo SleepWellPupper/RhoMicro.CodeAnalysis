@@ -3,7 +3,9 @@
 using Microsoft.CodeAnalysis;
 
 using RhoMicro.CodeAnalysis.Library.Models;
+using RhoMicro.CodeAnalysis.Library.Models.Collections;
 using RhoMicro.CodeAnalysis.Library.Text.SourceTexts;
+using RhoMicro.CodeAnalysis.Library.Text.Templating;
 using RhoMicro.CodeAnalysis.Templating;
 
 /// <summary>
@@ -51,7 +53,6 @@ public class TemplatingGenerator : IIncrementalGenerator
 
         context.RegisterSourceOutput(provider, (ctx, t) => ctx.AddSource(t.hintName, t.source));
     }
-
     private static (String hintName, String source) IsbImpl((NamedTypeModel type, TemplateSyntaxModel template, TemplateAttribute.Model attribute) t, CancellationToken ct)
     {
         ct.ThrowIfCancellationRequested();
@@ -63,6 +64,9 @@ public class TemplatingGenerator : IIncrementalGenerator
         });
 
         var (type, template, attribute) = t;
+
+        foreach(var u in attribute.Usings)
+            sourceBuilder.Append("using ").Append(u).Append(';').AppendLineCore();
 
         type.BuildStrings(
             sourceBuilder,
@@ -91,7 +95,11 @@ public class TemplatingGenerator : IIncrementalGenerator
         }
 
         sourceBuilder
-            .Append("public void Render(ref global::RhoMicro.CodeAnalysis.Library.Text.Templating.DynamicallyAllocatedBuffer<char> __buffer, global::System.ReadOnlySpan<Char> __indentation, global::System.Threading.CancellationToken __cancellationToken)")
+            .Append(
+                "public void Render(" +
+                "ref global::RhoMicro.CodeAnalysis.Library.Text.Templating.DynamicallyAllocatedBuffer<char> __buffer, " +
+                "global::System.ReadOnlySpan<Char> __indentation = default, " +
+                "global::System.Threading.CancellationToken __cancellationToken = default)")
             .OpenBracesBlock()
             .AppendLine("__cancellationToken.ThrowIfCancellationRequested();")
             .Append("const string __template =").AppendLineCore();
@@ -140,7 +148,7 @@ public class TemplatingGenerator : IIncrementalGenerator
 
                         sourceBuilder
                             .Append("global::RhoMicro.CodeAnalysis.Library.Text.Templating.TemplateRuntimeHelpers.Render(")
-                            .Append(variableName).AppendCore(", ref __buffer);");
+                            .Append(variableName).AppendCore(", ref __buffer, __indentation, __cancellationToken);");
                     }
                 }
             }
@@ -271,21 +279,21 @@ partial §(model.TypeModifier)§(Params)
 }
 */
 
-//[Template(
-//"""
-//§{
-//if(typeParameters.Count > 0)
-//{
-//    §('<')
+[Template(
+"""
+§{
+if(typeParameters.Count > 0)
+{
+    §('<')
 
-//    for(var i = 0; i < typeParameters.Count; i++)
-//    {
-//        §(typeParameters[i])
-//    }
+    for(var i = 0; i < typeParameters.Count; i++)
+    {
+        §(typeParameters[i])
+    }
 
-//    §('>')
-//}
-//}
-//""")]
-//[NonEquatable]
-//internal readonly partial struct TypeParametersTemplate(EquatableList<String> typeParameters);
+    §('>')
+}
+}
+""", Usings = [])]
+[NonEquatable]
+internal readonly partial struct TypeParametersTemplate(EquatableList<String> typeParameters);

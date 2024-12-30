@@ -240,6 +240,65 @@ Best regards,
             """, actual);
     }
 
+    [Template(
+"""
+§{
+    §(Tab, lines)
+}
+""")]
+    private partial class IndentationTemplate(String lines);
+
+    [Fact]
+    public void IndentationIsAppliedToEveryNewLine()
+    {
+        var actual = new IndentationTemplate(
+            """
+            Foo
+            Foo
+            Foo
+            Foo
+            Foo
+            """)
+            .ToString();
+
+        Assert.Equal("\tFoo\n\tFoo\n\tFoo\n\tFoo\n\tFoo", actual);
+    }
+
+    [Template(
+        """
+        public static void Main()
+        {
+            Console.WriteLine("Hello, World!");
+            return;
+        }
+        """)]
+    private partial class MainMethodTemplate;
+    [Template(
+        """
+        public class §(name)
+        {
+        §(Tab, body)
+        }
+        """)]
+    private partial class ClassTemplate(String name, ITemplate body);
+
+    [Fact]
+    public void IndentationIsAppliedToEveryNewLineOfChild()
+    {
+        var actual = new ClassTemplate("Program", new MainMethodTemplate()).ToString();
+
+        Assert.Equal(
+            $$"""
+            public class Program
+            {
+            {{'\t'}}public static void Main()
+            {{'\t'}}{
+            {{'\t'}}    Console.WriteLine("Hello, World!");
+            {{'\t'}}    return;
+            {{'\t'}}}
+            }
+            """, actual);
+    }
     //[Template(
     //    """
     //    §{AssertInterned(__template);}

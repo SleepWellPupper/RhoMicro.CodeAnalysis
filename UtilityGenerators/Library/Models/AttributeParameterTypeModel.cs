@@ -184,7 +184,7 @@ internal sealed record AttributeParameterTypeModel(
         return result;
     }
     private static String ToDisplayString(ITypeSymbol type) => type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
-    private static String ToArrayDisplayString(String elementType, Boolean nullable) => $"global::System.Collections.Immutable.ImmutableArray<{elementType}>{( nullable ? "?" : "" )}";
+    private static String ToArrayDisplayString(String elementType, Boolean nullable) => $"global::RhoMicro.CodeAnalysis.Library.Models.Collections.EquatableList<{elementType}>{( nullable ? "?" : "" )}";
     private static String ToArrayDisplayString(ITypeSymbol elementType, Boolean nullable) => ToArrayDisplayString(elementType.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat), nullable);
     private static Boolean IsType(ITypeSymbol type) => type is { Name: "Type", ContainingNamespace: { Name: "System", ContainingNamespace: { IsGlobalNamespace: true } } };
 

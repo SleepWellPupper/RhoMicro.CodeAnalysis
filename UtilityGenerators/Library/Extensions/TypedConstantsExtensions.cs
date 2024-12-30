@@ -8,6 +8,8 @@ using System.Runtime.CompilerServices;
 using Microsoft.CodeAnalysis;
 
 using RhoMicro.CodeAnalysis;
+using RhoMicro.CodeAnalysis.Library.Models;
+using RhoMicro.CodeAnalysis.Library.Models.Collections;
 
 #if RHOMICRO_CODEANALYSIS_UTILITYGENERATORS
 [IncludeFile]
@@ -78,9 +80,23 @@ internal static class TypedConstantsExtensions
         return false;
     }
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [Obsolete]
     public static Boolean TryGetReferenceTypeArrayValue<T>(this TypedConstant typedConstant, [NotNullWhen(true)] out ImmutableArray<T>? value)
         where T : class
     {
+        if(TryGetReferenceTypeArrayValue(typedConstant, out EquatableList<T>? valueList))
+        {
+            value = valueList!.ToImmutableArray();
+            return true;
+        }
+
+        value = null;
+        return false;
+    }
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Boolean TryGetReferenceTypeArrayValue<T>(this TypedConstant typedConstant, [NotNullWhen(true)] out EquatableList<T>? value)
+        where T : class
+    {
         if(typedConstant is not
             {
                 Kind: TypedConstantKind.Array,
@@ -94,7 +110,21 @@ internal static class TypedConstantsExtensions
         return TryGetReferenceTypeArrayValue(array, out value);
     }
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Boolean TryGetReferenceTypeNullableArrayValue<T>(this TypedConstant typedConstant, out ImmutableArray<T>? value)
+    [Obsolete]
+    public static Boolean TryGetReferenceTypeNullableArrayValue<T>(this TypedConstant typedConstant, [NotNullWhen(true)] out ImmutableArray<T>? value)
+        where T : class
+    {
+        if(TryGetReferenceTypeNullableArrayValue(typedConstant, out EquatableList<T>? valueList))
+        {
+            value = valueList!.ToImmutableArray();
+            return true;
+        }
+
+        value = null;
+        return false;
+    }
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Boolean TryGetReferenceTypeNullableArrayValue<T>(this TypedConstant typedConstant, out EquatableList<T>? value)
         where T : class
     {
         if(typedConstant is not
@@ -116,16 +146,17 @@ internal static class TypedConstantsExtensions
 
         return TryGetReferenceTypeArrayValue(array, out value);
     }
-    private static Boolean TryGetReferenceTypeArrayValue<T>(ImmutableArray<TypedConstant> array, [NotNullWhen(true)] out ImmutableArray<T>? value)
+    private static Boolean TryGetReferenceTypeArrayValue<T>(ImmutableArray<TypedConstant> array, [NotNullWhen(true)] out EquatableList<T>? value)
         where T : class
     {
-        var builder = ImmutableArray.CreateBuilder<T>(array.Length);
+        using var ctx = ModelCreationContext.CreateDefault(CancellationToken.None);
+        value = ctx.CollectionFactory.CreateList<T>();
 
-        for(var i = 0; i < array.Length; i++)
+        foreach(var constant in array)
         {
-            if(array[i].TryGetReferenceTypeValue<T>(out var item))
+            if(constant.TryGetReferenceTypeValue<T>(out var item))
             {
-                builder[i] = item;
+                value.Add(item);
             } else
             {
                 value = null;
@@ -133,14 +164,27 @@ internal static class TypedConstantsExtensions
             }
         }
 
-        value = builder.MoveToImmutable();
         return true;
     }
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [Obsolete]
     public static Boolean TryGetNullableReferenceTypeArrayValue<T>(this TypedConstant typedConstant, [NotNullWhen(true)] out ImmutableArray<T?>? value)
         where T : class
     {
+        if(TryGetNullableReferenceTypeArrayValue(typedConstant, out EquatableList<T?>? valueList))
+        {
+            value = valueList!.ToImmutableArray();
+            return true;
+        }
+
+        value = null;
+        return false;
+    }
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Boolean TryGetNullableReferenceTypeArrayValue<T>(this TypedConstant typedConstant, [NotNullWhen(true)] out EquatableList<T?>? value)
+        where T : class
+    {
         if(typedConstant is not
             {
                 Kind: TypedConstantKind.Array,
@@ -154,7 +198,21 @@ internal static class TypedConstantsExtensions
         return TryGetNullableReferenceTypeArrayValue(array, out value);
     }
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Boolean TryGetNullableReferenceTypeNullableArrayValue<T>(this TypedConstant typedConstant, out ImmutableArray<T?>? value)
+    [Obsolete]
+    public static Boolean TryGetNullableReferenceTypeNullableArrayValue<T>(this TypedConstant typedConstant, [NotNullWhen(true)] out ImmutableArray<T?>? value)
+        where T : class
+    {
+        if(TryGetNullableReferenceTypeNullableArrayValue(typedConstant, out EquatableList<T?>? valueList))
+        {
+            value = valueList!.ToImmutableArray();
+            return true;
+        }
+
+        value = null;
+        return false;
+    }
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Boolean TryGetNullableReferenceTypeNullableArrayValue<T>(this TypedConstant typedConstant, out EquatableList<T?>? value)
         where T : class
     {
         if(typedConstant is not
@@ -176,16 +234,17 @@ internal static class TypedConstantsExtensions
 
         return TryGetNullableReferenceTypeArrayValue(array, out value);
     }
-    private static Boolean TryGetNullableReferenceTypeArrayValue<T>(ImmutableArray<TypedConstant> array, [NotNullWhen(true)] out ImmutableArray<T?>? value)
+    private static Boolean TryGetNullableReferenceTypeArrayValue<T>(ImmutableArray<TypedConstant> array, [NotNullWhen(true)] out EquatableList<T?>? value)
         where T : class
     {
-        var builder = ImmutableArray.CreateBuilder<T?>(array.Length);
+        using var ctx = ModelCreationContext.CreateDefault(CancellationToken.None);
+        value = ctx.CollectionFactory.CreateList<T?>();
 
-        for(var i = 0; i < array.Length; i++)
+        foreach(var constant in array)
         {
-            if(array[i].TryGetNullableReferenceTypeValue<T>(out var item))
+            if(constant.TryGetNullableReferenceTypeValue<T>(out var item))
             {
-                builder[i] = item;
+                value.Add(item);
             } else
             {
                 value = null;
@@ -193,11 +252,24 @@ internal static class TypedConstantsExtensions
             }
         }
 
-        value = builder.MoveToImmutable();
         return true;
     }
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [Obsolete]
     public static Boolean TryGetValueTypeArrayValue<T>(this TypedConstant typedConstant, [NotNullWhen(true)] out ImmutableArray<T>? value)
+        where T : struct
+    {
+        if(TryGetValueTypeArrayValue(typedConstant, out EquatableList<T>? valueList))
+        {
+            value = valueList!.ToImmutableArray();
+            return true;
+        }
+
+        value = null;
+        return false;
+    }
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Boolean TryGetValueTypeArrayValue<T>(this TypedConstant typedConstant, [NotNullWhen(true)] out EquatableList<T>? value)
         where T : struct
     {
         if(typedConstant is not
@@ -213,7 +285,21 @@ internal static class TypedConstantsExtensions
         return TryGetValueTypeArrayValue(array, out value);
     }
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static Boolean TryGetValueTypeNullableArrayValue<T>(this TypedConstant typedConstant, out ImmutableArray<T>? value)
+    [Obsolete]
+    public static Boolean TryGetValueTypeNullableArrayValue<T>(this TypedConstant typedConstant, [NotNullWhen(true)] out ImmutableArray<T>? value)
+        where T : struct
+    {
+        if(TryGetValueTypeNullableArrayValue(typedConstant, out EquatableList<T>? valueList))
+        {
+            value = valueList!.ToImmutableArray();
+            return true;
+        }
+
+        value = null;
+        return false;
+    }
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static Boolean TryGetValueTypeNullableArrayValue<T>(this TypedConstant typedConstant, out EquatableList<T>? value)
         where T : struct
     {
         if(typedConstant is not
@@ -235,16 +321,17 @@ internal static class TypedConstantsExtensions
 
         return TryGetValueTypeArrayValue(array, out value);
     }
-    private static Boolean TryGetValueTypeArrayValue<T>(ImmutableArray<TypedConstant> array, [NotNullWhen(true)] out ImmutableArray<T>? value)
+    private static Boolean TryGetValueTypeArrayValue<T>(ImmutableArray<TypedConstant> array, [NotNullWhen(true)] out EquatableList<T>? value)
         where T : struct
     {
-        var builder = ImmutableArray.CreateBuilder<T>(array.Length);
+        using var ctx = ModelCreationContext.CreateDefault(CancellationToken.None);
+        value = ctx.CollectionFactory.CreateList<T>();
 
-        for(var i = 0; i < array.Length; i++)
+        foreach(var constant in array)
         {
-            if(array[i].TryGetValueTypeValue<T>(out var item))
+            if(constant.TryGetValueTypeValue<T>(out var item))
             {
-                builder[i] = item!.Value;
+                value.Add(item!.Value);
             } else
             {
                 value = null;
@@ -252,7 +339,6 @@ internal static class TypedConstantsExtensions
             }
         }
 
-        value = builder.MoveToImmutable();
         return true;
     }
     [MethodImpl(MethodImplOptions.AggressiveInlining)]

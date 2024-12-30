@@ -112,7 +112,7 @@ internal sealed record AttributeFactoryModel(
 
         if(property.Type is
         { SpecialType: SpecialType.System_Object }
-            or IArrayTypeSymbol
+            or IArrayTypeSymbol { ElementType: { SpecialType: SpecialType.System_Object } or { Name: "Type", ContainingNamespace: { Name: "System", ContainingNamespace: { IsGlobalNamespace: true } } } }
             or { Name: "Type", ContainingNamespace: { Name: "System", ContainingNamespace: { IsGlobalNamespace: true } } })
         {
             isEquatable = false;

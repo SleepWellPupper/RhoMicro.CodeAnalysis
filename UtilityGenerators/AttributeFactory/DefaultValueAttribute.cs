@@ -171,6 +171,13 @@ internal sealed partial class DefaultValueAttribute : Attribute
     /// The default value to use for the targeted property.
     /// </param>
     public DefaultValueAttribute(String? defaultValue) => DefaultValue = defaultValue;
+    /// <summary>
+    /// Initializes a new instance.
+    /// </summary>
+    /// <param name="defaultValue">
+    /// The default value to use for the targeted property.
+    /// </param>
+    public DefaultValueAttribute(String[]? defaultValue) => DefaultValue = defaultValue;
 
     /// <summary>
     /// Gets the default value to use for the targeted property.
