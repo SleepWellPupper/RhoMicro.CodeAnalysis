@@ -34,7 +34,7 @@
     <Company>RhoMicro</Company>
     <PackageId>$(MSBuildProjectName)</PackageId>
     <PackageId Condition="'$(SolutionName)'!=''">$(SolutionName).$(MSBuildProjectName)</PackageId>
-    <RepositoryUrl>https://github.com/PaulBraetz/RhoMicro.CodeAnalysis/tree/master/$(MSBuildProjectName)</RepositoryUrl>
+    <RepositoryUrl>https://github.com/SleepWellPupper/RhoMicro.CodeAnalysis/tree/master/$(MSBuildProjectName)</RepositoryUrl>
     <ProjectUrl>$(RepositoryUrl)</ProjectUrl>
   </PropertyGroup>
   <PropertyGroup Condition=" $(Configuration) == 'Debug' ">
