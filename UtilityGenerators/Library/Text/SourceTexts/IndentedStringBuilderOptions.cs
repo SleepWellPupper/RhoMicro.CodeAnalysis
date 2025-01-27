@@ -8,7 +8,7 @@ internal sealed record class IndentedStringBuilderOptions
     public StringOrChar DefaultIndentation { get; init; } = StringOrChar.Tab;
     public StringOrChar NewLine { get; init; } = StringOrChar.NewLine;
     public String GeneratorName { get; init; } = String.Empty;
-    public Boolean PrependMarkerComment { get; init; } = true;
+    public Boolean PrependMarkerComment { get; init; } = false;
     public Boolean PrependWarningDisablePragma { get; init; } = false;
     public Boolean PrependNullableEnable { get; init; } = false;
     public String License { get; init; } = String.Empty;

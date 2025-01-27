@@ -1,7 +1,4 @@
 ﻿namespace RhoMicro.CodeAnalysis.Library.Models;
-
-using System.Runtime.CompilerServices;
-
 [Flags]
 #if RHOMICRO_CODEANALYSIS_UTILITYGENERATORS
 [IncludeFile]
@@ -36,7 +33,6 @@ internal enum AttributeParameterTypeKind
 
 internal static class AttributeArgumentTypeKindExtensions
 {
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Boolean HasFlagsFast(this AttributeParameterTypeKind value, params ReadOnlySpan<AttributeParameterTypeKind> flags)
     {
         foreach(var flag in flags)
@@ -48,7 +44,6 @@ internal static class AttributeArgumentTypeKindExtensions
         return false;
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static String ToStringFast(this AttributeParameterTypeKind value) => value switch
     {
         AttributeParameterTypeKind.ReferenceType => nameof(AttributeParameterTypeKind.ReferenceType),

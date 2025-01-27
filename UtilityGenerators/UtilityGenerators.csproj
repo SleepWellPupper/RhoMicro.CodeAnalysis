@@ -8,8 +8,13 @@
 		<NoPackageAnalysis>true</NoPackageAnalysis>
 		<IsRoslynComponent>true</IsRoslynComponent>
 		<EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+		<RootNamespace>RhoMicro.CodeAnalysis</RootNamespace>
 	</PropertyGroup>
 
+	<ItemGroup>
+		<InternalsVisibleTo Include="RhoMicro.CodeAnalysis.UtilityGenerators.Tests" />		
+	</ItemGroup>
+	
 	<PropertyGroup>
 		<IsPackable>true</IsPackable>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>

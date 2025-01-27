@@ -1,7 +1,6 @@
 ﻿namespace RhoMicro.CodeAnalysis.Library.Text.SourceTexts;
 
 using System.Collections.Immutable;
-using System.Runtime.CompilerServices;
 using System.Text;
 
 #if RHOMICRO_CODEANALYSIS_UTILITYGENERATORS
@@ -165,7 +164,6 @@ internal partial class IndentedStringBuilder
     }
     #endregion
     #region Indent
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void IndentCore() => _indentations.Push(Options.DefaultIndentation);
     public IndentScope CreateIndentScope() => new(Indent());
     public IndentedStringBuilder Indent()
@@ -189,9 +187,7 @@ internal partial class IndentedStringBuilder
     }
     #endregion
     #region Detent
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void DetentUnsafeCore() => _ = _indentations.Pop();
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void DetentCore()
     {
         if(_indentations.Count > 0)
@@ -209,14 +205,12 @@ internal partial class IndentedStringBuilder
     }
     #endregion
     #region Append String
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void AppendCoreNoIndentation(String value)
     {
         ThrowIfCancellationRequested();
 
         _ = _builder.Append(value);
     }
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void AppendCore(String value)
     {
         ApplyIndentation();
@@ -257,14 +251,12 @@ internal partial class IndentedStringBuilder
     }
     #endregion
     #region Append Char
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void AppendCoreNoIndentation(Char value)
     {
         ThrowIfCancellationRequested();
 
         _ = _builder.Append(value);
     }
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void AppendCore(Char value)
     {
         ApplyIndentation();
@@ -305,11 +297,9 @@ internal partial class IndentedStringBuilder
     }
     #endregion
     #region Append T
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void AppendCoreNoIndentation<T>(T value)
         where T : IIndentedStringBuilderAppendable
         => value?.AppendTo(this);
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void AppendCore<T>(T value)
         where T : IIndentedStringBuilderAppendable
     {
@@ -357,10 +347,8 @@ internal partial class IndentedStringBuilder
     }
     #endregion
     #region Append Action
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void AppendCoreNoIndentation(Action<IndentedStringBuilder> value)
         => value?.Invoke(this);
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void AppendCore(Action<IndentedStringBuilder> value)
     {
         ApplyIndentation();
@@ -553,7 +541,6 @@ internal partial class IndentedStringBuilder
     }
     #endregion
     #region Append Line
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public void AppendLineCore()
     {
         ThrowIfCancellationRequested();
@@ -563,7 +550,6 @@ internal partial class IndentedStringBuilder
             _builder.Append((Char)Options.NewLine);
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void AppendSingleLineCore()
     {
         if(LastWasNewLine)
@@ -607,7 +593,6 @@ internal partial class IndentedStringBuilder
     }
     #endregion
     #region Cancellation
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void ThrowIfCancellationRequested() => Options.AmbientCancellationToken.ThrowIfCancellationRequested();
     #endregion
 }

@@ -1,33 +1,43 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
-	  <ImplicitUsings>enable</ImplicitUsings>
-	  <Nullable>enable</Nullable>
-	  <IsPackable>false</IsPackable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<OutputType>Exe</OutputType>
+		<RootNamespace>RhoMicro.CodeAnalysis.UtilityGenerators.Tests</RootNamespace>
+		<AssemblyName>RhoMicro.CodeAnalysis.UtilityGenerators.Tests</AssemblyName>
+		<TargetFramework>net8.0</TargetFramework>
+		<!--
+    To enable the Microsoft Testing Platform 'dotnet test' experience, add property:
+      <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
 
-  <ItemGroup>
-	  <PackageReference Include="coverlet.collector" Version="6.0.2">
-		  <PrivateAssets>all</PrivateAssets>
-		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-	  </PackageReference>
-	  <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
-	  <PackageReference Include="xunit" Version="2.9.2" />
-	  <PackageReference Include="xunit.runner.visualstudio" Version="3.0.0">
-		  <PrivateAssets>all</PrivateAssets>
-		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-	  </PackageReference>
-	  <PackageReference Include="Basic.Reference.Assemblies" Version="1.7.9" />
-	  <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.12.0" />
-  </ItemGroup>
+    To enable the Microsoft Testing Platform native command line experience, add property:
+      <UseMicrosoftTestingPlatformRunner>true</UseMicrosoftTestingPlatformRunner>
 
-  <ItemGroup>
-	  <ProjectReference Include="..\UtilityGenerators\UtilityGenerators.csproj" />
-  </ItemGroup>
+    For more information on Microsoft Testing Platform support in xUnit.net, please visit:
+      https://xunit.net/docs/getting-started/v3/microsoft-testing-platform
+    -->
+	</PropertyGroup>
 
-  <ItemGroup>
-	  <Using Include="Xunit" />
-  </ItemGroup>
+	<ItemGroup>
+		<Content Include="xunit.runner.json" CopyToOutputDirectory="PreserveNewest" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Using Include="Xunit" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
+		<PackageReference Include="xunit.v3" Version="1.0.1" />
+		<PackageReference Include="xunit.runner.visualstudio" Version="3.0.1" />
+		<PackageReference Include="DiffPlex" Version="1.7.2" />
+		<PackageReference Include="Basic.Reference.Assemblies" Version="1.7.9" />
+		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.12.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\UtilityGenerators\UtilityGenerators.csproj" />
+	</ItemGroup>
 
 </Project>

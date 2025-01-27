@@ -1,0 +1,6 @@
+﻿<Project>
+	<PropertyGroup>
+		<AssemblyName>UtilityGenerators.Benchmarks</AssemblyName>
+		<WarningsAsErrors></WarningsAsErrors>
+	</PropertyGroup>
+</Project>

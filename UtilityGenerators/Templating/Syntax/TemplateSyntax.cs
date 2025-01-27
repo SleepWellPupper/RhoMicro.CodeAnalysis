@@ -1,0 +1,12 @@
+﻿namespace RhoMicro.CodeAnalysis.Templating.Syntax;
+
+using RhoMicro.CodeAnalysis.Templating.Syntax.Visitors;
+
+/// <summary>
+/// Represents the <c>template</c> production.
+/// </summary>
+internal abstract record TemplateSyntax : ISyntax
+{
+    public abstract void Accept<TVisitor>(TVisitor visitor) where TVisitor : ISyntaxVisitor;
+    public override String ToString() => this.ToAstString();
+}

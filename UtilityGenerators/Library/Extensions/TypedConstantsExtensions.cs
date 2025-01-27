@@ -3,7 +3,6 @@
 using System;
 using System.Collections.Immutable;
 using System.Diagnostics.CodeAnalysis;
-using System.Runtime.CompilerServices;
 
 using Microsoft.CodeAnalysis;
 
@@ -16,7 +15,6 @@ using RhoMicro.CodeAnalysis.Library.Models.Collections;
 #endif
 internal static class TypedConstantsExtensions
 {
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Boolean TryGetReferenceTypeValue<T>(this TypedConstant typedConstant, [NotNullWhen(true)] out T? value)
         where T : class
     {
@@ -29,7 +27,6 @@ internal static class TypedConstantsExtensions
         value = null;
         return false;
     }
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Boolean TryGetNullableReferenceTypeValue<T>(this TypedConstant typedConstant, out T? value)
         where T : class
     {
@@ -42,7 +39,6 @@ internal static class TypedConstantsExtensions
         value = null;
         return false;
     }
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Boolean TryGetValueTypeValue<T>(this TypedConstant typedConstant, [NotNullWhen(true)] out T? value)
         where T : struct
     {
@@ -55,7 +51,6 @@ internal static class TypedConstantsExtensions
         value = null;
         return false;
     }
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Boolean TryGetTypeValue(this TypedConstant typedConstant, [NotNullWhen(true)] out ITypeSymbol? value)
     {
         if(typedConstant is { Kind: TypedConstantKind.Type, Value: ITypeSymbol v })
@@ -67,7 +62,6 @@ internal static class TypedConstantsExtensions
         value = null;
         return false;
     }
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Boolean TryGetNullableTypeValue(this TypedConstant typedConstant, out ITypeSymbol? value)
     {
         if(typedConstant is { Kind: TypedConstantKind.Type, Value: ITypeSymbol or null } c)
@@ -79,7 +73,6 @@ internal static class TypedConstantsExtensions
         value = null;
         return false;
     }
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [Obsolete]
     public static Boolean TryGetReferenceTypeArrayValue<T>(this TypedConstant typedConstant, [NotNullWhen(true)] out ImmutableArray<T>? value)
         where T : class
@@ -93,7 +86,6 @@ internal static class TypedConstantsExtensions
         value = null;
         return false;
     }
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Boolean TryGetReferenceTypeArrayValue<T>(this TypedConstant typedConstant, [NotNullWhen(true)] out EquatableList<T>? value)
         where T : class
     {
@@ -109,7 +101,6 @@ internal static class TypedConstantsExtensions
 
         return TryGetReferenceTypeArrayValue(array, out value);
     }
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [Obsolete]
     public static Boolean TryGetReferenceTypeNullableArrayValue<T>(this TypedConstant typedConstant, [NotNullWhen(true)] out ImmutableArray<T>? value)
         where T : class
@@ -123,7 +114,6 @@ internal static class TypedConstantsExtensions
         value = null;
         return false;
     }
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Boolean TryGetReferenceTypeNullableArrayValue<T>(this TypedConstant typedConstant, out EquatableList<T>? value)
         where T : class
     {
@@ -167,7 +157,6 @@ internal static class TypedConstantsExtensions
         return true;
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [Obsolete]
     public static Boolean TryGetNullableReferenceTypeArrayValue<T>(this TypedConstant typedConstant, [NotNullWhen(true)] out ImmutableArray<T?>? value)
         where T : class
@@ -181,7 +170,6 @@ internal static class TypedConstantsExtensions
         value = null;
         return false;
     }
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Boolean TryGetNullableReferenceTypeArrayValue<T>(this TypedConstant typedConstant, [NotNullWhen(true)] out EquatableList<T?>? value)
         where T : class
     {
@@ -197,7 +185,6 @@ internal static class TypedConstantsExtensions
 
         return TryGetNullableReferenceTypeArrayValue(array, out value);
     }
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [Obsolete]
     public static Boolean TryGetNullableReferenceTypeNullableArrayValue<T>(this TypedConstant typedConstant, [NotNullWhen(true)] out ImmutableArray<T?>? value)
         where T : class
@@ -211,7 +198,6 @@ internal static class TypedConstantsExtensions
         value = null;
         return false;
     }
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Boolean TryGetNullableReferenceTypeNullableArrayValue<T>(this TypedConstant typedConstant, out EquatableList<T?>? value)
         where T : class
     {
@@ -254,7 +240,6 @@ internal static class TypedConstantsExtensions
 
         return true;
     }
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [Obsolete]
     public static Boolean TryGetValueTypeArrayValue<T>(this TypedConstant typedConstant, [NotNullWhen(true)] out ImmutableArray<T>? value)
         where T : struct
@@ -268,7 +253,6 @@ internal static class TypedConstantsExtensions
         value = null;
         return false;
     }
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Boolean TryGetValueTypeArrayValue<T>(this TypedConstant typedConstant, [NotNullWhen(true)] out EquatableList<T>? value)
         where T : struct
     {
@@ -284,7 +268,6 @@ internal static class TypedConstantsExtensions
 
         return TryGetValueTypeArrayValue(array, out value);
     }
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     [Obsolete]
     public static Boolean TryGetValueTypeNullableArrayValue<T>(this TypedConstant typedConstant, [NotNullWhen(true)] out ImmutableArray<T>? value)
         where T : struct
@@ -298,7 +281,6 @@ internal static class TypedConstantsExtensions
         value = null;
         return false;
     }
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Boolean TryGetValueTypeNullableArrayValue<T>(this TypedConstant typedConstant, out EquatableList<T>? value)
         where T : struct
     {
@@ -341,7 +323,6 @@ internal static class TypedConstantsExtensions
 
         return true;
     }
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Boolean TryGetTypeArrayValue(this TypedConstant typedConstant, [NotNullWhen(true)] out ImmutableArray<ITypeSymbol>? value)
     {
         if(typedConstant is not
@@ -356,7 +337,6 @@ internal static class TypedConstantsExtensions
 
         return TryGetTypeArrayValue(array, out value);
     }
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Boolean TryGetTypeNullableArrayValue(this TypedConstant typedConstant, out ImmutableArray<ITypeSymbol>? value)
     {
         if(typedConstant is not
@@ -398,7 +378,6 @@ internal static class TypedConstantsExtensions
         return true;
     }
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Boolean TryGetNullableTypeArrayValue(this TypedConstant typedConstant, [NotNullWhen(true)] out ImmutableArray<ITypeSymbol?>? value)
     {
         if(typedConstant is not
@@ -413,7 +392,6 @@ internal static class TypedConstantsExtensions
 
         return TryGetNullableTypeArrayValue(array, out value);
     }
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static Boolean TryGetNullableTypeNullableArrayValue(this TypedConstant typedConstant, out ImmutableArray<ITypeSymbol?>? value)
     {
         if(typedConstant is not

@@ -1,0 +1,28 @@
+﻿namespace RhoMicro.CodeAnalysis.Templating;
+
+/// <summary>
+/// Represents the type of a template token.
+/// </summary>
+internal enum TokenKind
+{
+    OpenCodeBlock,
+    CloseCodeBlock,
+
+    OpenRenderBlock,
+    CloseRenderBlock,
+
+    OpenTemplateBlock,
+    CloseTemplateBlock,
+
+    Text,
+
+    EscapeColon,
+    Trivia,
+
+    /// <summary>
+    /// The end of file token. This token is defined to terminate any template
+    /// tokenization. The eof is defined to always start after the last
+    /// character, and to be of length 0.
+    /// </summary>
+    Eof
+}

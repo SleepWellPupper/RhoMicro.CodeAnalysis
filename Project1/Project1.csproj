@@ -12,5 +12,6 @@
 
 	<ItemGroup>
 	  <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.12.0" />
+	  <PackageReference Include="PlexDiff" Version="1.6.5" />
 	</ItemGroup>
 </Project>

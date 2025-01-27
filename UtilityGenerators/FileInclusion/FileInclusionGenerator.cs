@@ -68,10 +68,10 @@ public sealed class FileInclusionGenerator : IIncrementalGenerator
             {
                 var (rawDollarsCount, rawQuotesCount, sourceText, hintName) = t;
 
-                var rawDollars = StringRepeat('$', rawDollarsCount);
-                var rawBracesOpen = StringRepeat('{', rawDollarsCount);
-                var rawBracesClose = StringRepeat('}', rawDollarsCount);
-                var rawQuotes = StringRepeat('"', rawQuotesCount);
+                var rawDollars = new String('$', rawDollarsCount);
+                var rawBracesOpen = new String('{', rawDollarsCount);
+                var rawBracesClose = new String('}', rawDollarsCount);
+                var rawQuotes = new String('"', rawQuotesCount);
 
                 var addSourceStatement =
                 $$"""
@@ -146,7 +146,6 @@ public sealed class FileInclusionGenerator : IIncrementalGenerator
 #endif
     }
 
-    private static String StringRepeat(Char c, Int32 count) => String.Concat(Enumerable.Repeat(c, count));
     private static String Hash(String sourceText, CancellationToken ct)
     {
         ct.ThrowIfCancellationRequested();

@@ -1055,7 +1055,6 @@ public sealed partial class AttributeFactoryGenerator : IIncrementalGenerator
                 .OpenReturns()
                 .Append("<see langword=\"true\"/> if a value for ").Comment.SeeCRef(mappedProperty.Name).Append(" could be found in the constructor arguments in <see cref=\"Data\"/>; otherwise, <see langword=\"false\"/>.")
                 .CloseBlock()
-                .AppendLine(AggressiveInliningAttributeSyntax)
                 .Append("public bool TryGet").Append(mappedProperty.Name)
                 .Append("([global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out ")
                 .Append(mappedProperty.Type.NullableDisplayString).Append(" value)")
@@ -1097,7 +1096,6 @@ public sealed partial class AttributeFactoryGenerator : IIncrementalGenerator
                 .OpenReturns()
                 .Append("<see langword=\"true\"/> if a value for ").Comment.SeeCRef(unmappedProperty.Name).Append(" could be found in the constructor arguments in <see cref=\"Data\"/>; otherwise, <see langword=\"false\"/>.")
                 .CloseBlock()
-                .AppendLine(AggressiveInliningAttributeSyntax)
                 .Append("public bool TryGet").Append(unmappedProperty.Name)
                 .Append("([global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out ")
                 .Append(unmappedProperty.Type.NullableDisplayString).Append(" value)")
@@ -2333,7 +2331,6 @@ public sealed partial class AttributeFactoryGenerator : IIncrementalGenerator
             .OpenReturns()
             .Comment.Langword("true").Append(" if ").Comment.ParamRef("data").Append(" is representing an attribute of type").Comment.SeeCRef(ctx.DisplayString).Append("; otherwise, ").Comment.Langword("false").Append('.')
             .CloseBlock()
-            .AppendLine(AggressiveInliningAttributeSyntax)
             .Append("public static bool Is").Append(ctx.Model.Signature.Name).Append("(this ").Append(AttributeDataDisplayString).Append(" data)")
             .OpenBracesBlock()
             .AppendLine("var result = data is")
@@ -2399,7 +2396,6 @@ public sealed partial class AttributeFactoryGenerator : IIncrementalGenerator
             .SeeCRef(ctx.DisplayString).Append('.').Append(ctx.Model.AttributeModel.ConstructorArgumentAccessorTypeName)
             .Append(" wrapping <paramref name=\"data\"/>.")
             .CloseBlock()
-            .AppendLine(AggressiveInliningAttributeSyntax)
             .Append("public static ")
             .Append(ctx.DisplayString).Append('.').Append(ctx.Model.AttributeModel.ConstructorArgumentAccessorTypeName)
             .Append(" Get").Append(ctx.Model.Signature.Name).Append("ConstructorArgumentAccessor(this ")
@@ -2431,7 +2427,6 @@ public sealed partial class AttributeFactoryGenerator : IIncrementalGenerator
             .SeeCRef(ctx.DisplayString).Append('.').Append(ctx.Model.AttributeModel.PropertyAccessorTypeName)
             .Append(" wrapping <paramref name=\"data\"/>.")
             .CloseBlock()
-            .AppendLine(AggressiveInliningAttributeSyntax)
             .Append("public static ")
             .Append(ctx.DisplayString).Append('.').Append(ctx.Model.AttributeModel.PropertyAccessorTypeName)
             .Append(" Get").Append(ctx.Model.Signature.Name).Append("PropertyAccessor(this ")
@@ -2487,7 +2482,6 @@ public sealed partial class AttributeFactoryGenerator : IIncrementalGenerator
             .OpenReturns()
             .Append("<see langword=\"true\"/> if a model could be created; otherwise, <see langword=\"false\"/>.")
             .CloseBlock()
-            .AppendLine(AggressiveInliningAttributeSyntax)
             .Append("public static bool TryGet").Append(ctx.Model.Signature.Name).Append("Model(this ").Append(AttributeDataDisplayString)
             .AppendCore(" data");
 
@@ -2551,7 +2545,6 @@ public sealed partial class AttributeFactoryGenerator : IIncrementalGenerator
                 .Append("A new instance of ").Comment
                 .SeeCRef($"{ctx.DisplayString}.{ctx.Model.AttributeModel.ModelTypeName}")
                 .CloseBlock()
-                .AppendLine(AggressiveInliningAttributeSyntax)
                 .Append("public static ").Append(ctx.DisplayString).Append('.').Append(ctx.Model.AttributeModel.ModelTypeName)
                 .Append(" Get").Append(ctx.Model.Signature.Name).Append("Model(this ").Append(AttributeDataDisplayString)
                 .AppendCore(" data");

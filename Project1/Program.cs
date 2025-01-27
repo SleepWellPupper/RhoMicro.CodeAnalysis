@@ -1,17 +1,91 @@
+using System.Diagnostics.Metrics;
+using System.Globalization;
 using System.Text;
+using System.Text.RegularExpressions;
+
+using DiffPlex;
+using DiffPlex.Chunkers;
+using DiffPlex.DiffBuilder;
+using DiffPlex.DiffBuilder.Model;
 
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
-internal class Program
+internal partial class Program
 {
+    public static Regex MyPattern = MyRegex();
     private static void Main(String[] _)
     {
-        Console.WriteLine(typeof(Stream).AssemblyQualifiedName);
-        //TestIntersectionMapping();
-        TestDefaultValues();
+        // Original and Modified text
+        var oldText = "This is the original text.\nIt has multiple lines.\nThis is the final line.";
+        var newText = "This is the updated text.\nIt has several lines.\nThis is the final line.\nAnd an extra line.";
+
+        // Create a diff builder and calculate the diff
+
+        // Generate side-by-side diff as a string
+        var result = GetSideBySideDiff(oldText, newText);
+
+        // Display or use the result
+        Console.WriteLine(result); // Output to console for demonstration
     }
+
+    static String GetSideBySideDiff(String expected, String actual)
+    {
+        const Int32 columnWidth = 64;
+
+        var diffBuilder = new SideBySideDiffBuilder(new Differ());
+        var diff = diffBuilder.BuildDiffModel(expected, actual);
+
+        var sb = new StringBuilder();
+
+        // Add headers
+        _ = sb.AppendLine(
+            CultureInfo.InvariantCulture,
+            $"{"expected".PadRight(columnWidth)} | {"actual".PadRight(columnWidth)}");
+        _ = sb.AppendLine(new String('-', columnWidth * 2 + 10)); // Divider line
+
+        // Determine the maximum number of lines to process
+        var maxLines = Math.Max(diff.OldText.Lines.Count, diff.NewText.Lines.Count);
+
+        for(var i = 0; i < maxLines; i++)
+        {
+            // Fetch lines from old and new texts
+            var oldLine = i < diff.OldText.Lines.Count ? diff.OldText.Lines[i] : null;
+            var newLine = i < diff.NewText.Lines.Count ? diff.NewText.Lines[i] : null;
+
+            // Generate the side-by-side display for each line
+            var oldText = getFormattedText(oldLine, columnWidth);
+            var newText = getFormattedText(newLine, columnWidth);
+            var status = getStatusSymbol( newLine);
+
+            _ = sb.AppendLine(CultureInfo.InvariantCulture, $"{oldText} | {status} {newText}");
+        }
+
+        return sb.ToString();
+
+    static String getFormattedText(DiffPiece? line, Int32 columnWidth)
+    {
+        if(line?.Text == null)
+            return "".PadRight(columnWidth); // Blank space for missing lines
+
+        // Return the line's text truncated or padded to fit the column width
+        return line.Text.PadRight(columnWidth)[..columnWidth];
+    }
+
+    static String getStatusSymbol(DiffPiece? newLine) => newLine?.Type switch
+    {
+        ChangeType.Inserted => "+",
+        ChangeType.Modified => "~",
+        ChangeType.Deleted or null => "-",
+        _ => " "
+    };
+    }
+    //{
+    //    Console.WriteLine(typeof(Stream).AssemblyQualifiedName);
+    //    //TestIntersectionMapping();
+    //    TestDefaultValues();
+    //}
 
     private static void TestDefaultValues()
     {
@@ -204,4 +278,6 @@ internal class Program
             _ = builder.Append(quote).Append(symbol.ExplicitDefaultValue ?? "null").Append(quote);
         }
     }
+    [GeneratedRegex(@".*")]
+    private static partial Regex MyRegex();
 }

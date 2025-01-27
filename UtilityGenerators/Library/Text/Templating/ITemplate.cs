@@ -1,7 +1,4 @@
 ﻿namespace RhoMicro.CodeAnalysis.Library.Text.Templating;
-
-using System;
-
 /// <summary>
 /// Represents a component that may be rendered to a buffer.
 /// </summary>
@@ -11,16 +8,15 @@ using System;
 internal interface ITemplate
 {
     /// <summary>
-    /// Renders the template to a buffer, using the indentation provided.
+    /// Renders the template.
     /// </summary>
-    /// <param name="buffer">
-    /// The buffer to render the templates characters to.
+    /// <param name="renderer">
+    /// The renderer to render the template with.
     /// </param>
-    /// <param name="indentation">
-    /// The indentation to apply to text appended.
+    /// <param name="body">
+    /// The body to render inside of the template. If the template
+    /// implementation does not support bodies, the parameter is ignored.
     /// </param>
-    /// <param name="cancellationToken">
-    /// The cancellation token used to request rendering to be cancelled.
-    /// </param>
-    void Render(ref DynamicallyAllocatedBuffer<Char> buffer, ReadOnlySpan<Char> indentation, CancellationToken cancellationToken);
+    void Render<TBody>(ref TemplateRenderer renderer, TBody body)
+        where TBody : ITemplate;
 }

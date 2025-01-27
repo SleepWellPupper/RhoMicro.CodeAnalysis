@@ -1,6 +1,7 @@
 # Generators/UtilityGenerators.Tests
 # Generators/UtilityGenerators.Tests.E2E
 # Generators/UtilityGenerators.Dev
+# Generators/UtilityGenerators.Benchmarks
 # Generators/UtilityGenerators
 
 # Generators/UnionsGenerator.EndToEnd.Tests

@@ -11,6 +11,8 @@ using System;
 internal static class Indentations
 {
     public static ReadOnlySpan<Char> Space => " ".AsSpan();
+    public static ReadOnlySpan<Char> Space2 => "  ".AsSpan();
+    public static ReadOnlySpan<Char> Space4 => "    ".AsSpan();
     public static ReadOnlySpan<Char> Tab => "\t".AsSpan();
     public static ReadOnlySpan<Char> SingleLineComment => "// ".AsSpan();
     public static ReadOnlySpan<Char> DocumentationComment => "/// ".AsSpan();

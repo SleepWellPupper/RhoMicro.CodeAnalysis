@@ -1,18 +1,21 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>Exe</OutputType>
-    <TargetFramework>net9.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net9.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<RootNamespace>RhoMicro.CodeAnalysis.Benchmarks</RootNamespace>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="BenchmarkDotNet" Version="0.14.0" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="BenchmarkDotNet" Version="0.14.0" />
+		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.12.0" />
+	</ItemGroup>
 
-  <ItemGroup>
-	  <ProjectReference Include="../UtilityGenerators/UtilityGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="../UtilityGenerators/UtilityGenerators.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+	</ItemGroup>
 
 </Project>
