@@ -56,7 +56,7 @@ jobs:
 
     - name: Publish NuGet Package
       run: |
-          foreach($file in (Get-ChildItem "$Env:NuGetDirectory" -Recurse -Include *.*nupkg)) {
+          foreach($file in (Get-ChildItem "$Env:NuGetDirectory" -Recurse -Exclude *.Dev.${{github.ref_name}}.nupkg -Include *.*nupkg)) {
               dotnet nuget push $file --api-key "$Env:NUGETAPITOKEN" --source https://api.nuget.org/v3/index.json --skip-duplicate
           }
       env: 

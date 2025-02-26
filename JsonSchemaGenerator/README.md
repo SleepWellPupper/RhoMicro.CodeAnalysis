@@ -831,7 +831,7 @@ class Foo14
 }
 ```
 
-3. Create an `appsettings.release.schema.json` file:
+3. Create an `appsettings.schema.release.json` file:
 
 ```json
 {
