@@ -232,28 +232,26 @@ public partial class LexerTests(ITestOutputHelper testOutput)
            .Eof()
         );
     [Theory]
-    [InlineData("(:", (Int32)OpenRenderBlock)]
-    [InlineData(":)", (Int32)CloseRenderBlock)]
-    [InlineData("{:", (Int32)OpenCodeBlock)]
-    [InlineData(":}", (Int32)CloseCodeBlock)]
-    [InlineData("<:", (Int32)OpenTemplateBlock)]
-    [InlineData(":>", (Int32)CloseTemplateBlock)]
-    [InlineData("foo", (Int32)NotNewline)]
-    [InlineData(" ", (Int32)Whitespaces)]
-    [InlineData("\t", (Int32)Whitespaces)]
-    [InlineData("\t ", (Int32)Whitespaces)]
-    [InlineData(" \t", (Int32)Whitespaces)]
-    [InlineData(" \t ", (Int32)Whitespaces)]
-    [InlineData("\r", (Int32)Newline)]
-    [InlineData("\r\n", (Int32)Newline)]
-    [InlineData("\n", (Int32)Newline)]
-    public void LexerScansSingleToken(String lexeme, Int32 kind) => TestLexer(
+    [InlineData("(:", 2, (Int32)OpenRenderBlock)]
+    [InlineData(":)", 2, (Int32)CloseRenderBlock)]
+    [InlineData("{:", 2, (Int32)OpenCodeBlock)]
+    [InlineData(":}", 2, (Int32)CloseCodeBlock)]
+    [InlineData("<:", 2, (Int32)OpenTemplateBlock)]
+    [InlineData(":>", 2, (Int32)CloseTemplateBlock)]
+    [InlineData("foo", 3, (Int32)NotNewline)]
+    [InlineData(" ", 1, (Int32)Whitespaces)]
+    [InlineData("\t", 1, (Int32)Whitespaces)]
+    [InlineData("\t ", 2, (Int32)Whitespaces)]
+    [InlineData(" \t", 2, (Int32)Whitespaces)]
+    [InlineData(" \t ", 3, (Int32)Whitespaces)]
+    [InlineData("\\r", 1, (Int32)Newline)]
+    [InlineData("\\r\\n", 2, (Int32)Newline)]
+    [InlineData("\\n", 1, (Int32)Newline)]
+    public void LexerScansSingleToken(String lexeme, Int32 length, Int32 kind) => TestLexer(
         $""""
-        """
-        {lexeme}
-        """
+        "{lexeme}"
         """", b => b
-        .Token(kind, lexeme.Length)
+        .Token(kind, length)
         .Eof()
         );
     [Fact]
@@ -321,9 +319,9 @@ public partial class LexerTests(ITestOutputHelper testOutput)
         """
         """", b => b
         .NotNewline(3)
-        .Newline(2)
+        .Newline(1)
         .OpenCodeBlock()
-        .Newline(2)
+        .Newline(1)
         .NotNewline(17)
         .Eof());
 }
