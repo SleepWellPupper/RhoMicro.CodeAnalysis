@@ -101,14 +101,14 @@ internal sealed record NamedTypeModel(
     }
     private void Append(StringBuilder resultBuilder, in AppendTokenInfo tokenInfo, CancellationToken ct)
     {
-        AppendNamespace(resultBuilder, in tokenInfo, ct);
+        AppendNamespace(resultBuilder,in tokenInfo, ct);
         AppendContainingTypes(resultBuilder, in tokenInfo, ct);
 
         if(!tokenInfo.SeparateParts && ( ContainingTypes.Count > 0 || NamespaceParts.Count > 0 ))
             _ = resultBuilder.Append(tokenInfo.SeparatorToken);
 
         AppendName(resultBuilder, Name, ct);
-        AppendTypeArguments(resultBuilder, TypeArguments, in tokenInfo, ct);
+        AppendTypeArguments(resultBuilder, TypeArguments,in tokenInfo, ct);
     }
     private void AppendNamespace(StringBuilder resultBuilder, in AppendTokenInfo tokenInfo, CancellationToken ct)
     {

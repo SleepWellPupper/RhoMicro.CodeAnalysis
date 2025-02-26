@@ -64,7 +64,7 @@ internal readonly record struct ConstructorModel(
 
             _ = ctx.SourceBuilder.Comment.SeeCRef(param.Type.ElementDisplayString);
 
-            if(param.Type.Kind.HasFlagsFast(AttributeParameterTypeKind.Array))
+            if(param.Type.Kind.HasAnyFlagFast(AttributeParameterTypeKind.Array))
                 ctx.SourceBuilder.AppendCore("[]");
 
             ctx.SourceBuilder.AppendCore(' ');
@@ -96,7 +96,7 @@ internal readonly record struct ConstructorModel(
 
             _ = ctx.SourceBuilder.Append(param.Type.ElementDisplayString);
 
-            if(param.Type.Kind.HasFlagsFast(AttributeParameterTypeKind.Array))
+            if(param.Type.Kind.HasAnyFlagFast(AttributeParameterTypeKind.Array))
                 ctx.SourceBuilder.AppendCore("[]");
 
             ctx.SourceBuilder.AppendCore(' ');

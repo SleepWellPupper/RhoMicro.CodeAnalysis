@@ -15,5 +15,5 @@ internal sealed record TemplateBlockBodySyntax(EquatableList<TemplateBlockBodyCh
     public void Accept<TVisitor>(TVisitor visitor)
         where TVisitor : ISyntaxVisitor
         => visitor.Visit(this);
-    public override String ToString() => this.ToAstString();
+    public override String ToString() => this.ToXmlTreeString(CancellationToken.None);
 }

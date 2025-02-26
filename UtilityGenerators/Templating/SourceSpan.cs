@@ -25,6 +25,11 @@ internal readonly record struct SourceSpan
     }
 
     /// <summary>
+    /// Gets an empty source span.
+    /// </summary>
+    public static SourceSpan Empty { get; } = default;
+
+    /// <summary>
     /// Gets the start of the span (inclusive).
     /// </summary>
     public SourcePosition Start { get; }
@@ -32,5 +37,6 @@ internal readonly record struct SourceSpan
     /// Gets the end of the span (inclusive).
     /// </summary>
     public SourcePosition End { get; }
+
     public override String ToString() => $"({Start.Line},{Start.Character},{End.Line},{End.Character})";
 }

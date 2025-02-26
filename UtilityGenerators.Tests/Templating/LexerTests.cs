@@ -2,22 +2,18 @@
 namespace RhoMicro.CodeAnalysis.Tests.Templating;
 
 using System;
-using System.Text;
 
 using Microsoft.CodeAnalysis.CSharp;
-using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 using RhoMicro.CodeAnalysis.Library.Models;
 using RhoMicro.CodeAnalysis.Library.Models.Collections;
 using RhoMicro.CodeAnalysis.Templating;
 
-using Xunit.Runner.Common;
-
 using static RhoMicro.CodeAnalysis.Templating.TokenKind;
 
 public partial class LexerTests(ITestOutputHelper testOutput)
 {
-    private void TestLexer(String sourceText, Action<TokenListBuilder> buildTokens)
+    private void TestLexer(String sourceText, Action<TokenListBuilder> buildTokens, Int32 newlineLength = 1)
     {
         // Arrange
         var token = CSharpSyntaxTree
@@ -30,7 +26,7 @@ public partial class LexerTests(ITestOutputHelper testOutput)
                 (Int32)SyntaxKind.SingleLineRawStringLiteralToken);
 
         var templateString = TemplateString.Create(token, TestContext.Current.CancellationToken);
-        var builder = new TokenListBuilder(templateString);
+        var builder = new TokenListBuilder(templateString, newlineLength);
         buildTokens.Invoke(builder);
         EquatableList<Token> expected, actual;
 
@@ -38,7 +34,7 @@ public partial class LexerTests(ITestOutputHelper testOutput)
         using(var context = ModelCreationContext.CreateDefault(TestContext.Current.CancellationToken))
         {
             expected = builder.Build(in context);
-            actual = Lexer.Scan(templateString, in context).Tokens;
+            actual = Lexer.Scan(templateString, newlineLength, in context).Tokens;
         }
 
         // Assert
@@ -125,121 +121,11 @@ public partial class LexerTests(ITestOutputHelper testOutput)
 
         // Act
         using(var context = ModelCreationContext.CreateDefault(TestContext.Current.CancellationToken))
-            actual = Lexer.Scan(templateString, in context).RequiredQuotes;
+            actual = Lexer.Scan(templateString, newlineLength: 1, in context).RequiredQuotes;
 
         // Assert
         Assert.Equal(expected, actual);
     }
-
-    [Theory]
-    [InlineData(":)", (Int32)CloseRenderBlock, "(:", (Int32)OpenRenderBlock, "")]
-    [InlineData(":)", (Int32)CloseRenderBlock, "{:", (Int32)OpenCodeBlock, "")]
-    [InlineData(":)", (Int32)CloseRenderBlock, "<:", (Int32)OpenTemplateBlock, "")]
-    [InlineData(":}", (Int32)CloseCodeBlock, "(:", (Int32)OpenRenderBlock, "")]
-    [InlineData(":}", (Int32)CloseCodeBlock, "{:", (Int32)OpenCodeBlock, "")]
-    [InlineData(":}", (Int32)CloseCodeBlock, "<:", (Int32)OpenTemplateBlock, "")]
-    [InlineData(":>", (Int32)CloseTemplateBlock, "(:", (Int32)OpenRenderBlock, "")]
-    [InlineData(":>", (Int32)CloseTemplateBlock, "{:", (Int32)OpenCodeBlock, "")]
-    [InlineData(":>", (Int32)CloseTemplateBlock, "<:", (Int32)OpenTemplateBlock, "")]
-
-    [InlineData(":)", (Int32)CloseRenderBlock, "(:", (Int32)OpenRenderBlock, " ")]
-    [InlineData(":)", (Int32)CloseRenderBlock, "{:", (Int32)OpenCodeBlock, " ")]
-    [InlineData(":)", (Int32)CloseRenderBlock, "<:", (Int32)OpenTemplateBlock, " ")]
-    [InlineData(":}", (Int32)CloseCodeBlock, "(:", (Int32)OpenRenderBlock, " ")]
-    [InlineData(":}", (Int32)CloseCodeBlock, "{:", (Int32)OpenCodeBlock, " ")]
-    [InlineData(":}", (Int32)CloseCodeBlock, "<:", (Int32)OpenTemplateBlock, " ")]
-    [InlineData(":>", (Int32)CloseTemplateBlock, "(:", (Int32)OpenRenderBlock, " ")]
-    [InlineData(":>", (Int32)CloseTemplateBlock, "{:", (Int32)OpenCodeBlock, " ")]
-    [InlineData(":>", (Int32)CloseTemplateBlock, "<:", (Int32)OpenTemplateBlock, " ")]
-
-    [InlineData(":)", (Int32)CloseRenderBlock, "(:", (Int32)OpenRenderBlock, "\t")]
-    [InlineData(":)", (Int32)CloseRenderBlock, "{:", (Int32)OpenCodeBlock, "\t")]
-    [InlineData(":)", (Int32)CloseRenderBlock, "<:", (Int32)OpenTemplateBlock, "\t")]
-    [InlineData(":}", (Int32)CloseCodeBlock, "(:", (Int32)OpenRenderBlock, "\t")]
-    [InlineData(":}", (Int32)CloseCodeBlock, "{:", (Int32)OpenCodeBlock, "\t")]
-    [InlineData(":}", (Int32)CloseCodeBlock, "<:", (Int32)OpenTemplateBlock, "\t")]
-    [InlineData(":>", (Int32)CloseTemplateBlock, "(:", (Int32)OpenRenderBlock, "\t")]
-    [InlineData(":>", (Int32)CloseTemplateBlock, "{:", (Int32)OpenCodeBlock, "\t")]
-    [InlineData(":>", (Int32)CloseTemplateBlock, "<:", (Int32)OpenTemplateBlock, "\t")]
-
-    [InlineData(":)", (Int32)CloseRenderBlock, "(:", (Int32)OpenRenderBlock, "\t \t")]
-    [InlineData(":)", (Int32)CloseRenderBlock, "{:", (Int32)OpenCodeBlock, "\t \t")]
-    [InlineData(":)", (Int32)CloseRenderBlock, "<:", (Int32)OpenTemplateBlock, "\t \t")]
-    [InlineData(":}", (Int32)CloseCodeBlock, "(:", (Int32)OpenRenderBlock, "\t \t")]
-    [InlineData(":}", (Int32)CloseCodeBlock, "{:", (Int32)OpenCodeBlock, "\t \t")]
-    [InlineData(":}", (Int32)CloseCodeBlock, "<:", (Int32)OpenTemplateBlock, "\t \t")]
-    [InlineData(":>", (Int32)CloseTemplateBlock, "(:", (Int32)OpenRenderBlock, "\t \t")]
-    [InlineData(":>", (Int32)CloseTemplateBlock, "{:", (Int32)OpenCodeBlock, "\t \t")]
-    [InlineData(":>", (Int32)CloseTemplateBlock, "<:", (Int32)OpenTemplateBlock, "\t \t")]
-
-    [InlineData(":)", (Int32)CloseRenderBlock, "(:", (Int32)OpenRenderBlock, "   \t \t")]
-    [InlineData(":)", (Int32)CloseRenderBlock, "{:", (Int32)OpenCodeBlock, "   \t \t")]
-    [InlineData(":)", (Int32)CloseRenderBlock, "<:", (Int32)OpenTemplateBlock, "   \t \t")]
-    [InlineData(":}", (Int32)CloseCodeBlock, "(:", (Int32)OpenRenderBlock, "   \t \t")]
-    [InlineData(":}", (Int32)CloseCodeBlock, "{:", (Int32)OpenCodeBlock, "   \t \t")]
-    [InlineData(":}", (Int32)CloseCodeBlock, "<:", (Int32)OpenTemplateBlock, "   \t \t")]
-    [InlineData(":>", (Int32)CloseTemplateBlock, "(:", (Int32)OpenRenderBlock, "   \t \t")]
-    [InlineData(":>", (Int32)CloseTemplateBlock, "{:", (Int32)OpenCodeBlock, "   \t \t")]
-    [InlineData(":>", (Int32)CloseTemplateBlock, "<:", (Int32)OpenTemplateBlock, "   \t \t")]
-    public void LexerScansTriviaBetweenBlocks(String terminator1, Int32 kind1, String terminator2, Int32 kind2, String whitespace) => TestLexer(
-        $""""
-        """
-        foo{terminator1}
-        {whitespace}{terminator2}bar
-        """
-        """", b => b
-           .Text(3)
-           .Kind(kind1).Length(2)
-           .Trivia(whitespace.Length)
-           .Kind(kind2).Length(2)
-           .Text(3)
-           .Eof());
-    [Theory]
-    [InlineData("(:", (Int32)OpenRenderBlock, "")]
-    [InlineData(":)", (Int32)CloseRenderBlock, "")]
-    [InlineData("{:", (Int32)OpenCodeBlock, "")]
-    [InlineData(":}", (Int32)CloseCodeBlock, "")]
-    [InlineData("<:", (Int32)OpenTemplateBlock, "")]
-    [InlineData(":>", (Int32)CloseTemplateBlock, "")]
-
-    [InlineData("(:", (Int32)OpenRenderBlock, " ")]
-    [InlineData(":)", (Int32)CloseRenderBlock, " ")]
-    [InlineData("{:", (Int32)OpenCodeBlock, " ")]
-    [InlineData(":}", (Int32)CloseCodeBlock, " ")]
-    [InlineData("<:", (Int32)OpenTemplateBlock, " ")]
-    [InlineData(":>", (Int32)CloseTemplateBlock, " ")]
-
-    [InlineData("(:", (Int32)OpenRenderBlock, "\t")]
-    [InlineData(":)", (Int32)CloseRenderBlock, "\t")]
-    [InlineData("{:", (Int32)OpenCodeBlock, "\t")]
-    [InlineData(":}", (Int32)CloseCodeBlock, "\t")]
-    [InlineData("<:", (Int32)OpenTemplateBlock, "\t")]
-    [InlineData(":>", (Int32)CloseTemplateBlock, "\t")]
-
-    [InlineData("(:", (Int32)OpenRenderBlock, "\t \t")]
-    [InlineData(":)", (Int32)CloseRenderBlock, "\t \t")]
-    [InlineData("{:", (Int32)OpenCodeBlock, "\t \t")]
-    [InlineData(":}", (Int32)CloseCodeBlock, "\t \t")]
-    [InlineData("<:", (Int32)OpenTemplateBlock, "\t \t")]
-    [InlineData(":>", (Int32)CloseTemplateBlock, "\t \t")]
-
-    [InlineData("(:", (Int32)OpenRenderBlock, "   \t \t")]
-    [InlineData(":)", (Int32)CloseRenderBlock, "   \t \t")]
-    [InlineData("{:", (Int32)OpenCodeBlock, "   \t \t")]
-    [InlineData(":}", (Int32)CloseCodeBlock, "   \t \t")]
-    [InlineData("<:", (Int32)OpenTemplateBlock, "   \t \t")]
-    [InlineData(":>", (Int32)CloseTemplateBlock, "   \t \t")]
-    public void LexerDoesNotScanTriviaBetweenBlockAndText(String terminator, Int32 kind, String whitespace) => TestLexer(
-        $""""
-        """
-        foo{terminator}
-        {whitespace}foo
-        """
-        """", b => b
-           .Text(3)
-           .Kind(kind).Length(2)
-           .Text(4 + whitespace.Length).Newline().Character(whitespace.Length + 2)
-           .Eof());
 
     [Theory]
     [InlineData("(::", (Int32)OpenRenderBlock)]
@@ -251,9 +137,9 @@ public partial class LexerTests(ITestOutputHelper testOutput)
         foo{escaped}bar
         """
         """", b => b
-           .Text(3)
+           .NotNewline(3)
            .EscapedOpen(kind)
-           .Text(3)
+           .NotNewline(3)
            .Eof()
         );
     [Theory]
@@ -280,9 +166,9 @@ public partial class LexerTests(ITestOutputHelper testOutput)
         foo{escaped}bar
         """
         """", b => b
-           .Text(3)
+           .NotNewline(3)
            .EscapedClose(kind)
-           .Text(3)
+           .NotNewline(3)
            .Eof()
         );
     [Theory]
@@ -308,10 +194,10 @@ public partial class LexerTests(ITestOutputHelper testOutput)
         foo{block}bar
         """
         """", b => b
-           .Text(3)
-           .Kind(leftKind).Length(2)
-           .Kind(rightKind).Length(2)
-           .Text(3)
+           .NotNewline(3)
+           .Token(leftKind, 2)
+           .Token(rightKind, 2)
+           .NotNewline(3)
            .Eof()
         );
     [Theory]
@@ -324,8 +210,8 @@ public partial class LexerTests(ITestOutputHelper testOutput)
         {block}
         """
         """", b => b
-           .Kind(leftKind).Length(2)
-           .Kind(rightKind).Length(2)
+           .Token(leftKind, 2)
+           .Token(rightKind, 2)
            .Eof()
         );
     [Theory]
@@ -342,9 +228,7 @@ public partial class LexerTests(ITestOutputHelper testOutput)
         {leftTerminator}foo{rightTerminator}
         """
         """", b => b
-           .Kind(leftKind).Length(2)
-           .Text(3)
-           .Kind(rightKind).Length(2)
+           .Token(leftKind, 2).NotNewline(3).Token(rightKind, 2)
            .Eof()
         );
     [Theory]
@@ -354,40 +238,92 @@ public partial class LexerTests(ITestOutputHelper testOutput)
     [InlineData(":}", (Int32)CloseCodeBlock)]
     [InlineData("<:", (Int32)OpenTemplateBlock)]
     [InlineData(":>", (Int32)CloseTemplateBlock)]
-    [InlineData("foo", (Int32)Text)]
-    [InlineData(" ", (Int32)Text)]
+    [InlineData("foo", (Int32)NotNewline)]
+    [InlineData(" ", (Int32)Whitespaces)]
+    [InlineData("\t", (Int32)Whitespaces)]
+    [InlineData("\t ", (Int32)Whitespaces)]
+    [InlineData(" \t", (Int32)Whitespaces)]
+    [InlineData(" \t ", (Int32)Whitespaces)]
+    [InlineData("\r", (Int32)Newline)]
+    [InlineData("\r\n", (Int32)Newline)]
+    [InlineData("\n", (Int32)Newline)]
     public void LexerScansSingleToken(String lexeme, Int32 kind) => TestLexer(
         $""""
-        """{lexeme}"""
+        """
+        {lexeme}
+        """
         """", b => b
-        .Kind(kind).Length(lexeme.Length)
+        .Token(kind, lexeme.Length)
         .Eof()
         );
     [Fact]
     public void LexerScansEmptyAsEof() =>
         // empty raw string literals are illegal
         TestLexer("\"\"", b => b.Eof());
-    [Fact]
-    public void LexerScansComplexText1() => TestLexer(
-        """"
+
+    [Theory]
+    [InlineData(" ", "{:", (Int32)OpenCodeBlock)]
+    [InlineData("\t", "{:", (Int32)OpenCodeBlock)]
+    [InlineData("\t ", "{:", (Int32)OpenCodeBlock)]
+    [InlineData(" \t", "{:", (Int32)OpenCodeBlock)]
+
+    [InlineData(" ", "<:", (Int32)OpenTemplateBlock)]
+    [InlineData("\t", "<:", (Int32)OpenTemplateBlock)]
+    [InlineData("\t ", "<:", (Int32)OpenTemplateBlock)]
+    [InlineData(" \t", "<:", (Int32)OpenTemplateBlock)]
+    public void LexerScansLeadingTrivia(String trivia, String open, Int32 kind) => TestLexer(
+        $""""
         """
-        foo(::)baz
-        {:bar:}
-        (:)::>>
+        foo
+        {trivia}{open}bar
         """
         """", b => b
-        .Text(3)                            // foo
-        .OpenRenderBlock()                  // (:
-        .CloseRenderBlock()                 // :)
-        .Text(4).Flush().Newline()          // baz\n
-        .OpenCodeBlock()                    // {:
-        .Text(3)                            // bar
-        .CloseCodeBlock()                   // :}
-        .Trivia(0)                          // \n
-        .OpenRenderBlock()                  // (:
-        .Text(1)                            // )
-        .EscapedClose(CloseTemplateBlock)   // ::>
-        .Text(1)                            // >
-        .Eof()
-        );
+        .NotNewline(3).Newline(
+               """
+               
+
+               """.Length)
+        .Whitespaces(trivia.Length).Token(kind, open.Length).NotNewline(3)
+        .Eof());
+
+    [Theory]
+    [InlineData("\n", ":}", (Int32)CloseCodeBlock)]
+    [InlineData("\r\n", ":}", (Int32)CloseCodeBlock)]
+
+    [InlineData("\n", ":>", (Int32)CloseTemplateBlock)]
+    [InlineData("\r\n", ":>", (Int32)CloseTemplateBlock)]
+    public void LexerScansTrailingTrivia(String trivia, String close, Int32 kind) => TestLexer(
+        $""""
+        """
+        bar{close}{trivia}bar
+        """
+        """", b => b
+        .NotNewline(3).Token(kind, close.Length).Newline(trivia.Length)
+        .NotNewline(3)
+        .Eof());
+    [Theory]
+    [InlineData("!")]
+    public void LexerScansSingleTokenAsNotNewline(String token) => TestLexer(
+        $""""
+        """
+        {token}
+        """
+        """", b => b
+        .NotNewline(token.Length)
+        .Eof());
+    [Fact]
+    public void LexerScansNewlineCorrectly() => TestLexer(
+        """"
+        """
+        foo
+        {:
+            if(condition)
+        """
+        """", b => b
+        .NotNewline(3)
+        .Newline(2)
+        .OpenCodeBlock()
+        .Newline(2)
+        .NotNewline(17)
+        .Eof());
 }

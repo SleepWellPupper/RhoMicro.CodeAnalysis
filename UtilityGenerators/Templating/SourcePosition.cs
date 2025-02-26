@@ -27,6 +27,11 @@ internal readonly record struct SourcePosition : IComparable<SourcePosition>
     }
 
     /// <summary>
+    /// Gets an empty source position.
+    /// </summary>
+    public static SourcePosition Empty { get; } = default;
+
+    /// <summary>
     /// Gets the (0,0) source position marking the beginning of a source text.
     /// </summary>
     public static SourcePosition Start { get; } = default;

@@ -1,39 +1,42 @@
 ﻿namespace RhoMicro.CodeAnalysis.Templating.Syntax.Visitors;
+
+using RhoMicro.CodeAnalysis.Templating.Syntax;
+
 internal interface ISyntaxVisitor
 {
-    void Visit(NotEmptyTemplateSyntax syntax);
-    void Visit(EmptyTemplateSyntax syntax);
-    
-    void Visit(TextSyntax syntax);
-    void Visit(NotEscapedTextSyntax syntax);
-
-    void Visit(TemplateBlockBodySyntax syntax);
-
-    void Visit(BlockSequenceSyntax syntax);
-    void Visit(TriviaBlockSyntax syntax);
-    void Visit(TriviaSyntax syntax);
-
-    void Visit(RenderBlockSyntax syntax);
-    void Visit(RenderBlockHeadSyntax syntax);
-    void Visit(RenderBlockBodySyntax syntax);
-
-    void Visit(TemplateBlockSyntax syntax);
-
-    void Visit(CodeBlockSyntax syntax);
-    void Visit(CodeBodySyntax syntax);
-    void Visit(CodeBodyChildSyntax syntax);
-
-    void Visit(EmptyBlockSyntax syntax);
-
-    void Visit(EscapedOpenBlockSyntax syntax);
-    void Visit(EscapedCloseBlockSyntax syntax);
-    void Visit(EscapeColonSyntax syntax);
-
-    void Visit(OpenRenderBlockSyntax syntax);
-    void Visit(OpenCodeBlockSyntax syntax);
-    void Visit(OpenTemplateBlockSyntax syntax);
-
-    void Visit(CloseRenderBlockSyntax syntax);
-    void Visit(CloseCodeBlockSyntax syntax);
-    void Visit(CloseTemplateBlockSyntax syntax);
+    public void Visit(CloseBlockSyntax syntax);
+    public void Visit(CloseCodeBlockSyntax syntax);
+    public void Visit(CloseRenderBlockSyntax syntax);
+    public void Visit(CloseTemplateBlockSyntax syntax);
+    public void Visit(CodeBlockBodyChildSyntax syntax);
+    public void Visit(CodeBlockBodySyntax syntax);
+    public void Visit(CodeBlockSyntax syntax);
+    public void Visit(EmptyBlockSyntax syntax);
+    public void Visit(EmptyTemplateSyntax syntax);
+    public void Visit(EscapeColonSyntax syntax);
+    public void Visit(EscapedCloseBlockSyntax syntax);
+    public void Visit(EscapedOpenBlockSyntax syntax);
+    public void Visit(EscapedTextSyntax syntax);
+    public void Visit(LeadingTriviaSyntax syntax);
+    public void Visit(NewlineSyntax syntax);
+    public void Visit(NotEmptyTemplateSyntax syntax);
+    public void Visit(NotEscapedTextChildSyntax syntax);
+    public void Visit(NotEscapedTextSyntax syntax);
+    public void Visit(NotNewlineSyntax syntax);
+    public void Visit(OpenBlockSyntax syntax);
+    public void Visit(OpenCodeBlockSyntax syntax);
+    public void Visit(OpenRenderBlockSyntax syntax);
+    public void Visit(OpenTemplateBlockSyntax syntax);
+    public void Visit(RenderBlockBodySyntax syntax);
+    public void Visit(RenderBlockHeadSyntax syntax);
+    public void Visit(RenderBlockSyntax syntax);
+    public void Visit(RenderBlockTriviaSyntax syntax);
+    public void Visit(TemplateBlockBodyChildSyntax syntax);
+    public void Visit(TemplateBlockBodySyntax syntax);
+    public void Visit(TemplateBlockSyntax syntax);
+    public void Visit(TemplateSyntax syntax);
+    public void Visit(TextChildSyntax syntax);
+    public void Visit(TextSyntax syntax);
+    public void Visit(TrailingTriviaSyntax syntax);
+    public void Visit(WhitespacesSyntax syntax);
 }

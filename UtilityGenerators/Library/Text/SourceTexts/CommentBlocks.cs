@@ -7,8 +7,8 @@ internal static class CommentBlocks
 {
     public static Block Multiline { get; } = new("/*\n", "*/", PlaceDelimitersOnNewLine: true);
     public static Block SingleLine { get; } = new(
-        $"// ",
-        StringOrChar.Empty,
+        OpeningDelimiter: StringOrChar.CommentSlashes,
+        ClosingDelimiter: StringOrChar.Empty,
         PlaceDelimitersOnNewLine: true,
         Indentation: StringOrChar.CommentSlashes);
 

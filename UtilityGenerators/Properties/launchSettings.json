@@ -1,17 +1,5 @@
 {
   "profiles": {
-    "UnionsGenerator": {
-      "commandName": "DebugRoslynComponent",
-      "targetProject": "..\\UnionsGenerator\\UnionsGenerator.csproj"
-    },
-    "Tests": {
-      "commandName": "DebugRoslynComponent",
-      "targetProject": "..\\UtilityGenerators.Library.Tests\\UtilityGenerators.Library.Tests.csproj"
-    },
-    "DslGenerator": {
-      "commandName": "DebugRoslynComponent",
-      "targetProject": "..\\DslGenerator\\DslGenerator.csproj"
-    },
     "IsbTestApp": {
       "commandName": "DebugRoslynComponent",
       "targetProject": "..\\IndentedStringBuilderTestApp\\IndentedStringBuilderTestApp.csproj"
@@ -27,6 +15,10 @@
     "E2E": {
       "commandName": "DebugRoslynComponent",
       "targetProject": "..\\UtilityGenerators.Tests.E2E\\UtilityGenerators.Tests.E2E.csproj"
+    },
+    "Profile 1": {
+      "commandName": "DebugRoslynComponent",
+      "targetProject": "..\\Project1\\Project1.csproj"
     }
   }
 }

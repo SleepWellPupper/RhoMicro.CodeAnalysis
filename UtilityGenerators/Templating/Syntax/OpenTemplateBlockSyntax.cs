@@ -1,13 +1,35 @@
 ﻿namespace RhoMicro.CodeAnalysis.Templating.Syntax;
+
+using RhoMicro.CodeAnalysis.Templating;
+using RhoMicro.CodeAnalysis.Templating.Syntax.Visitors;
+
 /// <summary>
 /// Represents the <c>open-template-block</c> production.
 /// </summary>
-/// <param name="Token">
-/// Represents the <c>OAB CLN</c> part of the production.
-/// </param>
-internal sealed record OpenTemplateBlockSyntax(Token Token) : OpenBlockSyntax(Token, TokenKind.OpenTemplateBlock)
+internal sealed record OpenTemplateBlockSyntax : ISyntax
 {
     public const String Production = "open-template-block";
-    public override void Accept<TVisitor>(TVisitor visitor) => visitor.Visit(this);
-    public override String ToString() => this.ToAstString();
+
+    /// <summary>
+    /// Initializes a new instance.
+    /// </summary>
+    /// <param name="token">
+    /// The <c>OAB CLN</c> part of the production.
+    /// </param>
+    public OpenTemplateBlockSyntax(Token token)
+    {
+        ThrowHelpers.ThrowIfKindNotEqual(token, TokenKind.OpenTemplateBlock);
+
+        Token = token;
+    }
+
+    /// <summary>
+    /// Gets the <c>OAB CLN</c> part of the production.
+    /// </summary>
+    public Token Token { get; }
+
+    public void Accept<TVisitor>(TVisitor visitor)
+        where TVisitor : ISyntaxVisitor
+        => visitor.Visit(this);
+    public override String ToString() => this.ToXmlTreeString(CancellationToken.None);
 }

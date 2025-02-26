@@ -58,46 +58,87 @@
 		<Compile Include="..\UtilityGenerators\AttributeFactory\PropertyModel.cs" Link="PropertyModel.cs" />
 		<Compile Include="..\UtilityGenerators\AttributeFactory\SourceBuildingContext.cs" Link="SourceBuildingContext.cs" />
 		<Compile Include="..\UtilityGenerators\FileInclusion\FileInclusionGenerator.cs" Link="FileInclusionGenerator.cs" />
+		<Compile Include="..\UtilityGenerators\GlobalUsings.cs" Link="GlobalUsings.cs" />
 		<Compile Include="..\UtilityGenerators\NonEquatable\NonEquatableGenerator.cs" Link="NonEquatableGenerator.cs" />
-		<Compile Include="..\UtilityGenerators\Templating\AstStringBuilderVisitor.cs" Link="AstStringBuilderVisitor.cs" />
-		<Compile Include="..\UtilityGenerators\Templating\BlockSyntax.cs" Link="BlockSyntax.cs" />
-		<Compile Include="..\UtilityGenerators\Templating\BlockTerminators.cs" Link="BlockTerminators.cs" />
-		<Compile Include="..\UtilityGenerators\Templating\CodeBlockSyntax.cs" Link="CodeBlockSyntax.cs" />
-		<Compile Include="..\UtilityGenerators\Templating\CodeBodyChildSyntax.cs" Link="CodeBodyChildSyntax.cs" />
-		<Compile Include="..\UtilityGenerators\Templating\CodeBodySyntax.cs" Link="CodeBodySyntax.cs" />
-		<Compile Include="..\UtilityGenerators\Templating\DebugTokenVerificationVisitor.cs" Link="DebugTokenVerificationVisitor.cs" />
-		<Compile Include="..\UtilityGenerators\Templating\DefaultTokenVerificationVisitor.cs" Link="DefaultTokenVerificationVisitor.cs" />
-		<Compile Include="..\UtilityGenerators\Templating\Diagnostic.cs" Link="Diagnostic.cs" />
-		<Compile Include="..\UtilityGenerators\Templating\DiagnosticSeverity.cs" Link="DiagnosticSeverity.cs" />
-		<Compile Include="..\UtilityGenerators\Templating\ISyntax.cs" Link="ISyntax.cs" />
-		<Compile Include="..\UtilityGenerators\Templating\Lexer.cs" Link="Lexer.cs" />
-		<Compile Include="..\UtilityGenerators\Templating\Parser.cs" Link="Parser.cs" />
-		<Compile Include="..\UtilityGenerators\Templating\ParseResult.cs" Link="ParseResult.cs" />
-		<Compile Include="..\UtilityGenerators\Templating\ScanResult.cs" Link="ScanResult.cs" />
-		<Compile Include="..\UtilityGenerators\Templating\SourcePosition.cs" Link="SourcePosition.cs" />
-		<Compile Include="..\UtilityGenerators\Templating\SourceSpan.cs" Link="SourceSpan.cs" />
-		<Compile Include="..\UtilityGenerators\Templating\SyntaxVisitor.cs" Link="SyntaxVisitor.cs" />
-		<Compile Include="..\UtilityGenerators\Templating\TemplateBlockSyntax.cs" Link="TemplateBlockSyntax.cs" />
-		<Compile Include="..\UtilityGenerators\Templating\TemplateChildSyntax.cs" Link="TemplateChildSyntax.cs" />
-		<Compile Include="..\UtilityGenerators\Templating\TemplateSpan.cs" Link="TemplateSpan.cs" />
-		<Compile Include="..\UtilityGenerators\Templating\TemplateString.cs" Link="TemplateString.cs" />
-		<Compile Include="..\UtilityGenerators\Templating\TemplateSyntax.cs" Link="TemplateSyntax.cs" />
-		<Compile Include="..\UtilityGenerators\Templating\TemplatingGenerator.cs" Link="TemplatingGenerator.cs" />
-		<Compile Include="..\UtilityGenerators\Templating\TextSyntax.cs" Link="TextSyntax.cs" />
-		<Compile Include="..\UtilityGenerators\Templating\Token.cs" Link="Token.cs" />
-		<Compile Include="..\UtilityGenerators\Templating\TokenSpans.cs" Link="TokenSpans.cs" />
-		<Compile Include="..\UtilityGenerators\Templating\TokenType.cs" Link="TokenType.cs" />
-		<Compile Include="..\UtilityGenerators\Templating\TokenVerificationVisitor.cs" Link="TokenVerificationVisitor.cs" />
-		<Compile Include="..\UtilityGenerators\Templating\ValueBlockSyntax.cs" Link="ValueBlockSyntax.cs" />
-		<Compile Include="..\UtilityGenerators\Templating\ValueBodySyntax.cs" Link="ValueBodySyntax.cs" />
-		<Compile Include="..\UtilityGenerators\Templating\ValueExpressionChildSyntax.cs" Link="ValueExpressionChildSyntax.cs" />
-		<Compile Include="..\UtilityGenerators\Templating\ValueExpressionSyntax.cs" Link="ValueExpressionSyntax.cs" />
-		<Compile Include="..\UtilityGenerators\Templating\ValueHeadSyntax.cs" Link="ValueHeadSyntax.cs" />
+		<Compile Include="..\UtilityGenerators\Templating\Diagnostic.cs" Link="Templating\Diagnostic.cs" />
+		<Compile Include="..\UtilityGenerators\Templating\DiagnosticSeverity.cs" Link="Templating\DiagnosticSeverity.cs" />
+		<Compile Include="..\UtilityGenerators\Templating\Lexer.cs" Link="Templating\Lexer.cs" />
+		<Compile Include="..\UtilityGenerators\Templating\Parser.cs" Link="Templating\Parser.cs" />
+		<Compile Include="..\UtilityGenerators\Templating\ParseResult.cs" Link="Templating\ParseResult.cs" />
+		<Compile Include="..\UtilityGenerators\Templating\ScanResult.cs" Link="Templating\ScanResult.cs" />
+		<Compile Include="..\UtilityGenerators\Templating\SourcePosition.cs" Link="Templating\SourcePosition.cs" />
+		<Compile Include="..\UtilityGenerators\Templating\SourceSpan.cs" Link="Templating\SourceSpan.cs" />
+		<Compile Include="..\UtilityGenerators\Templating\Syntax\CloseBlockSyntax.cs" Link="Templating\CloseBlockSyntax.cs" />
+		<Compile Include="..\UtilityGenerators\Templating\Syntax\CloseCodeBlockSyntax.cs" Link="Templating\CloseCodeBlockSyntax.cs" />
+		<Compile Include="..\UtilityGenerators\Templating\Syntax\CloseRenderBlockSyntax.cs" Link="Templating\CloseRenderBlockSyntax.cs" />
+		<Compile Include="..\UtilityGenerators\Templating\Syntax\CloseTemplateBlockSyntax.cs" Link="Templating\CloseTemplateBlockSyntax.cs" />
+		<Compile Include="..\UtilityGenerators\Templating\Syntax\CodeBlockBodyChildSyntax.cs" Link="Templating\CodeBlockBodyChildSyntax.cs" />
+		<Compile Include="..\UtilityGenerators\Templating\Syntax\CodeBlockBodySyntax.cs" Link="Templating\CodeBlockBodySyntax.cs" />
+		<Compile Include="..\UtilityGenerators\Templating\Syntax\CodeBlockSyntax.cs" Link="Templating\CodeBlockSyntax.cs" />
+		<Compile Include="..\UtilityGenerators\Templating\Syntax\EmptyBlockSyntax.cs" Link="Templating\EmptyBlockSyntax.cs" />
+		<Compile Include="..\UtilityGenerators\Templating\Syntax\EmptyTemplateSyntax.cs" Link="Templating\EmptyTemplateSyntax.cs" />
+		<Compile Include="..\UtilityGenerators\Templating\Syntax\EscapeColonSyntax.cs" Link="Templating\EscapeColonSyntax.cs" />
+		<Compile Include="..\UtilityGenerators\Templating\Syntax\EscapedCloseBlockSyntax.cs" Link="Templating\EscapedCloseBlockSyntax.cs" />
+		<Compile Include="..\UtilityGenerators\Templating\Syntax\EscapedOpenBlockSyntax.cs" Link="Templating\EscapedOpenBlockSyntax.cs" />
+		<Compile Include="..\UtilityGenerators\Templating\Syntax\EscapedTextSyntax.cs" Link="Templating\EscapedTextSyntax.cs" />
+		<Compile Include="..\UtilityGenerators\Templating\Syntax\ISyntax.cs" Link="Templating\ISyntax.cs" />
+		<Compile Include="..\UtilityGenerators\Templating\Syntax\LeadingTriviaSyntax.cs" Link="Templating\LeadingTriviaSyntax.cs" />
+		<Compile Include="..\UtilityGenerators\Templating\Syntax\NewlineSyntax.cs" Link="Templating\NewlineSyntax.cs" />
+		<Compile Include="..\UtilityGenerators\Templating\Syntax\NotEmptyTemplateSyntax.cs" Link="Templating\NotEmptyTemplateSyntax.cs" />
+		<Compile Include="..\UtilityGenerators\Templating\Syntax\NotEscapedTextChildSyntax.cs" Link="Templating\NotEscapedTextChildSyntax.cs" />
+		<Compile Include="..\UtilityGenerators\Templating\Syntax\NotEscapedTextSyntax.cs" Link="Templating\NotEscapedTextSyntax.cs" />
+		<Compile Include="..\UtilityGenerators\Templating\Syntax\NotNewlineSyntax.cs" Link="Templating\NotNewlineSyntax.cs" />
+		<Compile Include="..\UtilityGenerators\Templating\Syntax\OpenBlockSyntax.cs" Link="Templating\OpenBlockSyntax.cs" />
+		<Compile Include="..\UtilityGenerators\Templating\Syntax\OpenCodeBlockSyntax.cs" Link="Templating\OpenCodeBlockSyntax.cs" />
+		<Compile Include="..\UtilityGenerators\Templating\Syntax\OpenRenderBlockSyntax.cs" Link="Templating\OpenRenderBlockSyntax.cs" />
+		<Compile Include="..\UtilityGenerators\Templating\Syntax\OpenTemplateBlockSyntax.cs" Link="Templating\OpenTemplateBlockSyntax.cs" />
+		<Compile Include="..\UtilityGenerators\Templating\Syntax\RenderBlockBodySyntax.cs" Link="Templating\RenderBlockBodySyntax.cs" />
+		<Compile Include="..\UtilityGenerators\Templating\Syntax\RenderBlockHeadSyntax.cs" Link="Templating\RenderBlockHeadSyntax.cs" />
+		<Compile Include="..\UtilityGenerators\Templating\Syntax\RenderBlockSyntax.cs" Link="Templating\RenderBlockSyntax.cs" />
+		<Compile Include="..\UtilityGenerators\Templating\Syntax\RenderBlockTriviaSyntax.cs" Link="Templating\RenderBlockTriviaSyntax.cs" />
+		<Compile Include="..\UtilityGenerators\Templating\Syntax\SyntaxExtensions.cs" Link="Templating\SyntaxExtensions.cs" />
+		<Compile Include="..\UtilityGenerators\Templating\Syntax\TemplateBlockBodyChildSyntax.cs" Link="Templating\TemplateBlockBodyChildSyntax.cs" />
+		<Compile Include="..\UtilityGenerators\Templating\Syntax\TemplateBlockBodySyntax.cs" Link="Templating\TemplateBlockBodySyntax.cs" />
+		<Compile Include="..\UtilityGenerators\Templating\Syntax\TemplateBlockSyntax.cs" Link="Templating\TemplateBlockSyntax.cs" />
+		<Compile Include="..\UtilityGenerators\Templating\Syntax\TemplateSyntax.cs" Link="Templating\TemplateSyntax.cs" />
+		<Compile Include="..\UtilityGenerators\Templating\Syntax\TextChildSyntax.cs" Link="Templating\TextChildSyntax.cs" />
+		<Compile Include="..\UtilityGenerators\Templating\Syntax\TextSyntax.cs" Link="Templating\TextSyntax.cs" />
+		<Compile Include="..\UtilityGenerators\Templating\Syntax\ThrowHelpers.cs" Link="Templating\ThrowHelpers.cs" />
+		<Compile Include="..\UtilityGenerators\Templating\Syntax\TrailingTriviaSyntax.cs" Link="Templating\TrailingTriviaSyntax.cs" />
+		<Compile Include="..\UtilityGenerators\Templating\Syntax\Visitors\CommentDisplayTreeStringBuilder.cs" Link="Templating\CommentDisplayTreeStringBuilder.cs" />
+		<Compile Include="..\UtilityGenerators\Templating\Syntax\Visitors\CommentTreeStringBuilder.cs" Link="Templating\CommentTreeStringBuilder.cs" />
+		<Compile Include="..\UtilityGenerators\Templating\Syntax\Visitors\CommentXmlTreeStringBuilder.cs" Link="Templating\CommentXmlTreeStringBuilder.cs" />
+		<Compile Include="..\UtilityGenerators\Templating\Syntax\Visitors\DebugTokenValidator.cs" Link="Templating\DebugTokenValidator.cs" />
+		<Compile Include="..\UtilityGenerators\Templating\Syntax\Visitors\DisplayTreeStringBuilder.cs" Link="Templating\DisplayTreeStringBuilder.cs" />
+		<Compile Include="..\UtilityGenerators\Templating\Syntax\Visitors\ISyntaxVisitor.cs" Link="Templating\ISyntaxVisitor.cs" />
+		<Compile Include="..\UtilityGenerators\Templating\Syntax\Visitors\SourceGeneratingTemplateVisitor.CodeBlockVisitor.cs" Link="Templating\SourceGeneratingTemplateVisitor.CodeBlockVisitor.cs" />
+		<Compile Include="..\UtilityGenerators\Templating\Syntax\Visitors\SourceGeneratingTemplateVisitor.cs" Link="Templating\SourceGeneratingTemplateVisitor.cs" />
+		<Compile Include="..\UtilityGenerators\Templating\Syntax\Visitors\SourceGeneratingTemplateVisitor.TemplateBlockVisitor.cs" Link="Templating\SourceGeneratingTemplateVisitor.TemplateBlockVisitor.cs" />
+		<Compile Include="..\UtilityGenerators\Templating\Syntax\Visitors\SyntaxSpansCalculatingVisitor.cs" Link="Templating\SyntaxSpansCalculatingVisitor.cs" />
+		<Compile Include="..\UtilityGenerators\Templating\Syntax\Visitors\TemplateStringReconstructionVisitor.cs" Link="Templating\TemplateStringReconstructionVisitor.cs" />
+		<Compile Include="..\UtilityGenerators\Templating\Syntax\Visitors\TokenCountingVisitor.cs" Link="Templating\TokenCountingVisitor.cs" />
+		<Compile Include="..\UtilityGenerators\Templating\Syntax\Visitors\TokenValidator.cs" Link="Templating\TokenValidator.cs" />
+		<Compile Include="..\UtilityGenerators\Templating\Syntax\Visitors\TreeStringBuilder.cs" Link="Templating\TreeStringBuilder.cs" />
+		<Compile Include="..\UtilityGenerators\Templating\Syntax\Visitors\TreeWalkingSyntaxVisitor.cs" Link="Templating\TreeWalkingSyntaxVisitor.cs" />
+		<Compile Include="..\UtilityGenerators\Templating\Syntax\Visitors\XmlTreeStringBuilder.cs" Link="Templating\XmlTreeStringBuilder.cs" />
+		<Compile Include="..\UtilityGenerators\Templating\Syntax\WhitespacesSyntax.cs" Link="Templating\WhitespacesSyntax.cs" />
+		<Compile Include="..\UtilityGenerators\Templating\TemplateAttribute.Model.cs" Link="Templating\TemplateAttribute.Model.cs" />
+		<Compile Include="..\UtilityGenerators\Templating\TemplateSourceText.cs" Link="Templating\TemplateSourceText.cs" />
+		<Compile Include="..\UtilityGenerators\Templating\TemplateSpan.cs" Link="Templating\TemplateSpan.cs" />
+		<Compile Include="..\UtilityGenerators\Templating\TemplateString.cs" Link="Templating\TemplateString.cs" />
+		<Compile Include="..\UtilityGenerators\Templating\TemplatingGenerator.cs" Link="Templating\TemplatingGenerator.cs" />
+		<Compile Include="..\UtilityGenerators\Templating\Token.cs" Link="Templating\Token.cs" />
+		<Compile Include="..\UtilityGenerators\Templating\TokenKind.cs" Link="Templating\TokenKind.cs" />
+		<Compile Include="..\UtilityGenerators\Templating\TokenSpans.cs" Link="Templating\TokenSpans.cs" />
 		<Compile Include="..\UtilityGenerators\TypeSymbolPattern\TypeSymbolPatternAttributeModel.cs" Link="TypeSymbolPatternAttributeModel.cs" />
 		<Compile Include="..\UtilityGenerators\TypeSymbolPattern\TypeSymbolPatternGenerator.cs" Link="TypeSymbolPatternGenerator.cs" />
 		<Compile Include="..\UtilityGenerators\TypeSymbolPattern\TypeSymbolPatternMethodModel.cs" Link="TypeSymbolPatternMethodModel.cs" />
 		<Compile Include="..\UtilityGenerators\TypeSymbolPattern\TypeSymbolPatternMethodsModel.cs" Link="TypeSymbolPatternMethodsModel.cs" />
 		<Compile Include="..\UtilityGenerators\TypeSymbolPattern\TypeSymbolPatternMethodsPartialModel.cs" Link="TypeSymbolPatternMethodsPartialModel.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Folder Include="Templating\" />
 	</ItemGroup>
 
 </Project>

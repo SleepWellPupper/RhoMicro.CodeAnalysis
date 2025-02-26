@@ -5,6 +5,7 @@ namespace RhoMicro.CodeAnalysis.Benchmarks;
 using System;
 
 using BenchmarkDotNet.Attributes;
+
 using RhoMicro.CodeAnalysis.Library.Text.Templating;
 
 [SimpleJob]

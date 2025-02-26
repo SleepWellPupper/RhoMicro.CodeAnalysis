@@ -35,7 +35,7 @@ internal readonly partial struct StringOrChar : IEquatable<StringOrChar>, IInden
         start == 0 && length is 1 or 0 ?
         new ReadOnlySpan<Char>([_charValue]) :
         throw new IndexOutOfRangeException();
-    public Int32 Length => IsString ? _stringValue!.Length : 1;
+    public Int32 Length => IsString ? _stringValue == null ? 0 : _stringValue.Length : 1;
     public Boolean IsString => _isChar == 0;
 
     private StringOrChar(String stringValue) => _stringValue = stringValue;

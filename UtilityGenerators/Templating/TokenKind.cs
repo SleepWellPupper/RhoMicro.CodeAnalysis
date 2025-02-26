@@ -14,15 +14,16 @@ internal enum TokenKind
     OpenTemplateBlock,
     CloseTemplateBlock,
 
-    Text,
+    Whitespaces,
+    Newline,
+    NotNewline,
 
     EscapeColon,
-    Trivia,
 
     /// <summary>
     /// The end of file token. This token is defined to terminate any template
     /// tokenization. The eof is defined to always start after the last
-    /// character, and to be of length 0.
+    /// character (on the same line), and to be of length 0.
     /// </summary>
     Eof
 }

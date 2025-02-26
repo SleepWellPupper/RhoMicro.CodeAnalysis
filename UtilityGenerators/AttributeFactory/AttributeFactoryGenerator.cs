@@ -2172,7 +2172,7 @@ public sealed partial class AttributeFactoryGenerator : IIncrementalGenerator
 
             var kind = property.Type.Kind;
 
-            if(kind.HasFlagsFast(AttributeParameterTypeKind.ValueType, AttributeParameterTypeKind.Array))
+            if(kind.HasAnyFlagFast(AttributeParameterTypeKind.ValueType, AttributeParameterTypeKind.Enum))
                 ctx.SourceBuilder.AppendCore(".Value");
 
             ctx.SourceBuilder.Append(';').AppendLineCore();
@@ -2218,7 +2218,7 @@ public sealed partial class AttributeFactoryGenerator : IIncrementalGenerator
                     .Append("if(kvp.Value.TryGet").Append(property.Type.KindString).Append("Value(out ").Append(property.Type.NullableDisplayString).AppendLine(" value))")
                     .Indent().Append(property.Name).AppendCore(" = value");
 
-                if(property.Type.Kind.HasFlagsFast(AttributeParameterTypeKind.ValueType))
+                if(property.Type.Kind.HasAnyFlagFast(AttributeParameterTypeKind.ValueType, AttributeParameterTypeKind.Enum))
                     ctx.SourceBuilder.AppendCore(".Value");
 
                 ctx.SourceBuilder.AppendLine(';').Detent()
@@ -2247,18 +2247,18 @@ public sealed partial class AttributeFactoryGenerator : IIncrementalGenerator
 
                 if(property is { HasSetter: false, Mappings: [] })
                     continue;
-                
+
                 ctx.SourceBuilder.Comment
                     .OpenSummary()
                     .Append("Gets the value for the ").Comment.SeeCRef($"{ctx.DisplayString}.{property.Name}").Append(" property.")
                     .CloseBlock()
                     .AppendCore("public ");
 
-                //if(ctx.Model.AttributeModel.GenerateModelTypeAsStruct)
-                //    ctx.SourceBuilder.AppendCore("readonly ");
-
-                ctx.SourceBuilder.Append(property.Type.DisplayString).Append(' ').Append(property.Name).Append("{ get; private set; } = ")
-                    .Append(property.DefaultValueExpression ?? "default!").Append(';').AppendLineCore();
+                ctx.SourceBuilder.Append(property.Type.DisplayString).Append(' ').Append(property.Name)
+                    .Append(" { get; private set; } = (")
+                    .Append(property.Type.DisplayString)
+                    .Append(')')
+                    .Append(property.DefaultValueExpression ?? "default").Append("!;").AppendLineCore();
             }
         }
     }

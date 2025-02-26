@@ -7,8 +7,10 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 using RhoMicro.CodeAnalysis.Library.Models;
 using RhoMicro.CodeAnalysis.Library.Text.SourceTexts;
+using RhoMicro.CodeAnalysis.Library.Text.Templating;
 using RhoMicro.CodeAnalysis.Templating;
 using RhoMicro.CodeAnalysis.Templating.Syntax;
+using RhoMicro.CodeAnalysis.Templating.Syntax.Visitors;
 
 /// <summary>
 /// Generates template classes from string templates.
@@ -17,6 +19,8 @@ using RhoMicro.CodeAnalysis.Templating.Syntax;
 public class TemplatingGenerator : IIncrementalGenerator
 {
     private const String _attributeMetadataName = "RhoMicro.CodeAnalysis.TemplateAttribute";
+    private const Int32 _parserTimeout = 100;
+
     /// <inheritdoc/>
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
@@ -42,7 +46,9 @@ public class TemplatingGenerator : IIncrementalGenerator
                 }
 
                 using var modelCtx = ModelCreationContext.CreateDefault(ct);
-                var templateString = TemplateString.Create(token, ct);
+                var cts = CancellationTokenSource.CreateLinkedTokenSource(ct);
+                cts.CancelAfter(_parserTimeout);
+                var templateString = TemplateString.Create(token, cts.Token);
                 var typeModel = NamedTypeModel.Create(target, in modelCtx);
                 var result = (typeModel, templateString, attribute);
 
@@ -54,8 +60,10 @@ public class TemplatingGenerator : IIncrementalGenerator
                 ct.ThrowIfCancellationRequested();
 
                 var (type, templateString, attribute) = t!.Value;
-                using var ctx = ModelCreationContext.CreateDefault(ct);
-                var scanResult = Lexer.Scan(templateString, in ctx);
+                var cts = CancellationTokenSource.CreateLinkedTokenSource(ct);
+                cts.CancelAfter(_parserTimeout);
+                using var ctx = ModelCreationContext.CreateDefault(cts.Token);
+                var scanResult = Lexer.Scan(templateString, attribute.NewlineValue.Length, in ctx);
 
                 return (type, scanResult, attribute);
             })
@@ -64,7 +72,9 @@ public class TemplatingGenerator : IIncrementalGenerator
                 ct.ThrowIfCancellationRequested();
 
                 var (type, scanResult, attribute) = t;
-                using var ctx = ModelCreationContext.CreateDefault(ct);
+                var cts = CancellationTokenSource.CreateLinkedTokenSource(ct);
+                cts.CancelAfter(_parserTimeout);
+                using var ctx = ModelCreationContext.CreateDefault(cts.Token);
                 var parseResult = Parser.Parse(scanResult, in ctx);
 
                 return (type, parseResult, attribute);
@@ -89,6 +99,7 @@ public class TemplatingGenerator : IIncrementalGenerator
         var scanResult = parseResult.ScanResult;
         var template = parseResult.Syntax;
         var templateString = scanResult.TemplateString;
+        var diagnostics = parseResult.AllDiagnostics;
 
         foreach(var u in attribute.Usings)
             sourceBuilder.Append("using ").Append(u).Append(';').AppendLineCore();
@@ -96,29 +107,75 @@ public class TemplatingGenerator : IIncrementalGenerator
         type.BuildStrings(
             sourceBuilder,
             out var hintName,
-            out _,
+            out var displayString,
             ["global::RhoMicro.CodeAnalysis.Library.Text.Templating.ITemplate"],
             ct);
 
         if(attribute.GenerateToString)
         {
             sourceBuilder
-                .AppendLine("public override string ToString() => global::RhoMicro.CodeAnalysis.Library.Text.Templating.TemplateRenderer.Render(this);")
-                .Append(
-                    "public string ToString(global::System.Threading.CancellationToken cancellationToken) => " +
-                    "global::RhoMicro.CodeAnalysis.Library.Text.Templating.TemplateRenderer.Render(this, cancellationToken);"
-                    ).AppendLineCore();
+                .AppendLine("public override string ToString()")
+                .Indent()
+                    .AppendLine("=> global::RhoMicro.CodeAnalysis.Library.Text.Templating.TemplateRenderer.Render(this);")
+                    .AppendLine()
+                .Detent()
+
+                .Append("public string RenderToString<")
+                .Append(attribute.BodyParameterTypeName)
+                .Append(">(in ")
+                .Append(attribute.BodyParameterTypeName).AppendLine(" body)")
+                .Indent()
+                    .Append("where ").Append(attribute.BodyParameterTypeName).AppendLine(" : global::RhoMicro.CodeAnalysis.Library.Text.Templating.ITemplate")
+                    .Append("=> global::RhoMicro.CodeAnalysis.Library.Text.Templating.TemplateRenderer.Render<")
+                    .Append(displayString)
+                    .Append(", ")
+                    .Append(attribute.BodyParameterTypeName)
+                    .AppendLine(">(this, body);")
+                    .AppendLine()
+                .Detent()
+
+                .Append("public string RenderToString<")
+                .Append(attribute.BodyParameterTypeName)
+                .Append(">(in ")
+                .Append(attribute.BodyParameterTypeName)
+                .AppendLine(" body, global::System.Threading.CancellationToken cancellationToken)")
+                .Indent()
+                    .Append("where ").Append(attribute.BodyParameterTypeName).AppendLine(" : global::RhoMicro.CodeAnalysis.Library.Text.Templating.ITemplate")
+                    .Append("=> global::RhoMicro.CodeAnalysis.Library.Text.Templating.TemplateRenderer.Render<")
+                    .Append(displayString)
+                    .Append(", ")
+                    .Append(attribute.BodyParameterTypeName)
+                    .AppendLine(">(this, body, cancellationToken);")
+                    .AppendLine()
+                .Detent()
+
+                .AppendLine(
+                    "public string RenderToString(" +
+                    "global::System.Threading.CancellationToken cancellationToken)")
+                .Indent()
+                    .AppendLine("=> " +
+                        "global::RhoMicro.CodeAnalysis.Library.Text.Templating.TemplateRenderer.Render(" +
+                        "this, cancellationToken" +
+                        ");")
+                    .AppendLine()
+                .DetentCore();
         }
 
         sourceBuilder
             .Append("public void Render<")
             .Append(attribute.BodyParameterTypeName)
-            .Append(">(ref global::RhoMicro.CodeAnalysis.Library.Text.Templating.TemplateRenderer ")
-            .Append(attribute.RendererParameterName).Append(", ")
-            .Append(attribute.BodyParameterTypeName).Append(' ').Append(attribute.BodyParameterName).AppendLine(" )")
-            .Append("where ").Append(attribute.BodyParameterTypeName).Append(" : global::RhoMicro.CodeAnalysis.Library.Text.Templating.ITemplate")
+            .AppendLine(">(")
+            .Indent()
+                .Append("ref global::RhoMicro.CodeAnalysis.Library.Text.Templating.TemplateRenderer ")
+                .Append(attribute.RendererParameterName).AppendLine(',')
+                .Append(attribute.BodyParameterTypeName).Append(' ')
+                .Append(attribute.BodyParameterName).AppendLine(',')
+                .Append("global::System.Threading.CancellationToken ")
+                .Append(attribute.CancellationTokenParameterName).AppendLine(')')
+                .Append("where ").Append(attribute.BodyParameterTypeName).Append(" : global::RhoMicro.CodeAnalysis.Library.Text.Templating.ITemplate")
+            .Detent()
             .OpenBracesBlock()
-            .Append(attribute.RendererParameterName).AppendLine(".ThrowIfCancellationRequested();")
+            .Append(attribute.CancellationTokenParameterName).AppendLine(".ThrowIfCancellationRequested();")
             .AppendLine()
             .Append("// This template was taken from: ")
             .Append(templateString.Path)
@@ -131,8 +188,17 @@ public class TemplatingGenerator : IIncrementalGenerator
 
         var quotes = new String('"', scanResult.RequiredQuotes);
         sourceBuilder
-            .AppendLine(quotes)
-            .AppendLine(attribute.TemplateString)
+            .Append(quotes)
+            .AppendLineCore();
+
+        template.Accept(
+            new TemplateStringReconstructionVisitor(
+            newline: attribute.NewlineValue,
+            sourceBuilder,
+            ct));
+
+        sourceBuilder
+            .AppendLine()
             .Append(quotes)
             .AppendCore(";");
 
@@ -141,25 +207,50 @@ public class TemplatingGenerator : IIncrementalGenerator
 
         sourceBuilder.AppendLine().AppendLineCore();
 
-        if(attribute.GenerateStructuralRepresentation)
-        {
-            sourceBuilder.Append("/* Structural Representation:").AppendLineCore();
-
-            detentCount = 0;
-            for(; detentCount < sourceBuilder.OpenBlocks; detentCount++)
-                sourceBuilder.DetentCore();
-
-            var structuralRepresentation = template.ToAstString(ct);
-            sourceBuilder.Append(structuralRepresentation).AppendLineCore();
-
-            for(; detentCount > 0; detentCount--)
-                sourceBuilder.IndentCore();
-
-            sourceBuilder.Append("*/").AppendLineCore();
-        }
+        AppendDebugComment(sourceBuilder, attribute, template, ct);
+        AppendDiagnostics(sourceBuilder, diagnostics, ct);
+        AppendTemplate(sourceBuilder, template, attribute, templateString, ct);
 
         var source = sourceBuilder.CloseAllBlocks().ToString();
 
         return (hintName, source);
+    }
+    private static void AppendTemplate(
+        IndentedStringBuilder sourceBuilder,
+        TemplateSyntax template,
+        TemplateAttribute.Model attribute,
+        TemplateString templateString,
+        CancellationToken ct)
+    {
+        ct.ThrowIfCancellationRequested();
+
+        template.Accept(new SourceGeneratingTemplateVisitor(sourceBuilder, attribute, templateString, ct));
+    }
+    private static void AppendDiagnostics(IndentedStringBuilder sourceBuilder, IEnumerable<Templating.Diagnostic> diagnostics, CancellationToken ct)
+    {
+        ct.ThrowIfCancellationRequested();
+
+        foreach(var diagnostic in diagnostics)
+        {
+            sourceBuilder
+                .Append("// ")
+                .Append(diagnostic.ToString())
+                .AppendLineCore();
+        }
+    }
+    private static void AppendDebugComment(
+        IndentedStringBuilder sourceBuilder,
+        TemplateAttribute.Model attribute,
+        TemplateSyntax template,
+        CancellationToken ct)
+    {
+        ct.ThrowIfCancellationRequested();
+
+        if(!attribute.GenerateDebugInfo)
+            return;
+
+        var xmlTree = template.ToCommentXmlTreeString(ct);
+
+        sourceBuilder.Append(xmlTree).AppendLineCore();
     }
 }

@@ -1,6 +1,8 @@
 ﻿namespace RhoMicro.CodeAnalysis;
 using System;
 
+using RhoMicro.CodeAnalysis.Library.Text.Templating;
+
 /// <summary>
 /// Marks the target type for template generation.
 /// </summary>
@@ -12,7 +14,7 @@ using System;
 [NonEquatable]
 #endif
 #if RHOMICRO_CODEANALYSIS_UTILITYGENERATORS || RHOMICRO_CODEANALYSIS_UTILITYGENERATORS_DEV
-[GenerateFactory(GenerateModelTypeAsStruct = true)]
+[GenerateFactory]
 #endif
 internal sealed partial class TemplateAttribute : Attribute
 {
@@ -37,15 +39,23 @@ internal sealed partial class TemplateAttribute : Attribute
     /// <summary>
     /// Gets or sets the name of the renderer parameter of the synthesized <see
     /// cref="global::RhoMicro.CodeAnalysis.Library.Text.Templating.ITemplate.Render{TBody}(ref
-    /// Library.Text.Templating.TemplateRenderer, TBody)"/> method. The
+    /// Library.Text.Templating.TemplateRenderer, TBody, CancellationToken)"/> method. The
     /// default value is <c>__renderer</c>.
     /// </summary>
     [DefaultValue("__renderer")]
     public String RendererParameterName { get; set; } = "__renderer";
     /// <summary>
+    /// Gets or sets the name of the template string constant of the synthesized <see
+    /// cref="global::RhoMicro.CodeAnalysis.Library.Text.Templating.ITemplate.Render{TBody}(ref
+    /// Library.Text.Templating.TemplateRenderer, TBody, CancellationToken)"/> method. The
+    /// default value is <c>__template</c>.
+    /// </summary>
+    [DefaultValue("__template")]
+    public String TemplateConstName { get; set; } = "__template";
+    /// <summary>
     /// Gets or sets the name of the body parameter of the synthesized <see
     /// cref="global::RhoMicro.CodeAnalysis.Library.Text.Templating.ITemplate.Render{TBody}(ref
-    /// Library.Text.Templating.TemplateRenderer, TBody)"/> method. The
+    /// Library.Text.Templating.TemplateRenderer, TBody, CancellationToken)"/> method. The
     /// default value is <c>__body</c>.
     /// </summary>
     [DefaultValue("__body")]
@@ -53,33 +63,53 @@ internal sealed partial class TemplateAttribute : Attribute
     /// <summary>
     /// Gets or sets the name of the body type parameter of the synthesized <see
     /// cref="global::RhoMicro.CodeAnalysis.Library.Text.Templating.ITemplate.Render{TBody}(ref
-    /// Library.Text.Templating.TemplateRenderer, TBody)"/> method. The
+    /// Library.Text.Templating.TemplateRenderer, TBody, CancellationToken)"/> method. The
     /// default value is <c>__TBody</c>.
     /// </summary>
     [DefaultValue("__TBody")]
     public String BodyParameterTypeName { get; set; } = "__TBody";
     /// <summary>
+    /// Gets or sets the newline to use when rendering line breaks. The
+    /// default value is <see cref="Newline.Newline"/>.
+    /// </summary>
+    [DefaultValue((Int32)Newline.Newline)]
+    public Newline Newline { get; set; } = Newline.Newline;
+    /// <summary>
     /// Gets or sets the name of synthesized render fragments in the synthesized <see
     /// cref="global::RhoMicro.CodeAnalysis.Library.Text.Templating.ITemplate.Render{TBody}(ref
-    /// Library.Text.Templating.TemplateRenderer, TBody)"/> method. The
+    /// Library.Text.Templating.TemplateRenderer, TBody, CancellationToken)"/> method. The
     /// default value is <c>__fragment</c>.
     /// </summary>
     [DefaultValue("__fragment")]
     public String FragmentName { get; set; } = "__fragment";
     /// <summary>
+    /// Gets or sets the name of the cancellation token parameter of the synthesized <see
+    /// cref="global::RhoMicro.CodeAnalysis.Library.Text.Templating.ITemplate.Render{TBody}(ref
+    /// Library.Text.Templating.TemplateRenderer, TBody, CancellationToken)"/> method. The
+    /// default value is <c>__cancellationToken</c>.
+    /// </summary>
+    [DefaultValue("__cancellationToken")]
+    public String CancellationTokenParameterName { get; set; } = "__cancellationToken";
+    /// <summary>
     /// Gets or sets the using statements to include in the generated template file.
     /// The default values are:
     /// <list type="bullet">
-    /// <item>static global::RhoMicro.CodeAnalysis.Library.Text.Templating.Indentations</item>
+    /// <item><c>static global::RhoMicro.CodeAnalysis.Library.Text.Templating.Indentations</c></item>
     /// </list>
     /// </summary>
-    [DefaultValue(["static global::RhoMicro.CodeAnalysis.Library.Text.Templating.Indentations"])]
-    public String[] Usings { get; set; } = ["static global::RhoMicro.CodeAnalysis.Library.Text.Templating.Indentations"];
+    [DefaultValue(
+        [
+            "static global::RhoMicro.CodeAnalysis.Library.Text.Templating.Indentations",
+        ])]
+    public String[] Usings { get; set; } =
+        [
+            "static global::RhoMicro.CodeAnalysis.Library.Text.Templating.Indentations",
+        ];
     /// <summary>
     /// Gets or sets a value indicating whether to generate a structural
-    /// representation of the template for debugging purposes. The default value
-    /// is <see langword="false"/>.
+    /// representation and debugging information of the template for debugging
+    /// purposes. The default value is <see langword="false"/>.
     /// </summary>
     [DefaultValue(false)]
-    public Boolean GenerateStructuralRepresentation { get; set; } = false;
+    public Boolean GenerateDebugInfo { get; set; } = false;
 }

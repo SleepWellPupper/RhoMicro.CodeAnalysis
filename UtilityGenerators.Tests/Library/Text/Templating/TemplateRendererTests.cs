@@ -56,13 +56,29 @@ public class TemplateRendererTests
         using var renderer = new TemplateRenderer(stackalloc Char[64], stackalloc Char[16]);
 
         // Act
+        renderer.Render("foo");
         renderer.Indent(" ");
-        renderer.Render("foo\n");
+        renderer.Render("bar\n");
         renderer.Detent(1);
         var actual = renderer.ToString();
 
         // Assert
-        Assert.Equal("foo\n", actual);
+        Assert.Equal("foobar\n", actual);
+    }
+    [Fact]
+    public void PrependsIndentationIfEmpty()
+    {
+        // Arrange
+        using var renderer = new TemplateRenderer(stackalloc Char[64], stackalloc Char[16]);
+
+        // Act
+        renderer.Indent(" ");
+        renderer.Render("bar\n");
+        renderer.Detent(1);
+        var actual = renderer.ToString();
+
+        // Assert
+        Assert.Equal(" bar\n", actual);
     }
     [Fact]
     public void PrependsIndentationIfPrecededByNewline()

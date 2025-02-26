@@ -1,5 +1,6 @@
 ﻿namespace RhoMicro.CodeAnalysis.Templating;
 
+using System.Buffers;
 using System.Diagnostics;
 
 using RhoMicro.CodeAnalysis.Library.Models;
@@ -18,19 +19,20 @@ internal sealed partial class Lexer
         TemplateString templateString,
         EquatableList<Token> tokens,
         EquatableList<Diagnostic> diagnostics,
+        Int32 newlineLength,
         CancellationToken ct)
     {
         _templateString = templateString;
+        _reifiedTemplateString = templateString.Text.ToString();
 
-        _startLine = templateString.Start.Line;
-        _startCharacter = templateString.Start.Character;
-        _currentLine = templateString.Start.Line;
-        _currentCharacter = templateString.Start.Character;
-        _previousEolCharacter = templateString.Start.Character - 1;
+        _line = templateString.Start.Line;
+        _char = templateString.Start.Character;
 
         _tokens = tokens;
         _diagnostics = diagnostics;
         _ct = ct;
+
+        _newlineLength = newlineLength;
     }
 
     private readonly EquatableList<Token> _tokens;
@@ -38,24 +40,26 @@ internal sealed partial class Lexer
     private readonly CancellationToken _ct;
 
     private readonly TemplateString _templateString;
+    private readonly String _reifiedTemplateString;
 
-    private Int32 _startIndex;
-    private Int32 _currentIndex;
-    private Int32 _startLine;
-    private Int32 _startCharacter;
-    private Int32 _currentLine;
-    private Int32 _currentCharacter;
-    private Int32 _previousEolCharacter;
+    private readonly Int32 _newlineLength;
+
+    private Int32 _newlineOffset;
+    private Int32 _index;
+    private Int32 _length;
+    private Int32 _line;
+    private Int32 _char;
 
     private Int32 _requiredQuotesAcc = 1;
     private Int32 _requiredQuotes = 3;
 
-    public static ScanResult Scan(TemplateString templateString, in ModelCreationContext context)
+    public static ScanResult Scan(TemplateString templateString, Int32 newlineLength, in ModelCreationContext context)
     {
         var result = new Lexer(
             templateString,
             context.CollectionFactory.CreateList<Token>(),
             context.CollectionFactory.CreateList<Diagnostic>(),
+            newlineLength,
             context.CancellationToken)
             .Scan();
 
@@ -69,24 +73,39 @@ internal sealed partial class Lexer
         while(!IsAtEnd())
         {
             _ct.ThrowIfCancellationRequested();
-
-            SetStartToCurrent();
-
             ScanToken();
+            ResetIndices();
         }
 
-        _tokens.Add(Token.CreateEof(_templateString, new(_currentLine, _currentCharacter)));
+        AppendEof();
 
         var result = new ScanResult(_tokens, _templateString, _requiredQuotes, _diagnostics);
 
         return result;
     }
 
-    private void SetStartToCurrent()
+    private void AppendEof()
     {
-        _startIndex = _currentIndex;
-        _startCharacter = _currentCharacter;
-        _startLine = _currentLine;
+        var eofEnd = _tokens is [..,
+        {
+            Kind: Newline,
+            Spans.SourceSpan.End:
+            {
+                Line: var line,
+                Character: var character
+            }
+        }]
+            ? new SourcePosition(line, character + 1)
+            : new SourcePosition(_line, _char);
+
+        _tokens.Add(Token.CreateEof(_templateString, eofEnd, _newlineOffset));
+    }
+
+    private void ResetIndices()
+    {
+        _char += _length;
+        _index += _length;
+        _length = 0;
     }
 
     private void ScanToken()
@@ -99,15 +118,15 @@ internal sealed partial class Lexer
         {
             // open render block
             case '(' when Match(':'):
-                AddOpenBlockToken(OpenRenderBlock);
+                AddToken(OpenRenderBlock);
                 break;
             // open code block
             case '{' when Match(':'):
-                AddOpenBlockToken(OpenCodeBlock);
+                AddToken(OpenCodeBlock);
                 break;
             // open template block
             case '<' when Match(':'):
-                AddOpenBlockToken(OpenTemplateBlock);
+                AddToken(OpenTemplateBlock);
                 break;
             // close render block
             case ':' when Match(')'):
@@ -129,142 +148,128 @@ internal sealed partial class Lexer
                 _tokens is [.., { Kind: OpenCodeBlock or OpenRenderBlock or OpenTemplateBlock }]:
                 AddToken(EscapeColon);
                 break;
-            // text
+            // \r[\n]
+            case '\r':
+                // attempt to consume a possible \n as well
+                _ = Match('\n');
+                AddNewline();
+                break;
+            case '\n':
+                AddNewline();
+                break;
+            // text / whitespace
             default:
-                CheckNewline(c);
-                Text();
+                var isWhitespace = c is ' ' or '\t';
+
+                while(!( IsAtEnd() ||
+                        PeekSpan(3) is
+                        // \n / \r
+                        ['\n' or '\r', ..] or
+                        // \r\n is implied by \n / \r
+                        // ['\r', '\n', ..] or
+                        // open: (: or {: or <:
+                        ['(' or '{' or '<', ':', .. /*discard rest to match any beginning with open*/] or
+                        // close: :) or :} or :>
+                        [':', ')' or '}' or '>', .. /*discard rest to match any beginning with close*/] or
+                        // open: (:: or {:: or <::
+                        ['(' or '{' or '<', ':', ':'] or
+                        // close: ::) or ::} or ::>
+                        [':', ':', ')' or '}' or '>'] ))
+                {
+                    _ct.ThrowIfCancellationRequested();
+                    isWhitespace &= Advance() is ' ' or '\t';
+                }
+
+                var kind = isWhitespace
+                    ? Whitespaces
+                    : NotNewline;
+
+                AddToken(kind);
                 break;
         }
     }
-    private Boolean PeekBlockTerminator(Int32 lookahead = 0) =>
-        PeekSpan(lookahead, 2) is
-        // open: (: or {: or <:
-        ['(' or '{' or '<', ':'] or
-        // close: :) or :} or :>
-        [':', ')' or '}' or '>'];
-    private Boolean PeekEscape(Int32 lookahead = 0) =>
-        PeekSpan(lookahead, 3) is
-        // open: (:: or {:: or <::
-        ['(' or '{' or '<', ':', ':'] or
-        // close: ::) or ::} or ::>
-        [':', ':', ')' or '}' or '>'];
 
-    private void Text()
+    private void AddNewline()
     {
-        _ct.ThrowIfCancellationRequested();
-
-        while(!IsAtEnd() && !PeekBlockTerminator() && !PeekEscape())
-        {
-            _ct.ThrowIfCancellationRequested();
-
-            var c = Advance();
-            CheckNewline(c);
-        }
-
-        AddToken(TokenKind.Text);
+        AddToken(Newline);
+        _line++;
+        _char = _templateString.Start.Character;
+        _index += _length;
+        var newlineDelta = _newlineLength - _length;
+        _newlineOffset += newlineDelta;
+        _length = 0;
     }
-
-    private void CheckNewline(Char c)
+    private void AddToken(TokenKind kind)
     {
-        if(c is not '\n' && ( c is not '\r' || !Match('\n') ))
-            return;
-
-        // Newlines are meaningful for multiline raw string literals, as they
-        // affect positions relative to the C# source text. For single-line
-        // string literals, they are ordinary characters on the same source text
-        // line; we do not increment the line and reset the character in this
-        // case. 
-        if(!_templateString.IsMultiline)
-            return;
-
-        _previousEolCharacter = _currentCharacter - 1;
-        _currentLine++;
-        _currentCharacter = _templateString.Start.Character;
-    }
-    private static Boolean IsTrivia(Token potentialTrivia)
-    {
-        var lexeme = potentialTrivia.Lexeme;
-        var end = lexeme[0] is '\n' ? 0 : 1;
-        for(var i = lexeme.Length - 1; i < end; i++)
-        {
-            if(lexeme[i] is not ' ' and not '\t')
-                return false;
-        }
-
-        return true;
-    }
-    private void AddOpenBlockToken(TokenKind type)
-    {
-        if(_tokens is [..,
-            { Kind: CloseCodeBlock or CloseRenderBlock or CloseTemplateBlock },
-            { Kind: TokenKind.Text, Lexeme: ['\n', ..] or ['\r', '\n', ..] } potentialTrivia]
-            && IsTrivia(potentialTrivia))
-        {
-
-            _tokens[^1] = potentialTrivia with { Kind = Trivia };
-        }
-
-        AddToken(type);
-    }
-
-    private void AddToken(TokenKind type)
-    {
-        var token = CreateToken(type);
+        CreateToken(kind, out var token);
         _tokens.Add(token);
     }
-
-    private Token CreateToken(TokenKind type)
+    private void CreateToken(TokenKind kind, out Token token)
     {
-        var length = _currentIndex - _startIndex;
+        Debug.Assert(_length > 0);
 
-        Debug.Assert(length > 0);
+        var newlineAwareLength = kind is TokenKind.Newline
+            ? _newlineLength
+            : _length;
+        var newlineAwareIndex = _index + _newlineOffset;
 
-        var templateSpan = new TemplateSpan(_startIndex, length);
-        var start = new SourcePosition(_startLine, _startCharacter);
-        var end = _currentCharacter == _templateString.Start.Character
-            ? new SourcePosition(_currentLine - 1, _previousEolCharacter)
-            : new SourcePosition(_currentLine, _currentCharacter - 1);
+        var templateSpan = new TemplateSpan(_index, _length);
+        var newlineAwareTemplateSpan = new TemplateSpan(newlineAwareIndex, newlineAwareLength);
+        var start = new SourcePosition(_line, _char);
+        var end = new SourcePosition(_line, _char + _length - 1);
 
         var sourceSpan = new SourceSpan(start, end);
-        var spans = new TokenSpans(templateSpan, sourceSpan);
-        var result = new Token(type, _templateString, spans);
-
-        return result;
+        var spans = new TokenSpans(
+            TemplateSpan: templateSpan,
+            NewlineAwareTemplateSpan: newlineAwareTemplateSpan,
+            sourceSpan);
+        token = new Token(kind, _templateString, spans);
     }
-
-    private Boolean IsAtEnd(Int32 lookahead = 0) => _currentIndex + lookahead >= _templateString.Text.Length;
-
+    private Int32 Remaining() => _reifiedTemplateString.Length - _index - _length;
+    private Boolean IsAtEnd(Int32 lookahead = 0) => lookahead >= Remaining();
     private Char Advance()
     {
-        var result = _templateString.Text[_currentIndex];
+        var result = _reifiedTemplateString[_index + _length];
         Advance(1);
         return result;
     }
-
     private void Advance(Int32 count)
     {
-        if(Peek() == '"')
+        for(var i = 0; i < count; i++)
         {
-            _requiredQuotesAcc++;
-        } else
-        {
-            _requiredQuotes = Math.Max(_requiredQuotes, _requiredQuotesAcc);
-            _requiredQuotesAcc = 1;
+            if(Peek(i) == '"')
+            {
+                _requiredQuotesAcc++;
+            } else
+            {
+                _requiredQuotes = Math.Max(_requiredQuotes, _requiredQuotesAcc);
+                _requiredQuotesAcc = 1;
+            }
         }
 
-        _currentIndex += count;
-        _currentCharacter += count;
+        _length += count;
     }
-    private ReadOnlySpan<Char> PeekSpan(Int32 length) => PeekSpan(0, length);
-    private ReadOnlySpan<Char> PeekSpan(Int32 lookahead, Int32 length)
+    private ReadOnlySpan<Char> PeekSpan(Int32 maxLength) => PeekSpan(0, maxLength);
+    private ReadOnlySpan<Char> PeekSpan(Int32 lookahead, Int32 maxLength)
     {
-        Debug.Assert(length > 0);
+        Debug.Assert(maxLength > 0);
 
-        if(IsAtEnd(lookahead + length - 1))
-            return [];
+        ReadOnlySpan<Char> result;
 
-        var result = _templateString.Text
-            .AsSpan(_currentIndex + lookahead, length);
+        if(IsAtEnd(lookahead))
+        {
+            // The remainder after lookahead is empty.
+            result = [];
+        } else
+        {
+            // We obtain the remainder after lookahead.
+            var remaining = _reifiedTemplateString.AsSpan(_index + _length + lookahead);
+            // We return either the remainder, or an exactly sized slice,
+            // depending on which is smaller.
+            result = remaining.Length <= maxLength
+                ? remaining
+                : remaining[..maxLength];
+        }
 
         return result;
     }
@@ -273,11 +278,10 @@ internal sealed partial class Lexer
         if(IsAtEnd(lookahead))
             return '\0';
 
-        var result = _templateString.Text[_currentIndex + lookahead];
+        var result = _reifiedTemplateString[_index + _length + lookahead];
 
         return result;
     }
-
     private Boolean Match(Char c, Int32 lookahead = 0)
     {
         if(Peek(lookahead) is { } p && p == c)
@@ -289,5 +293,8 @@ internal sealed partial class Lexer
         return false;
     }
 
-    private String GetCurrentLexemeString() => _templateString.Text[_startIndex.._currentIndex].Replace("\r", "\\r").Replace("\n", "\\n");
+    private String GetCurrentLexemeString() => _reifiedTemplateString
+        .Substring(_index, _length)
+        .Replace("\r", "\\r")
+        .Replace("\n", "\\n");
 }

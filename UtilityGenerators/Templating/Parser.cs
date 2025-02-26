@@ -10,7 +10,7 @@ using RhoMicro.CodeAnalysis.Library.Models.Collections;
 using RhoMicro.CodeAnalysis.Templating.Syntax;
 
 using static Diagnostic;
-using static TokenKind;
+using static RhoMicro.CodeAnalysis.Templating.TokenKind;
 
 [NonEquatable]
 [DebuggerDisplay("{GetDebugDisplayString()}")]
@@ -61,8 +61,8 @@ internal sealed partial class Parser
         _ct.ThrowIfCancellationRequested();
 
         TemplateSyntax result = NonEmptyTemplate(out var s)
-            ? s
-            : new EmptyTemplateSyntax();
+            ? new(s)
+            : new(new EmptyTemplateSyntax());
 
         if(!IsAtEnd())
             EmitDiagnostic(Ids.UnexpectedToken, DiagnosticSeverity.Error);
@@ -71,6 +71,8 @@ internal sealed partial class Parser
     }
     private Boolean NonEmptyTemplate([NotNullWhen(true)] out NotEmptyTemplateSyntax? syntax)
     {
+        _ct.ThrowIfCancellationRequested();
+
         if(!TemplateBlockBody(out var templateBlockBody))
         {
             syntax = null;
@@ -84,7 +86,7 @@ internal sealed partial class Parser
     {
         _ct.ThrowIfCancellationRequested();
 
-        if(!TemplateChild(out var firstChild))
+        if(!TemplateBlockBodyChild(out var firstChild))
         {
             syntax = null;
             return false;
@@ -93,7 +95,7 @@ internal sealed partial class Parser
         var children = _collectionFactory.CreateList<TemplateBlockBodyChildSyntax>();
         children.Add(firstChild);
 
-        while(TemplateChild(out var child))
+        while(TemplateBlockBodyChild(out var child))
         {
             _ct.ThrowIfCancellationRequested();
 
@@ -103,99 +105,25 @@ internal sealed partial class Parser
         syntax = new TemplateBlockBodySyntax(children);
         return true;
     }
-    private Boolean TemplateChild([NotNullWhen(true)] out TemplateBlockBodyChildSyntax? syntax)
-    {
-        _ct.ThrowIfCancellationRequested();
-
-        if(Text(out var text))
-        {
-            syntax = text;
-            return true;
-        }
-
-        if(BlockSequence(out var blockSequence))
-        {
-            syntax = blockSequence;
-            return true;
-        }
-
-        syntax = null;
-        return false;
-    }
-    private Boolean BlockSequence([NotNullWhen(true)] out BlockSequenceSyntax? syntax)
-    {
-        _ct.ThrowIfCancellationRequested();
-
-        if(!Block(out var block))
-        {
-            syntax = null;
-            return false;
-        }
-
-        var children = _collectionFactory.CreateList<TriviaBlockSyntax>();
-
-        while(NewlineBlock(out var child))
-        {
-            _ct.ThrowIfCancellationRequested();
-
-            children.Add(child);
-        }
-
-        syntax = new BlockSequenceSyntax(block, children);
-        return true;
-    }
-    private Boolean NewlineBlock([NotNullWhen(true)] out TriviaBlockSyntax? syntax)
-    {
-        _ct.ThrowIfCancellationRequested();
-
-        if(!Trivia(out var newlineTrivia))
-        {
-            syntax = null;
-            return false;
-        }
-
-        if(!Block(out var block))
-        {
-            Return(newlineTrivia);
-            syntax = null;
-            return false;
-        }
-
-        syntax = new(newlineTrivia, block);
-        return true;
-    }
-    private Boolean Trivia([NotNullWhen(true)] out TriviaSyntax? syntax)
-    {
-        _ct.ThrowIfCancellationRequested();
-
-        if(Match(TokenKind.Trivia, out var token))
-        {
-            syntax = new(token);
-            return true;
-        }
-
-        syntax = null;
-        return false;
-    }
-    private Boolean Block([NotNullWhen(true)] out BlockSyntax? syntax)
+    private Boolean TemplateBlockBodyChild([NotNullWhen(true)] out TemplateBlockBodyChildSyntax? syntax)
     {
         _ct.ThrowIfCancellationRequested();
 
         if(RenderBlock(out var renderBlock))
         {
-            syntax = renderBlock;
+            syntax = new TemplateBlockBodyChildSyntax(renderBlock);
             return true;
         }
 
         if(CodeBlock(out var codeBlock))
         {
-            syntax = codeBlock;
+            syntax = new TemplateBlockBodyChildSyntax(codeBlock);
             return true;
         }
 
-        if(TemplateBlock(out var templateBlock))
+        if(Text(out var text))
         {
-            syntax = templateBlock;
+            syntax = new TemplateBlockBodyChildSyntax(text);
             return true;
         }
 
@@ -206,66 +134,78 @@ internal sealed partial class Parser
     {
         _ct.ThrowIfCancellationRequested();
 
+        var leadingTrivia = LeadingTrivia(out var l) ? l : null;
+
         if(!OpenCodeBlock(out var openCodeBlock))
         {
+            Return(leadingTrivia);
             syntax = null;
             return false;
         }
 
-        if(!CodeBody(out var codeBody))
+        if(!CodeBlockBody(out var codeBlockBody))
         {
             Return(openCodeBlock);
+            Return(leadingTrivia);
             syntax = null;
             return false;
         }
 
         if(!CloseCodeBlock(out var closeCodeBlock))
         {
-            Return(codeBody);
+            Return(codeBlockBody);
             Return(openCodeBlock);
+            Return(leadingTrivia);
             syntax = null;
             return false;
         }
 
-        syntax = new(openCodeBlock, codeBody, closeCodeBlock);
+        var trailingTrivia = TrailingTrivia(out var t) ? t : null;
+
+        syntax = new CodeBlockSyntax(
+            leadingTrivia,
+            openCodeBlock,
+            codeBlockBody,
+            closeCodeBlock,
+            trailingTrivia);
         return true;
     }
-    private Boolean CodeBody([NotNullWhen(true)] out CodeBodySyntax? syntax)
+    private Boolean CodeBlockBody([NotNullWhen(true)] out CodeBlockBodySyntax? syntax)
     {
         _ct.ThrowIfCancellationRequested();
 
-        if(!CodeBodyChild(out var firstChild))
+        if(!CodeBlockBodyChild(out var firstChild))
         {
             syntax = null;
             return false;
         }
 
-        var children = _collectionFactory.CreateList<CodeBodyChildSyntax>();
+        var children = _collectionFactory.CreateList<CodeBlockBodyChildSyntax>();
         children.Add(firstChild);
 
-        while(CodeBodyChild(out var child))
+        while(CodeBlockBodyChild(out var child))
         {
             _ct.ThrowIfCancellationRequested();
 
             children.Add(child);
         }
 
-        syntax = new(children);
+        syntax = new CodeBlockBodySyntax(children);
         return true;
     }
-    private Boolean CodeBodyChild([NotNullWhen(true)] out CodeBodyChildSyntax? syntax)
+    private Boolean CodeBlockBodyChild([NotNullWhen(true)] out CodeBlockBodyChildSyntax? syntax)
     {
         _ct.ThrowIfCancellationRequested();
 
-        if(Text(out var text))
+        if(RenderBlock(out var renderBlock))
         {
-            syntax = text;
+            syntax = new CodeBlockBodyChildSyntax(renderBlock);
             return true;
         }
 
-        if(RenderBlock(out var renderBlock))
+        if(Text(out var text))
         {
-            syntax = renderBlock;
+            syntax = new CodeBlockBodyChildSyntax(text);
             return true;
         }
 
@@ -282,58 +222,8 @@ internal sealed partial class Parser
             return false;
         }
 
-        if(RenderBlockBody(out var renderBlockBody))
-        {
-            syntax = new(renderBlockHead, renderBlockBody);
-            return true;
-        }
-
-        syntax = new(renderBlockHead);
-        return true;
-    }
-    private Boolean RenderBlockBody([NotNullWhen(true)] out RenderBlockBodySyntax? syntax)
-    {
-        _ct.ThrowIfCancellationRequested();
-
-        var trivia = Trivia(out var t) ? t : null;
-
-        if(!TemplateBlock(out var templateBlock))
-        {
-            if(trivia is not null)
-                Return(trivia);
-            syntax = null;
-            return false;
-        }
-
-        syntax = new(trivia, templateBlock);
-        return true;
-    }
-    private Boolean TemplateBlock([NotNullWhen(true)] out TemplateBlockSyntax? syntax)
-    {
-        _ct.ThrowIfCancellationRequested();
-
-        if(!OpenTemplateBlock(out var openTemplateBlock))
-        {
-            syntax = null;
-            return false;
-        }
-
-        if(!TemplateBlockBody(out var templateBlockBody))
-        {
-            Return(openTemplateBlock);
-            syntax = null;
-            return false;
-        }
-
-        if(!CloseTemplateBlock(out var closeTemplateBlock))
-        {
-            Return(templateBlockBody);
-            Return(openTemplateBlock);
-            syntax = null;
-            return false;
-        }
-
-        syntax = new(openTemplateBlock, templateBlockBody, closeTemplateBlock);
+        var renderBlockBody = RenderBlockBody(out var b) ? b : null;
+        syntax = new RenderBlockSyntax(renderBlockHead, renderBlockBody);
         return true;
     }
     private Boolean RenderBlockHead([NotNullWhen(true)] out RenderBlockHeadSyntax? syntax)
@@ -361,8 +251,116 @@ internal sealed partial class Parser
             return false;
         }
 
-        syntax = new(openRenderBlock, text, closeRenderBlock);
+        syntax = new RenderBlockHeadSyntax(openRenderBlock, text, closeRenderBlock);
         return true;
+    }
+    private Boolean RenderBlockBody([NotNullWhen(true)] out RenderBlockBodySyntax? syntax)
+    {
+        _ct.ThrowIfCancellationRequested();
+
+        var renderBlockTrivia = RenderBlockTrivia(out var t) ? t : null;
+
+        if(!TemplateBlock(out var templateBlock))
+        {
+            Return(renderBlockTrivia);
+            syntax = null;
+            return false;
+        }
+
+        syntax = new RenderBlockBodySyntax(renderBlockTrivia, templateBlock);
+        return true;
+    }
+    private Boolean RenderBlockTrivia([NotNullWhen(true)] out RenderBlockTriviaSyntax? syntax)
+    {
+        _ct.ThrowIfCancellationRequested();
+
+        if(Newline(out var newline))
+        {
+            syntax = new RenderBlockTriviaSyntax(newline);
+            return true;
+        }
+
+        syntax = null;
+        return false;
+    }
+    private Boolean TemplateBlock([NotNullWhen(true)] out TemplateBlockSyntax? syntax)
+    {
+        _ct.ThrowIfCancellationRequested();
+
+        var leadingTrivia = LeadingTrivia(out var l) ? l : null;
+
+        if(!OpenTemplateBlock(out var openTemplateBlock))
+        {
+            Return(leadingTrivia);
+            syntax = null;
+            return false;
+        }
+
+        if(!TemplateBlockBody(out var templateBlockBody))
+        {
+            Return(openTemplateBlock);
+            Return(leadingTrivia);
+            syntax = null;
+            return false;
+        }
+
+        if(!CloseTemplateBlock(out var closeTemplateBlock))
+        {
+            Return(templateBlockBody);
+            Return(openTemplateBlock);
+            Return(leadingTrivia);
+            syntax = null;
+            return false;
+        }
+
+        var trailingTrivia = TrailingTrivia(out var t) ? t : null;
+
+        syntax = new TemplateBlockSyntax(
+            leadingTrivia,
+            openTemplateBlock,
+            templateBlockBody,
+            closeTemplateBlock,
+            trailingTrivia);
+        return true;
+    }
+    private Boolean LeadingTrivia([NotNullWhen(true)] out LeadingTriviaSyntax? syntax)
+    {
+        _ct.ThrowIfCancellationRequested();
+
+        if(Whitespaces(out var whitespaces))
+        {
+            syntax = new LeadingTriviaSyntax(whitespaces);
+            return true;
+        }
+
+        syntax = null;
+        return false;
+    }
+    private Boolean Whitespaces([NotNullWhen(true)] out WhitespacesSyntax? syntax)
+    {
+        _ct.ThrowIfCancellationRequested();
+
+        if(Match(TokenKind.Whitespaces, out var token))
+        {
+            syntax = new WhitespacesSyntax(token);
+            return true;
+        }
+
+        syntax = null;
+        return false;
+    }
+    private Boolean TrailingTrivia([NotNullWhen(true)] out TrailingTriviaSyntax? syntax)
+    {
+        _ct.ThrowIfCancellationRequested();
+
+        if(Newline(out var newline))
+        {
+            syntax = new TrailingTriviaSyntax(newline);
+            return true;
+        }
+
+        syntax = null;
+        return false;
     }
     private Boolean Text([NotNullWhen(true)] out TextSyntax? syntax)
     {
@@ -384,22 +382,22 @@ internal sealed partial class Parser
             children.Add(child);
         }
 
-        syntax = new(children);
+        syntax = new TextSyntax(children);
         return true;
     }
     private Boolean TextChild([NotNullWhen(true)] out TextChildSyntax? syntax)
     {
         _ct.ThrowIfCancellationRequested();
 
-        if(NotEscapedText(out var notEscaped))
+        if(EscapedText(out var escapedText))
         {
-            syntax = notEscaped;
+            syntax = new TextChildSyntax(escapedText);
             return true;
         }
 
-        if(EscapedText(out var escaped))
+        if(NotEscapedText(out var notEscapedText))
         {
-            syntax = escaped;
+            syntax = new TextChildSyntax(notEscapedText);
             return true;
         }
 
@@ -410,9 +408,70 @@ internal sealed partial class Parser
     {
         _ct.ThrowIfCancellationRequested();
 
-        if(Match(TokenKind.Text, out var token))
+        if(!NotEscapedTextChild(out var firstChild))
         {
-            syntax = new(token);
+            syntax = null;
+            return false;
+        }
+
+        var children = _collectionFactory.CreateList<NotEscapedTextChildSyntax>();
+        children.Add(firstChild);
+
+        while(NotEscapedTextChild(out var child))
+        {
+            _ct.ThrowIfCancellationRequested();
+
+            children.Add(child);
+        }
+
+        syntax = new NotEscapedTextSyntax(children);
+        return true;
+    }
+    private Boolean NotEscapedTextChild([NotNullWhen(true)] out NotEscapedTextChildSyntax? syntax)
+    {
+        _ct.ThrowIfCancellationRequested();
+
+        if(NotNewline(out var notNewline))
+        {
+            syntax = new NotEscapedTextChildSyntax(notNewline);
+            return true;
+        }
+
+        if(Newline(out var newline))
+        {
+            syntax = new NotEscapedTextChildSyntax(newline);
+            return true;
+        }
+
+        if(Whitespaces(out var whitespaces))
+        {
+            syntax = new NotEscapedTextChildSyntax(whitespaces);
+            return true;
+        }
+
+        syntax = null;
+        return false;
+    }
+    private Boolean NotNewline([NotNullWhen(true)] out NotNewlineSyntax? syntax)
+    {
+        _ct.ThrowIfCancellationRequested();
+
+        if(Match(TokenKind.NotNewline, out var token))
+        {
+            syntax = new NotNewlineSyntax(token);
+            return true;
+        }
+
+        syntax = null;
+        return false;
+    }
+    private Boolean Newline([NotNullWhen(true)] out NewlineSyntax? syntax)
+    {
+        _ct.ThrowIfCancellationRequested();
+
+        if(Match(TokenKind.Newline, out var token))
+        {
+            syntax = new NewlineSyntax(token);
             return true;
         }
 
@@ -425,19 +484,72 @@ internal sealed partial class Parser
 
         if(EscapedOpenBlock(out var escapedOpenBlock))
         {
-            syntax = escapedOpenBlock;
+            syntax = new EscapedTextSyntax(escapedOpenBlock);
             return true;
         }
 
         if(EscapedCloseBlock(out var escapedCloseBlock))
         {
-            syntax = escapedCloseBlock;
+            syntax = new EscapedTextSyntax(escapedCloseBlock);
             return true;
         }
 
         if(EmptyBlock(out var emptyBlock))
         {
-            syntax = emptyBlock;
+            syntax = new EscapedTextSyntax(emptyBlock);
+            return true;
+        }
+
+        syntax = null;
+        return false;
+    }
+    private Boolean EscapedOpenBlock([NotNullWhen(true)] out EscapedOpenBlockSyntax? syntax)
+    {
+        _ct.ThrowIfCancellationRequested();
+
+        if(!OpenBlock(out var closeBlock))
+        {
+            syntax = null;
+            return false;
+        }
+
+        if(!EscapeColon(out var escapeColon))
+        {
+            Return(closeBlock);
+            syntax = null;
+            return false;
+        }
+
+        syntax = new EscapedOpenBlockSyntax(closeBlock, escapeColon);
+        return true;
+    }
+    private Boolean EscapedCloseBlock([NotNullWhen(true)] out EscapedCloseBlockSyntax? syntax)
+    {
+        _ct.ThrowIfCancellationRequested();
+
+        if(!EscapeColon(out var escapeColon))
+        {
+            syntax = null;
+            return false;
+        }
+
+        if(!CloseBlock(out var closeBlock))
+        {
+            Return(escapeColon);
+            syntax = null;
+            return false;
+        }
+
+        syntax = new EscapedCloseBlockSyntax(escapeColon, closeBlock);
+        return true;
+    }
+    private Boolean EscapeColon([NotNullWhen(true)] out EscapeColonSyntax? syntax)
+    {
+        _ct.ThrowIfCancellationRequested();
+
+        if(Match(TokenKind.EscapeColon, out var token))
+        {
+            syntax = new EscapeColonSyntax(token);
             return true;
         }
 
@@ -461,125 +573,8 @@ internal sealed partial class Parser
             return false;
         }
 
-        syntax = new(openBlock, closeBlock);
+        syntax = new EmptyBlockSyntax(openBlock, closeBlock);
         return true;
-    }
-    private Boolean EscapedCloseBlock([NotNullWhen(true)] out EscapedCloseBlockSyntax? syntax)
-    {
-        _ct.ThrowIfCancellationRequested();
-
-        if(!EscapeColon(out var escapeColon))
-        {
-            syntax = null;
-            return false;
-        }
-
-        if(!CloseBlock(out var closeBlock))
-        {
-            Return(escapeColon);
-            syntax = null;
-            return false;
-        }
-
-        syntax = new(escapeColon, closeBlock);
-        return true;
-    }
-    private Boolean CloseBlock([NotNullWhen(true)] out CloseBlockSyntax? syntax)
-    {
-        _ct.ThrowIfCancellationRequested();
-
-        if(CloseCodeBlock(out var closeCodeBlock))
-        {
-            syntax = closeCodeBlock;
-            return true;
-        }
-
-        if(CloseRenderBlock(out var closeRenderBlock))
-        {
-            syntax = closeRenderBlock;
-            return true;
-        }
-
-        if(CloseTemplateBlock(out var closeTemplateBlock))
-        {
-            syntax = closeTemplateBlock;
-            return true;
-        }
-
-        syntax = null;
-        return false;
-    }
-    private Boolean CloseTemplateBlock([NotNullWhen(true)] out CloseTemplateBlockSyntax? syntax)
-    {
-        _ct.ThrowIfCancellationRequested();
-
-        if(Match(TokenKind.CloseTemplateBlock, out var token))
-        {
-            syntax = new(token);
-            return true;
-        }
-
-        syntax = null;
-        return false;
-    }
-    private Boolean CloseRenderBlock([NotNullWhen(true)] out CloseRenderBlockSyntax? syntax)
-    {
-        _ct.ThrowIfCancellationRequested();
-
-        if(Match(TokenKind.CloseRenderBlock, out var token))
-        {
-            syntax = new(token);
-            return true;
-        }
-
-        syntax = null;
-        return false;
-    }
-    private Boolean CloseCodeBlock([NotNullWhen(true)] out CloseCodeBlockSyntax? syntax)
-    {
-        _ct.ThrowIfCancellationRequested();
-
-        if(Match(TokenKind.CloseCodeBlock, out var token))
-        {
-            syntax = new(token);
-            return true;
-        }
-
-        syntax = null;
-        return false;
-    }
-    private Boolean EscapedOpenBlock([NotNullWhen(true)] out EscapedOpenBlockSyntax? syntax)
-    {
-        _ct.ThrowIfCancellationRequested();
-
-        if(!OpenBlock(out var openBlock))
-        {
-            syntax = null;
-            return false;
-        }
-
-        if(!EscapeColon(out var escapeColon))
-        {
-            Return(openBlock);
-            syntax = null;
-            return false;
-        }
-
-        syntax = new(openBlock, escapeColon);
-        return true;
-    }
-    private Boolean EscapeColon([NotNullWhen(true)] out EscapeColonSyntax? syntax)
-    {
-        _ct.ThrowIfCancellationRequested();
-
-        if(Match(TokenKind.EscapeColon, out var token))
-        {
-            syntax = new(token);
-            return true;
-        }
-
-        syntax = null;
-        return false;
     }
     private Boolean OpenBlock([NotNullWhen(true)] out OpenBlockSyntax? syntax)
     {
@@ -587,45 +582,19 @@ internal sealed partial class Parser
 
         if(OpenCodeBlock(out var openCodeBlock))
         {
-            syntax = openCodeBlock;
+            syntax = new OpenBlockSyntax(openCodeBlock);
             return true;
         }
 
         if(OpenRenderBlock(out var openRenderBlock))
         {
-            syntax = openRenderBlock;
+            syntax = new OpenBlockSyntax(openRenderBlock);
             return true;
         }
 
         if(OpenTemplateBlock(out var openTemplateBlock))
         {
-            syntax = openTemplateBlock;
-            return true;
-        }
-
-        syntax = null;
-        return false;
-    }
-    private Boolean OpenTemplateBlock([NotNullWhen(true)] out OpenTemplateBlockSyntax? syntax)
-    {
-        _ct.ThrowIfCancellationRequested();
-
-        if(Match(TokenKind.OpenTemplateBlock, out var token))
-        {
-            syntax = new(token);
-            return true;
-        }
-
-        syntax = null;
-        return false;
-    }
-    private Boolean OpenRenderBlock([NotNullWhen(true)] out OpenRenderBlockSyntax? syntax)
-    {
-        _ct.ThrowIfCancellationRequested();
-
-        if(Match(TokenKind.OpenRenderBlock, out var token))
-        {
-            syntax = new(token);
+            syntax = new OpenBlockSyntax(openTemplateBlock);
             return true;
         }
 
@@ -638,28 +607,121 @@ internal sealed partial class Parser
 
         if(Match(TokenKind.OpenCodeBlock, out var token))
         {
-            syntax = new(token);
+            syntax = new OpenCodeBlockSyntax(token);
             return true;
         }
 
         syntax = null;
         return false;
     }
+    private Boolean OpenRenderBlock([NotNullWhen(true)] out OpenRenderBlockSyntax? syntax)
+    {
+        _ct.ThrowIfCancellationRequested();
 
+        if(Match(TokenKind.OpenRenderBlock, out var token))
+        {
+            syntax = new OpenRenderBlockSyntax(token);
+            return true;
+        }
+
+        syntax = null;
+        return false;
+    }
+    private Boolean OpenTemplateBlock([NotNullWhen(true)] out OpenTemplateBlockSyntax? syntax)
+    {
+        _ct.ThrowIfCancellationRequested();
+
+        if(Match(TokenKind.OpenTemplateBlock, out var token))
+        {
+            syntax = new OpenTemplateBlockSyntax(token);
+            return true;
+        }
+
+        syntax = null;
+        return false;
+    }
+    private Boolean CloseBlock([NotNullWhen(true)] out CloseBlockSyntax? syntax)
+    {
+        _ct.ThrowIfCancellationRequested();
+
+        if(CloseCodeBlock(out var closeCodeBlock))
+        {
+            syntax = new CloseBlockSyntax(closeCodeBlock);
+            return true;
+        }
+
+        if(CloseRenderBlock(out var closeRenderBlock))
+        {
+            syntax = new CloseBlockSyntax(closeRenderBlock);
+            return true;
+        }
+
+        if(CloseTemplateBlock(out var closeTemplateBlock))
+        {
+            syntax = new CloseBlockSyntax(closeTemplateBlock);
+            return true;
+        }
+
+        syntax = null;
+        return false;
+    }
+    private Boolean CloseCodeBlock([NotNullWhen(true)] out CloseCodeBlockSyntax? syntax)
+    {
+        _ct.ThrowIfCancellationRequested();
+
+        if(Match(TokenKind.CloseCodeBlock, out var token))
+        {
+            syntax = new CloseCodeBlockSyntax(token);
+            return true;
+        }
+
+        syntax = null;
+        return false;
+    }
+    private Boolean CloseRenderBlock([NotNullWhen(true)] out CloseRenderBlockSyntax? syntax)
+    {
+        _ct.ThrowIfCancellationRequested();
+
+        if(Match(TokenKind.CloseRenderBlock, out var token))
+        {
+            syntax = new CloseRenderBlockSyntax(token);
+            return true;
+        }
+
+        syntax = null;
+        return false;
+    }
+    private Boolean CloseTemplateBlock([NotNullWhen(true)] out CloseTemplateBlockSyntax? syntax)
+    {
+        _ct.ThrowIfCancellationRequested();
+
+        if(Match(TokenKind.CloseTemplateBlock, out var token))
+        {
+            syntax = new CloseTemplateBlockSyntax(token);
+            return true;
+        }
+
+        syntax = null;
+        return false;
+    }
     private Boolean IsAtEnd(Int32 lookahead = 0) =>
         _currentIndex + lookahead >= _tokens.Count
      || _tokens[_currentIndex + lookahead].Kind == Eof;
 
-    private Token Advance()
+    private void Advance(out Token token)
     {
-        var result = _tokens[_currentIndex];
+        token = _tokens[_currentIndex];
         Advance(1);
-        return result;
     }
 
-    private void Return<TSyntax>(TSyntax syntax)
+    private void Return<TSyntax>(TSyntax? syntax)
         where TSyntax : ISyntax
-        => _currentIndex -= syntax.CountTokens(_ct);
+    {
+        if(syntax is null)
+            return;
+
+        _currentIndex -= syntax.CountTokens(_ct);
+    }
 
     private void Advance(Int32 count) => _currentIndex += count;
 
@@ -669,27 +731,55 @@ internal sealed partial class Parser
         : _tokens[_currentIndex + lookahead].Kind;
 
     private Boolean Peek(
-        TokenKind type,
+        TokenKind kind,
         Int32 lookahead = 0)
     {
-        if(Peek(lookahead) == type)
+        if(Peek(lookahead) == kind)
             return true;
+
+        return false;
+    }
+    private Boolean Peek(
+        ReadOnlySpan<TokenKind> kinds,
+        Int32 lookahead = 0)
+    {
+        var peeked = Peek(lookahead);
+
+        foreach(var kind in kinds)
+        {
+            if(kind == peeked)
+                return true;
+        }
 
         return false;
     }
 
     private Boolean Match(
-        TokenKind type,
-        [NotNullWhen(true)] out Token? token,
+        ReadOnlySpan<TokenKind> kinds,
+        out Token token,
         Int32 lookahead = 0)
     {
-        if(!Peek(type, lookahead))
+        if(!Peek(kinds, lookahead))
         {
-            token = null;
+            token = default;
             return false;
         }
 
-        token = Advance();
+        Advance(out token);
+        return true;
+    }
+    private Boolean Match(
+        TokenKind kind,
+        out Token token,
+        Int32 lookahead = 0)
+    {
+        if(!Peek(kind, lookahead))
+        {
+            token = default;
+            return false;
+        }
+
+        Advance(out token);
         return true;
     }
 

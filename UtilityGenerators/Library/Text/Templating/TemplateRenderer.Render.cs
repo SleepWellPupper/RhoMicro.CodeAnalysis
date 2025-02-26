@@ -19,7 +19,7 @@ internal partial struct TemplateRenderer
         var ctx = new TemplateRenderer(stackalloc Char[2048], stackalloc Char[64], cancellationToken);
         try
         {
-            template.Render(ref ctx, body);
+            template.Render(ref ctx, body, cancellationToken);
         } finally
         {
             ctx.Dispose();
@@ -32,7 +32,7 @@ internal partial struct TemplateRenderer
 
     public void Render(params ReadOnlySpan<Char> value)
     {
-        ThrowIfCancellationRequested();
+        _cancellationToken.ThrowIfCancellationRequested();
 
         // If there is no indentation requested, we omit any and all checks for
         // newlines and splitting at newlines.
@@ -54,13 +54,14 @@ internal partial struct TemplateRenderer
         // order to split the value, we must track the start and length (via i)
         // of the current span examined. The currently examined span is a line
         // beginning with a non-newline and optionally followed by any number of
-        // empty newlines.
-        var precededByNewline = _buffer.Span is [.., '\n'] or [.., '\r', '\n'];
+        // empty newlines. We treat an empty buffer as if it contained a single
+        // newline. 
+        var precededByNewline = _buffer.Span is [] or [.., '\n'] or [.., '\r', '\n'];
         var start = 0;
         var i = 0;
         for(; i < value.Length; i++)
         {
-            ThrowIfCancellationRequested();
+            _cancellationToken.ThrowIfCancellationRequested();
 
             var newlineCharacterCount =
                 value[i] == '\n'
@@ -97,7 +98,7 @@ internal partial struct TemplateRenderer
 
             // The next character will not be preceded by a newline, so we unset
             // the flag.
-            precededByNewline = false; 
+            precededByNewline = false;
         }
 
         // We add the remaining characters.
@@ -123,11 +124,8 @@ internal partial struct TemplateRenderer
         => Render(in value, EmptyTemplate.Instance);
     public void Render<T, TBody>(in T value, in TBody body)
         where T : ITemplate
-        where TBody : ITemplate
-    {
-        ThrowIfCancellationRequested();
-        value.Render(ref this, body);
-    }
+        where TBody : ITemplate 
+        => value.Render(ref this, body, _cancellationToken);
     public void Render<T>(in T value, RenderFragment fragment)
         where T : ITemplate
         => Render(in value, new RenderFragmentAdapter(fragment));

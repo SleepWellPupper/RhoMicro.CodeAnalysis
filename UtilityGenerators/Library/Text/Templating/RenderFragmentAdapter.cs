@@ -11,7 +11,11 @@
 #endif
 internal readonly struct RenderFragmentAdapter(RenderFragment fragment) : ITemplate
 {
-    public void Render<TBody>(ref TemplateRenderer renderer, TBody body)
+    public void Render<TBody>(ref TemplateRenderer renderer, TBody body, CancellationToken cancellationToken)
         where TBody : ITemplate
-        => fragment.Invoke(ref renderer);
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        fragment.Invoke(ref renderer, cancellationToken);
+    }
 }

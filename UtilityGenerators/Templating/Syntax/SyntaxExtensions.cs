@@ -6,30 +6,74 @@ using RhoMicro.CodeAnalysis.Templating.Syntax.Visitors;
 
 internal static class SyntaxExtensions
 {
-    public static String ToAstString<TSyntax>(this TSyntax syntax, CancellationToken ct = default)
+    public static TokenSpans GetSyntaxSpans<TSyntax>(this TSyntax syntax, CancellationToken ct)
         where TSyntax : ISyntax
     {
         ct.ThrowIfCancellationRequested();
 
-        var builder = new TreeStringBuilder(ct);
+        var visitor = new SyntaxSpansCalculatingVisitor(ct);
+        syntax.Accept(visitor);
+        var result = visitor.GetSpans();
+
+        return result;
+    }
+    public static String ToCommentDisplayTreeString<TSyntax>(this TSyntax syntax, CancellationToken ct)
+        where TSyntax : ISyntax
+    {
+        ct.ThrowIfCancellationRequested();
+
+        var builder = new CommentDisplayTreeStringBuilder(ct);
         syntax.Accept(builder);
         var result = builder.ToString();
 
         return result;
     }
-    public static Int32 CountTokens<TSyntax>(this TSyntax syntax, CancellationToken ct = default)
+    public static String ToDisplayTreeString<TSyntax>(this TSyntax syntax, CancellationToken ct)
         where TSyntax : ISyntax
     {
         ct.ThrowIfCancellationRequested();
 
-        var counter = new TokenCounter(ct);
+        var builder = new DisplayTreeStringBuilder(ct);
+        syntax.Accept(builder);
+        var result = builder.ToString();
+
+        return result;
+    }
+    public static String ToCommentXmlTreeString<TSyntax>(this TSyntax syntax, CancellationToken ct)
+        where TSyntax : ISyntax
+    {
+        ct.ThrowIfCancellationRequested();
+
+        var builder = new CommentXmlTreeStringBuilder(ct);
+        syntax.Accept(builder);
+        var result = builder.ToString();
+
+        return result;
+    }
+    public static String ToXmlTreeString<TSyntax>(this TSyntax syntax, CancellationToken ct)
+        where TSyntax : ISyntax
+    {
+        ct.ThrowIfCancellationRequested();
+
+        var builder = new XmlTreeStringBuilder(ct);
+        syntax.Accept(builder);
+        var result = builder.ToString();
+
+        return result;
+    }
+    public static Int32 CountTokens<TSyntax>(this TSyntax syntax, CancellationToken ct)
+        where TSyntax : ISyntax
+    {
+        ct.ThrowIfCancellationRequested();
+
+        var counter = new TokenCountingVisitor(ct);
         syntax.Accept(counter);
         var result = counter.Count;
 
         return result;
     }
     [Conditional("DEBUG")]
-    public static void DebugValidate<TSyntax>(this TSyntax syntax, CancellationToken ct = default)
+    public static void DebugValidate<TSyntax>(this TSyntax syntax, CancellationToken ct)
         where TSyntax : ISyntax
     {
         ct.ThrowIfCancellationRequested();
@@ -37,7 +81,7 @@ internal static class SyntaxExtensions
         var counter = new DebugTokenValidator(ct);
         syntax.Accept(counter);
     }
-    public static void Validate<TSyntax>(this TSyntax syntax, CancellationToken ct = default)
+    public static void Validate<TSyntax>(this TSyntax syntax, CancellationToken ct)
         where TSyntax : ISyntax
     {
         ct.ThrowIfCancellationRequested();

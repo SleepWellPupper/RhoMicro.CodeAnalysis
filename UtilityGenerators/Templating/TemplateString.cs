@@ -27,7 +27,7 @@ using Microsoft.CodeAnalysis.Text;
 /// single-line string literal; any newlines encountered may be treated as if on
 /// the same line as the starting character.
 /// </param>
-internal sealed record TemplateString(String Text, String Path, SourcePosition Start, Boolean IsMultiline)
+internal sealed record TemplateString(TemplateSourceText Text, String Path, SourcePosition Start, Boolean IsMultiline)
 {
     /// <summary>
     /// Creates a new template string from the syntax token provided. The token

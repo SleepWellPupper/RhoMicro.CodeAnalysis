@@ -3,7 +3,6 @@ namespace RhoMicro.CodeAnalysis.Tests.Templating;
 
 using System;
 
-using RhoMicro.CodeAnalysis.Templating;
 using RhoMicro.CodeAnalysis.Templating.Syntax;
 using RhoMicro.CodeAnalysis.Templating.Syntax.Visitors;
 

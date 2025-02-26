@@ -5,11 +5,16 @@ using System.Threading;
 
 using RhoMicro.CodeAnalysis.Library.Models.Collections;
 using RhoMicro.CodeAnalysis.Library.Text.SourceTexts;
+using RhoMicro.CodeAnalysis.Templating;
+using RhoMicro.CodeAnalysis.Templating.Syntax;
+using RhoMicro.CodeAnalysis.Templating.Syntax.Visitors;
 
 [NonEquatable]
-internal sealed partial class TreeStringBuilder(CancellationToken ct = default) : ISyntaxVisitor
+internal abstract partial class TreeStringBuilder<TSelf>(CancellationToken ct)
+    : ISyntaxVisitor
+    where TSelf : TreeStringBuilder<TSelf>
 {
-    private readonly IndentedStringBuilder _builder = new(
+    protected IndentedStringBuilder Builder { get; } = new(
         IndentedStringBuilderOptions.Default with
         {
             PrependMarkerComment = false,
@@ -17,323 +22,87 @@ internal sealed partial class TreeStringBuilder(CancellationToken ct = default) 
             DefaultIndentation = ' ',
             NewLine = '\n'
         });
+    protected CancellationToken Ct { get; } = ct;
 
-    public override String ToString() => _builder.ToString();
+    public override String ToString() => Builder.ToString();
 
-    private void Append<TChildSyntax>(String production, EquatableList<TChildSyntax> children, Boolean appendNewLine = true)
+    protected void Append<TChildSyntax>(String production, EquatableList<TChildSyntax> children, Boolean appendNewLine = true)
         where TChildSyntax : ISyntax
     {
-        ct.ThrowIfCancellationRequested();
+        Ct.ThrowIfCancellationRequested();
 
         Append(
             production,
-            static (@this, t) =>
+            static (@this, children) =>
             {
-                t.ct.ThrowIfCancellationRequested();
+                @this.Ct.ThrowIfCancellationRequested();
 
-                foreach(var child in t.children)
+                foreach(var child in children)
                 {
-                    t.ct.ThrowIfCancellationRequested();
+                    @this.Ct.ThrowIfCancellationRequested();
                     child.Accept(@this);
                 }
             },
-            (ct, children),
+            children,
             appendNewLine);
     }
-    private void Append<TChildSyntax>(String production, TChildSyntax child, Boolean appendNewLine = true)
-        where TChildSyntax : ISyntax
+    protected void Append(String production, ISyntax? child1 = null, ISyntax? child2 = null, ISyntax? child3 = null, ISyntax? child4 = null, ISyntax? child5 = null, Boolean appendNewLine = true)
     {
-        ct.ThrowIfCancellationRequested();
+        Ct.ThrowIfCancellationRequested();
 
         Append(
             production,
-            static (@this, t) =>
+            static (@this, children) =>
             {
-                t.ct.ThrowIfCancellationRequested();
+                @this.Ct.ThrowIfCancellationRequested();
 
-                t.child.Accept(@this);
+                children[0]?.Accept(@this);
+                children[1]?.Accept(@this);
+                children[2]?.Accept(@this);
+                children[3]?.Accept(@this);
+                children[4]?.Accept(@this);
             },
-            (ct, child),
+            new[] { child1, child2, child3, child4, child5 },
             appendNewLine);
     }
-    private void Append<TChildSyntax1, TChildSyntax2>(String production, TChildSyntax1 child1, TChildSyntax2 child2)
-        where TChildSyntax1 : ISyntax
-        where TChildSyntax2 : ISyntax
-    {
-        ct.ThrowIfCancellationRequested();
 
-        Append(
-            production,
-            static (@this, t) =>
-            {
-                t.ct.ThrowIfCancellationRequested();
+    protected abstract void Append(String production, Token token);
+    protected abstract void Append<TState>(String production, Action<TSelf, TState> body, TState state, Boolean appendNewLine = true);
+    protected abstract void Append(String production, Boolean appendNewLine = true);
 
-                t.child1.Accept(@this);
-                t.child2.Accept(@this);
-            },
-            (ct, child1, child2));
-    }
-    private void Append<TChildSyntax1, TChildSyntax2, TChildSyntax3>(String production, TChildSyntax1 child1, TChildSyntax2 child2, TChildSyntax3 child3)
-        where TChildSyntax1 : ISyntax
-        where TChildSyntax2 : ISyntax
-        where TChildSyntax3 : ISyntax
-    {
-        ct.ThrowIfCancellationRequested();
-
-        Append(
-            production,
-            static (@this, t) =>
-            {
-                t.ct.ThrowIfCancellationRequested();
-
-                t.child1.Accept(@this);
-                t.child2.Accept(@this);
-                t.child3.Accept(@this);
-            },
-            (ct, child1, child2, child3));
-    }
-    private void Append(String production, Token token)
-    {
-        ct.ThrowIfCancellationRequested();
-
-        Append(
-            production,
-            static (@this, t) =>
-            {
-                t.ct.ThrowIfCancellationRequested();
-
-                @this._builder
-                    .Append("<t:")
-                    .Append(t.type.ToString())
-                    .Append('>')
-                    .Append(t.lexeme.Replace("\r", "\\r").Replace("\n", "\\n").Replace("\t", "\\t"))
-                    .Append("</t:")
-                    .Append(t.type.ToString())
-                    .Append('>')
-                    .AppendLineCore();
-            },
-            (ct, type: token.Kind, lexeme: token.Lexeme.ToString()));
-    }
-    private void Append<TState>(String production, Action<TreeStringBuilder, TState> body, TState state, Boolean appendNewLine = true)
-    {
-        ct.ThrowIfCancellationRequested();
-
-        _builder
-            .Append("<s:")
-            .Append(production)
-            .AppendLine('>')
-            .IndentCore();
-
-        body.Invoke(this, state);
-
-        _builder
-            .Detent()
-            .Append("</s:")
-            .Append(production)
-            .AppendCore('>');
-
-        if(appendNewLine)
-            _builder.AppendLineCore();
-    }
-    private void Append(String production, Boolean appendNewLine = true)
-    {
-        ct.ThrowIfCancellationRequested();
-
-        _builder
-            .Append("<s:")
-            .Append(production)
-            .Append("/>")
-            .AppendLineCore();
-
-        if(appendNewLine)
-            _builder.AppendLineCore();
-    }
-
-    public void Visit(CodeBlockSyntax syntax)
-    {
-        ct.ThrowIfCancellationRequested();
-
-        Append(CodeBlockSyntax.Production, syntax.OpenCodeBlock, syntax.CodeBody, syntax.CloseCodeBlock);
-    }
-    public void Visit(CodeBodySyntax syntax)
-    {
-        ct.ThrowIfCancellationRequested();
-
-        Append(CodeBodySyntax.Production, syntax.Children);
-    }
-    public void Visit(CodeBodyChildSyntax syntax)
-    {
-        ct.ThrowIfCancellationRequested();
-
-        if(syntax.TryAsText(out var text))
-            text.Accept(this);
-        else if(syntax.TryAsRenderBlock(out var renderBlock))
-            renderBlock.Accept(this);
-    }
-    public void Visit(TemplateBlockSyntax syntax)
-    {
-        ct.ThrowIfCancellationRequested();
-
-        Append(TemplateBlockSyntax.Production, syntax.OpenTemplateBlock, syntax.TemplateBlockBody, syntax.CloseTemplateBlock);
-    }
-    public void Visit(TextSyntax syntax)
-    {
-        ct.ThrowIfCancellationRequested();
-
-        Append(TextSyntax.Production, syntax.Children);
-    }
-    public void Visit(NotEscapedTextSyntax syntax)
-    {
-        ct.ThrowIfCancellationRequested();
-
-        Append(NotEscapedTextSyntax.Production, syntax.Token);
-    }
-    public void Visit(RenderBlockSyntax syntax)
-    {
-        ct.ThrowIfCancellationRequested();
-
-        if(syntax.RenderBlockBody is { } body)
-            Append(RenderBlockSyntax.Production, syntax.RenderBlockHead, body);
-        else
-            Append(RenderBlockSyntax.Production, syntax.RenderBlockHead);
-    }
-    public void Visit(RenderBlockHeadSyntax syntax)
-    {
-        ct.ThrowIfCancellationRequested();
-
-        Append(RenderBlockHeadSyntax.Production, syntax.OpenRenderBlock, syntax.Text, syntax.CloseRenderBlock);
-    }
-    public void Visit(RenderBlockBodySyntax syntax)
-    {
-        ct.ThrowIfCancellationRequested();
-
-        if(syntax.Trivia is { } trivia)
-            Append(RenderBlockBodySyntax.Production, trivia, syntax.TemplateBlock);
-        else
-            Append(RenderBlockBodySyntax.Production, syntax.TemplateBlock);
-    }
-    public void Visit(EscapedOpenBlockSyntax syntax)
-    {
-        ct.ThrowIfCancellationRequested();
-
-        Append(
-        EscapedOpenBlockSyntax.Production,
-        static (@this, syntax) =>
-        {
-            syntax.OpenBlock.Accept(@this);
-            syntax.EscapeColon.Accept(@this);
-        },
-        syntax);
-    }
-    public void Visit(EscapedCloseBlockSyntax syntax)
-    {
-        ct.ThrowIfCancellationRequested();
-
-        Append(
-        EscapedCloseBlockSyntax.Production,
-        static (@this, syntax) =>
-        {
-            syntax.Colon.Accept(@this);
-            syntax.CloseBlock.Accept(@this);
-        },
-        syntax);
-    }
-    public void Visit(EscapeColonSyntax syntax)
-    {
-        ct.ThrowIfCancellationRequested();
-
-        Append(EscapeColonSyntax.Production, syntax.Token);
-    }
-    public void Visit(OpenRenderBlockSyntax syntax)
-    {
-        ct.ThrowIfCancellationRequested();
-
-        Append(OpenRenderBlockSyntax.Production, syntax.Token);
-    }
-    public void Visit(OpenCodeBlockSyntax syntax)
-    {
-        ct.ThrowIfCancellationRequested();
-
-        Append(OpenCodeBlockSyntax.Production, syntax.Token);
-    }
-    public void Visit(OpenTemplateBlockSyntax syntax)
-    {
-        ct.ThrowIfCancellationRequested();
-
-        Append(OpenTemplateBlockSyntax.Production, syntax.Token);
-    }
-    public void Visit(CloseRenderBlockSyntax syntax)
-    {
-        ct.ThrowIfCancellationRequested();
-
-        Append(CloseRenderBlockSyntax.Production, syntax.Token);
-    }
-    public void Visit(CloseCodeBlockSyntax syntax)
-    {
-        ct.ThrowIfCancellationRequested();
-
-        Append(CloseCodeBlockSyntax.Production, syntax.Token);
-    }
-    public void Visit(CloseTemplateBlockSyntax syntax)
-    {
-        ct.ThrowIfCancellationRequested();
-
-        Append(CloseTemplateBlockSyntax.Production, syntax.Token);
-    }
-    public void Visit(TriviaSyntax syntax)
-    {
-        ct.ThrowIfCancellationRequested();
-
-        Append(TriviaSyntax.Production, syntax.Token);
-    }
-    public void Visit(BlockSequenceSyntax syntax)
-    {
-        ct.ThrowIfCancellationRequested();
-
-        Append(
-        BlockSequenceSyntax.Production,
-        static (@this, t) =>
-        {
-            t.ct.ThrowIfCancellationRequested();
-
-            t.syntax.Block.Accept(@this);
-            foreach(var child in t.syntax.Blocks)
-            {
-                t.ct.ThrowIfCancellationRequested();
-
-                child.Accept(@this);
-            }
-        },
-        (ct, syntax));
-    }
-    public void Visit(TriviaBlockSyntax syntax)
-    {
-        ct.ThrowIfCancellationRequested();
-
-        Append(TriviaBlockSyntax.Production, syntax.Trivia, syntax.Block);
-    }
-    public void Visit(EmptyBlockSyntax syntax)
-    {
-        ct.ThrowIfCancellationRequested();
-
-        Append(EmptyBlockSyntax.Production, syntax.OpenBlock, syntax.CloseBlock);
-    }
-    public void Visit(TemplateBlockBodySyntax syntax)
-    {
-        ct.ThrowIfCancellationRequested();
-
-        Append(TemplateBlockBodySyntax.Production, syntax.Children);
-    }
-    public void Visit(NotEmptyTemplateSyntax syntax)
-    {
-        ct.ThrowIfCancellationRequested();
-
-        Append(NotEmptyTemplateSyntax.Production, syntax.TemplateBlockBody);
-    }
-    public void Visit(EmptyTemplateSyntax syntax)
-    {
-        ct.ThrowIfCancellationRequested();
-
-        Append(EmptyTemplateSyntax.Production);
-    }
+    public void Visit(CodeBlockSyntax syntax) => Append(CodeBlockSyntax.Production, syntax.LeadingTrivia, syntax.OpenCodeBlock, syntax.CodeBody, syntax.CloseCodeBlock, syntax.TrailingTrivia);
+    public void Visit(CodeBlockBodySyntax syntax) => Append(CodeBlockBodySyntax.Production, syntax.Children);
+    public void Visit(CodeBlockBodyChildSyntax syntax) => Append(CodeBlockBodyChildSyntax.Production, syntax.Child);
+    public void Visit(TemplateBlockSyntax syntax) => Append(TemplateBlockSyntax.Production, syntax.LeadingTrivia, syntax.OpenTemplateBlock, syntax.TemplateBlockBody, syntax.CloseTemplateBlock, syntax.TrailingTrivia);
+    public void Visit(TextSyntax syntax) => Append(TextSyntax.Production, syntax.Children);
+    public void Visit(NotEscapedTextSyntax syntax) => Append(NotEscapedTextSyntax.Production, syntax.Children);
+    public void Visit(RenderBlockSyntax syntax) => Append(RenderBlockSyntax.Production, syntax.RenderBlockHead, syntax.RenderBlockBody);
+    public void Visit(RenderBlockHeadSyntax syntax) => Append(RenderBlockHeadSyntax.Production, syntax.OpenRenderBlock, syntax.Text, syntax.CloseRenderBlock);
+    public void Visit(RenderBlockBodySyntax syntax) => Append(RenderBlockBodySyntax.Production, syntax.RenderBlockTrivia, syntax.TemplateBlock);
+    public void Visit(EscapedOpenBlockSyntax syntax) => Append(EscapedOpenBlockSyntax.Production, syntax.OpenBlock, syntax.EscapeColon);
+    public void Visit(EscapedCloseBlockSyntax syntax) => Append(EscapedCloseBlockSyntax.Production, syntax.EscapeColon, syntax.CloseBlock);
+    public void Visit(EscapeColonSyntax syntax) => Append(EscapeColonSyntax.Production, syntax.Token);
+    public void Visit(OpenRenderBlockSyntax syntax) => Append(OpenRenderBlockSyntax.Production, syntax.Token);
+    public void Visit(OpenCodeBlockSyntax syntax) => Append(OpenCodeBlockSyntax.Production, syntax.Token);
+    public void Visit(OpenTemplateBlockSyntax syntax) => Append(OpenTemplateBlockSyntax.Production, syntax.Token);
+    public void Visit(CloseRenderBlockSyntax syntax) => Append(CloseRenderBlockSyntax.Production, syntax.Token);
+    public void Visit(CloseCodeBlockSyntax syntax) => Append(CloseCodeBlockSyntax.Production, syntax.Token);
+    public void Visit(CloseTemplateBlockSyntax syntax) => Append(CloseTemplateBlockSyntax.Production, syntax.Token);
+    public void Visit(EmptyBlockSyntax syntax) => Append(EmptyBlockSyntax.Production, syntax.OpenBlock, syntax.CloseBlock);
+    public void Visit(TemplateBlockBodySyntax syntax) => Append(TemplateBlockBodySyntax.Production, syntax.Children);
+    public void Visit(NotEmptyTemplateSyntax syntax) => Append(NotEmptyTemplateSyntax.Production, syntax.TemplateBlockBody, appendNewLine: false);
+    public void Visit(EmptyTemplateSyntax syntax) => Append(EmptyTemplateSyntax.Production, appendNewLine: false);
+    public void Visit(CloseBlockSyntax syntax) => Append(CloseBlockSyntax.Production, syntax.Child);
+    public void Visit(EscapedTextSyntax syntax) => Append(EscapedTextSyntax.Production, syntax.Child);
+    public void Visit(LeadingTriviaSyntax syntax) => Append(LeadingTriviaSyntax.Production, syntax.Whitespaces);
+    public void Visit(NewlineSyntax syntax) => Append(NewlineSyntax.Production, syntax.Token);
+    public void Visit(NotEscapedTextChildSyntax syntax) => Append(NotEscapedTextChildSyntax.Production, syntax.Child);
+    public void Visit(NotNewlineSyntax syntax) => Append(NotNewlineSyntax.Production, syntax.Token);
+    public void Visit(OpenBlockSyntax syntax) => Append(OpenBlockSyntax.Production, syntax.Child);
+    public void Visit(RenderBlockTriviaSyntax syntax) => Append(RenderBlockTriviaSyntax.Production, syntax.Newline);
+    public void Visit(TemplateBlockBodyChildSyntax syntax) => Append(TemplateBlockBodyChildSyntax.Production, syntax.Child);
+    public void Visit(TemplateSyntax syntax) => Append(TemplateSyntax.Production, syntax.Child);
+    public void Visit(TextChildSyntax syntax) => Append(TextChildSyntax.Production, syntax.Child);
+    public void Visit(TrailingTriviaSyntax syntax) => Append(TrailingTriviaSyntax.Production, syntax.Newline);
+    public void Visit(WhitespacesSyntax syntax) => Append(WhitespacesSyntax.Production, syntax.Token);
 }

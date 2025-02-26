@@ -26,11 +26,6 @@ internal ref partial struct TemplateRenderer : IDisposable
     public ReadOnlySpan<Char> Indentation => _indentationBuffer.Span;
 
     /// <summary>
-    /// Invokes <see cref="CancellationToken.ThrowIfCancellationRequested"/> on
-    /// <see cref="CancellationToken"/>.
-    /// </summary>
-    public void ThrowIfCancellationRequested() => _cancellationToken.ThrowIfCancellationRequested();
-    /// <summary>
     /// Adds indentation to the context.
     /// </summary>
     /// <param name="indentation">

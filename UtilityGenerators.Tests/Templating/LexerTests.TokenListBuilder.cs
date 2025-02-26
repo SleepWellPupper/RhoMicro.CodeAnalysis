@@ -2,6 +2,7 @@
 namespace RhoMicro.CodeAnalysis.Tests.Templating;
 
 using System;
+using System.Runtime.CompilerServices;
 
 using RhoMicro.CodeAnalysis.Library.Models;
 using RhoMicro.CodeAnalysis.Library.Models.Collections;
@@ -9,23 +10,13 @@ using RhoMicro.CodeAnalysis.Templating;
 
 public partial class LexerTests
 {
-    private sealed class TokenListBuilder(TemplateString templateString)
+    private sealed class TokenListBuilder(TemplateString templateString, Int32 newlineLength)
     {
-        private TokenKind? _currentKind;
-        private Int32 _startLine = templateString.Start.Line;
-        private Int32 _startCharacter = templateString.Start.Character;
-        private Int32 _currentLine = templateString.Start.Line;
-        private Int32 _currentCharacter = templateString.Start.Character;
-        private Int32 _startIndex;
-        private Int32 _currentIndex;
-
         private readonly List<Token> _tokens = [];
 
         public EquatableList<Token> Build(in ModelCreationContext ctx)
         {
             ctx.ThrowIfCancellationRequested();
-
-            FlushCore();
 
             var result = ctx.CollectionFactory.CreateList<Token>();
 
@@ -38,105 +29,113 @@ public partial class LexerTests
             return result;
         }
 
-        private void FlushCore()
-        {
-            if(_currentKind is { } currentKind)
-            {
-                if(currentKind is TokenKind.Trivia && _whitespaceCharacters > 0)
-                {
-                    _ = Newline();
-                    _currentCharacter = _whitespaceCharacters - 1;
-                    _currentIndex += _whitespaceCharacters;
-                }
+        public TokenListBuilder OpenCodeBlock() => Token(TokenKind.OpenCodeBlock, 2);
+        public TokenListBuilder CloseCodeBlock() => Token(TokenKind.CloseCodeBlock, 2);
+        public TokenListBuilder OpenRenderBlock() => Token(TokenKind.OpenRenderBlock, 2);
+        public TokenListBuilder CloseRenderBlock() => Token(TokenKind.CloseRenderBlock, 2);
+        public TokenListBuilder OpenTemplateBlock() => Token(TokenKind.OpenTemplateBlock, 2);
+        public TokenListBuilder CloseTemplateBlock() => Token(TokenKind.CloseTemplateBlock, 2);
 
-                var token = new Token(
-                            currentKind,
-                            templateString,
-                            new(
-                                new(_startIndex, _currentIndex - _startIndex),
-                                new(
-                                    new(_startLine, _startCharacter),
-                                    new(_currentLine, _currentCharacter))));
+        public TokenListBuilder NotNewline(Int32 length) => Token(TokenKind.NotNewline, length);
 
-                _tokens.Add(token);
-
-                _currentCharacter++;
-                _currentKind = null;
-
-                if(currentKind is TokenKind.Trivia && _whitespaceCharacters == 0)
-                    _ = Newline();
-            }
-
-            _startIndex = _currentIndex;
-            _startLine = _currentLine;
-            _startCharacter = _currentCharacter;
-            _whitespaceCharacters = 0;
-        }
-
-        public TokenListBuilder OpenCodeBlock() => Kind(TokenKind.OpenCodeBlock).Length(2);
-        public TokenListBuilder CloseCodeBlock() => Kind(TokenKind.CloseCodeBlock).Length(2);
-        public TokenListBuilder OpenRenderBlock() => Kind(TokenKind.OpenRenderBlock).Length(2);
-        public TokenListBuilder CloseRenderBlock() => Kind(TokenKind.CloseRenderBlock).Length(2);
-        public TokenListBuilder OpenTemplateBlock() => Kind(TokenKind.OpenTemplateBlock).Length(2);
-        public TokenListBuilder CloseTemplateBlock() => Kind(TokenKind.CloseTemplateBlock).Length(2);
-
-        public TokenListBuilder Text(Int32 length = 0) => Kind(TokenKind.Text).Length(length);
-
-        public TokenListBuilder Flush()
-        {
-            FlushCore();
-
-            return this;
-        }
-
-        public TokenListBuilder EscapedOpen(TokenKind kind) => Kind(kind).Length(2).Kind(TokenKind.EscapeColon).Length(1);
+        public TokenListBuilder EscapedOpen(TokenKind kind) => Token(kind, 2).Token(TokenKind.EscapeColon, 1);
         public TokenListBuilder EscapedOpen(Int32 kind) => EscapedOpen((TokenKind)kind);
-        public TokenListBuilder EscapedClose(TokenKind kind) => Kind(TokenKind.EscapeColon).Length(1).Kind(kind).Length(2);
+        public TokenListBuilder EscapedClose(TokenKind kind) => Token(TokenKind.EscapeColon, 1).Token(kind, 2);
         public TokenListBuilder EscapedClose(Int32 kind) => EscapedClose((TokenKind)kind);
 
-        public TokenListBuilder EscapedOpenCodeBlock() => Kind(TokenKind.OpenCodeBlock).Length(2).Kind(TokenKind.EscapeColon).Length(1);
-        public TokenListBuilder EscapedCloseCodeBlock() => Kind(TokenKind.EscapeColon).Length(1).Kind(TokenKind.CloseCodeBlock).Length(2);
-        public TokenListBuilder EscapedOpenRenderBlock() => Kind(TokenKind.OpenRenderBlock).Length(2).Kind(TokenKind.EscapeColon).Length(1);
-        public TokenListBuilder EscapedCloseRenderBlock() => Kind(TokenKind.EscapeColon).Length(1).Kind(TokenKind.CloseRenderBlock).Length(2);
-        public TokenListBuilder EscapedOpenTemplateBlock() => Kind(TokenKind.OpenTemplateBlock).Length(2).Kind(TokenKind.EscapeColon).Length(1);
-        public TokenListBuilder EscapedCloseTemplateBlock() => Kind(TokenKind.EscapeColon).Length(1).Kind(TokenKind.CloseTemplateBlock).Length(2);
+        public TokenListBuilder EscapedOpenCodeBlock() => Token(TokenKind.OpenCodeBlock, 2).Token(TokenKind.EscapeColon, 1);
+        public TokenListBuilder EscapedCloseCodeBlock() => Token(TokenKind.EscapeColon, 1).Token(TokenKind.CloseCodeBlock, 2);
+        public TokenListBuilder EscapedOpenRenderBlock() => Token(TokenKind.OpenRenderBlock, 2).Token(TokenKind.EscapeColon, 1);
+        public TokenListBuilder EscapedCloseRenderBlock() => Token(TokenKind.EscapeColon, 1).Token(TokenKind.CloseRenderBlock, 2);
+        public TokenListBuilder EscapedOpenTemplateBlock() => Token(TokenKind.OpenTemplateBlock, 2).Token(TokenKind.EscapeColon, 1);
+        public TokenListBuilder EscapedCloseTemplateBlock() => Token(TokenKind.EscapeColon, 1).Token(TokenKind.CloseTemplateBlock, 2);
 
-        private Int32 _whitespaceCharacters;
+        public TokenListBuilder Whitespaces(Int32 length) => Token(TokenKind.Whitespaces, length);
+        public TokenListBuilder Newline(Int32 length) => Token(TokenKind.Newline, length);
 
-        public TokenListBuilder Trivia(Int32 whitespaceLength)
-        {
-            _ = Kind(TokenKind.Trivia).Length(1);
-            _whitespaceCharacters = whitespaceLength;
-            return this;
-        }
+        public TokenListBuilder Eof() => Token(TokenKind.Eof, 0);
 
-        public TokenListBuilder Eof() => Kind(TokenKind.Eof);
-        public TokenListBuilder Kind(Int32 kind) => Kind((TokenKind)kind);
-        public TokenListBuilder Kind(TokenKind kind)
+        public TokenListBuilder Token(Int32 kind, Int32 length) => Token((TokenKind)kind, length);
+        public TokenListBuilder Token(TokenKind kind, Int32 length)
         {
-            FlushCore();
+            var spans = _tokens is [..,
+            {
+                Spans:
+                {
+                    SourceSpan.End:
+                    {
+                        Line: var previousEndLine,
+                        Character: var previousEndCharacter
+                    },
+                    TemplateSpan:
+                    {
+                        Index: var previousIndex,
+                        Length: var previousLength
+                    },
+                    NewlineAwareTemplateSpan:
+                    {
+                        Index: var previousNewlineAwareIndex,
+                        Length: var previousNewlineAwareLength
+                    }
+                }, Kind: var previousKind
+            }]
+                ? new TokenSpans(
+                    TemplateSpan: new(
+                        index: previousIndex + previousLength,
+                        length: length),
+                    NewlineAwareTemplateSpan: new(
+                        index: previousNewlineAwareIndex+previousNewlineAwareLength,
+                        length: kind is TokenKind.Newline
+                            ? newlineLength
+                            : length),
+                    SourceSpan: new(
+                        start: new(
+                            line:
+                                kind is TokenKind.Eof
+                                ? previousEndLine
+                                : previousKind is TokenKind.Newline
+                                ? previousEndLine + 1
+                                : previousEndLine,
+                            character:
+                                kind is TokenKind.Eof
+                                ? previousEndCharacter + 1
+                                : previousKind is TokenKind.Newline
+                                ? templateString.Start.Character
+                                : previousEndCharacter + 1),
+                        end: new(
+                            line:
+                                kind is TokenKind.Eof
+                                ? previousEndLine
+                                : previousKind is TokenKind.Newline
+                                ? previousEndLine + 1
+                                : previousEndLine,
+                            character:
+                                kind is TokenKind.Eof
+                                ? previousEndCharacter + 1
+                                : previousKind is TokenKind.Newline
+                                ? templateString.Start.Character + length - 1
+                                : previousEndCharacter + length)))
+                : new TokenSpans(
+                    TemplateSpan: new(
+                        index: 0,
+                        length: length),
+                    NewlineAwareTemplateSpan: new(
+                        index: 0,
+                        length: kind is TokenKind.Newline
+                            ? newlineLength
+                            : length),
+                    SourceSpan: new(
+                        start: new(
+                            line: templateString.Start.Line,
+                            character: templateString.Start.Character),
+                        end: new(
+                            line: templateString.Start.Line,
+                            character: kind is TokenKind.Eof
+                                ? templateString.Start.Character
+                                : templateString.Start.Character + length - 1)));
 
-            _currentKind = kind;
+            _tokens.Add(new Token(kind, templateString, spans));
 
-            return this;
-        }
-        public TokenListBuilder Length(Int32 length)
-        {
-            _currentIndex = _startIndex + length;
-            _currentCharacter += length - 1;
-            return this;
-        }
-        public TokenListBuilder Newline(Int32 count = 1)
-        {
-            _currentLine += count;
-            _currentCharacter = templateString.Start.Character;
-            return this;
-        }
-        public TokenListBuilder Character(Func<Int32, Int32> characterFactory) =>
-            Character(characterFactory.Invoke(_currentCharacter));
-        public TokenListBuilder Character(Int32 character)
-        {
-            _currentCharacter = character;
             return this;
         }
 

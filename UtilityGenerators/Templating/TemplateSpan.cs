@@ -26,6 +26,12 @@ internal readonly record struct TemplateSpan
         Index = index;
         Length = length;
     }
+
+    /// <summary>
+    /// Gets an empty template span.
+    /// </summary>
+    public static TemplateSpan Empty { get; } = default;
+
     /// <summary>
     /// Gets the index (0-based) of the span in the template string.
     /// </summary>
@@ -36,4 +42,19 @@ internal readonly record struct TemplateSpan
     public Int32 Length { get; }
 
     public override String ToString() => $"({Index},{Length})";
+
+    /// <summary>
+    /// Deconstructs the instance into its constituents.
+    /// </summary>
+    /// <param name="index">
+    /// The value for <see cref="Index"/>.
+    /// </param>
+    /// <param name="length">
+    /// The value for <see cref="Length"/>.
+    /// </param>
+    public void Deconstruct(out Int32 index, out Int32 length)
+    {
+        index = Index;
+        length = Length;
+    }
 }

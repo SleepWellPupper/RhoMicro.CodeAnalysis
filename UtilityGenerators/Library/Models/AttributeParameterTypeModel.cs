@@ -29,7 +29,11 @@ internal sealed record AttributeParameterTypeModel(
         // value type?
         if(type.IsValueType)
         {
-            kind = AttributeParameterTypeKind.ValueType;
+            // enum?
+            kind = type.BaseType is { SpecialType: SpecialType.System_Enum }
+                ? AttributeParameterTypeKind.Enum
+                : AttributeParameterTypeKind.ValueType;
+
             displayString = elementDisplayString = ToDisplayString(type);
         }
         // type?
@@ -60,7 +64,11 @@ internal sealed record AttributeParameterTypeModel(
                 // value type nullable array?
                 if(elementType.IsValueType)
                 {
-                    kind = AttributeParameterTypeKind.ValueTypeNullableArray;
+                    // enum nullable array?
+                    kind = elementType.BaseType is { SpecialType: SpecialType.System_Enum }
+                        ? AttributeParameterTypeKind.EnumNullableArray
+                        : AttributeParameterTypeKind.ValueTypeNullableArray;
+
                     displayString = ToArrayDisplayString(elementType, nullable: true);
                     elementDisplayString = ToDisplayString(elementType);
                 }
@@ -107,7 +115,11 @@ internal sealed record AttributeParameterTypeModel(
                 // value type array?
                 if(elementType.IsValueType)
                 {
-                    kind = AttributeParameterTypeKind.ValueTypeArray;
+                    // enum nullable array?
+                    kind = elementType.BaseType is { SpecialType: SpecialType.System_Enum }
+                        ? AttributeParameterTypeKind.EnumArray
+                        : AttributeParameterTypeKind.ValueTypeArray;
+
                     displayString = ToArrayDisplayString(elementType, nullable: false);
                     elementDisplayString = ToDisplayString(elementType);
                 }
@@ -168,9 +180,9 @@ internal sealed record AttributeParameterTypeModel(
 
         var kindString = kind.ToStringFast();
         var nullableDisplayString =
-            kind.HasFlagsFast(AttributeParameterTypeKind.NullableArray)
-            || !kind.HasFlagsFast(AttributeParameterTypeKind.Array)
-            && kind.HasFlagsFast(AttributeParameterTypeKind.Nullable)
+            kind.HasAnyFlagFast(AttributeParameterTypeKind.NullableArray)
+            || !kind.HasAnyFlagFast(AttributeParameterTypeKind.Array)
+            && kind.HasAnyFlagFast(AttributeParameterTypeKind.Nullable)
             ? displayString
             : $"{displayString}?";
 

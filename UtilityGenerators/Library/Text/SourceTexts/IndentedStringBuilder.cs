@@ -1,6 +1,7 @@
 ﻿namespace RhoMicro.CodeAnalysis.Library.Text.SourceTexts;
 
 using System.Collections.Immutable;
+using System.Globalization;
 using System.Text;
 
 #if RHOMICRO_CODEANALYSIS_UTILITYGENERATORS
@@ -71,18 +72,19 @@ internal partial class IndentedStringBuilder
         }
     }
     public Int32 OpenBlocks => _blocks.Count;
+    public Int32 IndentedColumns { get; private set; }
     #endregion
     #region Open Block
     public void OpenBlockCore(Block block)
     {
-        var delimiter = block.OpeningDelimiter;
-
         if(block.PlaceDelimitersOnNewLine && !LastWasNewLine)
             AppendSingleLineCore();
 
-        AppendCore(delimiter);
+        AppendCore(block.OpeningDelimiter);
 
         _blocks.Push(block);
+
+        IndentedColumns += block.Indentation.GetValueOrDefault().Length;
 
         var indentation = block.Indentation ?? Options.DefaultIndentation;
         _indentations.Push(indentation);
@@ -144,6 +146,8 @@ internal partial class IndentedStringBuilder
 
         AppendCore(block.ClosingDelimiter);
         _ = _blocks.Pop();
+
+        IndentedColumns -= block.Indentation.GetValueOrDefault().Length;
     }
     public void CloseAllBlocksCore()
     {
@@ -295,6 +299,41 @@ internal partial class IndentedStringBuilder
 
         return this;
     }
+    #endregion
+    #region Append Numbers
+    public IndentedStringBuilder Append(SByte value) => Append(value.ToString(CultureInfo.InvariantCulture));
+    public IndentedStringBuilder AppendLine(SByte value) => AppendLine(value.ToString(CultureInfo.InvariantCulture));
+    public void AppendCore(SByte value) => AppendCore(value.ToString(CultureInfo.InvariantCulture));
+    public IndentedStringBuilder Append(Int16 value) => Append(value.ToString(CultureInfo.InvariantCulture));
+    public IndentedStringBuilder AppendLine(Int16 value) => AppendLine(value.ToString(CultureInfo.InvariantCulture));
+    public void AppendCore(Int16 value) => AppendCore(value.ToString(CultureInfo.InvariantCulture));
+    public IndentedStringBuilder Append(Int32 value) => Append(value.ToString(CultureInfo.InvariantCulture));
+    public IndentedStringBuilder AppendLine(Int32 value) => AppendLine(value.ToString(CultureInfo.InvariantCulture));
+    public void AppendCore(Int32 value) => AppendCore(value.ToString(CultureInfo.InvariantCulture));
+    public IndentedStringBuilder Append(Int64 value) => Append(value.ToString(CultureInfo.InvariantCulture));
+    public IndentedStringBuilder AppendLine(Int64 value) => AppendLine(value.ToString(CultureInfo.InvariantCulture));
+    public void AppendCore(Int64 value) => AppendCore(value.ToString(CultureInfo.InvariantCulture));
+
+    public IndentedStringBuilder Append(Byte value) => Append(value.ToString(CultureInfo.InvariantCulture));
+    public IndentedStringBuilder AppendLine(Byte value) => AppendLine(value.ToString(CultureInfo.InvariantCulture));
+    public void AppendCore(Byte value) => AppendCore(value.ToString(CultureInfo.InvariantCulture));
+    public IndentedStringBuilder Append(UInt16 value) => Append(value.ToString(CultureInfo.InvariantCulture));
+    public IndentedStringBuilder AppendLine(UInt16 value) => AppendLine(value.ToString(CultureInfo.InvariantCulture));
+    public void AppendCore(UInt16 value) => AppendCore(value.ToString(CultureInfo.InvariantCulture));
+    public IndentedStringBuilder Append(UInt32 value) => Append(value.ToString(CultureInfo.InvariantCulture));
+    public IndentedStringBuilder AppendLine(UInt32 value) => AppendLine(value.ToString(CultureInfo.InvariantCulture));
+    public void AppendCore(UInt32 value) => AppendCore(value.ToString(CultureInfo.InvariantCulture));
+    public IndentedStringBuilder Append(UInt64 value) => Append(value.ToString(CultureInfo.InvariantCulture));
+    public IndentedStringBuilder AppendLine(UInt64 value) => AppendLine(value.ToString(CultureInfo.InvariantCulture));
+    public void AppendCore(UInt64 value) => AppendCore(value.ToString(CultureInfo.InvariantCulture));
+
+    public IndentedStringBuilder Append(Single value) => Append(value.ToString(CultureInfo.InvariantCulture));
+    public IndentedStringBuilder AppendLine(Single value) => AppendLine(value.ToString(CultureInfo.InvariantCulture));
+    public void AppendCore(Single value) => AppendCore(value.ToString(CultureInfo.InvariantCulture));
+
+    public IndentedStringBuilder Append(Double value) => Append(value.ToString(CultureInfo.InvariantCulture));
+    public IndentedStringBuilder AppendLine(Double value) => AppendLine(value.ToString(CultureInfo.InvariantCulture));
+    public void AppendCore(Double value) => AppendCore(value.ToString(CultureInfo.InvariantCulture));
     #endregion
     #region Append T
     private void AppendCoreNoIndentation<T>(T value)

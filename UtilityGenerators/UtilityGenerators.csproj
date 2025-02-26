@@ -12,7 +12,8 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<InternalsVisibleTo Include="RhoMicro.CodeAnalysis.UtilityGenerators.Tests" />		
+		<InternalsVisibleTo Include="RhoMicro.CodeAnalysis.UtilityGenerators.Tests" />
+		<InternalsVisibleTo Include="UtilityGenerators.Benchmarks" />
 	</ItemGroup>
 	
 	<PropertyGroup>
@@ -43,6 +44,10 @@
 	
 	<ItemGroup>
 		<None Remove=".editorconfig"></None>
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <None Remove="bin\Release\netstandard2.0\\RhoMicro.CodeAnalysis.UtilityGenerators.1.0.0.dll" />
 	</ItemGroup>
 
 	<ItemGroup>

@@ -16,5 +16,6 @@
 # Generators/JsonSchemaGenerator.Cli
 
 # Applications/TestApp
+# Applications/Project1
 # Applications/DslGenerator.TestApp
 # Applications/IndentedStringBuilderTestApp

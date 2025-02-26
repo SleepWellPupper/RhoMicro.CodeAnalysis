@@ -14,13 +14,13 @@ using System;
 /// <param name="Spans">
 /// The spans providing the tokens position in the template string.
 /// </param>
-internal sealed record Token(TokenKind Kind, TemplateString TemplateString, TokenSpans Spans)
+internal readonly record struct Token(TokenKind Kind, TemplateString TemplateString, TokenSpans Spans)
 {
     /// <summary>
-    /// Gets the tokens lexeme.
+    /// Gets the tokens lexeme from the <see cref="TokenSpans.TemplateSpan"/>.
     /// </summary>
-    public ReadOnlySpan<Char> Lexeme => Spans.TextSpan.Length > 0
-        ? TemplateString.Text.AsSpan(Spans.TextSpan.Index, Spans.TextSpan.Length)
+    public ReadOnlySpan<Char> Lexeme => Spans.TemplateSpan.Length > 0
+        ? TemplateString.Text.ToString().AsSpan(Spans.TemplateSpan.Index, Spans.TemplateSpan.Length)
         : [];
     /// <summary>
     /// Creates a new token for the <see cref="TokenKind.Eof"/> type.
@@ -32,15 +32,20 @@ internal sealed record Token(TokenKind Kind, TemplateString TemplateString, Toke
     /// The ending position of the template string, relative to its containing
     /// C# source text.
     /// </param>
+    /// <param name="newlineOffset">
+    /// The difference in length between the original template string and the
+    /// newline aware translation.
+    /// </param>
     /// <returns>
     /// A new eof token.
     /// </returns>
-    public static Token CreateEof(TemplateString templateString, SourcePosition endPosition) => new(
+    public static Token CreateEof(TemplateString templateString, SourcePosition endPosition, Int32 newlineOffset) => new(
         TokenKind.Eof,
         templateString,
-        new(new(templateString.Text.Length, 0), new(endPosition, endPosition)));
+        new(
+            TemplateSpan: new(templateString.Text.ToString().Length, 0),
+            NewlineAwareTemplateSpan: new(templateString.Text.ToString().Length + newlineOffset, 0),
+            new(endPosition, endPosition)));
     public override String ToString() =>
-        $"{Kind} '{Lexeme.ToString().Replace("\r", "\\r").Replace("\n", "\\n").Replace("\t", "\\t")}' (" +
-    $"{Spans.SourceSpan.Start.Line},{Spans.SourceSpan.Start.Character},{Spans.SourceSpan.End.Line},{Spans.SourceSpan.End.Character}) " +
-        $"({Spans.TextSpan.Index},{Spans.TextSpan.Length})";
+        $"{Kind} '{Lexeme.ToString().Replace("\r", "\\r").Replace("\n", "\\n").Replace("\t", "\\t")}' {Spans}";
 }

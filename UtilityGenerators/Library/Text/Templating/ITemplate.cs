@@ -17,6 +17,9 @@ internal interface ITemplate
     /// The body to render inside of the template. If the template
     /// implementation does not support bodies, the parameter is ignored.
     /// </param>
-    void Render<TBody>(ref TemplateRenderer renderer, TBody body)
+    /// <param name="cancellationToken">
+    /// The cancellation token used to request rendering of the component to be cancelled.
+    /// </param>
+    public void Render<TBody>(ref TemplateRenderer renderer, TBody body, CancellationToken cancellationToken)
         where TBody : ITemplate;
 }

@@ -10,7 +10,7 @@ internal sealed class EmptyTemplate : ITemplate
 {
     private EmptyTemplate() { }
     public static EmptyTemplate Instance { get; } = new();
-    public void Render<TBody>(ref TemplateRenderer context, TBody body)
-        where TBody : ITemplate
-    { }
+    public void Render<TBody>(ref TemplateRenderer context, TBody body, CancellationToken cancellationToken)
+        where TBody : ITemplate 
+        => cancellationToken.ThrowIfCancellationRequested();
 }

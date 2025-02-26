@@ -6,7 +6,8 @@
 		<OutputType>Exe</OutputType>
 		<RootNamespace>RhoMicro.CodeAnalysis.UtilityGenerators.Tests</RootNamespace>
 		<AssemblyName>RhoMicro.CodeAnalysis.UtilityGenerators.Tests</AssemblyName>
-		<TargetFramework>net8.0</TargetFramework>
+		<TargetFramework>net9.0</TargetFramework>
+		<EnforceExtendedAnalyzerRules>false</EnforceExtendedAnalyzerRules>
 		<!--
     To enable the Microsoft Testing Platform 'dotnet test' experience, add property:
       <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>

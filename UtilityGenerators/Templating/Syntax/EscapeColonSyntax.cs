@@ -1,5 +1,6 @@
 ﻿namespace RhoMicro.CodeAnalysis.Templating.Syntax;
 
+using RhoMicro.CodeAnalysis.Templating;
 using RhoMicro.CodeAnalysis.Templating.Syntax.Visitors;
 
 /// <summary>
@@ -12,7 +13,7 @@ internal sealed record EscapeColonSyntax : ISyntax
         ThrowHelpers.ThrowIfKindNotEqual(token, TokenKind.EscapeColon);
         Token = token;
     }
-    public const String Production = "colon";
+    public const String Production = "escape-colon";
     /// <summary>
     /// Gets the matched token.
     /// </summary>
@@ -20,5 +21,5 @@ internal sealed record EscapeColonSyntax : ISyntax
     public void Accept<TVisitor>(TVisitor visitor)
         where TVisitor : ISyntaxVisitor
         => visitor.Visit(this);
-    public override String ToString() => this.ToAstString();
+    public override String ToString() => this.ToXmlTreeString(CancellationToken.None);
 }
