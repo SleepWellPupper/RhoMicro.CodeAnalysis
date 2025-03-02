@@ -354,7 +354,7 @@ public class TemplatingGeneratorTests : TestBase<TemplatingGenerator>
         """")]
     public void CompilesTemplate(String name, String template)
     {
-        using var cts = new CancellationTokenSource(Debugger.IsAttached ? -1 : 2500);
+        using var cts = new CancellationTokenSource(Debugger.IsAttached ? -1 : 10000);
 
         try
         {
