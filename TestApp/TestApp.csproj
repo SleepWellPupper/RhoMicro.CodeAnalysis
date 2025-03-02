@@ -16,18 +16,6 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <Compile Include="..\UtilityGenerators\Templating\CodeSyntaxModel.cs" Link="CodeSyntaxModel.cs" />
-	  <Compile Include="..\UtilityGenerators\Templating\SourceSpanModel.cs" Link="SourceSpanModel.cs" />
-	  <Compile Include="..\UtilityGenerators\Templating\SyntaxKind.cs" Link="SyntaxKind.cs" />
-	  <Compile Include="..\UtilityGenerators\Templating\TemplateChildSyntaxModel.cs" Link="TemplateChildSyntaxModel.cs" />
-	  <Compile Include="..\UtilityGenerators\Templating\TemplateSyntaxBaseModel.cs" Link="TemplateSyntaxBaseModel.cs" />
-	  <Compile Include="..\UtilityGenerators\Templating\TemplateSyntaxModel.cs" Link="TemplateSyntaxModel.cs" />
-	  <Compile Include="..\UtilityGenerators\Templating\TextOrValueSyntaxModel.cs" Link="TextOrValueSyntaxModel.cs" />
-	  <Compile Include="..\UtilityGenerators\Templating\TextSyntaxModel.cs" Link="TextSyntaxModel.cs" />
-	  <Compile Include="..\UtilityGenerators\Templating\ValueSyntaxModel.cs" Link="ValueSyntaxModel.cs" />
-	</ItemGroup>
-
-	<ItemGroup>
 	  <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.12.0" />
 	</ItemGroup>
 
