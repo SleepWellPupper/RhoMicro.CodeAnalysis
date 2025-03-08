@@ -7,42 +7,57 @@ using RhoMicro.CodeAnalysis.Library.Models.Collections;
 [Template(
     """
     {:
-        if(model.NamespaceParts is { Count: > 0 and var length } parts)
-        {
-            (:"namespace ":)
-            for(var i = 0; i < length; i++)
-            {
-                if(i > 0)
-                    (:'.':)
+    var body = new BodyTemplate(model);
 
-                (:parts[i]:)
-            }
-            (:";\n\n":)
-        }
+    if(model.NamespaceParts is { Count: > 0 } parts)
+        (:new NamespaceTemplate(parts), body:)
+    else
+        (:body:)
     :}
-    (:new ContainingType(model.ContainingTypes, 0):)
-    <:partial (:model.Kind.Value:) (:model.Name:){:
-        if(body is not EmptyTemplate)
-        {
-        :}
-
-    {
-    (:Space4, body:)
-    }{:
-        } else
-        {
-            (:';':)
-        }
-    :}:>
-    """, BodyParameterName = "body")]
+    """)]
 #if RHOMICRO_CODEANALYSIS_UTILITYGENERATORS
 [IncludeFile]
 #endif
 #if GENERATOR
 [NonEquatable]
 #endif
-internal sealed partial class NamedTypeTemplate(NamedTypeModel model)
+internal readonly partial struct NamedTypeTemplate(NamedTypeModel model)
 {
+    [Template(
+        """
+        namespace {:
+        for(var i = 0; i < parts.Count; i++)
+        {
+            if(i > 0)
+                (:'.':)
+        
+            (:parts[i]:)
+        }
+        :}
+
+        {
+            (:body:)
+        }
+        """, BodyParameterName = "body")]
+    private readonly partial struct NamespaceTemplate(EquatableList<String> parts);
+    [Template(
+        """
+        (:new ContainingType(model.ContainingTypes, 0):)
+        <:partial (:model.Kind.Value:) (:model.Name:){:
+            if(body is not EmptyTemplate)
+            {
+            :}
+
+        {
+        (:Space4, body:)
+        }{:
+            } else
+            {
+                (:';':)
+            }
+        :}:>
+        """, BodyParameterName = "body")]
+    private sealed partial class BodyTemplate(NamedTypeModel model);
     [Template(
         """
         {:
