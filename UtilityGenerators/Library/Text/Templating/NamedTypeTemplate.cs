@@ -7,14 +7,14 @@ using RhoMicro.CodeAnalysis.Library.Models.Collections;
 [Template(
     """
     {:
-    var body = new BodyTemplate(model);
+    var bodyTemplate = new BodyTemplate<TBody>(model, body);
 
     if(model.NamespaceParts is { Count: > 0 } parts)
-        (:new NamespaceTemplate(parts), body:)
+        (:new NamespaceTemplate(parts), bodyTemplate:)
     else
-        (:body:)
+        (:bodyTemplate:)
     :}
-    """)]
+    """, BodyParameterName = "body", BodyParameterTypeName = "TBody")]
 #if RHOMICRO_CODEANALYSIS_UTILITYGENERATORS
 [IncludeFile]
 #endif
@@ -56,8 +56,9 @@ internal readonly partial struct NamedTypeTemplate(NamedTypeModel model)
                 (:';':)
             }
         :}:>
-        """, BodyParameterName = "body")]
-    private sealed partial class BodyTemplate(NamedTypeModel model);
+        """)]
+    private sealed partial class BodyTemplate<TBody>(NamedTypeModel model, TBody body)
+        where TBody : ITemplate;
     [Template(
         """
         {:
