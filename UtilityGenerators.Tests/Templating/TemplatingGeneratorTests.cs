@@ -191,7 +191,7 @@ public class TemplatingGeneratorTests : TestBase<TemplatingGenerator>
                 Console.WriteLine("Hello, World!");
                 return;
             }
-            """, GenerateDebugInfo = true, Newline = Newline.Newline)]
+            """, GenerateDebugInfo = true, Newline = Newline.Lf)]
         partial class MainMethodTemplate;
         """")]
     [InlineData(
@@ -349,7 +349,7 @@ public class TemplatingGeneratorTests : TestBase<TemplatingGenerator>
         #pragma warning disable
         using RhoMicro.CodeAnalysis;
         using RhoMicro.CodeAnalysis.Library.Text.Templating;
-        [Template("{: :}\r\n\r\nSecond Text", Newline = Newline.Newline)]
+        [Template("{: :}\r\n\r\nSecond Text", Newline = Newline.Lf)]
         partial record CarriageReturnNewlineCodeTextTemplate;
         """")]
     public void CompilesTemplate(String name, String template)

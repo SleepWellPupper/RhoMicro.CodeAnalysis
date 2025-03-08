@@ -70,10 +70,10 @@ internal sealed partial class TemplateAttribute : Attribute
     public String BodyParameterTypeName { get; set; } = "__TBody";
     /// <summary>
     /// Gets or sets the newline to use when rendering line breaks. The
-    /// default value is <see cref="Newline.Newline"/>.
+    /// default value is <see cref="Newline.Lf"/>.
     /// </summary>
-    [DefaultValue((Int32)Newline.Newline)]
-    public Newline Newline { get; set; } = Newline.Newline;
+    [DefaultValue((Int32)Newline.Lf)]
+    public Newline Newline { get; set; } = Newline.Lf;
     /// <summary>
     /// Gets or sets the name of synthesized render fragments in the synthesized <see
     /// cref="global::RhoMicro.CodeAnalysis.Library.Text.Templating.ITemplate.Render{TBody}(ref

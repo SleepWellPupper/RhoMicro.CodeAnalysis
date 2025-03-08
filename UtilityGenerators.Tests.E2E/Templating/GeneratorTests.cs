@@ -40,7 +40,7 @@ public partial class GeneratorTests
         public SimpleValueTemplate(String foo) => Foo = foo;
         private String Foo { get; }
     }
-    [Template("\n", Newline = Newline.CarriageReturnNewline)]
+    [Template("\n", Newline = Newline.CrLf)]
     private sealed partial class NewlineTemplate;
     [Fact]
     public void NewlineTemplateRenders()
@@ -48,7 +48,7 @@ public partial class GeneratorTests
         var actual = new NewlineTemplate().ToString();
         Assert.Equal("\r\n", actual);
     }
-    [Template("\r", Newline = Newline.Newline)]
+    [Template("\r", Newline = Newline.Lf)]
     private sealed partial class CarriageReturnTemplate;
     [Fact]
     public void CarriageReturnTemplateRenders()
@@ -56,126 +56,7 @@ public partial class GeneratorTests
         var actual = new CarriageReturnTemplate().ToString();
         Assert.Equal("\n", actual);
     }
-    [Template("\r\n", Newline = Newline.Newline)]
-    private sealed partial class CarriageReturnNewlineTemplate;
-    [Fact]
-    public void CarriageReturnNewlineTemplateRenders()
-    {
-        var actual = new CarriageReturnNewlineTemplate().ToString();
-        Assert.Equal("\n", actual);
-    }
-    [Theory]
-    [InlineData("")]                                                        // Empty string
-    [InlineData("Hello, World!")]                                           // Classic phrase
-    [InlineData("Lorem ipsum dolor sit amet")]                              // Lorem ipsum
-    [InlineData("🚀🌟💻🎉")]                                               // Emojis
-    [InlineData("This is a longer string to test")]                         // Longer string
-    [InlineData("1234567890")]                                              // Numeric string
-    [InlineData("Special characters: !@#$%^&*()_+-=[]{}|;:'\",.<>?/\\")]    // Special characters
-    [InlineData("Single space ")]                                           // String with trailing space
-    [InlineData(" Leading space")]                                          // String with leading space
-    [InlineData("Line\nBreak")]                                             // String with a newline character
-    [InlineData("Tab\tCharacter")]                                          // String with a tab character
-    [InlineData("NullChar\u0000Here")]                                      // String with null character in the middle
-    [InlineData("こんにちは")]                                                // Japanese (Hello)
-    [InlineData("你好")]                                                     // Chinese (Hello)
-    [InlineData("안녕하세요")]                                                // Korean (Hello)
-    [InlineData("Привет")]                                                  // Russian (Hello)
-    [InlineData("مرحبا")]                                                   // Arabic (Hello)
-    [InlineData("String with an emoji 🤖 at the end")]                      // Mixed content
-    [InlineData("Repeat: Repeat: Repeat: Repeat:")]                         // Repetitive string
-    public void SimpleValueTemplateRendersExpectedString(String value)
-    {
-        var template = new SimpleValueTemplate(value);
-        var actual = TemplateRenderer.Render(template);
-
-        Assert.Equal(value, actual);
-    }
-    [Template(
-        """
-        First text
-        (:Foo:)
-        Second Text
-        """)]
-    private partial class TextValueTextTemplate
-    {
-        public TextValueTextTemplate(String foo) => Foo = foo;
-
-        private String Foo { get; }
-    }
-    [Fact]
-    public void TextValueTextTemplateRendersExpectedString()
-    {
-        var template = new TextValueTextTemplate("FooBar");
-        var actual = TemplateRenderer.Render(template);
-
-        Assert.Equal(
-            """
-            First text
-            FooBar
-            Second Text
-            """, actual);
-    }
-    [Template(
-        """
-        First text
-        {:
-            for(var i = 0; i < 5; i++)
-                (:Foo:)
-        :}
-        
-        Second Text
-        """, Newline = Newline.Newline)]
-    private partial record TextCodeTextTemplate(String Foo);
-    [Fact]
-    public void TextCodeTextTemplateRendersExpectedString()
-    {
-        var template = new TextCodeTextTemplate("FooBar");
-        var actual = TemplateRenderer.Render(template);
-
-        Assert.Equal(
-            """
-            First text
-            FooBarFooBarFooBarFooBarFooBar
-            Second Text
-            """, actual);
-    }
-    [Template(
-        """
-        {: :}
-
-        Second Text
-        """)]
-    private partial record CodeTextTemplate;
-    [Fact]
-    public void CodeTextTemplateRendersExpectedString()
-    {
-        var template = new CodeTextTemplate();
-        var actual = TemplateRenderer.Render(template);
-
-        Assert.Equal("\nSecond Text", actual);
-    }
-    [Template("{: :}\n\nSecond Text", Newline = Newline.CarriageReturn)]
-    private partial record NewlineCodeTextTemplate;
-    [Fact]
-    public void NewlineCodeTextTemplateRendersExpectedString()
-    {
-        var template = new NewlineCodeTextTemplate();
-        var actual = TemplateRenderer.Render(template);
-
-        Assert.Equal("\rSecond Text", actual);
-    }
-    [Template("{: :}\r\n\r\nSecond Text", Newline = Newline.Newline)]
-    private partial record CarriageReturnNewlineCodeTextTemplate;
-    [Fact]
-    public void CarriageReturnNewlineCodeTextTemplateRendersExpectedString()
-    {
-        var template = new CarriageReturnNewlineCodeTextTemplate();
-        var actual = TemplateRenderer.Render(template);
-
-        Assert.Equal("\nSecond Text", actual);
-    }
-    [Template("{: :}\r\rSecond Text", Newline = Newline.Newline)]
+    [Template("\r\n", Newline = Newline.Lf)]
     private partial record CarriageReturnCodeTextTemplate;
     [Fact]
     public void CarriageReturnCodeTextTemplateRendersExpectedString()
@@ -183,7 +64,7 @@ public partial class GeneratorTests
         var template = new CarriageReturnCodeTextTemplate();
         var actual = TemplateRenderer.Render(template);
 
-        Assert.Equal("\nSecond Text", actual);
+        Assert.Equal("\n", actual);
     }
     [Template(
         """

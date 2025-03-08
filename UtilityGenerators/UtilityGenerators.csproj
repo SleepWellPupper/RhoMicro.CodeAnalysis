@@ -7,7 +7,7 @@
 		<developmentDependency>true</developmentDependency>
 		<NoPackageAnalysis>true</NoPackageAnalysis>
 		<IsRoslynComponent>true</IsRoslynComponent>
-		<EmitCompilerGeneratedFiles>true</EmitCompilerGeneratedFiles>
+		<EmitCompilerGeneratedFiles>false</EmitCompilerGeneratedFiles>
 		<RootNamespace>RhoMicro.CodeAnalysis</RootNamespace>
 	</PropertyGroup>
 

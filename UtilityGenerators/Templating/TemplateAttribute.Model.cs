@@ -8,8 +8,8 @@ internal partial class TemplateAttribute
     {
         public String NewlineValue => Newline switch
         {
-            Newline.CarriageReturnNewline => "\r\n",
-            Newline.CarriageReturn => "\r",
+            Newline.CrLf => "\r\n",
+            Newline.Cr => "\r",
             _ => "\n"
         };
     }

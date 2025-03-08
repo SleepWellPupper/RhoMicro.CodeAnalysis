@@ -13,13 +13,13 @@ internal enum Newline
     /// <summary>
     /// Represents the <c>\n</c> newline.
     /// </summary>
-    Newline,
+    Lf,
     /// <summary>
     /// Represents the <c>\r</c> newline.
     /// </summary>
-    CarriageReturn,
+    Cr,
     /// <summary>
     /// Represents the <c>\r\n</c> newline.
     /// </summary>
-    CarriageReturnNewline
+    CrLf
 }
