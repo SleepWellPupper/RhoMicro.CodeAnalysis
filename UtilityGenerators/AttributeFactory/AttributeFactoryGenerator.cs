@@ -2012,6 +2012,7 @@ public sealed partial class AttributeFactoryGenerator : IIncrementalGenerator
         using var _ = ctx.SourceBuilder.OpenRegionBlockScope("Model");
         OpenModel(in ctx);
 
+        AppendModelDefaultInstance(in ctx);
         AppendFactoryStateTypes(in ctx);
 
         using(ctx.SourceBuilder.OpenRegionBlockScope("Factories"))
@@ -2055,6 +2056,23 @@ public sealed partial class AttributeFactoryGenerator : IIncrementalGenerator
             .Append(accessibility).Append(ctx.Model.AttributeModel.ModelTypeName).Append("()")
             .OpenBracesBlock()
             .CloseBlockCore();
+    }
+    private static void AppendModelDefaultInstance(in SourceBuildingContext ctx)
+    {
+        ctx.CancellationToken.ThrowIfCancellationRequested();
+
+        if(!ctx.Model.AttributeModel.GenerateDefaultInstance)
+            return;
+
+        ctx.SourceBuilder
+            .Comment
+            .OpenSummary()
+                .Append("Gets the default instance of the model.")
+            .CloseBlock()
+            .Append("public static ")
+            .Append(ctx.Model.AttributeModel.ModelTypeName)
+            .Append(" Default { get; } = new();")
+            .AppendLineCore();
     }
     private static void AppendModelFactories(in SourceBuildingContext ctx)
     {
