@@ -1,0 +1,42 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>netstandard2.0</TargetFramework>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<Description>Provides a standalone library for the IndentedStringBuilder</Description>
+		<PackageTags></PackageTags>
+	</PropertyGroup>
+
+	<ItemGroup>
+	  <Compile Include="..\UtilityGenerators\Library\Text\SourceTexts\Block.cs" Link="Block.cs" />
+	  <Compile Include="..\UtilityGenerators\Library\Text\SourceTexts\Blocks.cs" Link="Blocks.cs" />
+	  <Compile Include="..\UtilityGenerators\Library\Text\SourceTexts\BlockScope.cs" Link="BlockScope.cs" />
+	  <Compile Include="..\UtilityGenerators\Library\Text\SourceTexts\BlockScopeCollection.cs" Link="BlockScopeCollection.cs" />
+	  <Compile Include="..\UtilityGenerators\Library\Text\SourceTexts\CommentBlocks.cs" Link="CommentBlocks.cs" />
+	  <Compile Include="..\UtilityGenerators\Library\Text\SourceTexts\CommentBuilder.cs" Link="CommentBuilder.cs" />
+	  <Compile Include="..\UtilityGenerators\Library\Text\SourceTexts\IIndentedStringBuilderAppendable.cs" Link="IIndentedStringBuilderAppendable.cs" />
+	  <Compile Include="..\UtilityGenerators\Library\Text\SourceTexts\IndentedStringBuilder.cs" Link="IndentedStringBuilder.cs" />
+	  <Compile Include="..\UtilityGenerators\Library\Text\SourceTexts\IndentedStringBuilder.OperatorsDecorator.cs" Link="IndentedStringBuilder.OperatorsDecorator.cs" />
+	  <Compile Include="..\UtilityGenerators\Library\Text\SourceTexts\IndentedStringBuilderAppendable.cs" Link="IndentedStringBuilderAppendable.cs" />
+	  <Compile Include="..\UtilityGenerators\Library\Text\SourceTexts\IndentedStringBuilderOptions.cs" Link="IndentedStringBuilderOptions.cs" />
+	  <Compile Include="..\UtilityGenerators\Library\Text\SourceTexts\IndentScope.cs" Link="IndentScope.cs" />
+	  <Compile Include="..\UtilityGenerators\Library\Text\SourceTexts\StringOrChar.cs" Link="StringOrChar.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="README.md" Pack="true" PackagePath="/" CopyToOutputDirectory="Always" />
+		<None Include="LICENSE.txt" Pack="true" PackagePath="/" CopyToOutputDirectory="Always" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <PackageReference Include="PolySharp" Version="1.15.0">
+	    <PrivateAssets>all</PrivateAssets>
+	    <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+	  </PackageReference>
+	  <PackageReference Include="System.Collections.Immutable" Version="9.0.3" />
+	</ItemGroup>
+
+</Project>
