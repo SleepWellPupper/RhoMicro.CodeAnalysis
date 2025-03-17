@@ -9,6 +9,8 @@
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<Description>Provides a standalone library for the IndentedStringBuilder</Description>
 		<PackageTags></PackageTags>
+        <DefineConstants>$(DefineConstants);SOURCETEXTS_LIBRARY</DefineConstants>
+        <NoWarn>CS1591</NoWarn>
 	</PropertyGroup>
 
 	<ItemGroup>

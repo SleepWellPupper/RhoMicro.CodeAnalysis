@@ -5,7 +5,12 @@ using System;
 #if RHOMICRO_CODEANALYSIS_UTILITYGENERATORS
 [IncludeFile]
 #endif
-internal readonly partial struct StringOrChar : IEquatable<StringOrChar>, IIndentedStringBuilderAppendable
+#if SOURCETEXTS_LIBRARY
+public
+#else
+internal
+#endif
+ readonly partial struct StringOrChar : IEquatable<StringOrChar>, IIndentedStringBuilderAppendable
 {
     private readonly Char _charValue;
     private readonly String? _stringValue;
@@ -75,6 +80,8 @@ internal readonly partial struct StringOrChar : IEquatable<StringOrChar>, IInden
         ( (Char)this ).GetHashCode();
     public void AppendTo(IndentedStringBuilder builder)
     {
+        _ = builder ?? throw new ArgumentNullException(nameof(builder));
+
         _ = IsString ?
         builder.Append(_stringValue ?? String.Empty) :
         builder.Append(_charValue);

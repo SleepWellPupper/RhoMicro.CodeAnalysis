@@ -3,7 +3,12 @@
 #if RHOMICRO_CODEANALYSIS_UTILITYGENERATORS
 [IncludeFile]
 #endif
-internal readonly record struct Block(
+#if SOURCETEXTS_LIBRARY
+public
+#else
+internal
+#endif
+ readonly record struct Block(
     StringOrChar OpeningDelimiter = default,
     StringOrChar ClosingDelimiter = default,
     Boolean PlaceDelimitersOnNewLine = false,

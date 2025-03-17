@@ -6,7 +6,12 @@
 #if GENERATOR
 [NonEquatable]
 #endif
-internal sealed partial class BlockScopeCollection : IDisposable
+#if SOURCETEXTS_LIBRARY
+public
+#else
+internal
+#endif
+ sealed partial class BlockScopeCollection : IDisposable
 {
     private readonly List<BlockScope> _scopes = [];
     public void AddScope(BlockScope scope) => _scopes.Add(scope);

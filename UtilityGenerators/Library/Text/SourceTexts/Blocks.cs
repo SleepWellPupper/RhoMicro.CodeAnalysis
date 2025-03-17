@@ -3,7 +3,12 @@
 #if RHOMICRO_CODEANALYSIS_UTILITYGENERATORS
 [IncludeFile]
 #endif
-internal static partial class Blocks
+#if SOURCETEXTS_LIBRARY
+public
+#else
+internal
+#endif
+ static partial class Blocks
 {
     public static Block Indent { get; } = new();
     public static Block Braces(StringOrChar newLine) => new($"{{{newLine}", $"}}{newLine}", PlaceDelimitersOnNewLine: true);

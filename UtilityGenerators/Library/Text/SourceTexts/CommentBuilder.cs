@@ -8,7 +8,12 @@ using System.Runtime.CompilerServices;
 #if GENERATOR
 [NonEquatable]
 #endif
-internal partial class CommentBuilder(IndentedStringBuilder builder)
+#if SOURCETEXTS_LIBRARY
+public
+#else
+internal
+#endif
+ partial class CommentBuilder(IndentedStringBuilder builder)
 {
     public IndentedStringBuilder Builder => builder;
     #region Open Block
@@ -88,6 +93,8 @@ internal partial class CommentBuilder(IndentedStringBuilder builder)
     public IndentedStringBuilder SeeCRefMethod(String name, params IEnumerable<String> parameterTypes) => SeeCRefMethod(name, highlightIndex: -1, parameterTypes);
     public IndentedStringBuilder SeeCRefMethod(String name, Int32 highlightIndex, params IEnumerable<String> parameterTypes)
     {
+        _ = parameterTypes ?? throw new ArgumentNullException(nameof(parameterTypes));
+
         Builder.Append("<see cref=\"").Append(name).AppendCore('(');
 
         var i = 0;

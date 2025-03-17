@@ -10,7 +10,12 @@ using System.Text;
 #if GENERATOR
 [NonEquatable]
 #endif
-internal partial class IndentedStringBuilder
+#if SOURCETEXTS_LIBRARY
+public
+#else
+internal
+#endif
+ partial class IndentedStringBuilder
 {
     public IndentedStringBuilder(IndentedStringBuilderOptions options)
     {
@@ -113,6 +118,8 @@ internal partial class IndentedStringBuilder
 
     public IndentedStringBuilder OpenBlockScope(Block block, BlockScopeCollection scopes)
     {
+        _ = scopes ?? throw new ArgumentNullException(nameof(scopes));
+
         var scope = OpenBlockScope(block);
         scopes.AddScope(scope);
         return this;
@@ -228,6 +235,8 @@ internal partial class IndentedStringBuilder
     }
     public IndentedStringBuilder Append(params String[] values)
     {
+        _ = values ?? throw new ArgumentNullException(nameof(values));
+
         for(var i = 0; i < values.Length; i++)
         {
             AppendCore(values[i]);
@@ -246,6 +255,8 @@ internal partial class IndentedStringBuilder
     }
     public IndentedStringBuilder Append(IEnumerable<String> values)
     {
+        _ = values ?? throw new ArgumentNullException(nameof(values));
+
         foreach(var value in values)
         {
             AppendCore(value);
@@ -274,6 +285,8 @@ internal partial class IndentedStringBuilder
     }
     public IndentedStringBuilder Append(params Char[] values)
     {
+        _ = values ?? throw new ArgumentNullException(nameof(values));
+
         for(var i = 0; i < values.Length; i++)
         {
             AppendCore(values[i]);
@@ -292,6 +305,8 @@ internal partial class IndentedStringBuilder
     }
     public IndentedStringBuilder Append(IEnumerable<Char> values)
     {
+        _ = values ?? throw new ArgumentNullException(nameof(values));
+
         foreach(var value in values)
         {
             AppendCore(value);
@@ -357,6 +372,8 @@ internal partial class IndentedStringBuilder
     public IndentedStringBuilder Append<T>(params T[] values)
         where T : IIndentedStringBuilderAppendable
     {
+        _ = values ?? throw new ArgumentNullException(nameof(values));
+
         for(var i = 0; i < values.Length; i++)
         {
             AppendCore(values[i]);
@@ -377,6 +394,8 @@ internal partial class IndentedStringBuilder
     public IndentedStringBuilder Append<T>(IEnumerable<T> values)
         where T : IIndentedStringBuilderAppendable
     {
+        _ = values ?? throw new ArgumentNullException(nameof(values));
+
         foreach(var value in values)
         {
             AppendCore(value);
@@ -402,6 +421,8 @@ internal partial class IndentedStringBuilder
     }
     public IndentedStringBuilder Append(params Action<IndentedStringBuilder>[] values)
     {
+        _ = values ?? throw new ArgumentNullException(nameof(values));
+
         for(var i = 0; i < values.Length; i++)
         {
             AppendCore(values[i]);
@@ -420,6 +441,8 @@ internal partial class IndentedStringBuilder
     }
     public IndentedStringBuilder Append(IEnumerable<Action<IndentedStringBuilder>> values)
     {
+        _ = values ?? throw new ArgumentNullException(nameof(values));
+
         foreach(var value in values)
         {
             AppendCore(value);
@@ -432,6 +455,8 @@ internal partial class IndentedStringBuilder
     public IndentedStringBuilder AppendJoin(IEnumerable<String> values) => AppendJoin(", ", values);
     public IndentedStringBuilder AppendJoin(StringOrChar separator, IEnumerable<String> values)
     {
+        _ = values ?? throw new ArgumentNullException(nameof(values));
+
         var enumerator = values.GetEnumerator();
         if(!enumerator.MoveNext())
             return this;
@@ -449,6 +474,8 @@ internal partial class IndentedStringBuilder
     public IndentedStringBuilder AppendJoinLines(IEnumerable<String> values) => AppendJoinLines(',', values);
     public IndentedStringBuilder AppendJoinLines(StringOrChar separator, IEnumerable<String> values)
     {
+        _ = values ?? throw new ArgumentNullException(nameof(values));
+
         var enumerator = values.GetEnumerator();
         if(!enumerator.MoveNext())
             return this;
@@ -468,6 +495,8 @@ internal partial class IndentedStringBuilder
     public IndentedStringBuilder AppendJoin(IEnumerable<Char> values) => AppendJoin(", ", values);
     public IndentedStringBuilder AppendJoin(StringOrChar separator, IEnumerable<Char> values)
     {
+        _ = values ?? throw new ArgumentNullException(nameof(values));
+
         var enumerator = values.GetEnumerator();
         if(!enumerator.MoveNext())
             return this;
@@ -485,6 +514,8 @@ internal partial class IndentedStringBuilder
     public IndentedStringBuilder AppendJoinLines(IEnumerable<Char> values) => AppendJoinLines(',', values);
     public IndentedStringBuilder AppendJoinLines(StringOrChar separator, IEnumerable<Char> values)
     {
+        _ = values ?? throw new ArgumentNullException(nameof(values));
+
         var enumerator = values.GetEnumerator();
         if(!enumerator.MoveNext())
             return this;
@@ -507,6 +538,8 @@ internal partial class IndentedStringBuilder
     public IndentedStringBuilder AppendJoin<T>(StringOrChar separator, IEnumerable<T> values)
         where T : IIndentedStringBuilderAppendable
     {
+        _ = values ?? throw new ArgumentNullException(nameof(values));
+
         var enumerator = values.GetEnumerator();
         if(!enumerator.MoveNext())
             return this;
@@ -527,6 +560,8 @@ internal partial class IndentedStringBuilder
     public IndentedStringBuilder AppendJoinLines<T>(StringOrChar separator, IEnumerable<T> values)
         where T : IIndentedStringBuilderAppendable
     {
+        _ = values ?? throw new ArgumentNullException(nameof(values));
+
         var enumerator = values.GetEnumerator();
         if(!enumerator.MoveNext())
             return this;
@@ -546,6 +581,8 @@ internal partial class IndentedStringBuilder
     public IndentedStringBuilder AppendJoin(IEnumerable<Action<IndentedStringBuilder>> values) => AppendJoin(", ", values);
     public IndentedStringBuilder AppendJoin(StringOrChar separator, IEnumerable<Action<IndentedStringBuilder>> values)
     {
+        _ = values ?? throw new ArgumentNullException(nameof(values));
+
         var enumerator = values.GetEnumerator();
         if(!enumerator.MoveNext())
             return this;
@@ -563,6 +600,8 @@ internal partial class IndentedStringBuilder
     public IndentedStringBuilder AppendJoinLines(IEnumerable<Action<IndentedStringBuilder>> values) => AppendJoinLines(',', values);
     public IndentedStringBuilder AppendJoinLines(StringOrChar separator, IEnumerable<Action<IndentedStringBuilder>> values)
     {
+        _ = values ?? throw new ArgumentNullException(nameof(values));
+
         var enumerator = values.GetEnumerator();
         if(!enumerator.MoveNext())
             return this;

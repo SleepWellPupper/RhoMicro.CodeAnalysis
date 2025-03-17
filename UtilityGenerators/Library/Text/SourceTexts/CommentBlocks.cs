@@ -3,7 +3,12 @@
 #if RHOMICRO_CODEANALYSIS_UTILITYGENERATORS
 [IncludeFile]
 #endif
-internal static class CommentBlocks
+#if SOURCETEXTS_LIBRARY
+public
+#else
+internal
+#endif
+ static class CommentBlocks
 {
     public static Block Multiline { get; } = new("/*\n", "*/", PlaceDelimitersOnNewLine: true);
     public static Block SingleLine { get; } = new(

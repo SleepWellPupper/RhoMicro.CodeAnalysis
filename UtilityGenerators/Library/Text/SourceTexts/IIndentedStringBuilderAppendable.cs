@@ -3,7 +3,12 @@
 #if RHOMICRO_CODEANALYSIS_UTILITYGENERATORS
 [IncludeFile]
 #endif
-internal interface IIndentedStringBuilderAppendable
+#if SOURCETEXTS_LIBRARY
+public
+#else
+internal
+#endif
+ interface IIndentedStringBuilderAppendable
 {
     public void AppendTo(IndentedStringBuilder builder);
 }

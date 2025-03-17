@@ -6,7 +6,12 @@
 #if GENERATOR
 [NonEquatable]
 #endif
-internal sealed partial class IndentedStringBuilderAppendable(Action<IndentedStringBuilder> strategy) : IIndentedStringBuilderAppendable
+#if SOURCETEXTS_LIBRARY
+public
+#else
+internal
+#endif
+ sealed partial class IndentedStringBuilderAppendable(Action<IndentedStringBuilder> strategy) : IIndentedStringBuilderAppendable
 {
     public void AppendTo(IndentedStringBuilder builder) => strategy.Invoke(builder);
 }

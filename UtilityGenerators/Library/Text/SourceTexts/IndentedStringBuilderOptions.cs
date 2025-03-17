@@ -3,7 +3,12 @@
 #if RHOMICRO_CODEANALYSIS_UTILITYGENERATORS
 [IncludeFile]
 #endif
-internal sealed record class IndentedStringBuilderOptions
+#if SOURCETEXTS_LIBRARY
+public
+#else
+internal
+#endif
+ sealed record class IndentedStringBuilderOptions
 {
     public StringOrChar DefaultIndentation { get; init; } = StringOrChar.Tab;
     public StringOrChar NewLine { get; init; } = StringOrChar.NewLine;

@@ -1,6 +1,11 @@
 ﻿namespace RhoMicro.CodeAnalysis.Library.Text.SourceTexts;
 
-internal partial class IndentedStringBuilder
+#if SOURCETEXTS_LIBRARY
+public
+#else
+internal
+#endif
+ partial class IndentedStringBuilder
 {
 #if RHOMICRO_CODEANALYSIS_UTILITYGENERATORS
     [IncludeFile]
@@ -13,16 +18,22 @@ internal partial class IndentedStringBuilder
         public IndentedStringBuilder Builder => builder;
         public static OperatorsDecorator operator +(OperatorsDecorator operators, String value)
         {
+            _ = operators ?? throw new ArgumentNullException(nameof(operators));
+
             operators.Builder.AppendCore(value);
             return operators;
         }
         public static OperatorsDecorator operator +(OperatorsDecorator operators, Char value)
         {
+            _ = operators ?? throw new ArgumentNullException(nameof(operators));
+
             operators.Builder.AppendCore(value);
             return operators;
         }
         public static OperatorsDecorator operator +(OperatorsDecorator operators, IIndentedStringBuilderAppendable value)
         {
+            _ = operators ?? throw new ArgumentNullException(nameof(operators));
+
             operators.Builder.AppendCore(value);
             return operators;
         }
