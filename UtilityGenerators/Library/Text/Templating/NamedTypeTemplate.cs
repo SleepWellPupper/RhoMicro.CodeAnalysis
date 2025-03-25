@@ -1,6 +1,5 @@
 ﻿namespace RhoMicro.CodeAnalysis.Library.Text.Templating;
 using System;
-using System.Collections;
 
 using RhoMicro.CodeAnalysis.Library.Models;
 using RhoMicro.CodeAnalysis.Library.Models.Collections;
