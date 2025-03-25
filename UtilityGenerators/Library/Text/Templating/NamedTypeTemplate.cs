@@ -47,12 +47,12 @@ internal readonly partial struct NamedTypeTemplate(NamedTypeModel model, Equatab
         (:new ContainingType(model.ContainingTypes, 0):)
         <:(:comment:)partial (:model.Kind.Value:) (:model.Name:){:
             if(baseList.Count > 0)
-                (:':':)
+                :} : {:
         
             for(var i = 0; i < baseList.Count; i++)
             {
                 if(i > 0)
-                    (:',':)
+                    :}, {:
         
                 (:baseList[i]:)
             }
