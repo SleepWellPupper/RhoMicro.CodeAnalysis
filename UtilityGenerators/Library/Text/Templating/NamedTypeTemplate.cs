@@ -36,7 +36,7 @@ internal readonly partial struct NamedTypeTemplate(NamedTypeModel model)
         :}
 
         {
-            (:body:)
+        (:Space4, body:)
         }
         """, BodyParameterName = "body")]
     private readonly partial struct NamespaceTemplate(EquatableList<String> parts);
