@@ -1,5 +1,6 @@
 ﻿namespace RhoMicro.CodeAnalysis.Library.Text.Templating;
 using System;
+using System.Collections;
 
 using RhoMicro.CodeAnalysis.Library.Models;
 using RhoMicro.CodeAnalysis.Library.Models.Collections;
@@ -7,7 +8,7 @@ using RhoMicro.CodeAnalysis.Library.Models.Collections;
 [Template(
     """
     {:
-    var bodyTemplate = new BodyTemplate<TBody>(model, body);
+    var bodyTemplate = new BodyTemplate<TBody>(model, baseList, comment, body);
 
     if(model.NamespaceParts is { Count: > 0 } parts)
         (:new NamespaceTemplate(parts), bodyTemplate:)
@@ -21,8 +22,10 @@ using RhoMicro.CodeAnalysis.Library.Models.Collections;
 #if GENERATOR
 [NonEquatable]
 #endif
-internal readonly partial struct NamedTypeTemplate(NamedTypeModel model)
+internal readonly partial struct NamedTypeTemplate(NamedTypeModel model, EquatableList<String> baseList, DocsCommentTemplate comment)
 {
+    public NamedTypeTemplate(NamedTypeModel model) : this(model, [], DocsCommentTemplate.Create(String.Empty)) { }
+
     [Template(
         """
         namespace {:
@@ -43,7 +46,18 @@ internal readonly partial struct NamedTypeTemplate(NamedTypeModel model)
     [Template(
         """
         (:new ContainingType(model.ContainingTypes, 0):)
-        <:partial (:model.Kind.Value:) (:model.Name:){:
+        <:(:comment:)partial (:model.Kind.Value:) (:model.Name:){:
+            if(baseList.Count > 0)
+                (:':':)
+        
+            for(var i = 0; i < baseList.Count; i++)
+            {
+                if(i > 0)
+                    (:',':)
+        
+                (:baseList[i]:)
+            }
+            
             if(body is not EmptyTemplate)
             {
             :}
@@ -57,7 +71,7 @@ internal readonly partial struct NamedTypeTemplate(NamedTypeModel model)
             }
         :}:>
         """)]
-    private sealed partial class BodyTemplate<TBody>(NamedTypeModel model, TBody body)
+    private sealed partial class BodyTemplate<TBody>(NamedTypeModel model, EquatableList<String> baseList, DocsCommentTemplate comment, TBody body)
         where TBody : ITemplate;
     [Template(
         """
