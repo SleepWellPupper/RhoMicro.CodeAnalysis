@@ -6,8 +6,10 @@
         if(_summary is null or [])
             return;
     :}
+    /// <summary>
     (:DocumentationComment, _summary:)
-
+    /// </summary>
+    
     """)]
 
 #if RHOMICRO_CODEANALYSIS_UTILITYGENERATORS
