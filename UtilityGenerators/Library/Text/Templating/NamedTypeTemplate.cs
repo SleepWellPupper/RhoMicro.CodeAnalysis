@@ -1,6 +1,8 @@
 ﻿namespace RhoMicro.CodeAnalysis.Library.Text.Templating;
 using System;
 
+using Microsoft.CodeAnalysis.CSharp;
+
 using RhoMicro.CodeAnalysis.Library.Models;
 using RhoMicro.CodeAnalysis.Library.Models.Collections;
 
@@ -45,7 +47,7 @@ internal readonly partial struct NamedTypeTemplate(NamedTypeModel model, Equatab
     [Template(
         """
         (:new ContainingType(model.ContainingTypes, 0):)
-        <:(:comment:)partial (:model.Kind.Value:) (:model.Name:){:
+        <:(:comment:)(:Accessibility:)partial (:model.Kind.Value:) (:model.Name:){:
             if(baseList.Count > 0)
                 :} : {:
         
@@ -71,7 +73,12 @@ internal readonly partial struct NamedTypeTemplate(NamedTypeModel model, Equatab
         :}:>
         """)]
     private sealed partial class BodyTemplate<TBody>(NamedTypeModel model, EquatableList<String> baseList, DocsCommentTemplate comment, TBody body)
-        where TBody : ITemplate;
+        where TBody : ITemplate
+    {
+        private String Accessibility => model.Accessibility is { } a
+            ? $"{SyntaxFacts.GetText(a)} "
+            : String.Empty;
+    }
     [Template(
         """
         {:
