@@ -1,5 +1,5 @@
 ﻿#pragma warning disable  // Missing XML comment for publicly visible type or member
-namespace RhoMicro.CodeAnalysis.UtilityGenerators.Tests.Library.Text.Templating;
+namespace RhoMicro.CodeAnalysis.UtilityGenerators.Tests.E2E.Library.Text.Templating;
 
 using System;
 using System.Collections.Generic;
