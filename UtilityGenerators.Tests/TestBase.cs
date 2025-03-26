@@ -20,7 +20,8 @@ public abstract class TestBase<TGenerator>
         _references =
         [
             .. references,
-            MetadataReference.CreateFromFile(typeof(SyntaxNode).Assembly.Location)
+            MetadataReference.CreateFromFile(typeof(SyntaxNode).Assembly.Location),
+            MetadataReference.CreateFromFile(typeof(CSharpSyntaxNode).Assembly.Location)
         ];
 
     private readonly MetadataReference[] _references;
