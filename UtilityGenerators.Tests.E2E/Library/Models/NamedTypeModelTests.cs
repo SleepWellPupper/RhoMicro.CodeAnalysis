@@ -51,6 +51,7 @@ public class NamedTypeModelTests
     {
         var actual = new NamedTypeModel(
             ContainingTypes: [],
+            Accessibility: null,
             Kind: PartialTypeKindModel.Class,
             TypeArguments: [.. typeArguments.Select(a=>new TypeModel(
                 NamespaceParts:[..namespaceParts],
