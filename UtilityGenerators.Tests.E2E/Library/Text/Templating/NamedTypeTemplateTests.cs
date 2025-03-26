@@ -7,6 +7,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+
 using RhoMicro.CodeAnalysis.Library.Models;
 using RhoMicro.CodeAnalysis.Library.Text.Templating;
 
@@ -17,6 +20,7 @@ public partial class NamedTypeTemplateTests
     {
         var actual = new NamedTypeTemplate(new NamedTypeModel(
             ContainingTypes: [],
+            Accessibility: null,
             Kind: PartialTypeKindModel.Class,
             TypeArguments: [],
             NamespaceParts: ["RhoMicro", "Test"],
@@ -32,11 +36,53 @@ public partial class NamedTypeTemplateTests
             }
             """, actual);
     }
+    [Theory]
+    [InlineData(Accessibility.Private)]
+    [InlineData(Accessibility.Public)]
+    [InlineData(Accessibility.Protected)]
+    [InlineData(Accessibility.Internal)]
+    [InlineData(Accessibility.ProtectedAndInternal)]
+    public void RendersAccessibility(Accessibility accessibility)
+    {
+        var actual = new NamedTypeTemplate(new NamedTypeModel(
+            ContainingTypes: [],
+            Accessibility: accessibility,
+            Kind: PartialTypeKindModel.Class,
+            TypeArguments: [],
+            NamespaceParts: [],
+            Name: "Foo"),
+            baseList: [],
+            comment: DocsCommentTemplate.Create("")).ToString();
+
+        Assert.Equal(
+            $"""
+            {SyntaxFacts.GetText(accessibility)} partial class Foo;
+            """, actual);
+    }
+    [Fact]
+    public void DoesNotRenderNullAccessibility()
+    {
+        var actual = new NamedTypeTemplate(new NamedTypeModel(
+            ContainingTypes: [],
+            Accessibility: null,
+            Kind: PartialTypeKindModel.Class,
+            TypeArguments: [],
+            NamespaceParts: [],
+            Name: "Foo"),
+            baseList: [],
+            comment: DocsCommentTemplate.Create("")).ToString();
+
+        Assert.Equal(
+            $"""
+            partial class Foo;
+            """, actual);
+    }
     [Fact]
     public void RendersSinglelineSummaryComment()
     {
         var actual = new NamedTypeTemplate(new NamedTypeModel(
             ContainingTypes: [],
+            Accessibility: null,
             Kind: PartialTypeKindModel.Class,
             TypeArguments: [],
             NamespaceParts: ["RhoMicro", "Test"],
@@ -60,6 +106,7 @@ public partial class NamedTypeTemplateTests
     {
         var actual = new NamedTypeTemplate(new NamedTypeModel(
             ContainingTypes: [],
+            Accessibility: null,
             Kind: PartialTypeKindModel.Class,
             TypeArguments: [],
             NamespaceParts: ["RhoMicro", "Test"],
@@ -87,6 +134,7 @@ public partial class NamedTypeTemplateTests
     {
         var actual = new NamedTypeTemplate(new NamedTypeModel(
             ContainingTypes: [],
+            Accessibility: null,
             Kind: PartialTypeKindModel.Class,
             TypeArguments: [],
             NamespaceParts: ["RhoMicro", "Test"],
@@ -109,6 +157,7 @@ public partial class NamedTypeTemplateTests
     {
         var actual = new NamedTypeTemplate(new NamedTypeModel(
             ContainingTypes: [],
+            Accessibility: null,
             Kind: PartialTypeKindModel.Class,
             TypeArguments: [],
             NamespaceParts: ["RhoMicro", "Test"],
@@ -129,6 +178,7 @@ public partial class NamedTypeTemplateTests
     {
         var actual = new NamedTypeTemplate(new NamedTypeModel(
             ContainingTypes: [],
+            Accessibility: null,
             Kind: PartialTypeKindModel.Class,
             TypeArguments: [],
             NamespaceParts: [],
