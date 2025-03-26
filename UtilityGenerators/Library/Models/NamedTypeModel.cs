@@ -12,6 +12,7 @@ using RhoMicro.CodeAnalysis.Library.Text.SourceTexts;
 #endif
 internal sealed record NamedTypeModel(
     EquatableList<ContainingTypeSignatureModel> ContainingTypes,
+    Accessibility? Accessibility,
     PartialTypeKindModel Kind,
     EquatableList<TypeModel> TypeArguments,
     EquatableList<String> NamespaceParts,
@@ -38,11 +39,13 @@ internal sealed record NamedTypeModel(
             typeArguments.Add(model);
         }
 
+        var accessibility = type.DeclaredAccessibility;
         var kind = PartialTypeKindModel.Create(type, in ctx);
         var name = type.Name;
 
         var result = new NamedTypeModel(
             containingTypes,
+            accessibility,
             kind,
             typeArguments,
             namespaceParts,
@@ -101,14 +104,14 @@ internal sealed record NamedTypeModel(
     }
     private void Append(StringBuilder resultBuilder, in AppendTokenInfo tokenInfo, CancellationToken ct)
     {
-        AppendNamespace(resultBuilder,in tokenInfo, ct);
+        AppendNamespace(resultBuilder, in tokenInfo, ct);
         AppendContainingTypes(resultBuilder, in tokenInfo, ct);
 
         if(!tokenInfo.SeparateParts && ( ContainingTypes.Count > 0 || NamespaceParts.Count > 0 ))
             _ = resultBuilder.Append(tokenInfo.SeparatorToken);
 
         AppendName(resultBuilder, Name, ct);
-        AppendTypeArguments(resultBuilder, TypeArguments,in tokenInfo, ct);
+        AppendTypeArguments(resultBuilder, TypeArguments, in tokenInfo, ct);
     }
     private void AppendNamespace(StringBuilder resultBuilder, in AppendTokenInfo tokenInfo, CancellationToken ct)
     {
