@@ -71,14 +71,23 @@ internal sealed record NamedTypeModel(
 
         var resultBuilder = new StringBuilder();
 
-        Append(resultBuilder, new(
-            SeparatorToken: "_",
-            OpenToken: "of_",
-            ArgumentSeparatorToken: "_and_",
-            CloseToken: "_fo",
-            SeparateParts: true), ct);
+        foreach(var part in NamespaceParts)
+            _ = resultBuilder.Append(part).Append('.');
 
-        var result = resultBuilder.Append(".g.cs").ToString();
+        foreach(var containingType in ContainingTypes)
+        {
+            _ = resultBuilder.Append(containingType.Name).Append('.');
+
+            if(containingType.TypeArguments is { Count: > 0 and var innerCount })
+                _ = resultBuilder.Append(innerCount).Append('.');
+        }
+
+        _ = resultBuilder.Append(Name).Append('.');
+
+        if(TypeArguments is { Count: > 0 and var outerCount })
+            _ = resultBuilder.Append(outerCount).Append('.');
+
+        var result = resultBuilder.Append("g.cs").ToString();
 
         return result;
     }
@@ -101,14 +110,14 @@ internal sealed record NamedTypeModel(
     }
     private void Append(StringBuilder resultBuilder, in AppendTokenInfo tokenInfo, CancellationToken ct)
     {
-        AppendNamespace(resultBuilder,in tokenInfo, ct);
+        AppendNamespace(resultBuilder, in tokenInfo, ct);
         AppendContainingTypes(resultBuilder, in tokenInfo, ct);
 
         if(!tokenInfo.SeparateParts && ( ContainingTypes.Count > 0 || NamespaceParts.Count > 0 ))
             _ = resultBuilder.Append(tokenInfo.SeparatorToken);
 
         AppendName(resultBuilder, Name, ct);
-        AppendTypeArguments(resultBuilder, TypeArguments,in tokenInfo, ct);
+        AppendTypeArguments(resultBuilder, TypeArguments, in tokenInfo, ct);
     }
     private void AppendNamespace(StringBuilder resultBuilder, in AppendTokenInfo tokenInfo, CancellationToken ct)
     {
