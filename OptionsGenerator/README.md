@@ -128,4 +128,3 @@ partial class BarRegistrationStrategy
 ## TODO
 - analyzer to reflect restrictions
 - tests
-- generated docs comments
