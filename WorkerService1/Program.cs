@@ -3,14 +3,13 @@ using Microsoft.Extensions.Options;
 using RhoMicro.CodeAnalysis.WorkerService1;
 
 using System.ComponentModel.DataAnnotations;
-using System.Globalization;
 using System.Text.Json;
 
 var builder = Host.CreateApplicationBuilder(args);
 
-builder.Services.AddFoo(c => c.UseMonitorOptions());
-
-_ = builder.Services.AddHostedService<Worker>();
+_ = builder.Services
+    .AddFooOptions(c => c.UseMonitorOptions())
+    .AddHostedService<Worker>();
 
 var host = builder.Build();
 host.Run();
