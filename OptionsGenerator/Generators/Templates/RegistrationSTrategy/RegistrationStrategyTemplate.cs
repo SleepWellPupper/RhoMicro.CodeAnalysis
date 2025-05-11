@@ -13,7 +13,7 @@
         /// <typeparam name="T">
         /// The adapter type to register.
         /// </typeparam>
-        public abstract partial class Pattern<T>
+        public sealed partial class Pattern<T>
             : (:model.Templates().FullyQualifiedTypeNames.RegistrationStrategy:)
             where T : class, (:model.Templates().FullyQualifiedTypeNames.Interface:)
         {
