@@ -10,24 +10,21 @@
         /// <summary>
         /// Provides an implementation for registering an options pattern for <see cref="(:model.Templates().FullyQualifiedTypeNames.Interface:)"/>, as well as an adapter implementation.
         /// </summary>
-        /// <typeparam name="T">
+        /// <param name="configurationSection">
+        /// The configuration section to bind the options instance against.
+        /// </param>
+        /// <param name="lifetime">
+        /// The lifetime of the registered adapter type.
+        /// </param>
+        /// <typeparam name="TAdapter">
         /// The adapter type to register.
         /// </typeparam>
-        public sealed partial class Pattern<T>
+        public sealed partial class Pattern<TAdapter>(
+            string configurationSection,
+            (:TypeNames.ServiceLifetime:) lifetime)
             : (:model.Templates().FullyQualifiedTypeNames.RegistrationStrategy:)
-            where T : class, (:model.Templates().FullyQualifiedTypeNames.Interface:)
+            where TAdapter : class, (:model.Templates().FullyQualifiedTypeNames.Interface:)
         {
-            private Pattern(
-                string configurationSection,
-                (:TypeNames.ServiceLifetime:) lifetime)
-            {
-                _configurationSection = configurationSection;
-                _lifetime = lifetime;
-            }
-
-            private readonly string _configurationSection;
-            private readonly (:TypeNames.ServiceLifetime:) _lifetime;
-        
             /// <inheritdoc/>
             internal sealed override void Execute(
                 (:TypeNames.IServiceCollection:) services,
@@ -37,12 +34,12 @@
                     services,
                     new (:TypeNames.ServiceDescriptor:)(
                         serviceType: typeof((:model.Templates().FullyQualifiedTypeNames.Interface:)),
-                        implementationType: typeof(T),
-                        lifetime: _lifetime));
+                        implementationType: typeof(TAdapter),
+                        lifetime: lifetime));
 
                 var builder = (:TypeNames.OptionsBuilderConfigurationExtensions:).BindConfiguration(
                     (:TypeNames.OptionsServiceCollectionExtensions:).AddOptions<(:model.Templates().FullyQualifiedTypeNames.Mutable:)>(services),
-                    _configurationSection);
+                    configurationSection);
 
                 ConfigureOptionsBuilder(builder, configuration);
             }

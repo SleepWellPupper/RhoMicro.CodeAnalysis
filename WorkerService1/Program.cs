@@ -8,7 +8,7 @@ using System.Text.Json;
 var builder = Host.CreateApplicationBuilder(args);
 
 _ = builder.Services
-    .AddFooOptions(c => c.UseMonitorOptions())
+    .AddFoo(c => c.UseMonitorOptions())
     .AddHostedService<Worker>();
 
 var host = builder.Build();
@@ -18,7 +18,7 @@ namespace RhoMicro.CodeAnalysis.WorkerService1
 {
     partial class BarRegistrationStrategy
     {
-        partial class Pattern<T>
+        partial class Pattern<TAdapter>
         {
             static partial void ConfigureOptionsBuilder(
                 OptionsBuilder<MutableBar> builder,

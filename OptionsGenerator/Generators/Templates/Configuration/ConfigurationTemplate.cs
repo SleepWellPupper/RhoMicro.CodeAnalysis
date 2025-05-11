@@ -32,7 +32,9 @@
         public (:model.Templates().FullyQualifiedTypeNames.Configuration:) UseDefaultOptions(
             string configurationSection = "(:model.NormalizedName:)")
             => UseRegistrationStrategy(
-                new (:model.Templates().FullyQualifiedTypeNames.RegistrationStrategy:).Pattern<(:model.Templates().FullyQualifiedTypeNames.Default:)>(configurationSection));
+                new (:model.Templates().FullyQualifiedTypeNames.RegistrationStrategy:).Pattern<(:model.Templates().FullyQualifiedTypeNames.Default:)>(
+                    configurationSection,
+                    (:TypeNames.ServiceLifetime:).Singleton));
         
         /// <summary>
         /// Registers an implementation of <see cref="(:model.Templates().FullyQualifiedTypeNames.Interface:)"/> based on <see cref="(:TypeNames.IOptionsSnapshot:){T}"/>.
@@ -46,7 +48,9 @@
         public (:model.Templates().FullyQualifiedTypeNames.Configuration:) UseSnapshotOptions(
             string configurationSection = "(:model.NormalizedName:)")
             => UseRegistrationStrategy(
-                new (:model.Templates().FullyQualifiedTypeNames.RegistrationStrategy:).Pattern<(:model.Templates().FullyQualifiedTypeNames.Snapshot:)>(configurationSection));
+                new (:model.Templates().FullyQualifiedTypeNames.RegistrationStrategy:).Pattern<(:model.Templates().FullyQualifiedTypeNames.Snapshot:)>(
+                    configurationSection,
+                    (:TypeNames.ServiceLifetime:).Scoped));
     
         /// <summary>
         /// Registers an implementation of <see cref="(:model.Templates().FullyQualifiedTypeNames.Interface:)"/> based on <see cref="(:TypeNames.IOptionsMonitor:){T}"/>.
@@ -60,7 +64,9 @@
         public (:model.Templates().FullyQualifiedTypeNames.Configuration:) UseMonitorOptions(
             string configurationSection = "(:model.NormalizedName:)")
             => UseRegistrationStrategy(
-                new (:model.Templates().FullyQualifiedTypeNames.RegistrationStrategy:).Pattern<(:model.Templates().FullyQualifiedTypeNames.Monitor:)>(configurationSection));
+                new (:model.Templates().FullyQualifiedTypeNames.RegistrationStrategy:).Pattern<(:model.Templates().FullyQualifiedTypeNames.Monitor:)>(
+                    configurationSection,
+                    (:TypeNames.ServiceLifetime:).Singleton));
     
         /// <summary>
         /// Registers a custom implementation of <see cref="(:model.Templates().FullyQualifiedTypeNames.Interface:)"/>.
