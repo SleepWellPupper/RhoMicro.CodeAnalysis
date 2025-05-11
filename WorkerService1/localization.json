@@ -1,0 +1,24 @@
+{
+  "Internationalization": {
+    "Localizations": {
+      "en": {
+        "RoleManagerDataGrid": {
+          "Title": "translated value",
+          "PaginationTemplate": "Page {0} of {1}"
+        },
+        "AnotherComponentProperties": {
+          "prop1": "value"
+        }
+      },
+      "tr": {
+        "RoleManagerDataGrid": {
+          "Title": "translated value",
+          "PaginationTemplate": "Page {0} of {1}"
+        },
+        "AnotherComponentProperties": {
+          "prop1": "value"
+        }
+      }
+    }
+  }
+}

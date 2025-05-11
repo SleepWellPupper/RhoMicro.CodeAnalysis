@@ -3,20 +3,32 @@ using Microsoft.Extensions.Options;
 using RhoMicro.CodeAnalysis.WorkerService1;
 
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.Text.Json;
 
 var builder = Host.CreateApplicationBuilder(args);
 
-_ = builder.Services
-    .AddFooOptions(c => c.UseMonitorOptions())
-    .AddHostedService<Worker>();
+builder.Services.AddFoo(c => c.UseMonitorOptions());
+
+_ = builder.Services.AddHostedService<Worker>();
 
 var host = builder.Build();
 host.Run();
 
 namespace RhoMicro.CodeAnalysis.WorkerService1
 {
-    public class Worker(ILogger<Worker> logger, IFooOptions options) : BackgroundService
+    partial class BarRegistrationStrategy
+    {
+        partial class Pattern<T>
+        {
+            static partial void ConfigureOptionsBuilder(
+                OptionsBuilder<MutableBar> builder,
+                BarConfiguration configuration)
+                => builder.ValidateDataAnnotations().ValidateOnStart();
+        }
+    }
+
+    public class Worker(ILogger<Worker> logger, IFoo options) : BackgroundService
     {
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
@@ -27,19 +39,8 @@ namespace RhoMicro.CodeAnalysis.WorkerService1
 
             while(!stoppingToken.IsCancellationRequested)
             {
-                logger.LogInformation("{Data}", JsonSerializer.Serialize(
-                    new
-                    {
-                        Type = options.GetType().Name,
-                        options.Property,
-                        options.IntProperty,
-                        BarOptions = new
-                        {
-                            options.BarOptions.Property
-                        },
-                        options.IgnoredProperty
-                    }, jsonOptions));
-                await Task.Delay(1000, stoppingToken).ConfigureAwait(false);
+                logger.LogInformation("{Data}", JsonSerializer.Serialize(options, jsonOptions));
+                await Task.Delay(500, stoppingToken).ConfigureAwait(false);
             }
         }
     }
@@ -71,45 +72,18 @@ namespace RhoMicro.CodeAnalysis.WorkerService1
     // The default value expression needs to contain:
     // - expression text
     // - location
-
-    partial class FooOptionsRegistrationStrategy
-    {
-        partial class Pattern
-        {
-            static partial void ConfigureOptionsBuilder(OptionsBuilder<MutableFooOptions> builder, FooOptionsConfiguration config)
-                => builder.ValidateDataAnnotations().ValidateOnStart();
-        }
-    }
-
-    // options interfaces must be partial to allow for a generated static default instance property
     [Options]
-    public partial interface IFooOptions
+    public partial interface IFoo
     {
-        // properties must be of type primitive or an [Options] annotated interface
-        // or provide a default implementation
-
-        // set/init/readonly is implemented as per the interface
-
-        // This property is included as it has no default implementation. The
-        // default value may be specified and will be used in the generated record.
-        // The location of the expression is emitted into a #line directive in the
-        // record, so we get appropriate intellisense and errors for erroneous
-        // expressions in user code.
-        [DefaultValueExpression(@"""Default Value""")]
-        // Any other attributes will be included in all generated classes.
-        [Required(AllowEmptyStrings = false)]
-        String Property { get; }
-        [AllowedValues(42, 13L)]
-        Int32 IntProperty { get; }
-
-        IBarOptions BarOptions { get; }
-
-        [Unbound]
-        String IgnoredProperty => Property.ToLowerInvariant();
+        [DefaultValueExpression("String.Empty")]
+        [AllowedValues(123, 456L)]
+        String Prop { get; }
+        Int32 IntProp { get; }
+        IBar Bar { get; }
     }
     [Options]
-    public partial interface IBarOptions
+    public partial interface IBar
     {
-        Int32 Property { get; }
+        String StringProp { get; }
     }
 }

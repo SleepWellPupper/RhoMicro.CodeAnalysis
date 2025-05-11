@@ -1,4 +1,4 @@
-﻿namespace RhoMicro.CodeAnalysis.OptionsGenerator.Generators;
+﻿namespace RhoMicro.CodeAnalysis.OptionsGenerator.GeneratorsV2;
 
 using System;
 using System.Text;
@@ -45,7 +45,7 @@ internal sealed record PropertyModel(
         {
             ctx.ThrowIfCancellationRequested();
 
-            if(attribute.IsUnboundAttribute())
+            if(attribute.IsExcludeFromOptionsAttribute())
             {
                 result = null;
                 return false;

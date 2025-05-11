@@ -13,4 +13,4 @@ using System;
 [NonEquatable]
 #endif
 [AttributeUsage(AttributeTargets.Property, AllowMultiple = false, Inherited = false)]
-internal sealed partial class UnboundAttribute : Attribute;
+internal sealed partial class ExcludeFromOptionsAttribute : Attribute;

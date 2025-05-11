@@ -1,0 +1,19 @@
+﻿namespace RhoMicro.CodeAnalysis.OptionsGenerator.Generators;
+
+[Template(
+    """
+    /// <summary>
+    /// Default implementation of <see cref="(:model.Templates().FullyQualifiedTypeNames.Interface:)"/>.
+    /// </summary>
+    public sealed partial record (:model.Templates().TypeNames.Immutable:)
+        : (:model.Templates().FullyQualifiedTypeNames.Interface:)
+    {
+    {:
+        foreach(var property in model.Properties)
+        {
+            (:Space4, new ImmutablePropertyTemplate(property):)
+            (:'\n':)
+        }
+    :}}
+    """), NonEquatable]
+internal readonly partial struct ImmutableOptionsTemplate(OptionsModel model);

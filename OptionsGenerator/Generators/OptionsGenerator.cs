@@ -1,4 +1,4 @@
-﻿namespace RhoMicro.CodeAnalysis.OptionsGenerator.Generators;
+﻿namespace RhoMicro.CodeAnalysis.OptionsGenerator.GeneratorsV2;
 
 using System.Linq;
 
@@ -45,7 +45,7 @@ public sealed class OptionsGenerator : IIncrementalGenerator
                     }
 
                     using var modelContext = ModelCreationContext.CreateDefault(ct);
-                    var model = OptionsInterfaceModel.Create(type, attribute, in modelContext);
+                    var model = OptionsModel.Create(type, attribute, in modelContext);
 
                     return model;
                 }).Where(m => m is not null)
@@ -53,8 +53,9 @@ public sealed class OptionsGenerator : IIncrementalGenerator
                 {
                     var model = m!;
                     var hintName = $"{model.NamespacePrefix}{model.Name}.g.cs";
-                    var source = new GeneratedFileTemplate(nameof(OptionsGenerator))
-                        .RenderToString(new OptionsTemplate(model), ct);
+                    var source = new GeneratedFileTemplate(
+                        name: nameof(OptionsGenerator))
+                        .RenderToString(model.Templates().Root, ct);
 
                     return (hintName, source);
                 });

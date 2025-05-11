@@ -7,7 +7,7 @@ using Microsoft.CodeAnalysis;
 using RhoMicro.CodeAnalysis.Library.Models;
 using RhoMicro.CodeAnalysis.Library.Models.Collections;
 
-internal sealed record OptionsInterfaceModel(
+internal sealed record OptionsModel(
     EquatableList<PropertyModel> Properties,
     String Namespace,
     String Name,
@@ -15,7 +15,7 @@ internal sealed record OptionsInterfaceModel(
     String NamespacePrefix,
     String NormalizedName)
 {
-    public static OptionsInterfaceModel Create(
+    public static OptionsModel Create(
         INamedTypeSymbol type,
         OptionsAttribute.Model _,
         in ModelCreationContext ctx)
@@ -34,7 +34,7 @@ internal sealed record OptionsInterfaceModel(
 
         var @namespace = type.ContainingNamespace.ToDisplayString(SymbolDisplayFormats.GlobalOmittedNamespaceFormat);
 
-        var result = new OptionsInterfaceModel(
+        var result = new OptionsModel(
             Properties: properties,
             Namespace: @namespace,
             FullyQualifiedNamespacePrefix: @namespace.Length > 0
@@ -48,4 +48,6 @@ internal sealed record OptionsInterfaceModel(
 
         return result;
     }
+
+    public Templates Templates() => new(this);
 }
