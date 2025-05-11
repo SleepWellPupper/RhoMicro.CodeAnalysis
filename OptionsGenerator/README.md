@@ -13,8 +13,6 @@ class Service(IFoo foo);
 ```
 This is an opinionated design that aligns with my use of the pattern.
 
-It is possible to sidestep this of course by injecting `IOptions<Foo>` even when using the generator and its generated extensions.
-
 ## Installation
 
 ```xml
