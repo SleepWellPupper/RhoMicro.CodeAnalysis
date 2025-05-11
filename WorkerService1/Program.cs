@@ -18,7 +18,7 @@ namespace RhoMicro.CodeAnalysis.WorkerService1
 {
     partial class BarRegistrationStrategy
     {
-        partial class Pattern<T>
+        partial class Pattern<TAdapter>
         {
             static partial void ConfigureOptionsBuilder(
                 OptionsBuilder<MutableBar> builder,
