@@ -1,73 +1,77 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-	<!--AutoUpdateAssemblyName-->
+    <!--AutoUpdateAssemblyName-->
 
-	<PropertyGroup>
-		<TargetFramework>netstandard2.0</TargetFramework>
-		<IncludeBuildOutput>false</IncludeBuildOutput>
-		<developmentDependency>true</developmentDependency>
-		<NoPackageAnalysis>true</NoPackageAnalysis>
-		<IsRoslynComponent>true</IsRoslynComponent>
-		<Nullable>enable</Nullable>
-		<ImplicitUsings>enable</ImplicitUsings>
-	</PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <IncludeBuildOutput>false</IncludeBuildOutput>
+        <developmentDependency>true</developmentDependency>
+        <NoPackageAnalysis>true</NoPackageAnalysis>
+        <IsRoslynComponent>true</IsRoslynComponent>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+    </PropertyGroup>
 
-	<PropertyGroup>
-		<IsPackable>true</IsPackable>
-		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-		<Description>Generates json schemata from class definitions.</Description>
-		<PackageTags>Source Generator;json schema;json;jsonschema;appsettings</PackageTags>
-		<PackageIcon>logo_256.png</PackageIcon>
-	</PropertyGroup>
+    <PropertyGroup>
+        <IsPackable>true</IsPackable>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <Description>Generates json schemata from class definitions.</Description>
+        <PackageTags>Source Generator;json schema;json;jsonschema;appsettings</PackageTags>
+        <PackageIcon>logo_256.png</PackageIcon>
+    </PropertyGroup>
 
-	<PropertyGroup>
-		<DefineConstants>$(DefineConstants);GENERATOR</DefineConstants>
-	</PropertyGroup>
+    <ItemGroup>
+        <InternalsVisibleTo Include="RhoMicro.CodeAnalysis.JsonSchemeGenerator.Tests"/>
+    </ItemGroup>
 
-	<ItemGroup>
-		<PackageReference Update="NETStandard.Library" PrivateAssets="all" />
-		<PackageReference Include="IKVM.Core.MSBuild" Version="0.1.103">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
-		<PackageReference Include="Microsoft.CodeAnalysis" Version="4.12.0" />
-		<PackageReference Include="PolySharp" Version="1.15.0">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
-		<PackageReference Include="RhoMicro.CodeAnalysis.UtilityGenerators" Version="15.3.4">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
-		<PackageReference Include="RhoMicro.CodeAnalysis.UnionsGenerator" Version="15.3.4">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
-	</ItemGroup>
+    <PropertyGroup>
+        <DefineConstants>$(DefineConstants);GENERATOR</DefineConstants>
+    </PropertyGroup>
 
-	<ItemGroup>
-		<None Include="docs\logo_256.png" Pack="true" PackagePath="" />
-		<None Include="build\**\*" Pack="true" PackagePath="build\%(RecursiveDir)%(Filename)%(Extension)" />
-		<None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
-		<None Include="README.md" Pack="true" PackagePath="/" CopyToOutputDirectory="Always" />
-		<None Include="LICENSE.txt" Pack="true" PackagePath="/" CopyToOutputDirectory="Always" />
-	</ItemGroup>
+    <ItemGroup>
+        <PackageReference Update="NETStandard.Library" PrivateAssets="all"/>
+        <PackageReference Include="IKVM.Core.MSBuild" Version="0.1.103">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.CodeAnalysis" Version="4.12.0"/>
+        <PackageReference Include="PolySharp" Version="1.15.0">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="RhoMicro.CodeAnalysis.UtilityGenerators" Version="15.3.4">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="RhoMicro.CodeAnalysis.UnionsGenerator" Version="15.3.4">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
 
-	<ItemGroup>
-		<PublishProjectReference Include="../JsonSchemaGenerator.Cli/JsonSchemaGenerator.Cli.csproj">
-			<Pack>true</Pack>
-			<SetTargetFramework>TargetFramework=net9.0</SetTargetFramework>
-			<PublishTargetPath>tool</PublishTargetPath>
-			<PublishPackagePath>tool</PublishPackagePath>
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</PublishProjectReference>
-	</ItemGroup>
+    <ItemGroup>
+        <None Include="docs\logo_256.png" Pack="true" PackagePath=""/>
+        <None Include="build\**\*" Pack="true" PackagePath="build\%(RecursiveDir)%(Filename)%(Extension)"/>
+        <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false"/>
+        <None Include="README.md" Pack="true" PackagePath="/" CopyToOutputDirectory="Always"/>
+        <None Include="LICENSE.txt" Pack="true" PackagePath="/" CopyToOutputDirectory="Always"/>
+    </ItemGroup>
 
-	<ItemGroup>
-		<None Update="build\RhoMicro.CodeAnalysis.JsonSchemaGenerator.props">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-		<None Update="build\RhoMicro.CodeAnalysis.JsonSchemaGenerator.targets">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-		</None>
-	</ItemGroup>
+    <ItemGroup>
+        <PublishProjectReference Include="../JsonSchemaGenerator.Cli/JsonSchemaGenerator.Cli.csproj">
+            <Pack>true</Pack>
+            <SetTargetFramework>TargetFramework=net9.0</SetTargetFramework>
+            <PublishTargetPath>tool</PublishTargetPath>
+            <PublishPackagePath>tool</PublishPackagePath>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </PublishProjectReference>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Update="build\RhoMicro.CodeAnalysis.JsonSchemaGenerator.props">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+        <None Update="build\RhoMicro.CodeAnalysis.JsonSchemaGenerator.targets">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
 </Project>
