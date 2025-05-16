@@ -13,21 +13,12 @@
         /// <typeparam name="T">
         /// The adapter type to register.
         /// </typeparam>
-        public sealed partial class Pattern<T>
+        public sealed partial class Pattern<T>(
+            string configurationSection,
+            (:TypeNames.ServiceLifetime:) lifetime)
             : (:model.Templates().FullyQualifiedTypeNames.RegistrationStrategy:)
             where T : class, (:model.Templates().FullyQualifiedTypeNames.Interface:)
         {
-            private Pattern(
-                string configurationSection,
-                (:TypeNames.ServiceLifetime:) lifetime)
-            {
-                _configurationSection = configurationSection;
-                _lifetime = lifetime;
-            }
-
-            private readonly string _configurationSection;
-            private readonly (:TypeNames.ServiceLifetime:) _lifetime;
-        
             /// <inheritdoc/>
             internal sealed override void Execute(
                 (:TypeNames.IServiceCollection:) services,
@@ -38,11 +29,11 @@
                     new (:TypeNames.ServiceDescriptor:)(
                         serviceType: typeof((:model.Templates().FullyQualifiedTypeNames.Interface:)),
                         implementationType: typeof(T),
-                        lifetime: _lifetime));
+                        lifetime: lifetime));
 
                 var builder = (:TypeNames.OptionsBuilderConfigurationExtensions:).BindConfiguration(
                     (:TypeNames.OptionsServiceCollectionExtensions:).AddOptions<(:model.Templates().FullyQualifiedTypeNames.Mutable:)>(services),
-                    _configurationSection);
+                    configurationSection);
 
                 ConfigureOptionsBuilder(builder, configuration);
             }

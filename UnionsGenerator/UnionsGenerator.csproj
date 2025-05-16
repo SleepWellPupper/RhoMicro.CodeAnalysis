@@ -23,6 +23,10 @@
 		<DefineConstants>$(DefineConstants);UNIONS_GENERATOR</DefineConstants>
 	</PropertyGroup>
 
+	<PropertyGroup>
+		<InternalsVisibleTo>RhoMicro.CodeAnalysis.UnionsGenerator.Tests</InternalsVisibleTo>
+	</PropertyGroup>
+	
 	<ItemGroup>
 		<PackageReference Update="NETStandard.Library" PrivateAssets="all" />
 		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.12.0" />

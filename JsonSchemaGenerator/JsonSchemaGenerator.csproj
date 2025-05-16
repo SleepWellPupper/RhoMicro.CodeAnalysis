@@ -20,7 +20,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <InternalsVisibleTo Include="RhoMicro.CodeAnalysis.JsonSchemeGenerator.Tests"/>
+        <InternalsVisibleTo Include="JsonSchemaGenerator.Tests"/>
+        <InternalsVisibleTo Include="RhoMicro.CodeAnalysis.JsonSchemaGenerator.Tests"/>
     </ItemGroup>
 
     <PropertyGroup>

@@ -9,6 +9,7 @@
 		<IsRoslynComponent>true</IsRoslynComponent>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
+		<InternalsVisibleTo>RhoMicro.CodeAnalysis.DdlGenerator.Tests</InternalsVisibleTo>
 	</PropertyGroup>
 
 	<PropertyGroup>

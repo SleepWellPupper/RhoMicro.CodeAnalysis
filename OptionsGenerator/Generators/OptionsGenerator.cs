@@ -24,7 +24,6 @@ public sealed class OptionsGenerator : IIncrementalGenerator
                 typeof(OptionsAttribute).FullName,
                 static (n, _) => n is InterfaceDeclarationSyntax
                 {
-                    Modifiers: [.., { RawKind: (Int32)SyntaxKind.PartialKeyword }],
                     TypeParameterList: null
                 },
                 static (ctx, ct) =>
@@ -46,9 +45,10 @@ public sealed class OptionsGenerator : IIncrementalGenerator
 
                     using var modelContext = ModelCreationContext.CreateDefault(ct);
 
-                    var model = OptionsModel.Create(type, attribute, in modelContext);
+                    if(!OptionsModel.TryCreate(type, attribute, out var result, in modelContext))
+                        return null;
 
-                    return model;
+                    return result;
                 }).Where(m => m is not null)
                 .Select((m, ct) =>
                 {

@@ -217,19 +217,19 @@ public class UnionsGenerator : IIncrementalGenerator
             .Select(createProvider)
             .Aggregate(
                 createProvider("RhoMicro.CodeAnalysis.RelationAttribute`1"),
-                (leftProvider, rightProvider) =>
-                leftProvider.Combine(rightProvider)
-                .Select((tuple, ct) =>
-                {
-                    ct.ThrowIfCancellationRequested();
-                    var (leftList, rightList) = tuple;
-                    var result = leftList.Concat(rightList)
-                        .GroupBy(t => t.targetSignature)
-                        .Select(g => (targetSignature: g.Key, relations: g.SelectMany(t => t.relations).ToEquatableList(ct)))
-                        .ToEquatableList(ct);
-
-                    return result;
-                }))
+                (leftProvider, rightProvider) => 
+                    leftProvider.Combine(rightProvider)
+                    .Select((tuple, ct) =>
+                    {
+                        ct.ThrowIfCancellationRequested();
+                        var (leftList, rightList) = tuple;
+                        var result = leftList.Concat(rightList)
+                            .GroupBy(t => t.targetSignature)
+                            .Select(g => (targetSignature: g.Key, relations: g.SelectMany(t => t.relations).ToEquatableList(ct)))
+                            .ToEquatableList(ct);
+                    
+                        return result;
+                    }))
             .Select((tuples, ct) =>
             {
                 ct.ThrowIfCancellationRequested();

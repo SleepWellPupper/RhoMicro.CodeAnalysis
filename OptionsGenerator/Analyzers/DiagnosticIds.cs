@@ -6,4 +6,5 @@ using System.Diagnostics.CodeAnalysis;
 internal static class DiagnosticIds
 {
     public const String ROG0001TargetInterfacesCannotBeGeneric = "ROG0001";
+    public const String ROG0002OptionsPropertiesMustBeReadOnly = "ROG0002";
 }

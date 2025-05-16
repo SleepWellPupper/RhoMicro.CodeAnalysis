@@ -3,9 +3,13 @@
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+
 using Basic.Reference.Assemblies;
+
 using RhoMicro.CodeAnalysis.UnionsGenerator.Generators;
+
 using Microsoft.CodeAnalysis.Diagnostics;
+
 using System.Collections.Immutable;
 
 /// <summary>
@@ -14,6 +18,7 @@ using System.Collections.Immutable;
 public abstract class TestBase
 {
     protected TestBase() : this(NetStandard20.References.All.ToArray()) { }
+
     protected TestBase(IEnumerable<MetadataReference> references) =>
         _references = [.. references];
 
@@ -21,10 +26,12 @@ public abstract class TestBase
 
     //requiring >= C#11 due to file scoped modifiers
     private const LanguageVersion _targetLanguageVersion = LanguageVersion.CSharp11;
+
     private static readonly CSharpParseOptions _parseOptions =
         new(languageVersion: _targetLanguageVersion,
             documentationMode: DocumentationMode.Diagnose,
             kind: SourceCodeKind.Regular);
+
     /// <summary>
     /// Invokes an assertion on the union type implementation generated from a source.
     /// </summary>
@@ -33,20 +40,28 @@ public abstract class TestBase
     /// <param name="unionTypeName"></param>
     public void TestUnionType(String source, Action<INamedTypeSymbol> assertion, String? unionTypeName = null)
     {
-        _ = assertion ?? throw new ArgumentNullException(nameof(assertion));
+        try
+        {
+            _ = assertion ?? throw new ArgumentNullException(nameof(assertion));
 
-        Compilation compilation = CreateCompilation(source, out var sourceTree);
-        _ = RunGenerator(ref compilation);
-        var declaration = sourceTree.GetRoot()
-            .DescendantNodesAndSelf()
-            .OfType<TypeDeclarationSyntax>()
-            .SingleOrDefault(d => unionTypeName == null || d.Identifier.Text == unionTypeName);
-        Assert.NotNull(declaration);
-        var symbol = compilation.GetSemanticModel(sourceTree)
-            .GetDeclaredSymbol(declaration);
-        Assert.NotNull(symbol);
-        assertion.Invoke(symbol!);
+            Compilation compilation = CreateCompilation(source, out var sourceTree);
+            _ = RunGenerator(ref compilation);
+            var declaration = sourceTree.GetRoot()
+                .DescendantNodesAndSelf()
+                .OfType<TypeDeclarationSyntax>()
+                .SingleOrDefault(d => unionTypeName == null || d.Identifier.Text == unionTypeName);
+            Assert.NotNull(declaration);
+            var symbol = compilation.GetSemanticModel(sourceTree)
+                .GetDeclaredSymbol(declaration);
+            Assert.NotNull(symbol);
+            assertion.Invoke(symbol!);
+        } catch(Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
     }
+
     /// <summary>
     /// Invokes an assertion on the result of running the generator once on a source.
     /// </summary>
@@ -60,6 +75,7 @@ public abstract class TestBase
         var result = RunGenerator(ref compilation);
         assertion.Invoke(result);
     }
+
     public Task TestDiagnostics(String source, Func<CompilationWithAnalyzers, Task> assertion)
     {
         _ = assertion ?? throw new ArgumentNullException(nameof(assertion));
@@ -68,12 +84,14 @@ public abstract class TestBase
         var compilationWithDiagnostics = AttachAnalyzer(compilation);
         return assertion.Invoke(compilationWithDiagnostics);
     }
+
     private CompilationWithAnalyzers AttachAnalyzer(Compilation compilation)
     {
         var result = compilation.WithAnalyzers([(DiagnosticAnalyzer)new Analyzers.Analyzer()]);
 
         return result;
     }
+
     private GeneratorDriverRunResult RunGenerator(ref Compilation compilation)
     {
         var generator = new UnionsGenerator();
@@ -129,7 +147,7 @@ public abstract class TestBase
                     {
                         ReturnValue = returnValue;
                     }
-
+            
                     /// <summary>Gets the return value condition.</summary>
                     public bool ReturnValue { get; }
                 }
@@ -150,7 +168,7 @@ public abstract class TestBase
                         ReturnValue = returnValue;
                         Members = new[] { member };
                     }
-
+            
                     /// <summary>
                     /// Initializes the attribute with the specified return value condition and list of field and property members.
                     /// </summary>
@@ -161,12 +179,12 @@ public abstract class TestBase
                         ReturnValue = returnValue;
                         Members = members;
                     }
-
+            
                     /// <summary>
                     /// Gets the return value condition.
                     /// </summary>
                     public bool ReturnValue { get; }
-
+            
                     /// <summary>
                     /// Gets field or property member names.
                     /// </summary>
@@ -183,11 +201,13 @@ public abstract class TestBase
 
         return result;
     }
+
     private static CSharpCompilationOptions CreateCompilationOptions()
     {
         String[] args = ["/warnaserror"];
 #pragma warning disable RS1035 // Do not use APIs banned for analyzers (not an analyzer????)
-        var commandLineArguments = CSharpCommandLineParser.Default.Parse(args, baseDirectory: Environment.CurrentDirectory, sdkDirectory: Environment.CurrentDirectory);
+        var commandLineArguments = CSharpCommandLineParser.Default.Parse(args,
+            baseDirectory: Environment.CurrentDirectory, sdkDirectory: Environment.CurrentDirectory);
 #pragma warning restore RS1035 // Do not use APIs banned for analyzers
         var result = commandLineArguments.CompilationOptions
             .WithOutputKind(OutputKind.DynamicallyLinkedLibrary);

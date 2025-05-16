@@ -8,7 +8,7 @@ using System.Text.Json;
 var builder = Host.CreateApplicationBuilder(args);
 
 _ = builder.Services
-    .AddFooOptions(c => c.UseMonitorOptions())
+    .AddFoo(c => c.UseMonitorOptions())
     .AddHostedService<Worker>();
 
 var host = builder.Build();
@@ -31,10 +31,7 @@ namespace RhoMicro.CodeAnalysis.WorkerService1
     {
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            var jsonOptions = new JsonSerializerOptions()
-            {
-                WriteIndented = true
-            };
+            var jsonOptions = new JsonSerializerOptions() { WriteIndented = true };
 
             while(!stoppingToken.IsCancellationRequested)
             {
@@ -77,9 +74,11 @@ namespace RhoMicro.CodeAnalysis.WorkerService1
         [DefaultValueExpression("String.Empty")]
         [AllowedValues(123, 456L)]
         String Prop { get; }
+
         Int32 IntProp { get; }
         IBar Bar { get; }
     }
+
     [Options]
     public partial interface IBar
     {

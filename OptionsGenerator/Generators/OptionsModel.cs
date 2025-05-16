@@ -1,6 +1,7 @@
 ﻿namespace RhoMicro.CodeAnalysis.OptionsGenerator.Generators;
 
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 using Microsoft.CodeAnalysis;
 
@@ -15,9 +16,10 @@ internal sealed record OptionsModel(
     String NamespacePrefix,
     String NormalizedName)
 {
-    public static OptionsModel Create(
+    public static Boolean TryCreate(
         INamedTypeSymbol type,
         OptionsAttribute.Model _,
+        [NotNullWhen(true)] out OptionsModel? result,
         in ModelCreationContext ctx)
     {
         ctx.ThrowIfCancellationRequested();
@@ -28,13 +30,22 @@ internal sealed record OptionsModel(
         {
             ctx.ThrowIfCancellationRequested();
 
+            if(member is IPropertySymbol
+               {
+                   SetMethod:not null
+               } && !member.GetAttributes().Any(a=>a.IsExcludeFromOptionsAttribute()))
+            {
+                result = null;
+                return false;
+            }
+            
             if(PropertyModel.TryCreate(member, out var p, in ctx))
                 properties.Add(p);
         }
 
         var @namespace = type.ContainingNamespace.ToDisplayString(SymbolDisplayFormats.GlobalOmittedNamespaceFormat);
 
-        var result = new OptionsModel(
+        result = new OptionsModel(
             Properties: properties,
             Namespace: @namespace,
             FullyQualifiedNamespacePrefix: @namespace.Length > 0
@@ -46,7 +57,7 @@ internal sealed record OptionsModel(
             Name: type.Name,
             NormalizedName: type.Name[1..]);
 
-        return result;
+        return true;
     }
 
     public Templates Templates() => new(this);
