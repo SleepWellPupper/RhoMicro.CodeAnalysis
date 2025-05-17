@@ -1,40 +1,41 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<TargetFramework>net9.0</TargetFramework>
-		<ImplicitUsings>enable</ImplicitUsings>
-		<Nullable>enable</Nullable>
-		<IsPackable>false</IsPackable>
-	</PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <IsPackable>false</IsPackable>
+        <AssemblyName>RhoMicro.CodeAnalysis.JsonSchemaGenerator.Tests</AssemblyName>
+    </PropertyGroup>
 
-	<ItemGroup>
-	  <Compile Remove="NuGetTests\**" />
-	  <EmbeddedResource Remove="NuGetTests\**" />
-	  <None Remove="NuGetTests\**" />
-	</ItemGroup>
+    <ItemGroup>
+        <Compile Remove="NuGetTests\**"/>
+        <EmbeddedResource Remove="NuGetTests\**"/>
+        <None Remove="NuGetTests\**"/>
+    </ItemGroup>
 
-	<ItemGroup>
-		<PackageReference Include="coverlet.collector" Version="6.0.2">
-		  <PrivateAssets>all</PrivateAssets>
-		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
-		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
-		<PackageReference Include="xunit" Version="2.9.2" />
-		<PackageReference Include="xunit.runner.visualstudio" Version="3.0.0">
-		  <PrivateAssets>all</PrivateAssets>
-		  <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
-		<PackageReference Include="Basic.Reference.Assemblies" Version="1.8.0" />
-		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.12.0" />
-	</ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="coverlet.collector" Version="6.0.2">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0"/>
+        <PackageReference Include="xunit" Version="2.9.2"/>
+        <PackageReference Include="xunit.runner.visualstudio" Version="3.0.0">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <PackageReference Include="Basic.Reference.Assemblies" Version="1.8.0"/>
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.12.0"/>
+    </ItemGroup>
 
-	<ItemGroup>
-	  <ProjectReference Include="..\JsonSchemaGenerator.Cli\JsonSchemaGenerator.Cli.csproj" />
-	  <ProjectReference Include="..\JsonSchemaGenerator\JsonSchemaGenerator.csproj" />
-	</ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\JsonSchemaGenerator.Cli\JsonSchemaGenerator.Cli.csproj"/>
+        <ProjectReference Include="..\JsonSchemaGenerator\JsonSchemaGenerator.csproj"/>
+    </ItemGroup>
 
-	<ItemGroup>
-		<Using Include="Xunit" />
-	</ItemGroup>
+    <ItemGroup>
+        <Using Include="Xunit"/>
+    </ItemGroup>
 
 </Project>

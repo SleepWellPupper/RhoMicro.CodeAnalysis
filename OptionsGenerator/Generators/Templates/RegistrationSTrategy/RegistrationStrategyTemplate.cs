@@ -19,9 +19,10 @@
         /// <typeparam name="TAdapter">
         /// The adapter type to register.
         /// </typeparam>
-        public sealed partial class Pattern<TAdapter>(
+        public sealed partial class Pattern<T>(
             string configurationSection,
-            (:TypeNames.ServiceLifetime:) lifetime)
+            (:TypeNames.ServiceLifetime:) lifetime,
+            bool tryAdd)
             : (:model.Templates().FullyQualifiedTypeNames.RegistrationStrategy:)
             where TAdapter : class, (:model.Templates().FullyQualifiedTypeNames.Interface:)
         {
@@ -30,17 +31,28 @@
                 (:TypeNames.IServiceCollection:) services,
                 (:model.Templates().FullyQualifiedTypeNames.Configuration:) configuration)
             {
-                (:TypeNames.ServiceCollectionDescriptorExtensions:).TryAdd(
-                    services,
-                    new (:TypeNames.ServiceDescriptor:)(
-                        serviceType: typeof((:model.Templates().FullyQualifiedTypeNames.Interface:)),
-                        implementationType: typeof(TAdapter),
-                        lifetime: lifetime));
-
+                var descriptor = new (:TypeNames.ServiceDescriptor:)(
+                    serviceType: typeof((:model.Templates().FullyQualifiedTypeNames.Interface:)),
+                    implementationType: typeof(T),
+                    lifetime: lifetime);
+                    
+                if(tryAdd)
+                {
+                    (:TypeNames.ServiceCollectionDescriptorExtensions:).TryAdd(
+                        services,
+                        descriptor);
+                }
+                else
+                {
+                    (:TypeNames.ServiceCollectionDescriptorExtensions:).TryAdd(
+                        services,
+                        descriptor);
+                }
+    
                 var builder = (:TypeNames.OptionsBuilderConfigurationExtensions:).BindConfiguration(
                     (:TypeNames.OptionsServiceCollectionExtensions:).AddOptions<(:model.Templates().FullyQualifiedTypeNames.Mutable:)>(services),
                     configurationSection);
-
+              
                 ConfigureOptionsBuilder(builder, configuration);
             }
     
@@ -63,21 +75,35 @@
         /// </summary>
         public sealed partial class Custom(
             (:TypeNames.Func:)<(:TypeNames.IServiceProvider:), (:model.Templates().FullyQualifiedTypeNames.Interface:)> factory, 
-            (:TypeNames.ServiceLifetime:) lifetime)
+            (:TypeNames.ServiceLifetime:) lifetime,
+            bool tryAdd)
             : (:model.Templates().FullyQualifiedTypeNames.RegistrationStrategy:)
         {
             /// <inheritdoc/>
             internal override void Execute(
                 (:TypeNames.IServiceCollection:) services,
                 (:model.Templates().FullyQualifiedTypeNames.Configuration:) _)
-                => (:TypeNames.ServiceCollectionDescriptorExtensions:).TryAdd(
-                    services,
-                    new (:TypeNames.ServiceDescriptor:)(
-                        serviceType: typeof((:model.Templates().FullyQualifiedTypeNames.Interface:)),
-                        factory: factory,
-                        lifetime: lifetime));
+            {
+                var descriptor = new (:TypeNames.ServiceDescriptor:)(
+                    serviceType: typeof((:model.Templates().FullyQualifiedTypeNames.Interface:)),
+                    factory: factory,
+                    lifetime: lifetime);
+    
+                if(tryAdd)
+                {
+                    (:TypeNames.ServiceCollectionDescriptorExtensions:).TryAdd(
+                        services,
+                        descriptor);
+                }
+                else
+                {
+                    (:TypeNames.ServiceCollectionDescriptorExtensions:).TryAdd(
+                        services,
+                        descriptor);
+                }
+            }
         }
-
+    
         private (:model.Templates().TypeNames.RegistrationStrategy:)() { }
     
         /// <summary>
@@ -94,7 +120,6 @@
             (:model.Templates().FullyQualifiedTypeNames.Configuration:) configuration);
     }
     """
-    )]
-
+)]
 [NonEquatable]
 internal readonly partial struct RegistrationStrategyTemplate(OptionsModel model);

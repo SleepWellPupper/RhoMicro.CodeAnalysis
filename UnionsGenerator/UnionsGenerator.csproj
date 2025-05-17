@@ -1,55 +1,59 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-	<!--AutoUpdateAssemblyName-->
+    <!--AutoUpdateAssemblyName-->
 
-	<PropertyGroup>
-		<TargetFramework>netstandard2.0</TargetFramework>
-		<IncludeBuildOutput>false</IncludeBuildOutput>
-		<developmentDependency>true</developmentDependency>
-		<NoPackageAnalysis>true</NoPackageAnalysis>
-		<IsRoslynComponent>true</IsRoslynComponent>
-	</PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>netstandard2.0</TargetFramework>
+        <IncludeBuildOutput>false</IncludeBuildOutput>
+        <developmentDependency>true</developmentDependency>
+        <NoPackageAnalysis>true</NoPackageAnalysis>
+        <IsRoslynComponent>true</IsRoslynComponent>
+    </PropertyGroup>
 
-	<PropertyGroup>
-		<IsPackable>true</IsPackable>
-		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-		<Description>
-			Generate hybrid (tagged/type) union types.
-		</Description>
-		<PackageTags>Source Generator; Union Types; Unions</PackageTags>
-		<PackageIconUrl>https://raw.githubusercontent.com/PaulBraetz/RhoMicro.CodeAnalysis/master/UnionsGenerator/PackageLogo.svg</PackageIconUrl>
-	</PropertyGroup>
+    <PropertyGroup>
+        <IsPackable>true</IsPackable>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <Description>
+            Generate hybrid (tagged/type) union types.
+        </Description>
+        <PackageTags>Source Generator; Union Types; Unions</PackageTags>
+        <PackageIconUrl>https://raw.githubusercontent.com/PaulBraetz/RhoMicro.CodeAnalysis/master/UnionsGenerator/PackageLogo.svg</PackageIconUrl>
+    </PropertyGroup>
 
-	<PropertyGroup>
-		<DefineConstants>$(DefineConstants);UNIONS_GENERATOR</DefineConstants>
-	</PropertyGroup>
+    <PropertyGroup>
+        <DefineConstants>$(DefineConstants);UNIONS_GENERATOR</DefineConstants>
+    </PropertyGroup>
 
-	<ItemGroup>
-		<PackageReference Update="NETStandard.Library" PrivateAssets="all" />
-		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.12.0" />
-		<PackageReference Include="PolySharp" Version="1.15.0">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
-	</ItemGroup>
+    <ItemGroup>
+        <InternalsVisibleTo Include="RhoMicro.CodeAnalysis.UnionsGenerator.Tests"/>
+    </ItemGroup>
 
-	<ItemGroup>
-		<PackageReference Include="RhoMicro.CodeAnalysis.UtilityGenerators" Version="15.3.4">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
-	</ItemGroup>
+    <ItemGroup>
+        <PackageReference Update="NETStandard.Library" PrivateAssets="all"/>
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.12.0"/>
+        <PackageReference Include="PolySharp" Version="1.15.0">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
 
-	<ItemGroup>
-		<None Remove=".~lock.Logo_Explorations.odg#" />
-		<None Remove="Logo_Explorations.odg" />
-	</ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="RhoMicro.CodeAnalysis.UtilityGenerators" Version="15.3.4">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+    </ItemGroup>
 
-	<ItemGroup>
-		<None Include="PackageLogo.svg" Pack="true" PackagePath="" />
-		<None Remove="bin\Debug\netstandard2.0\\RhoMicro.CodeAnalysis.UnionsGenerator.1.0.0.1138.dll" />
-		<None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
-		<None Include="README.md" Pack="true" PackagePath="/" CopyToOutputDirectory="Always" />
-		<None Include="LICENSE.txt" Pack="true" PackagePath="/" CopyToOutputDirectory="Always" />
-	</ItemGroup>
-	
+    <ItemGroup>
+        <None Remove=".~lock.Logo_Explorations.odg#"/>
+        <None Remove="Logo_Explorations.odg"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="PackageLogo.svg" Pack="true" PackagePath=""/>
+        <None Remove="bin\Debug\netstandard2.0\\RhoMicro.CodeAnalysis.UnionsGenerator.1.0.0.1138.dll"/>
+        <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false"/>
+        <None Include="README.md" Pack="true" PackagePath="/" CopyToOutputDirectory="Always"/>
+        <None Include="LICENSE.txt" Pack="true" PackagePath="/" CopyToOutputDirectory="Always"/>
+    </ItemGroup>
+
 </Project>

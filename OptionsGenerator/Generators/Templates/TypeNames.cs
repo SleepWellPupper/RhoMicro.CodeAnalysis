@@ -16,4 +16,5 @@ internal static class TypeNames
     public const String Func = "global::System.Func";
     public const String Action = "global::System.Action";
     public const String IServiceProvider = "global::System.IServiceProvider";
+    public const String SetsRequiredMembersAttribute = "global::System.Diagnostics.CodeAnalysis.SetsRequiredMembersAttribute";
 }

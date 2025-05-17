@@ -2,8 +2,11 @@
 
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis;
+
 using Basic.Reference.Assemblies;
+
 using Microsoft.CodeAnalysis.Diagnostics;
+
 using System.Text.Json.Nodes;
 using System.Text.Json;
 
@@ -13,6 +16,7 @@ using System.Text.Json;
 public abstract class TestBase
 {
     protected TestBase() : this(Net80.References.All.ToArray()) { }
+
     protected TestBase(IEnumerable<MetadataReference> references) =>
         _references = [.. references];
 
@@ -20,18 +24,23 @@ public abstract class TestBase
 
     //requiring >= C#11 due to file scoped modifiers
     private const LanguageVersion _targetLanguageVersion = LanguageVersion.Preview;
+
     private static readonly CSharpParseOptions _parseOptions =
         new(languageVersion: _targetLanguageVersion,
             documentationMode: DocumentationMode.Diagnose,
             kind: SourceCodeKind.Regular);
+
     /// <summary>
     /// Tests a generated schema against an expected one.
     /// </summary>
     /// <param name="source"></param>
     /// <param name="expectedSchemaFactory"></param>
     /// <param name="idFactory"></param>
-    public void TestSchema(String source, Func<String, Object> expectedSchemaFactory, Func<String, String>? idFactory = null) =>
-        TestSchema(source, (assemblyName, actual) => AssertSchemataEqual(expectedSchemaFactory.Invoke(assemblyName), actual), idFactory);
+    public void TestSchema(String source, Func<String, Object> expectedSchemaFactory,
+        Func<String, String>? idFactory = null) =>
+        TestSchema(source,
+            (assemblyName, actual) => AssertSchemataEqual(expectedSchemaFactory.Invoke(assemblyName), actual),
+            idFactory);
 
     protected static async Task AssertSchemataEqual(Object expectedSchema, String actualPath)
     {
@@ -39,6 +48,7 @@ public abstract class TestBase
         var actual = await JsonNode.ParseAsync(fs).ConfigureAwait(ConfigureAwaitOptions.None) as JsonObject;
         AssertSchemataEqual(expectedSchema, actual);
     }
+
     protected static void AssertSchemataEqual(Object expectedSchema, JsonObject? actual)
     {
 #pragma warning disable
@@ -74,7 +84,7 @@ public abstract class TestBase
             .OfGeneratedJsonSchemaAttribute()
             .Select(a => JsonNode.Parse(a.Schema))
             .OfType<JsonObject>()
-            .Select(s => (hasId: s.TryGetPropertyValue("$id", out var idNode), idNode, s))
+            .Select(s => ( hasId: s.TryGetPropertyValue("$id", out var idNode), idNode, s ))
             .Where(t => t.hasId)
             .ToDictionary(t => t.idNode!.AsValue().ToString(), t => t.s);
 
@@ -86,7 +96,8 @@ public abstract class TestBase
         if(idFactory is not null)
         {
             var id = idFactory.Invoke(assemblyName);
-            Assert.True(schemata.TryGetValue(id, out schema!), $"Unable to locate schema with expected id '{id}' in test assembly schemata.");
+            Assert.True(schemata.TryGetValue(id, out schema!),
+                $"Unable to locate schema with expected id '{id}' in test assembly schemata.");
         } else
         {
             schema = schemata.First().Value;
@@ -94,6 +105,7 @@ public abstract class TestBase
 
         assertion.Invoke(assemblyName, schema);
     }
+
     /// <summary>
     /// Invokes an assertion on the result of running the generator once on a source.
     /// </summary>
@@ -107,6 +119,7 @@ public abstract class TestBase
         var result = RunGenerator(ref compilation);
         assertion.Invoke(result);
     }
+
     public Task TestDiagnostics(String source, Func<CompilationWithAnalyzers, Task> assertion)
     {
         _ = assertion ?? throw new ArgumentNullException(nameof(assertion));
@@ -115,12 +128,14 @@ public abstract class TestBase
         var compilationWithDiagnostics = AttachAnalyzer(compilation);
         return assertion.Invoke(compilationWithDiagnostics);
     }
+
     private CompilationWithAnalyzers AttachAnalyzer(Compilation compilation)
     {
-        var result = compilation.WithAnalyzers([/*(DiagnosticAnalyzer)new Analyzers.Analyzer()*/]);
+        var result = compilation.WithAnalyzers([ /*(DiagnosticAnalyzer)new Analyzers.Analyzer()*/]);
 
         return result;
     }
+
     protected GeneratorDriverRunResult RunGenerator(ref Compilation compilation)
     {
         var generator = new JsonSchemaGenerator.Generators.JsonSchemaGenerator();
@@ -178,7 +193,7 @@ public abstract class TestBase
                     {
                         ReturnValue = returnValue;
                     }
-
+            
                     /// <summary>Gets the return value condition.</summary>
                     public bool ReturnValue { get; }
                 }
@@ -199,7 +214,7 @@ public abstract class TestBase
                         ReturnValue = returnValue;
                         Members = new[] { member };
                     }
-
+            
                     /// <summary>
                     /// Initializes the attribute with the specified return value condition and list of field and property members.
                     /// </summary>
@@ -210,12 +225,12 @@ public abstract class TestBase
                         ReturnValue = returnValue;
                         Members = members;
                     }
-
+            
                     /// <summary>
                     /// Gets the return value condition.
                     /// </summary>
                     public bool ReturnValue { get; }
-
+            
                     /// <summary>
                     /// Gets field or property member names.
                     /// </summary>
@@ -232,12 +247,15 @@ public abstract class TestBase
 
         return result;
     }
+
     private static Int32 _testAssemblyCount;
+
     private static CSharpCompilationOptions CreateCompilationOptions()
     {
         String[] args = ["/warnaserror"];
 #pragma warning disable RS1035 // Do not use APIs banned for analyzers (not an analyzer????)
-        var commandLineArguments = CSharpCommandLineParser.Default.Parse(args, baseDirectory: Environment.CurrentDirectory, sdkDirectory: Environment.CurrentDirectory);
+        var commandLineArguments = CSharpCommandLineParser.Default.Parse(args,
+            baseDirectory: Environment.CurrentDirectory, sdkDirectory: Environment.CurrentDirectory);
 #pragma warning restore RS1035 // Do not use APIs banned for analyzers
         var result = commandLineArguments.CompilationOptions
             .WithOutputKind(OutputKind.DynamicallyLinkedLibrary);
