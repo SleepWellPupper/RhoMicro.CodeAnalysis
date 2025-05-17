@@ -38,7 +38,7 @@ public class TokenizerTests
         ["\"", Array.Empty<String>(), Array.Empty<Int32>()],
         ["/", new[] { "Slash:/" }, Array.Empty<Int32>()],
         ["#", Array.Empty<String>(), Array.Empty<Int32>()],
-        ["# this is a comment; 24224 ßßßß", new[] { "Comment: this is a comment; 24224 ßßßß" }, Array.Empty<Int32>()],
+        ["# this is a comment; 24224 ï¿½ï¿½ï¿½ï¿½", new[] { "Comment: this is a comment; 24224 ï¿½ï¿½ï¿½ï¿½" }, Array.Empty<Int32>()],
         ["/=", new[] { "SlashEqual:/=" }, Array.Empty<Int32>()],
         ["(", new[] { "ParenLeft:(" }, Array.Empty<Int32>()],
         [")", new[] { "ParenRight:)" }, Array.Empty<Int32>()],
