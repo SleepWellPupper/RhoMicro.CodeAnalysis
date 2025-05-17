@@ -11,10 +11,16 @@
         /// Initializes a new instance.
         /// </summary>
         [(:TypeNames.SetsRequiredMembersAttribute:)]
-        public (:model.Templates().TypeNames.Configuration:)() => UseDefaultOptions();
-
+        public (:model.Templates().TypeNames.Configuration:)(bool tryAdd)
+        {
+            _tryAdd = tryAdd;
+            UseDefaultOptions();
+        }
+    
+        private readonly bool _tryAdd;
+    
         internal (:model.Templates().FullyQualifiedTypeNames.RegistrationStrategy:) RegistrationStrategy { get; private set; }
-
+    
         private (:model.Templates().FullyQualifiedTypeNames.Configuration:) UseRegistrationStrategy((:model.FullyQualifiedNamespacePrefix:)(:model.NormalizedName:)RegistrationStrategy registrationStrategy)
         {
             RegistrationStrategy = registrationStrategy;
@@ -37,7 +43,10 @@
             string configurationSection = "(:model.NormalizedName:)",
             (:TypeNames.ServiceLifetime:) lifetime = (:TypeNames.ServiceLifetime:).Singleton)
             => UseRegistrationStrategy(
-                new (:model.Templates().FullyQualifiedTypeNames.RegistrationStrategy:).Pattern<(:model.Templates().FullyQualifiedTypeNames.Default:)>(configurationSection, lifetime));
+                new (:model.Templates().FullyQualifiedTypeNames.RegistrationStrategy:).Pattern<(:model.Templates().FullyQualifiedTypeNames.Default:)>(
+                    configurationSection, 
+                    lifetime,
+                    _tryAdd));
         
         /// <summary>
         /// Registers an implementation of <see cref="(:model.Templates().FullyQualifiedTypeNames.Interface:)"/> based on <see cref="(:TypeNames.IOptionsSnapshot:){T}"/>.
@@ -55,7 +64,10 @@
             string configurationSection = "(:model.NormalizedName:)",
             (:TypeNames.ServiceLifetime:) lifetime = (:TypeNames.ServiceLifetime:).Scoped)
             => UseRegistrationStrategy(
-                new (:model.Templates().FullyQualifiedTypeNames.RegistrationStrategy:).Pattern<(:model.Templates().FullyQualifiedTypeNames.Snapshot:)>(configurationSection, lifetime));
+                new (:model.Templates().FullyQualifiedTypeNames.RegistrationStrategy:).Pattern<(:model.Templates().FullyQualifiedTypeNames.Snapshot:)>(
+                    configurationSection, 
+                    lifetime,
+                    _tryAdd));
     
         /// <summary>
         /// Registers an implementation of <see cref="(:model.Templates().FullyQualifiedTypeNames.Interface:)"/> based on <see cref="(:TypeNames.IOptionsMonitor:){T}"/>.
@@ -73,7 +85,10 @@
             string configurationSection = "(:model.NormalizedName:)",
             (:TypeNames.ServiceLifetime:) lifetime = (:TypeNames.ServiceLifetime:).Singleton)
             => UseRegistrationStrategy(
-                new (:model.Templates().FullyQualifiedTypeNames.RegistrationStrategy:).Pattern<(:model.Templates().FullyQualifiedTypeNames.Monitor:)>(configurationSection, lifetime));
+                new (:model.Templates().FullyQualifiedTypeNames.RegistrationStrategy:).Pattern<(:model.Templates().FullyQualifiedTypeNames.Monitor:)>(
+                    configurationSection, 
+                    lifetime,
+                    _tryAdd));
     
         /// <summary>
         /// Registers a custom implementation of <see cref="(:model.Templates().FullyQualifiedTypeNames.Interface:)"/>.
@@ -93,7 +108,8 @@
             => UseRegistrationStrategy(
                 new (:model.Templates().FullyQualifiedTypeNames.RegistrationStrategy:).Custom(
                     factory, 
-                    lifetime));
+                    lifetime,
+                    _tryAdd));
     }
     """)]
 [NonEquatable]

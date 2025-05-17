@@ -5,11 +5,16 @@ using System.Text;
 
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
+
 using RhoMicro.CodeAnalysis.Library.Models;
 using RhoMicro.CodeAnalysis.Library.Models.Collections;
 using RhoMicro.CodeAnalysis.Library.Extensions;
+
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
+
+using Analyzers;
+
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
 internal sealed record PropertyModel(
@@ -21,22 +26,12 @@ internal sealed record PropertyModel(
     LocationModel DefaultValueExpressionLocation,
     String DefaultValueExpression)
 {
-    public static Boolean TryCreate(
-        ISymbol member,
-        [NotNullWhen(true)] out PropertyModel? result,
+    public static PropertyModel Create(
+        IPropertySymbol property,
         in ModelCreationContext ctx)
     {
         ctx.ThrowIfCancellationRequested();
-
-        if(member is not IPropertySymbol
-            {
-                DeclaringSyntaxReferences: [{ } reference]
-            } property)
-        {
-            result = null;
-            return false;
-        }
-
+        
         var defaultValueExpression = String.Empty;
         var defaultValueExpressionLocation = LocationModel.Empty;
         var attributes = ctx.CollectionFactory.CreateList<String>();
@@ -44,22 +39,20 @@ internal sealed record PropertyModel(
         foreach(var attribute in property.GetAttributes())
         {
             ctx.ThrowIfCancellationRequested();
-
-            if(attribute.IsExcludeFromOptionsAttribute())
-            {
-                result = null;
-                return false;
-            }
-
-            if(attribute.TryGetDefaultValueExpressionAttributeModel(out var m, cancellationToken: ctx.CancellationToken))
+            
+            if(attribute.TryGetDefaultValueExpressionAttributeModel(
+                   out var m,
+                   cancellationToken: ctx.CancellationToken))
             {
                 defaultValueExpression = m.Expression;
                 defaultValueExpressionLocation = attribute.ApplicationSyntaxReference?
                     .GetSyntax(ctx.CancellationToken) is AttributeSyntax
                 {
-                    ArgumentList.Arguments: [{ Expression: ( LiteralExpressionSyntax or InterpolatedStringExpressionSyntax ) and { } arg }]
+                    ArgumentList.Arguments:
+                    [{ Expression: (LiteralExpressionSyntax or InterpolatedStringExpressionSyntax) and { } arg }]
                 }
-                    ? LocationModel.Create(arg.GetLocation(), ctx.CancellationToken) //TODO: implement value text span calculation
+                    ? LocationModel.Create(arg.GetLocation(),
+                        ctx.CancellationToken) //TODO: implement value text span calculation
                     : LocationModel.Empty;
             } else
             {
@@ -68,17 +61,18 @@ internal sealed record PropertyModel(
             }
         }
 
-        var location = reference.GetSyntax(ctx.CancellationToken) is PropertyDeclarationSyntax
-        {
-            Identifier: { } identifier
-        }
-        ? LocationModel.Create(identifier.GetLocation(), ctx.CancellationToken)
-        : LocationModel.Empty;
+        var location =
+            property.DeclaringSyntaxReferences[0].GetSyntax(ctx.CancellationToken) is PropertyDeclarationSyntax
+            {
+                Identifier: { } identifier
+            }
+                ? LocationModel.Create(identifier.GetLocation(), ctx.CancellationToken)
+                : LocationModel.Empty;
         var name = property.Name;
         var type = property.Type.ToDisplayString(SymbolDisplayFormat.FullyQualifiedFormat);
         var isOptions = property.Type.GetAttributes().Any(static a => a.IsOptionsAttribute());
 
-        result = new PropertyModel(
+        var result = new PropertyModel(
             Name: name,
             Type: type,
             IsOptions: isOptions,
@@ -87,7 +81,7 @@ internal sealed record PropertyModel(
             DefaultValueExpression: defaultValueExpression,
             DefaultValueExpressionLocation: defaultValueExpressionLocation);
 
-        return true;
+        return result;
     }
 
     private static String GetAttributeAnnotation(AttributeData data, CancellationToken ct)

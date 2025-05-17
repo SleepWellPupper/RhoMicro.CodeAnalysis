@@ -3,6 +3,8 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 
+using Analyzers;
+
 using Microsoft.CodeAnalysis;
 
 using RhoMicro.CodeAnalysis.Library.Models;
@@ -30,17 +32,17 @@ internal sealed record OptionsModel(
         {
             ctx.ThrowIfCancellationRequested();
 
-            if(member is IPropertySymbol
-               {
-                   SetMethod:not null
-               } && !member.GetAttributes().Any(a=>a.IsExcludeFromOptionsAttribute()))
+            if(!OptionsAnalyzer.IsTargetProperty(member, out var p))
+                continue;
+
+            if(!OptionsAnalyzer.IsValidTargetProperty(p))
             {
                 result = null;
                 return false;
             }
-            
-            if(PropertyModel.TryCreate(member, out var p, in ctx))
-                properties.Add(p);
+
+            var property = PropertyModel.Create(p, in ctx);
+            properties.Add(property);
         }
 
         var @namespace = type.ContainingNamespace.ToDisplayString(SymbolDisplayFormats.GlobalOmittedNamespaceFormat);

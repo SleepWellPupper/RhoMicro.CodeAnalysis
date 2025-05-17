@@ -15,17 +15,32 @@
             (:TypeNames.Action:)<(:model.Templates().FullyQualifiedTypeNames.Configuration:)>? configure = null)
         {
             (:TypeNames.ArgumentNullException:).ThrowIfNull(services);
-
-            var config = new (:model.Templates().FullyQualifiedTypeNames.Configuration:)();
+    
+            var config = new (:model.Templates().FullyQualifiedTypeNames.Configuration:)(tryAdd: false);
             configure?.Invoke(config);
-
+    
             config.RegistrationStrategy.Execute(services, config);
-
+    
+            return services;
+        }
+        /// <summary>
+        /// Registers <see cref="(:model.Templates().FullyQualifiedTypeNames.Interface:)"/> to the service collection.
+        /// </summary>
+        internal static (:TypeNames.IServiceCollection:) TryAdd(:model.NormalizedName:)(
+            this (:TypeNames.IServiceCollection:) services, 
+            (:TypeNames.Action:)<(:model.Templates().FullyQualifiedTypeNames.Configuration:)>? configure = null)
+        {
+            (:TypeNames.ArgumentNullException:).ThrowIfNull(services);
+    
+            var config = new (:model.Templates().FullyQualifiedTypeNames.Configuration:)(tryAdd: true);
+            configure?.Invoke(config);
+    
+            config.RegistrationStrategy.Execute(services, config);
+    
             return services;
         }
     }
     """
-    )]
-    
+)]
 [NonEquatable]
 internal readonly partial struct ServiceCollectionExtensionsTemplate(OptionsModel model);

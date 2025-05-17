@@ -1,6 +1,7 @@
 namespace RhoMicro.CodeAnalysis.OptionsGenerator.Analyzers;
 
 using System.Collections.Immutable;
+using System.Diagnostics.CodeAnalysis;
 
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Diagnostics;
@@ -14,15 +15,15 @@ public sealed class OptionsAnalyzer : DiagnosticAnalyzer
     /// <summary>
     /// Gets the diagnostic descriptor for rule <c>ROG0001</c>.
     /// </summary>
-    public static DiagnosticDescriptor TargetInterfacesCannotBeGeneric { get; } =
+    public static DiagnosticDescriptor OptionInterfacesCannotBeGeneric { get; } =
         new(
-            id: DiagnosticIds.ROG0001TargetInterfacesCannotBeGeneric,
-            title: "Target interfaces cannot be generic",
-            messageFormat: "Target interface '{0}' cannot be generic",
+            id: DiagnosticIds.ROG0001OptionInterfacesCannotBeGeneric,
+            title: "Option interfaces cannot be generic",
+            messageFormat: "Option interface '{0}' cannot be generic",
             category: "OptionsGenerator",
             defaultSeverity: DiagnosticSeverity.Error,
             isEnabledByDefault: true,
-            description: "Target interfaces cannot be generic."
+            description: "Option interfaces cannot be generic."
         );
 
     /// <summary>
@@ -39,11 +40,26 @@ public sealed class OptionsAnalyzer : DiagnosticAnalyzer
             description: "Options properties must be read only."
         );
 
+    /// <summary>
+    /// Gets the diagnostic descriptor for rule <c>ROG0003</c>.
+    /// </summary>
+    public static DiagnosticDescriptor OptionInterfacesCannotBeNested { get; } =
+        new(
+            id: DiagnosticIds.ROG0003OptionInterfacesCannotBeNested,
+            title: "Option interfaces cannot be nested",
+            messageFormat: "Option interface '{0}' cannot be nested",
+            category: "OptionsGenerator",
+            defaultSeverity: DiagnosticSeverity.Error,
+            isEnabledByDefault: true,
+            description: "Option interfaces cannot be nested."
+        );
+
     /// <inheritdoc/>
     public override ImmutableArray<DiagnosticDescriptor> SupportedDiagnostics { get; } =
     [
-        TargetInterfacesCannotBeGeneric,
-        OptionsPropertiesMustBeReadOnly
+        OptionInterfacesCannotBeGeneric,
+        OptionsPropertiesMustBeReadOnly,
+        OptionInterfacesCannotBeNested,
     ];
 
     private static readonly SymbolDisplayFormat _symbolDisplayFormat = new SymbolDisplayFormat(
@@ -53,7 +69,7 @@ public sealed class OptionsAnalyzer : DiagnosticAnalyzer
         memberOptions: SymbolDisplayMemberOptions.IncludeContainingType,
         propertyStyle: SymbolDisplayPropertyStyle.ShowReadWriteDescriptor
     );
-    
+
     /// <inheritdoc/>
     public override void Initialize(AnalysisContext context)
     {
@@ -69,56 +85,101 @@ public sealed class OptionsAnalyzer : DiagnosticAnalyzer
     {
         if(AnalyzeNamedTypeSymbol(ctx))
             return;
-        
+
         if(AnalyzePropertySymbol(ctx))
             return;
     }
 
     private static Boolean AnalyzePropertySymbol(SymbolAnalysisContext ctx)
     {
-       ctx.CancellationToken.ThrowIfCancellationRequested();
-
-       if(ctx.Symbol is not IPropertySymbol p || 
-          p.GetAttributes().Any(a=>a.IsExcludeFromOptionsAttribute()) ||
-          !p.ContainingType.GetAttributes().Any(a => a.IsOptionsAttribute()))
-       {
-           return false;
-       }
-
-       if(p.GetMethod is not null)
-       {
-           ctx.ReportDiagnostic(
-               Diagnostic.Create(
-                   OptionsPropertiesMustBeReadOnly,
-                   p.Locations[0],
-                   p.ToDisplayString(_symbolDisplayFormat)));
-       }
-
-       return true;
-    }
-
-private static Boolean AnalyzeNamedTypeSymbol(SymbolAnalysisContext ctx)
-    {
         ctx.CancellationToken.ThrowIfCancellationRequested();
 
-        if(ctx.Symbol is not INamedTypeSymbol
-           {
-               TypeKind: TypeKind.Interface,
-               Locations: [_, ..]
-           } typeSymbol || !typeSymbol.GetAttributes().Any(a => a.IsOptionsAttribute()))
+        if(!IsTargetProperty(ctx.Symbol, out var p) ||
+           !p.ContainingType.GetAttributes().Any(a => a.IsOptionsAttribute()))
         {
             return false;
         }
 
-        if(typeSymbol.TypeParameters.Length > 0)
+        if(!IsReadOnlyProperty(p))
         {
             ctx.ReportDiagnostic(
                 Diagnostic.Create(
-                    TargetInterfacesCannotBeGeneric,
-                    typeSymbol.Locations[0],
-                    typeSymbol.ToDisplayString(_symbolDisplayFormat)));
+                    OptionsPropertiesMustBeReadOnly,
+                    p.Locations[0],
+                    p.ToDisplayString(_symbolDisplayFormat)));
         }
 
         return true;
+    }
+
+    private static Boolean AnalyzeNamedTypeSymbol(SymbolAnalysisContext ctx)
+    {
+        ctx.CancellationToken.ThrowIfCancellationRequested();
+
+        if(!IsTargetInterface(ctx.Symbol, out var i) || !i.GetAttributes().Any(a => a.IsOptionsAttribute()))
+        {
+            return false;
+        }
+
+        if(!IsNonGenericType(i))
+        {
+            ctx.ReportDiagnostic(
+                Diagnostic.Create(
+                    OptionInterfacesCannotBeGeneric,
+                    i.Locations[0],
+                    i.ToDisplayString(_symbolDisplayFormat)));
+        }
+
+        if(!IsTopLevelType(i))
+        {
+            ctx.ReportDiagnostic(
+                Diagnostic.Create(
+                    OptionInterfacesCannotBeNested,
+                    i.Locations[0],
+                    i.ToDisplayString(_symbolDisplayFormat)));
+        }
+
+        return true;
+    }
+
+    internal static Boolean IsValidTargetInterface(INamedTypeSymbol target)
+        => IsNonGenericType(target) && IsTopLevelType(target);
+
+    private static Boolean IsNonGenericType(INamedTypeSymbol target) => target.TypeParameters is [];
+    private static Boolean IsTopLevelType(INamedTypeSymbol target) => target.ContainingType is null;
+
+    internal static Boolean IsTargetInterface(ISymbol symbol, [NotNullWhen(true)] out INamedTypeSymbol? target)
+    {
+        if(symbol is INamedTypeSymbol
+           {
+               TypeKind: TypeKind.Interface,
+               Locations: [_, ..]
+           } i)
+        {
+            target = i;
+            return true;
+        }
+
+        target = null;
+        return false;
+    }
+
+    internal static Boolean IsValidTargetProperty(IPropertySymbol target) => IsReadOnlyProperty(target);
+    private static Boolean IsReadOnlyProperty(IPropertySymbol target) => target.SetMethod is null;
+
+    internal static Boolean IsTargetProperty(ISymbol symbol, [NotNullWhen(true)] out IPropertySymbol? target)
+    {
+        if(symbol is IPropertySymbol
+           {
+               DeclaringSyntaxReferences: [_, ..]
+           } p &&
+           !p.GetAttributes().Any(a => a.IsExcludeFromOptionsAttribute()))
+        {
+            target = p;
+            return true;
+        }
+
+        target = null;
+        return false;
     }
 }

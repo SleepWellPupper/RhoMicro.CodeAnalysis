@@ -2,6 +2,8 @@ namespace RhoMicro.CodeAnalysis.OptionsGenerator.Generators;
 
 using System.Linq;
 
+using Analyzers;
+
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -30,36 +32,31 @@ public sealed class OptionsGenerator : IIncrementalGenerator
                 {
                     ct.ThrowIfCancellationRequested();
 
-                    if(ctx is not
-                        {
-                            TargetSymbol: INamedTypeSymbol
-                            {
-                                TypeKind: TypeKind.Interface,
-                                TypeParameters: []
-                            } type,
-                            Attributes: [{ } a, ..]
-                        } || !a.TryGetOptionsAttributeModel(out var attribute, cancellationToken: ct))
+                    if(!OptionsAnalyzer.IsTargetInterface(ctx.TargetSymbol, out var target) ||
+                       !OptionsAnalyzer.IsValidTargetInterface(target) ||
+                       !ctx.Attributes[0].TryGetOptionsAttributeModel(out var attribute, cancellationToken: ct))
                     {
                         return null;
                     }
 
                     using var modelContext = ModelCreationContext.CreateDefault(ct);
 
-                    if(!OptionsModel.TryCreate(type, attribute, out var result, in modelContext))
+                    if(!OptionsModel.TryCreate(target, attribute, out var result, in modelContext))
                         return null;
 
                     return result;
-                }).Where(m => m is not null)
-                .Select((m, ct) =>
-                {
-                    var model = m!;
-                    var hintName = $"{model.NamespacePrefix}{model.Name}.g.cs";
-                    var source = new GeneratedFileTemplate(
+                })
+            .Where(m => m is not null)
+            .Select((m, ct) =>
+            {
+                var model = m!;
+                var hintName = $"{model.NamespacePrefix}{model.Name}.g.cs";
+                var source = new GeneratedFileTemplate(
                         name: nameof(OptionsGenerator))
-                        .RenderToString(model.Templates().Root, ct);
+                    .RenderToString(model.Templates().Root, ct);
 
-                    return (hintName, source);
-                });
+                return ( hintName, source );
+            });
 
         context.RegisterSourceOutput(provider, (ctx, t) => ctx.AddSource(t.hintName, t.source));
 

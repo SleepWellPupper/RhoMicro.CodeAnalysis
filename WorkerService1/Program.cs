@@ -68,15 +68,18 @@ namespace RhoMicro.CodeAnalysis.WorkerService1
     // The default value expression needs to contain:
     // - expression text
     // - location
-    [Options]
-    public partial interface IFoo
+    public class Bar
     {
-        [DefaultValueExpression("String.Empty")]
-        [AllowedValues(123, 456L)]
-        String Prop { get; }
+        [Options]
+        public partial interface IFoo
+        {
+            [DefaultValueExpression("String.Empty")]
+            [AllowedValues(123, 456L)]
+            String Prop { get; }
 
-        Int32 IntProp { get; }
-        IBar Bar { get; }
+            Int32 IntProp { get; }
+            IBar Bar { get; }
+        }
     }
 
     [Options]
