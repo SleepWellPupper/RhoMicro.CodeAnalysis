@@ -10,7 +10,13 @@
         /// <summary>
         /// Provides an implementation for registering an options pattern for <see cref="(:model.Templates().FullyQualifiedTypeNames.Interface:)"/>, as well as an adapter implementation.
         /// </summary>
-        /// <typeparam name="T">
+        /// <param name="configurationSection">
+        /// The configuration section to bind the options instance against.
+        /// </param>
+        /// <param name="lifetime">
+        /// The lifetime of the registered adapter type.
+        /// </param>
+        /// <typeparam name="TAdapter">
         /// The adapter type to register.
         /// </typeparam>
         public sealed partial class Pattern<T>(
@@ -18,7 +24,7 @@
             (:TypeNames.ServiceLifetime:) lifetime,
             bool tryAdd)
             : (:model.Templates().FullyQualifiedTypeNames.RegistrationStrategy:)
-            where T : class, (:model.Templates().FullyQualifiedTypeNames.Interface:)
+            where TAdapter : class, (:model.Templates().FullyQualifiedTypeNames.Interface:)
         {
             /// <inheritdoc/>
             internal sealed override void Execute(
@@ -46,7 +52,7 @@
                 var builder = (:TypeNames.OptionsBuilderConfigurationExtensions:).BindConfiguration(
                     (:TypeNames.OptionsServiceCollectionExtensions:).AddOptions<(:model.Templates().FullyQualifiedTypeNames.Mutable:)>(services),
                     configurationSection);
-    
+              
                 ConfigureOptionsBuilder(builder, configuration);
             }
     

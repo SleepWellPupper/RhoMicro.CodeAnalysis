@@ -31,7 +31,7 @@ using RhoMicro.CodeAnalysis;
 [Options]
 public interface IFoo
 {
-    string Setting { get; set; }
+    string Setting { get; }
 }
 ```
 
@@ -87,7 +87,7 @@ using RhoMicro.CodeAnalysis;
 public interface IFoo
 {
     [ExcludeFromOptions]
-    string ExcludedProperty { get; set; }
+    string ExcludedProperty { get; }
 }
 ```
 
@@ -114,6 +114,30 @@ partial class BarRegistrationStrategy
             BarConfiguration configuration)
             => builder.ValidateDataAnnotations().ValidateOnStart();
     }
+}
+```
+
+### Place Custom Attributes on Properties
+
+Any attribute besides `ExcludeFromOptions` will be included on all implementations of the interface:
+```cs
+using RhoMicro.CodeAnalysis;
+using System.ComponentModel.DataAnnotations;
+
+[Options]
+public interface IFoo
+{
+    [DisallowedValues([null])]
+    string StringProperty { get; }
+}
+```
+
+The generated types will reflect this annotation:
+```cs
+public sealed partial record Foo
+{
+    [DisallowedValues([null])]
+    string StringProperty { get; init; }
 }
 ```
 
