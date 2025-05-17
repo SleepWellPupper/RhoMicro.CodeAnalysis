@@ -40,26 +40,19 @@ public abstract class TestBase
     /// <param name="unionTypeName"></param>
     public void TestUnionType(String source, Action<INamedTypeSymbol> assertion, String? unionTypeName = null)
     {
-        try
-        {
-            _ = assertion ?? throw new ArgumentNullException(nameof(assertion));
+        _ = assertion ?? throw new ArgumentNullException(nameof(assertion));
 
-            Compilation compilation = CreateCompilation(source, out var sourceTree);
-            _ = RunGenerator(ref compilation);
-            var declaration = sourceTree.GetRoot()
-                .DescendantNodesAndSelf()
-                .OfType<TypeDeclarationSyntax>()
-                .SingleOrDefault(d => unionTypeName == null || d.Identifier.Text == unionTypeName);
-            Assert.NotNull(declaration);
-            var symbol = compilation.GetSemanticModel(sourceTree)
-                .GetDeclaredSymbol(declaration);
-            Assert.NotNull(symbol);
-            assertion.Invoke(symbol!);
-        } catch(Exception e)
-        {
-            Console.WriteLine(e);
-            throw;
-        }
+        Compilation compilation = CreateCompilation(source, out var sourceTree);
+        _ = RunGenerator(ref compilation);
+        var declaration = sourceTree.GetRoot()
+            .DescendantNodesAndSelf()
+            .OfType<TypeDeclarationSyntax>()
+            .SingleOrDefault(d => unionTypeName == null || d.Identifier.Text == unionTypeName);
+        Assert.NotNull(declaration);
+        var symbol = compilation.GetSemanticModel(sourceTree)
+            .GetDeclaredSymbol(declaration);
+        Assert.NotNull(symbol);
+        assertion.Invoke(symbol!);
     }
 
     /// <summary>
