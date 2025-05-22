@@ -44,7 +44,7 @@
                 }
                 else
                 {
-                    (:TypeNames.ServiceCollectionDescriptorExtensions:).TryAdd(
+                    (:TypeNames.ServiceCollectionDescriptorExtensions:).Add(
                         services,
                         descriptor);
                 }
@@ -97,7 +97,7 @@
                 }
                 else
                 {
-                    (:TypeNames.ServiceCollectionDescriptorExtensions:).TryAdd(
+                    (:TypeNames.ServiceCollectionDescriptorExtensions:).Add(
                         services,
                         descriptor);
                 }
