@@ -1,4 +1,4 @@
- OptionsGenerator
+# OptionsGenerator
 
 This generator generates an opinionated implementation of the [options pattern](https://learn.microsoft.com/en-us/dotnet/core/extensions/options) against an interface defining the options type to use.
 It allows you to invert control of choosing the desired options lifetime ([default](https://learn.microsoft.com/en-us/dotnet/core/extensions/options#options-interfaces), [snapshot](https://learn.microsoft.com/en-us/dotnet/core/extensions/options#use-ioptionssnapshot-to-read-updated-data), [monitor](https://learn.microsoft.com/en-us/dotnet/core/extensions/options#ioptionsmonitor)) from inside the consumer to the registration site.
