@@ -148,7 +148,3 @@ public sealed partial record Foo
 - the target interface must not be generic
 - only properties will be implemented
 - included properties must be readonly
-
-## TODO
-- analyzer to reflect restrictions
-- tests
