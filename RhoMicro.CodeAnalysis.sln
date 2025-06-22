@@ -68,6 +68,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkerService1", "WorkerSer
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OptionsGenerator.Tests", "OptionsGenerator.Tests\OptionsGenerator.Tests.csproj", "{412EC8AA-7F9B-4A54-A478-0524B791A208}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "VisitorGenerator", "VisitorGenerator\VisitorGenerator.csproj", "{D3BF809F-4878-470C-9897-D6C58D7068A9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -178,6 +180,10 @@ Global
 		{412EC8AA-7F9B-4A54-A478-0524B791A208}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{412EC8AA-7F9B-4A54-A478-0524B791A208}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{412EC8AA-7F9B-4A54-A478-0524B791A208}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D3BF809F-4878-470C-9897-D6C58D7068A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D3BF809F-4878-470C-9897-D6C58D7068A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D3BF809F-4878-470C-9897-D6C58D7068A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D3BF809F-4878-470C-9897-D6C58D7068A9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -209,6 +215,7 @@ Global
 		{7253892F-8AF6-41DC-B2E5-C231E3F8E4BF} = {96BBB21A-F476-4234-97AF-D79F88CE0644}
 		{876F9DD3-D211-4867-B69E-60BF76946838} = {D2B8AC38-3B81-453F-A253-6D410D860D6C}
 		{412EC8AA-7F9B-4A54-A478-0524B791A208} = {96BBB21A-F476-4234-97AF-D79F88CE0644}
+		{D3BF809F-4878-470C-9897-D6C58D7068A9} = {96BBB21A-F476-4234-97AF-D79F88CE0644}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {8A219ED5-5120-4C5F-8EB4-FFF44FFCE2CF}

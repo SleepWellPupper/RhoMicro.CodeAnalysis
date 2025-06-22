@@ -1,60 +1,78 @@
-namespace VisitorExample;
+# VisitorGenerator
 
-using System.Globalization;
+Generates visitor pattern implementation for tree structures.
 
-using RhoMicro.CodeAnalysis;
+## Example
 
-internal class Program
+The following example code illustrates using the generated visitor implementation by implementing 
+a printer and interpreter for a simple language.
+
+### Define Tree Node Types
+
+All node types to be included in the visitor implementations must be defined by annotating the abstract root node type with instances of the `GenerateVisitorAttribute`.
+
+```cs
+[GenerateVisitor<
+    AdditionExpression,
+    SubtractionExpression,
+    MultiplicationExpression,
+    DivisionExpression,
+    LiteralExpression,
+    AssignmentExpression,
+    VariableExpression,
+    StatementList>,
+ GenerateVisitor<
+    ExpressionStatement>]
+internal abstract partial class SyntaxNode;
+
+internal sealed partial class AssignmentExpression : Expression
 {
-    private static void Main()
-    {
-        var program = new StatementList()
-        {
-            Statements =
-            [
-                new ExpressionStatement()
-                {
-                    Expression = new AssignmentExpression()
-                    {
-                        Name = "foo",
-                        Expression = new AdditionExpression()
-                        {
-                            Lhs = new LiteralExpression() { Value = 6 },
-                            Rhs = new LiteralExpression() { Value = 5 }
-                        }
-                    }
-                },
-                new ExpressionStatement()
-                {
-                    Expression = new AssignmentExpression(){
-                        Name = "bar",
-                        Expression =new SubtractionExpression(){
-                        Lhs = new DivisionExpression()
-                        {
-                            Lhs = new VariableExpression(){Name = "foo"},
-                            Rhs = new MultiplicationExpression(){
-                                Lhs = new LiteralExpression(){ Value = 6 },
-                                Rhs = new LiteralExpression(){ Value = 0.5 }
-                            }
-                        },
-                            Rhs = new DivisionExpression(){
-                                Lhs= new LiteralExpression(){ Value = 2},
-                                Rhs = new LiteralExpression(){Value = 3}
-                            }
-                        }
-                    }
-                }
-            ]
-        };
-
-        program.Accept(Printer.Instance);
-
-        var result = program.Accept(new Interpreter());
-
-        Console.WriteLine(result);
-    }
+    public required String Name { get; init; }
+    public required Expression Expression { get; init; }
 }
 
+internal sealed partial class ExpressionStatement : Statement
+{
+    public required Expression Expression { get; init; }
+}
+
+internal sealed partial class VariableExpression : Expression
+{
+    public required String Name { get; init; }
+}
+
+internal sealed partial class LiteralExpression : Expression
+{
+    public required Double Value { get; init; }
+}
+
+internal sealed partial class AdditionExpression : BinaryExpression;
+internal sealed partial class SubtractionExpression : BinaryExpression;
+internal sealed partial class MultiplicationExpression : BinaryExpression;
+internal sealed partial class DivisionExpression : BinaryExpression;
+
+internal abstract class BinaryExpression : Expression
+{
+    public required Expression Lhs { get; init; }
+    public required Expression Rhs { get; init; }
+}
+
+internal sealed partial class StatementList : SyntaxNode
+{
+    public required IEnumerable<Statement> Statements { get; init; }
+}
+
+internal abstract class Expression : SyntaxNode;
+
+internal abstract class Statement : SyntaxNode;
+```
+
+### Implement the Printer
+
+The printer visitor is intended to simply print expressions to the console, without producing any results.
+Note that it hooks into `OnBeforeVisit` and `OnAfterVisit` template methods in order to surround only binary expressions with parentheses.
+Literals and variable expressions are not parenthesized.
+```cs
 internal sealed class Printer : SyntaxNodeVisitor
 {
     private Printer() { }
@@ -117,7 +135,14 @@ internal sealed class Printer : SyntaxNodeVisitor
     public override void VisitVariableExpression(VariableExpression target, CancellationToken cancellationToken = default)
         => Console.Write(target.Name);
 }
+```
 
+### Implement the Interpreter
+
+The interpreter is a simple treewalking interpreter that ambiently stores variable assignments in a hashmap. 
+The last expression in the list of statements visited determines the result of the interpreter.
+
+```cs
 internal sealed class Interpreter : SyntaxNodeVisitor<Double>
 {
     protected override Double GetDefault() => 0;
@@ -149,57 +174,75 @@ internal sealed class Interpreter : SyntaxNodeVisitor<Double>
         return _lastStatementValue;
     }
 }
+```
 
-internal sealed partial class AssignmentExpression : Expression
+### Define Ast
+
+Define an Ast to test our visitor implementation:
+```cs
+var program = new StatementList()
 {
-    public required String Name { get; init; }
-    public required Expression Expression { get; init; }
-}
+    Statements =
+    [
+        new ExpressionStatement()
+        {
+            Expression = new AssignmentExpression()
+            {
+                Name = "foo",
+                Expression = new AdditionExpression()
+                {
+                    Lhs = new LiteralExpression() { Value = 6 },
+                    Rhs = new LiteralExpression() { Value = 5 }
+                }
+            }
+        },
+        new ExpressionStatement()
+        {
+            Expression = new AssignmentExpression(){
+                Name = "bar",
+                Expression =new SubtractionExpression(){
+                Lhs = new DivisionExpression()
+                {
+                    Lhs = new VariableExpression(){Name = "foo"},
+                    Rhs = new MultiplicationExpression(){
+                        Lhs = new LiteralExpression(){ Value = 6 },
+                        Rhs = new LiteralExpression(){ Value = 0.5 }
+                    }
+                },
+                    Rhs = new DivisionExpression(){
+                        Lhs= new LiteralExpression(){ Value = 2},
+                        Rhs = new LiteralExpression(){Value = 3}
+                    }
+                }
+            }
+        }
+    ]
+};
 
-internal sealed partial class ExpressionStatement : Statement
-{
-    public required Expression Expression { get; init; }
-}
+program.Accept(Printer.Instance);
 
-internal sealed partial class VariableExpression : Expression
-{
-    public required String Name { get; init; }
-}
+var result = program.Accept(new Interpreter());
 
-internal sealed partial class LiteralExpression : Expression
-{
-    public required Double Value { get; init; }
-}
+Console.WriteLine(result);
+```
 
-internal sealed partial class AdditionExpression : BinaryExpression;
-internal sealed partial class SubtractionExpression : BinaryExpression;
-internal sealed partial class MultiplicationExpression : BinaryExpression;
-internal sealed partial class DivisionExpression : BinaryExpression;
+### Observe Output
 
-internal abstract class BinaryExpression : Expression
-{
-    public required Expression Lhs { get; init; }
-    public required Expression Rhs { get; init; }
-}
+The first two lines are the result of our printer implementation, while the last line represents the interpreter result value.
 
-internal sealed partial class StatementList : SyntaxNode
-{
-    public required IEnumerable<Statement> Statements { get; init; }
-}
+```
+foo = (6 + 5)
+bar = ((foo / (6 * 0.5)) - (2 / 3))
+3
+```
 
-internal abstract class Expression : SyntaxNode;
+## Restrictions
 
-internal abstract class Statement : SyntaxNode;
+- node base type must be abstract
+- node base type must be class or record class
+- node types must inherit base node
+- nested types are disallowed
 
-[GenerateVisitor<
-    AdditionExpression,
-    SubtractionExpression,
-    MultiplicationExpression,
-    DivisionExpression,
-    LiteralExpression,
-    AssignmentExpression,
-    VariableExpression,
-    StatementList>,
- GenerateVisitor<
-    ExpressionStatement>]
-internal abstract partial class SyntaxNode;
+## TODO
+
+- implement analyzer to reflect restrictions
