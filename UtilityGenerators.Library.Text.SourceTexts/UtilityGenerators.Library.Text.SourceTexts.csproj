@@ -31,7 +31,7 @@
 
 	<ItemGroup>
 		<None Include="README.md" Pack="true" PackagePath="/" CopyToOutputDirectory="Always" />
-		<None Include="LICENSE.txt" Pack="true" PackagePath="/" CopyToOutputDirectory="Always" />
+		
 	</ItemGroup>
 
 	<ItemGroup>

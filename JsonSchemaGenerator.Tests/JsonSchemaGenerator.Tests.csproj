@@ -5,7 +5,6 @@
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <IsPackable>false</IsPackable>
-        <AssemblyName>RhoMicro.CodeAnalysis.JsonSchemaGenerator.Tests</AssemblyName>
     </PropertyGroup>
 
     <ItemGroup>

@@ -6,7 +6,6 @@
 		<IsRoslynComponent>true</IsRoslynComponent>
 		<IsPackable>true</IsPackable>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-		<PackageVersion>$(DebugAssemblyVersion)</PackageVersion>
 		<PackageOutputPath>..\dist\dev</PackageOutputPath>
 	</PropertyGroup>
 
@@ -15,13 +14,12 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <None Remove="bin\Debug\netstandard2.0\\RhoMicro.CodeAnalysis.UtilityGenerators.Dev.1.0.0.2490.dll" />
+		<None Remove="bin\Debug\netstandard2.0\\RhoMicro.CodeAnalysis.UtilityGenerators.Dev.1.0.0.2490.dll" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false" />
 		<None Include="..\UtilityGenerators\README.md" Pack="true" PackagePath="/" CopyToOutputDirectory="Always" />
-		<None Include="..\UtilityGenerators\LICENSE.txt" Pack="true" PackagePath="/" CopyToOutputDirectory="Always" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -37,12 +35,9 @@
 	<PropertyGroup>
 		<PackageName>$(AssemblyName)</PackageName>
 	</PropertyGroup>
-	<PropertyGroup Condition=" $(Configuration) == 'Release' ">
-		<PackageName>$(AssemblyNameWithoutVersion).$(PackageVersion)</PackageName>
-	</PropertyGroup>
-	
+
 	<Target Name="MovePackageToDistDev" AfterTargets="GenerateNuspec">
-		<Copy SourceFiles="$(PackageOutputPath)\$(PackageName).nupkg" DestinationFiles="$(PackageOutputPath)\..\dev\$(AssemblyNameWithoutVersion).1.0.0.nupkg" />
+		<Copy SourceFiles="$(PackageOutputPath)\$(PackageName).nupkg" DestinationFiles="$(PackageOutputPath)\..\dev\$(AssemblyName).nupkg" />
 	</Target>
 
 	<ItemGroup>
@@ -138,7 +133,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Templating\" />
+		<Folder Include="Templating\" />
 	</ItemGroup>
 
 </Project>
