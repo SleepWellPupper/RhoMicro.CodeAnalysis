@@ -25,7 +25,6 @@
 	</PropertyGroup>
 	<PropertyGroup Condition=" $(Configuration) == 'Debug' ">
 		<PackageOutputPath>..\dist\debug</PackageOutputPath>
-		<PackageVersion>$(DebugAssemblyVersion)</PackageVersion>
 	</PropertyGroup>
 	<PropertyGroup Condition=" $(Configuration) == 'Release' ">
 		<PackageOutputPath>..\dist\release</PackageOutputPath>
