@@ -16,7 +16,7 @@
         /// <param name="lifetime">
         /// The lifetime of the registered adapter type.
         /// </param>
-        /// <typeparam name="T">
+        /// <typeparam name="TAdapter">
         /// The adapter type to register.
         /// </typeparam>
         public sealed partial class Pattern<TAdapter>(
@@ -24,7 +24,7 @@
             (:TypeNames.ServiceLifetime:) lifetime,
             bool tryAdd)
             : (:model.Templates().FullyQualifiedTypeNames.RegistrationStrategy:)
-            where T : class, (:model.Templates().FullyQualifiedTypeNames.Interface:)
+            where TAdapter : class, (:model.Templates().FullyQualifiedTypeNames.Interface:)
         {
             /// <inheritdoc/>
             internal sealed override void Execute(
