@@ -36,7 +36,7 @@
 		<PackageName>$(AssemblyName)</PackageName>
 	</PropertyGroup>
 
-	<Target Name="MovePackageToDistDev" AfterTargets="GenerateNuspec">
+	<Target Condition=" $(Configuration) == 'Debug' " Name="MovePackageToDistDev" AfterTargets="GenerateNuspec">
 		<Copy SourceFiles="$(PackageOutputPath)\$(PackageName).nupkg" DestinationFiles="$(PackageOutputPath)\..\dev\$(AssemblyName).nupkg" />
 	</Target>
 
