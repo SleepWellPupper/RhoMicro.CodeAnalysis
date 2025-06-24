@@ -33,7 +33,7 @@
             {
                 var descriptor = new (:TypeNames.ServiceDescriptor:)(
                     serviceType: typeof((:model.Templates().FullyQualifiedTypeNames.Interface:)),
-                    implementationType: typeof(T),
+                    implementationType: typeof(TAdapter),
                     lifetime: lifetime);
                     
                 if(tryAdd)
