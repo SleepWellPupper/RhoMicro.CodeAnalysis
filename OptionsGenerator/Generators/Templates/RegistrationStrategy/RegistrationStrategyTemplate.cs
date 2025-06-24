@@ -19,7 +19,7 @@
         /// <typeparam name="T">
         /// The adapter type to register.
         /// </typeparam>
-        public sealed partial class Pattern<T>(
+        public sealed partial class Pattern<TAdapter>(
             string configurationSection,
             (:TypeNames.ServiceLifetime:) lifetime,
             bool tryAdd)
