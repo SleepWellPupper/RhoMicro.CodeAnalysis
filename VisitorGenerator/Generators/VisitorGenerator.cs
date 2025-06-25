@@ -94,8 +94,10 @@ public sealed class VisitorGenerator : IIncrementalGenerator
         var result = ctx.CollectionFactory.CreateList<BaseNodeModel>();
         var duplicatesMap = new Dictionary<NodeSignatureModel, (BaseNodeModel duplicate, Int32 resultIndex, Boolean isImmutable)>();
 
-        AddModels(left, result, duplicatesMap, in ctx);
-        AddModels(right, result, duplicatesMap, in ctx);
+        var handledNodes = new HashSet<NodeSignatureModel>();
+
+        AddModels(left, result, duplicatesMap, handledNodes, in ctx);
+        AddModels(right, result, duplicatesMap, handledNodes, in ctx);
 
         return result;
     }
