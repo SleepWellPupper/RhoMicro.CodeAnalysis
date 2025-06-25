@@ -104,6 +104,7 @@ public sealed class VisitorGenerator : IIncrementalGenerator
         TList models,
         EquatableList<BaseNodeModel> result,
         Dictionary<NodeSignatureModel, (BaseNodeModel duplicate, Int32 resultIndex, Boolean isImmutable)> duplicatesMap,
+        HashSet<NodeSignatureModel> handledNodes,
         in ModelCreationContext ctx)
         where TList : IEnumerable<BaseNodeModel?>
     {
@@ -130,7 +131,8 @@ public sealed class VisitorGenerator : IIncrementalGenerator
                     {
                         ctx.ThrowIfCancellationRequested();
 
-                        newDuplicate.Nodes.Add(node);
+                        if (handledNodes.Add(node.Signature))
+                            newDuplicate.Nodes.Add(node);
                     }
 
                     duplicate = newDuplicate;
@@ -143,7 +145,8 @@ public sealed class VisitorGenerator : IIncrementalGenerator
                 {
                     ctx.ThrowIfCancellationRequested();
 
-                    duplicate.Nodes.Add(node);
+                    if (handledNodes.Add(node.Signature))
+                        duplicate.Nodes.Add(node);
                 }
             }
             else
