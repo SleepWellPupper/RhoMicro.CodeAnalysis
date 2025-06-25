@@ -8,7 +8,7 @@ namespace RhoMicro.CodeAnalysis;
     (:model.Signature.Flags.HasFlag(NodeSignatureFlags.IsPublic) ? "public" : "internal":) abstract class (:model.TypeNames().VisitorClass:): (:model.TypeNames().VisitorInterfaceFull:)
     {
     {:
-        foreach(var node in model.Nodes)
+        foreach(var node in model.LeafNodes())
         {
             (:Space4, new VisitorClassMethodGroupTemplate(node):)
         }

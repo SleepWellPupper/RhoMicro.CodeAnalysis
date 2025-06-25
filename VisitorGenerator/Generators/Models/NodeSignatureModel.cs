@@ -1,5 +1,7 @@
 namespace RhoMicro.CodeAnalysis;
 
+using System.Diagnostics.CodeAnalysis;
+
 using Microsoft.CodeAnalysis;
 
 using RhoMicro.CodeAnalysis.Library.Models;
@@ -11,26 +13,35 @@ internal sealed record NodeSignatureModel(
     String Name,
     EquatableList<String> TypeParameters)
 {
-    public static NodeSignatureModel Create(ITypeSymbol type, in ModelCreationContext ctx)
+    public static Boolean TryCreate(ITypeSymbol type, [NotNullWhen(true)] out NodeSignatureModel? result, in ModelCreationContext ctx)
     {
         ctx.ThrowIfCancellationRequested();
+
+        if (!type.IsSealed && !type.IsAbstract)
+        {
+            result = null;
+            return false;
+        }
 
         var @namespace = type.ContainingNamespace?.ToDisplayString(SymbolDisplayFormats.NamespaceFormat) ?? String.Empty;
         var name = type.Name;
 
         var flags = NodeSignatureFlags.None;
 
-        if(type.IsRecord)
+        if (type.IsRecord)
             flags |= NodeSignatureFlags.IsRecord;
 
-        if(type.DeclaredAccessibility is Accessibility.Public)
+        if (type.DeclaredAccessibility is Accessibility.Public)
             flags |= NodeSignatureFlags.IsPublic;
+
+        if (type.IsSealed)
+            flags |= NodeSignatureFlags.IsSealed;
 
         var typeParameters = ctx.CollectionFactory.CreateList<String>();
 
-        if(type is INamedTypeSymbol namedType)
+        if (type is INamedTypeSymbol namedType)
         {
-            foreach(var param in namedType.TypeParameters)
+            foreach (var param in namedType.ConstructedFrom.TypeParameters)
             {
                 ctx.ThrowIfCancellationRequested();
 
@@ -38,8 +49,7 @@ internal sealed record NodeSignatureModel(
             }
         }
 
-        var result = new NodeSignatureModel(@namespace, flags, name, typeParameters);
-
-        return result;
+        result = new NodeSignatureModel(@namespace, flags, name, typeParameters);
+        return true;
     }
 }

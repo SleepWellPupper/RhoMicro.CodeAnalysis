@@ -30,7 +30,7 @@ public sealed class VisitorGenerator : IIncrementalGenerator
                 new GeneratedFileTemplate(typeof(VisitorGenerator).FullName),
                 new BaseNodeTemplate(m),
                 ct);
-            var hintName = $"{( m.Signature.Namespace is [_, ..] n ? $"{n}." : String.Empty )}{m.Signature.Name}{( m.Signature.TypeParameters.Count is > 0 and var c ? $"`{c:0}" : String.Empty )}";
+            var hintName = $"{(m.Signature.Namespace is [_, ..] n ? $"{n}." : String.Empty)}{m.Signature.Name}{(m.Signature.TypeParameters.Count is > 0 and var c ? $"`{c:0}" : String.Empty)}";
 
             return (hintName, source);
         });
@@ -49,7 +49,7 @@ public sealed class VisitorGenerator : IIncrementalGenerator
 
         var modelProvider = default(IncrementalValueProvider<EquatableList<BaseNodeModel>>?);
 
-        for(var i = 1; i <= _supportedAttributeArity; i++)
+        for (var i = 1; i <= _supportedAttributeArity; i++)
         {
             var fullyQualifiedMetadataName = $"{typeof(GenerateVisitorAttribute).FullName}`{i:0}";
 
@@ -109,24 +109,24 @@ public sealed class VisitorGenerator : IIncrementalGenerator
     {
         ctx.ThrowIfCancellationRequested();
 
-        foreach(var model in models)
+        foreach (var model in models)
         {
             ctx.ThrowIfCancellationRequested();
 
-            if(model is null)
+            if (model is null)
                 continue;
 
             var signature = model.Signature;
 
-            if(duplicatesMap.TryGetValue(signature, out var t))
+            if (duplicatesMap.TryGetValue(signature, out var t))
             {
                 var (duplicate, resultIndex, duplicateIsImmutable) = t;
 
-                if(duplicateIsImmutable)
+                if (duplicateIsImmutable)
                 {
                     var newDuplicate = new BaseNodeModel(ctx.CollectionFactory.CreateList<NodeModel>(), signature);
 
-                    foreach(var node in duplicate.Nodes)
+                    foreach (var node in duplicate.Nodes)
                     {
                         ctx.ThrowIfCancellationRequested();
 
@@ -139,13 +139,14 @@ public sealed class VisitorGenerator : IIncrementalGenerator
                     result[resultIndex] = duplicate;
                 }
 
-                foreach(var node in model.Nodes)
+                foreach (var node in model.Nodes)
                 {
                     ctx.ThrowIfCancellationRequested();
 
                     duplicate.Nodes.Add(node);
                 }
-            } else
+            }
+            else
             {
                 duplicatesMap[signature] = (duplicate: model, resultIndex: result.Count, isImmutable: true);
                 result.Add(model);
@@ -157,51 +158,63 @@ public sealed class VisitorGenerator : IIncrementalGenerator
     {
         ct.ThrowIfCancellationRequested();
 
-        if(ctx.TargetSymbol is not INamedTypeSymbol baseNodeType)
+        if (ctx.TargetSymbol is not INamedTypeSymbol baseNodeType)
             return null;
 
-        if(baseNodeType.ContainingType is not null)
+        if (baseNodeType.ContainingType is not null)
             return null;
 
         using var modelCtx = ModelCreationContext.CreateDefault(ct);
-
         var nodes = modelCtx.CollectionFactory.CreateList<NodeModel>();
-        foreach(var attribute in ctx.Attributes)
+
+        if (!NodeSignatureModel.TryCreate(baseNodeType, out var baseSignature, in modelCtx))
+            return null;
+
+        var handledTypes = new HashSet<ITypeSymbol>(SymbolEqualityComparer.Default);
+        var result = new BaseNodeModel(nodes, baseSignature);
+
+        foreach (var attribute in ctx.Attributes)
         {
             ct.ThrowIfCancellationRequested();
 
-            foreach(var arg in attribute.ConstructorArguments)
+            foreach (var arg in attribute.ConstructorArguments)
             {
                 ct.ThrowIfCancellationRequested();
 
-                if(arg is not { Kind: TypedConstantKind.Array, Values: { } @params })
+                if (arg is not { Kind: TypedConstantKind.Array, Values: { } @params })
                     continue;
 
-                foreach(var param in @params)
+                foreach (var param in @params)
                 {
-                    if(param is not { Kind: TypedConstantKind.Type, Value: ITypeSymbol typeArg })
+                    if (param is not { Kind: TypedConstantKind.Type, Value: ITypeSymbol typeArg })
                         continue;
 
-                    if(NodeModel.TryCreate(typeArg, baseNodeType, out var node, in modelCtx))
-                        nodes.Add(node);
+                    NodeModel.AddModels(
+                        typeArg,
+                        baseNodeType,
+                        baseSignature,
+                        nodes,
+                        handledTypes,
+                        in modelCtx);
                 }
             }
 
-            if(attribute.AttributeClass?.TypeArguments is not [_, ..] args)
+            if (attribute.AttributeClass?.TypeArguments is not [_, ..] args)
                 continue;
 
-            foreach(var arg in args)
+            foreach (var arg in args)
             {
                 ct.ThrowIfCancellationRequested();
 
-                if(NodeModel.TryCreate(arg, baseNodeType, out var node, in modelCtx))
-                    nodes.Add(node);
+                NodeModel.AddModels(
+                    arg,
+                    baseNodeType,
+                    baseSignature,
+                    nodes,
+                    handledTypes,
+                    in modelCtx);
             }
         }
-
-        var signature = NodeSignatureModel.Create(baseNodeType, in modelCtx);
-
-        var result = new BaseNodeModel(nodes, signature);
 
         return result;
     }
@@ -210,37 +223,32 @@ public sealed class VisitorGenerator : IIncrementalGenerator
     {
         ct.ThrowIfCancellationRequested();
 
-        if(n is not TypeDeclarationSyntax
+        if (n is not TypeDeclarationSyntax
             {
-                RawKind: (Int32)SyntaxKind.RecordDeclaration or (Int32)SyntaxKind.ClassDeclaration
+                RawKind: (Int32)SyntaxKind.RecordDeclaration or (Int32)SyntaxKind.ClassDeclaration,
+                Arity: 0
             } classDeclaration)
         {
             return false;
         }
 
         var isAbstract = false;
-        foreach(var modifier in classDeclaration.Modifiers)
+        foreach (var modifier in classDeclaration.Modifiers)
         {
             ct.ThrowIfCancellationRequested();
 
-            if(modifier.IsKind(SyntaxKind.AbstractKeyword))
+            if (modifier.IsKind(SyntaxKind.AbstractKeyword))
             {
-                if(isAbstract)
+                if (isAbstract)
                     return false;
 
                 isAbstract = true;
             }
         }
 
-        if(!isAbstract)
+        if (!isAbstract)
             return false;
 
         return true;
     }
 }
-
-// rules:
-// node base type must be abstract
-// node base type must be class or record class
-// node types must inherit base node
-// nested types are disallowed

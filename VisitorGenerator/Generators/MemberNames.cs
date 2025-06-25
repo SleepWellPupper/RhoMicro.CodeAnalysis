@@ -3,6 +3,8 @@ namespace RhoMicro.CodeAnalysis;
 [NonEquatable]
 internal readonly partial struct MemberNames(NodeSignatureModel signature)
 {
+    public MethodNameTemplate RewriteMethod { get; } = new("Rewrite", signature);
+
     public MethodNameTemplate VisitMethod { get; } = new("Visit", signature);
     public MethodNameTemplate TraverseMethod { get; } = new("Traverse", signature);
     public MethodNameTemplate OnBeforeVisitMethod { get; } = new("OnBeforeVisit", signature);

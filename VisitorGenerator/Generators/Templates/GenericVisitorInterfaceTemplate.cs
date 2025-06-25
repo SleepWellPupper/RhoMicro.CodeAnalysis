@@ -4,14 +4,14 @@ namespace RhoMicro.CodeAnalysis;
     """
     /// <summary>
     /// Provides base abstraction of the visitor pattern over nodes 
-    /// as defined by <see cref="(:model.FullName():)"/>. Visitors 
+    /// as defined by (:model.Cref():). Visitors 
     /// of this type return some result from their visit.
     /// </summary>
     /// <typeparam name="TResult">The type of result produced by visiting nodes.</typeparam>
     (:model.Signature.Flags.HasFlag(NodeSignatureFlags.IsPublic) ? "public" : "internal":) interface (:model.TypeNames().GenericVisitorInterface:)
     {
     {:
-        foreach(var node in model.Nodes)
+        foreach(var node in model.LeafNodes())
         {
     :}
         /// <summary>

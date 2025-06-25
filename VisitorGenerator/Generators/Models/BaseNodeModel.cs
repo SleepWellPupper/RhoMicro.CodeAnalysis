@@ -6,6 +6,8 @@ internal sealed record BaseNodeModel(
     NodeSignatureModel Signature)
     : NodeModelBase(Signature)
 {
+    public IEnumerable<NodeModel> LeafNodes() => Nodes.Where(static n => n.IsLeaf());
     public TypeNames TypeNames() => new(Signature);
     public TypeNameTemplate FullName() => new(String.Empty, Signature, String.Empty, true);
+    public CrefTemplate Cref() => new(Signature, String.Empty);
 }

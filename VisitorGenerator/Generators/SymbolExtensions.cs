@@ -1,5 +1,7 @@
 namespace RhoMicro.CodeAnalysis;
 
+using System.Diagnostics.CodeAnalysis;
+
 using Microsoft.CodeAnalysis;
 
 internal static class SymbolExtensions

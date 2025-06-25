@@ -238,10 +238,13 @@ bar = ((foo / (6 * 0.5)) - (2 / 3))
 
 ## Restrictions
 
-- node base type must be abstract
+- node base type must have arity 0
 - node base type must be class or record class
 - node types must inherit base node
+- all nodes in hierarchy must be partial
+- all nodes in hierarchy must be sealed or abstract
 - nested types are disallowed
+- generic node types are allowed
 
 ## TODO
 

@@ -1,8 +1,11 @@
 namespace VisitorExample;
 
 using System.Globalization;
+using System.Linq.Expressions;
+using System.Reflection;
 
 using RhoMicro.CodeAnalysis;
+
 
 internal class Program
 {
@@ -52,6 +55,95 @@ internal class Program
         var result = program.Accept(new Interpreter());
 
         Console.WriteLine(result);
+
+        program = program.Accept(new ShoutingCaseRewriter());
+
+        program.Accept(Printer.Instance);
+
+        result = program.Accept(new Interpreter());
+
+        Console.WriteLine(result);
+    }
+}
+
+internal sealed class ShoutingCaseRewriter : SyntaxNodeRewriter
+{
+    public override AdditionExpression RewriteAdditionExpression(AdditionExpression target, CancellationToken cancellationToken = default)
+    {
+        var result = new AdditionExpression()
+        {
+            Lhs = target.Lhs.Accept(this, cancellationToken),
+            Rhs = target.Rhs.Accept(this, cancellationToken)
+        };
+
+        return result;
+    }
+    public override SubtractionExpression RewriteSubtractionExpression(SubtractionExpression target, CancellationToken cancellationToken = default)
+    {
+        var result = new SubtractionExpression()
+        {
+            Lhs = target.Lhs.Accept(this, cancellationToken),
+            Rhs = target.Rhs.Accept(this, cancellationToken)
+        };
+
+        return result;
+    }
+    public override DivisionExpression RewriteDivisionExpression(DivisionExpression target, CancellationToken cancellationToken = default)
+    {
+        var result = new DivisionExpression()
+        {
+            Lhs = target.Lhs.Accept(this, cancellationToken),
+            Rhs = target.Rhs.Accept(this, cancellationToken)
+        };
+
+        return result;
+    }
+    public override MultiplicationExpression RewriteMultiplicationExpression(MultiplicationExpression target, CancellationToken cancellationToken = default)
+    {
+        var result = new MultiplicationExpression()
+        {
+            Lhs = target.Lhs.Accept(this, cancellationToken),
+            Rhs = target.Rhs.Accept(this, cancellationToken)
+        };
+
+        return result;
+    }
+    public override VariableExpression RewriteVariableExpression(VariableExpression target, CancellationToken cancellationToken = default)
+    {
+        var result = new VariableExpression()
+        {
+            Name = target.Name.ToUpperInvariant()
+        };
+
+        return result;
+    }
+    public override AssignmentExpression RewriteAssignmentExpression(AssignmentExpression target, CancellationToken cancellationToken = default)
+    {
+        var result = new AssignmentExpression()
+        {
+            Name = target.Name.ToUpperInvariant(),
+            Expression = target.Expression.Accept(this, cancellationToken)
+        };
+
+        return result;
+    }
+    public override ExpressionStatement RewriteExpressionStatement(ExpressionStatement target, CancellationToken cancellationToken = default)
+    {
+        var result = new ExpressionStatement()
+        {
+            Expression = target.Expression.Accept(this, cancellationToken)
+        };
+
+        return result;
+    }
+    public override StatementList RewriteStatementList(StatementList target, CancellationToken cancellationToken = default)
+    {
+        var result = new StatementList()
+        {
+            Statements = target.Statements.Select(s => s.Accept(this, cancellationToken)).ToList()
+        };
+
+        return result;
     }
 }
 
@@ -143,7 +235,7 @@ internal sealed class Interpreter : SyntaxNodeVisitor<Double>
         => _lastStatementValue = target.Expression.Accept(this, cancellationToken);
     public override Double VisitStatementList(StatementList target, CancellationToken cancellationToken = default)
     {
-        foreach(var statement in target.Statements)
+        foreach (var statement in target.Statements)
             _lastStatementValue = statement.Accept(this, cancellationToken);
 
         return _lastStatementValue;
@@ -176,7 +268,7 @@ internal sealed partial class SubtractionExpression : BinaryExpression;
 internal sealed partial class MultiplicationExpression : BinaryExpression;
 internal sealed partial class DivisionExpression : BinaryExpression;
 
-internal abstract class BinaryExpression : Expression
+internal abstract partial class BinaryExpression : Expression
 {
     public required Expression Lhs { get; init; }
     public required Expression Rhs { get; init; }
@@ -187,9 +279,9 @@ internal sealed partial class StatementList : SyntaxNode
     public required IEnumerable<Statement> Statements { get; init; }
 }
 
-internal abstract class Expression : SyntaxNode;
+internal abstract partial class Expression : SyntaxNode;
 
-internal abstract class Statement : SyntaxNode;
+internal abstract partial class Statement : SyntaxNode;
 
 [GenerateVisitor<
     AdditionExpression,

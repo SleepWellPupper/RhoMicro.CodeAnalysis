@@ -4,16 +4,16 @@ namespace RhoMicro.CodeAnalysis;
     """
     /// <summary>
     /// Provides base abstraction of the visitor pattern over nodes 
-    /// as defined by <see cref="(:model.FullName():)"/>.
+    /// as defined by (:model.Cref():).
     /// </summary>
     (:model.Signature.Flags.HasFlag(NodeSignatureFlags.IsPublic) ? "public" : "internal":) interface (:model.TypeNames().VisitorInterface:)
     {
     {:
-        foreach(var node in model.Nodes)
+        foreach(var node in model.LeafNodes())
         {
     :}
         /// <summary>
-        /// Visits a node of type <see cref="(:model.FullName():)"/>.
+        /// Visits a node of type (:model.Cref():).
         /// </summary>
         /// <param name="target">
         /// The node to visit.

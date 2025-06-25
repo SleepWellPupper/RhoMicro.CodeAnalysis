@@ -29,7 +29,7 @@ namespace RhoMicro.CodeAnalysis;
         protected abstract TResult GetDefault();
 
     {:
-        foreach(var node in model.Nodes)
+        foreach(var node in model.LeafNodes())
         {
             (:Space4, new GenericVisitorClassMethodGroupTemplate(node):)
         }
