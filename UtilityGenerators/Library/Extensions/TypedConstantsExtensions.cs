@@ -1,4 +1,6 @@
-﻿namespace RhoMicro.CodeAnalysis.Library.Extensions;
+﻿// SPDX-License-Identifier: MPL-2.0
+
+namespace RhoMicro.CodeAnalysis.Library.Extensions;
 
 using System;
 using System.Collections.Immutable;
@@ -98,7 +100,7 @@ internal static class TypedConstantsExtensions
         value = null;
         return false;
     }
-    
+
     public static Boolean TryGetReferenceTypeArrayValue<T>(this TypedConstant typedConstant, [NotNullWhen(true)] out EquatableList<T>? value)
         where T : class
     {

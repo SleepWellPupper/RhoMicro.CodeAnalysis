@@ -1,4 +1,6 @@
-﻿Console.WriteLine(TestNamespace.FooStrings.Foo); //generated members
+﻿// SPDX-License-Identifier: MPL-2.0
+
+Console.WriteLine(TestNamespace.FooStrings.Foo); //generated members
 Console.WriteLine(TestNamespace.FooStrings.FooBar);
 Console.WriteLine(TestNamespace.FooStrings.Bar);
 Console.WriteLine(TestNamespace.FooStrings.Baz);

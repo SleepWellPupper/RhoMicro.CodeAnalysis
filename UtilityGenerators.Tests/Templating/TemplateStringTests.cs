@@ -1,4 +1,6 @@
-﻿#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+﻿// SPDX-License-Identifier: MPL-2.0
+
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 namespace RhoMicro.CodeAnalysis.Tests.Templating;
 
 using System;
@@ -158,13 +160,13 @@ public class TemplateStringTests
     [InlineData(
         """""
         """"
-        
+
         """"
         """"", 1, 0, true)]
     [InlineData(
         """""
         """
-        
+
         """
         """"", 1, 0, true)]
     [InlineData(
@@ -178,7 +180,7 @@ public class TemplateStringTests
     [InlineData(
         """"
         """
-        This is a raw 
+        This is a raw
         string literal with
         multiple lines.
         """
@@ -187,7 +189,7 @@ public class TemplateStringTests
         """""
         """"
              This is a raw string literal
-             with more indentation and 
+             with more indentation and
              line breaks
              """"
         """"", 1, 5, true)]
@@ -201,7 +203,7 @@ public class TemplateStringTests
     [InlineData(
         """""
         """
-         This is a multiline raw string literal 
+         This is a multiline raw string literal
          with varied indentation.
          """
         """"", 1, 1, true)]
@@ -245,7 +247,7 @@ public class TemplateStringTests
                 "key2": {
                     "nestedKey": "nestedValue"
                 }
-                }   
+                }
             """"
         """"", 1, 4, true)]
     [InlineData(
@@ -298,7 +300,7 @@ public class TemplateStringTests
         """"
         """
         foo
-        {{bar}}    
+        {{bar}}
         """
         """", 1, 0, true)]
     [InlineData(
@@ -307,7 +309,7 @@ public class TemplateStringTests
         foo
         {{
         bar
-        }}    
+        }}
         """
         """", 1, 0, true)]
     public void SourceTextIsCorrectlyCreated(String sourceText, Int32 startLine, Int32 startCharacter, Boolean isMultiline)

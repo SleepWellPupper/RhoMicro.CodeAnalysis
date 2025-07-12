@@ -1,4 +1,6 @@
-﻿namespace IndentedStringBuilderTestApp;
+﻿// SPDX-License-Identifier: MPL-2.0
+
+namespace IndentedStringBuilderTestApp;
 
 using RhoMicro.CodeAnalysis.Library.Text.SourceTexts;
 

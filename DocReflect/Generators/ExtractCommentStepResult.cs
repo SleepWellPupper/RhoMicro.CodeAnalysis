@@ -1,4 +1,6 @@
-﻿namespace RhoMicro.CodeAnalysis.DocReflect.Generators;
+﻿// SPDX-License-Identifier: MPL-2.0
+
+namespace RhoMicro.CodeAnalysis.DocReflect.Generators;
 
 using System.Collections.Generic;
 using System.Xml;

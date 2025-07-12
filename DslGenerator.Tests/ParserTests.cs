@@ -1,4 +1,6 @@
-﻿#pragma warning disable CA1819 // Properties should not return arrays
+﻿// SPDX-License-Identifier: MPL-2.0
+
+#pragma warning disable CA1819 // Properties should not return arrays
 namespace RhoMicro.CodeAnalysis.DslGenerator.Tests;
 
 using RhoMicro.CodeAnalysis.DslGenerator.Analysis;
@@ -38,7 +40,7 @@ public class ParserTests
                 """
 
                  rule   =   # some commented stuff
-                    rule; 
+                    rule;
                 """,
                 new RuleListBuilder().New("rule", b => b.Reference("rule")),
                 Array.Empty<Int32>()
@@ -182,7 +184,7 @@ public class ParserTests
                 SingleAlpha = "a"-"z" / "A"-"Z" / "_";
                 Alpha = SingleAlpha *SingleAlpha;
                 Digit = "0"-"9" *Digit;
-                
+
                 """,
                 new RuleListBuilder("RhoMicroBackusNaurForm")
 

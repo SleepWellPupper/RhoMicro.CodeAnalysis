@@ -1,4 +1,6 @@
-﻿namespace RhoMicro.CodeAnalysis.DslGenerator.Lexing;
+﻿// SPDX-License-Identifier: MPL-2.0
+
+namespace RhoMicro.CodeAnalysis.DslGenerator.Lexing;
 
 using RhoMicro.CodeAnalysis.DslGenerator.Analysis;
 

@@ -1,4 +1,6 @@
-﻿#pragma warning disable CS1591
+﻿// SPDX-License-Identifier: MPL-2.0
+
+#pragma warning disable CS1591
 
 namespace RhoMicro.CodeAnalysis.UtilityGenerators.Tests.E2E.Library.Models;
 

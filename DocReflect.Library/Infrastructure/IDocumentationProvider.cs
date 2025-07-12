@@ -1,10 +1,12 @@
-﻿namespace RhoMicro.CodeAnalysis.DocReflect.Infrastructure;
+﻿// SPDX-License-Identifier: MPL-2.0
+
+namespace RhoMicro.CodeAnalysis.DocReflect.Infrastructure;
 
 using System.Reflection;
 
 /// <summary>
-/// Provides documentation for types, methods and properties. 
-/// In order to be considered by the infrastructure, 
+/// Provides documentation for types, methods and properties.
+/// In order to be considered by the infrastructure,
 /// provider types must be marked using <see cref="DocumentationProviderAttribute"/>
 /// and have a parameterless constructor.
 /// </summary>

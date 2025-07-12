@@ -1,23 +1,25 @@
+// SPDX-License-Identifier: MPL-2.0
+
 namespace RhoMicro.CodeAnalysis;
 using RhoMicro.CodeAnalysis.Library.Text.Templating;
 
 [Template(
     """
     partial (:model.Flags.HasFlag(NodeSignatureFlags.IsRecord) ? "record" : "class":) (:model.Name:){:
-        if(model.TypeParameters is [_,..] typeParameters)    
+        if(model.TypeParameters is [_,..] typeParameters)
         {
             (:'<':)
-    
+
             for(var i = 0; i < typeParameters.Count; i++)
             {
                 if(i > 0)
                 {
                     :}, {:
                 }
-    
+
                 (:typeParameters[i]:)
             }
-    
+
             (:'>':)
         }
     :}

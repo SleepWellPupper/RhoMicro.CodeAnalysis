@@ -1,4 +1,6 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
+﻿// SPDX-License-Identifier: MPL-2.0
+
+// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
 #pragma warning disable
@@ -403,10 +405,10 @@ namespace System
         }
 
 #pragma warning disable 0809
-        // Obsolete member 'memberA' overrides non-obsolete member 'memberB'. 
+        // Obsolete member 'memberA' overrides non-obsolete member 'memberB'.
         // Disallowing GetHashCode and Equals is by design
 
-        // * We decided to not override GetHashCode() to produce the hash code 
+        // * We decided to not override GetHashCode() to produce the hash code
         //   as this would be weird, both naming-wise as well as from a
         //   behavioral standpoint (GetHashCode() should return the object's
         //   hash code, not the one being computed).

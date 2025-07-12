@@ -1,4 +1,6 @@
-﻿namespace RhoMicro.CodeAnalysis.DslGenerator.Lexing;
+﻿// SPDX-License-Identifier: MPL-2.0
+
+namespace RhoMicro.CodeAnalysis.DslGenerator.Lexing;
 
 using static RhoMicro.CodeAnalysis.DslGenerator.Analysis.DiagnosticDescriptors;
 using RhoMicro.CodeAnalysis.DslGenerator.Grammar;
@@ -15,7 +17,7 @@ partial class Tokenizer
     [UnionType<Token, TokenType>]
     private readonly partial struct TokenOrType;
     public static Tokenizer Instance { get; } = new();
-    
+
     public TokenizeResult Tokenize(SourceText sourceText, CancellationToken cancellationToken
 #if DSL_GENERATOR
         , String filePath = ""

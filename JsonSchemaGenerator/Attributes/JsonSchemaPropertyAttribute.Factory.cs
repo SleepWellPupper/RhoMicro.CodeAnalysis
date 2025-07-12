@@ -1,4 +1,6 @@
-﻿#nullable enable
+﻿// SPDX-License-Identifier: MPL-2.0
+
+#nullable enable
 #pragma warning disable
 using System;
 using System.Linq;
@@ -11,7 +13,7 @@ namespace RhoMicro.CodeAnalysis
     internal partial class JsonSchemaPropertyAttribute
     {
         /// <summary>
-        /// Attempts to create an instance of <see cref = "JsonSchemaPropertyAttribute"/> based on an 
+        /// Attempts to create an instance of <see cref = "JsonSchemaPropertyAttribute"/> based on an
         /// instance of <see cref = "AttributeData"/>.
         /// </summary>
         /// <param name = "data">The attribute data to try and create an instance from.</param>
@@ -24,8 +26,8 @@ namespace RhoMicro.CodeAnalysis
         public static Boolean TryCreate(AttributeData data, out JsonSchemaPropertyAttribute? result)
         {
             result = null;
-            if(data.AttributeClass == null 
-                || data.AttributeClass.MetadataName != "JsonSchemaPropertyAttribute" 
+            if(data.AttributeClass == null
+                || data.AttributeClass.MetadataName != "JsonSchemaPropertyAttribute"
                 || data.AttributeClass.ContainingNamespace.ToDisplayString() != "RhoMicro.CodeAnalysis")
             {
                 return false;
@@ -113,7 +115,7 @@ internal sealed partial class JsonSchemaPropertyAttribute : Attribute
     internal static class JsonSchemaPropertyAttributeExtensions
     {
         /// <summary>
-        /// Filters and projects an enumeration of <see cref = "AttributeData"/> onto 
+        /// Filters and projects an enumeration of <see cref = "AttributeData"/> onto
         /// instances of <see cref = "JsonSchemaPropertyAttribute"/>.
         /// </summary>
         /// <param name = "data">The attribute data to filter.</param>

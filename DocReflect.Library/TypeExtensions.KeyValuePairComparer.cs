@@ -1,4 +1,6 @@
-﻿namespace RhoMicro.CodeAnalysis.DocReflect;
+﻿// SPDX-License-Identifier: MPL-2.0
+
+namespace RhoMicro.CodeAnalysis.DocReflect;
 public static partial class Extensions
 {
     private sealed class KeyValuePairComparer<TKey, TValue> : IEqualityComparer<KeyValuePair<TKey, TValue>>

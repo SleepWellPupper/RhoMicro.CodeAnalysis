@@ -1,4 +1,6 @@
-﻿namespace RhoMicro.CodeAnalysis.Library.Text.Templating;
+﻿// SPDX-License-Identifier: MPL-2.0
+
+namespace RhoMicro.CodeAnalysis.Library.Text.Templating;
 using System;
 
 using Microsoft.CodeAnalysis.CSharp;
@@ -34,7 +36,7 @@ internal readonly partial struct NamedTypeTemplate(NamedTypeModel model, Equatab
         {
             if(i > 0)
                 (:'.':)
-        
+
             (:parts[i]:)
         }
         :}
@@ -50,15 +52,15 @@ internal readonly partial struct NamedTypeTemplate(NamedTypeModel model, Equatab
         <:(:comment:)(:Accessibility:)partial (:model.Kind.Value:) (:model.Name:){:
             if(baseList.Count > 0)
                 :} : {:
-        
+
             for(var i = 0; i < baseList.Count; i++)
             {
                 if(i > 0)
                     :}, {:
-        
+
                 (:baseList[i]:)
             }
-            
+
             if(body is not EmptyTemplate)
             {
             :}
@@ -115,7 +117,7 @@ internal readonly partial struct NamedTypeTemplate(NamedTypeModel model, Equatab
                 (:typeArguments[i].Name:)
 
             }
-        
+
             (:'>':)
         :}
         """)]

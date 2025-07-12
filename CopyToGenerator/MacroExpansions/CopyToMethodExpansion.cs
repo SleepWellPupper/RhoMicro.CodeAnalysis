@@ -1,4 +1,6 @@
-﻿namespace RhoMicro.CodeAnalysis.CopyToGenerator.ExpansionProviders;
+﻿// SPDX-License-Identifier: MPL-2.0
+
+namespace RhoMicro.CodeAnalysis.CopyToGenerator.ExpansionProviders;
 
 using RhoMicro.CodeAnalysis.Library;
 using RhoMicro.CodeAnalysis.CopyToGenerator;
@@ -21,10 +23,10 @@ internal sealed class CopyToMethodExpansion(Model model) : MacroExpansionBase(mo
                  target)
                 {
                     if(this == target || target == null)
-                    { 
+                    {
                         return;
                     }
-                                
+
                     if(AvoidCopy(this, target))
                     {
                         return;

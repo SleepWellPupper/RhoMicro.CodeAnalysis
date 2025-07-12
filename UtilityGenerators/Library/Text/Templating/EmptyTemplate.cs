@@ -1,4 +1,6 @@
-﻿namespace RhoMicro.CodeAnalysis.Library.Text.Templating;
+﻿// SPDX-License-Identifier: MPL-2.0
+
+namespace RhoMicro.CodeAnalysis.Library.Text.Templating;
 
 /// <summary>
 /// Represents an empty template. Rendering instance will always yield an empty string.
@@ -11,6 +13,6 @@ internal sealed class EmptyTemplate : ITemplate
     private EmptyTemplate() { }
     public static EmptyTemplate Instance { get; } = new();
     public void Render<TBody>(ref TemplateRenderer context, TBody body, CancellationToken cancellationToken)
-        where TBody : ITemplate 
+        where TBody : ITemplate
         => cancellationToken.ThrowIfCancellationRequested();
 }

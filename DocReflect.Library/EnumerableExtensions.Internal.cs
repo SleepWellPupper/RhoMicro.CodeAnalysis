@@ -1,4 +1,6 @@
-﻿namespace RhoMicro.CodeAnalysis.Library;
+﻿// SPDX-License-Identifier: MPL-2.0
+
+namespace RhoMicro.CodeAnalysis.Library;
 
 using RhoMicro.CodeAnalysis.Library.Models.Collections;
 

@@ -1,4 +1,6 @@
-﻿namespace RhoMicro.CodeAnalysis.JsonSchemaGenerator.Models;
+﻿// SPDX-License-Identifier: MPL-2.0
+
+namespace RhoMicro.CodeAnalysis.JsonSchemaGenerator.Models;
 using System.Text;
 
 internal sealed record JsonDynamicModel : JsonValueModel<JsonValueModel>

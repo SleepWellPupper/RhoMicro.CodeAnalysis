@@ -1,4 +1,6 @@
-﻿namespace RhoMicro.CodeAnalysis.DocReflect.Comments;
+﻿// SPDX-License-Identifier: MPL-2.0
+
+namespace RhoMicro.CodeAnalysis.DocReflect.Comments;
 using System;
 
 /// <summary>

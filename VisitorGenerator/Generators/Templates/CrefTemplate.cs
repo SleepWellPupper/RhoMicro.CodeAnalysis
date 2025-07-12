@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MPL-2.0
+
 namespace RhoMicro.CodeAnalysis;
 
 [Template(
@@ -21,7 +23,7 @@ namespace RhoMicro.CodeAnalysis;
 
                 (:typeParameters[i]:)
             }
-    
+
             (:'}':)
         }
     :}(:suffix:)"/>

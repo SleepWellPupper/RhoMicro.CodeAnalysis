@@ -1,4 +1,6 @@
-﻿namespace RhoMicro.CodeAnalysis;
+﻿// SPDX-License-Identifier: MPL-2.0
+
+namespace RhoMicro.CodeAnalysis;
 
 /// <summary>
 /// Defines the types of node to generate visitor methods for.

@@ -1,4 +1,6 @@
-﻿#pragma warning disable CA1861 // Avoid constant arrays as arguments
+﻿// SPDX-License-Identifier: MPL-2.0
+
+#pragma warning disable CA1861 // Avoid constant arrays as arguments
 namespace RhoMicro.CodeAnalysis.JsonSchemaGenerator.Tests;
 public class NullableValueTypesTests : TestBase
 {

@@ -1,4 +1,6 @@
-﻿namespace RhoMicro.CodeAnalysis.JsonSchemaGenerator.Tests;
+﻿// SPDX-License-Identifier: MPL-2.0
+
+namespace RhoMicro.CodeAnalysis.JsonSchemaGenerator.Tests;
 
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis;
@@ -193,7 +195,7 @@ public abstract class TestBase
                     {
                         ReturnValue = returnValue;
                     }
-            
+
                     /// <summary>Gets the return value condition.</summary>
                     public bool ReturnValue { get; }
                 }
@@ -214,7 +216,7 @@ public abstract class TestBase
                         ReturnValue = returnValue;
                         Members = new[] { member };
                     }
-            
+
                     /// <summary>
                     /// Initializes the attribute with the specified return value condition and list of field and property members.
                     /// </summary>
@@ -225,12 +227,12 @@ public abstract class TestBase
                         ReturnValue = returnValue;
                         Members = members;
                     }
-            
+
                     /// <summary>
                     /// Gets the return value condition.
                     /// </summary>
                     public bool ReturnValue { get; }
-            
+
                     /// <summary>
                     /// Gets field or property member names.
                     /// </summary>

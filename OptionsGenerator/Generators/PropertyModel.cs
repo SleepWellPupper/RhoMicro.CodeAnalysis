@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MPL-2.0
+
 namespace RhoMicro.CodeAnalysis.OptionsGenerator.Generators;
 
 using System;
@@ -31,7 +33,7 @@ internal sealed record PropertyModel(
         in ModelCreationContext ctx)
     {
         ctx.ThrowIfCancellationRequested();
-        
+
         var defaultValueExpression = String.Empty;
         var defaultValueExpressionLocation = LocationModel.Empty;
         var attributes = ctx.CollectionFactory.CreateList<String>();
@@ -39,7 +41,7 @@ internal sealed record PropertyModel(
         foreach(var attribute in property.GetAttributes())
         {
             ctx.ThrowIfCancellationRequested();
-            
+
             if(attribute.TryGetDefaultValueExpressionAttributeModel(
                    out var m,
                    cancellationToken: ctx.CancellationToken))

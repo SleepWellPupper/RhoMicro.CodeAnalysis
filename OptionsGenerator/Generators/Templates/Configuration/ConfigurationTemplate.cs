@@ -1,4 +1,6 @@
-﻿namespace RhoMicro.CodeAnalysis.OptionsGenerator.Generators;
+﻿// SPDX-License-Identifier: MPL-2.0
+
+namespace RhoMicro.CodeAnalysis.OptionsGenerator.Generators;
 
 [Template(
     """
@@ -16,17 +18,17 @@
             _tryAdd = tryAdd;
             UseDefaultOptions();
         }
-    
+
         private readonly bool _tryAdd;
-    
+
         internal (:model.Templates().FullyQualifiedTypeNames.RegistrationStrategy:) RegistrationStrategy { get; private set; }
-    
+
         private (:model.Templates().FullyQualifiedTypeNames.Configuration:) UseRegistrationStrategy((:model.FullyQualifiedNamespacePrefix:)(:model.NormalizedName:)RegistrationStrategy registrationStrategy)
         {
             RegistrationStrategy = registrationStrategy;
             return this;
         }
-    
+
         /// <summary>
         /// Registers an implementation of <see cref="(:model.Templates().FullyQualifiedTypeNames.Interface:)"/> based on <see cref="(:TypeNames.IOptions:){T}"/>.
         /// </summary>
@@ -44,10 +46,10 @@
             (:TypeNames.ServiceLifetime:) lifetime = (:TypeNames.ServiceLifetime:).Singleton)
             => UseRegistrationStrategy(
                 new (:model.Templates().FullyQualifiedTypeNames.RegistrationStrategy:).Pattern<(:model.Templates().FullyQualifiedTypeNames.Default:)>(
-                    configurationSection, 
+                    configurationSection,
                     lifetime,
                     _tryAdd));
-        
+
         /// <summary>
         /// Registers an implementation of <see cref="(:model.Templates().FullyQualifiedTypeNames.Interface:)"/> based on <see cref="(:TypeNames.IOptionsSnapshot:){T}"/>.
         /// </summary>
@@ -65,10 +67,10 @@
             (:TypeNames.ServiceLifetime:) lifetime = (:TypeNames.ServiceLifetime:).Scoped)
             => UseRegistrationStrategy(
                 new (:model.Templates().FullyQualifiedTypeNames.RegistrationStrategy:).Pattern<(:model.Templates().FullyQualifiedTypeNames.Snapshot:)>(
-                    configurationSection, 
+                    configurationSection,
                     lifetime,
                     _tryAdd));
-    
+
         /// <summary>
         /// Registers an implementation of <see cref="(:model.Templates().FullyQualifiedTypeNames.Interface:)"/> based on <see cref="(:TypeNames.IOptionsMonitor:){T}"/>.
         /// </summary>
@@ -86,10 +88,10 @@
             (:TypeNames.ServiceLifetime:) lifetime = (:TypeNames.ServiceLifetime:).Singleton)
             => UseRegistrationStrategy(
                 new (:model.Templates().FullyQualifiedTypeNames.RegistrationStrategy:).Pattern<(:model.Templates().FullyQualifiedTypeNames.Monitor:)>(
-                    configurationSection, 
+                    configurationSection,
                     lifetime,
                     _tryAdd));
-    
+
         /// <summary>
         /// Registers a custom implementation of <see cref="(:model.Templates().FullyQualifiedTypeNames.Interface:)"/>.
         /// </summary>
@@ -103,11 +105,11 @@
         /// A reference to the configuration, for chaining of further method calls.
         /// </returns>
         public (:model.Templates().FullyQualifiedTypeNames.Configuration:) UseCustomOptions(
-            (:TypeNames.Func:)<(:TypeNames.IServiceProvider:), (:model.Templates().FullyQualifiedTypeNames.Interface:)> factory, 
+            (:TypeNames.Func:)<(:TypeNames.IServiceProvider:), (:model.Templates().FullyQualifiedTypeNames.Interface:)> factory,
             (:TypeNames.ServiceLifetime:) lifetime = (:TypeNames.ServiceLifetime:).Singleton)
             => UseRegistrationStrategy(
                 new (:model.Templates().FullyQualifiedTypeNames.RegistrationStrategy:).Custom(
-                    factory, 
+                    factory,
                     lifetime,
                     _tryAdd));
     }

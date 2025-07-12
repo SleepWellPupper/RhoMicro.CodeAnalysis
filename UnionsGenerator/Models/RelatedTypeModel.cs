@@ -1,4 +1,6 @@
-﻿namespace RhoMicro.CodeAnalysis.UnionsGenerator.Models;
+﻿// SPDX-License-Identifier: MPL-2.0
+
+namespace RhoMicro.CodeAnalysis.UnionsGenerator.Models;
 
 using Microsoft.CodeAnalysis;
 
@@ -24,7 +26,7 @@ internal sealed record RelatedTypeModel(TypeSignatureModel Signature, EquatableS
         var typeParamSignatures = relationSymbol.TypeParameters
             .Select(p => PartialUnionTypeModel.CreateFromTypeParameter(p, cancellationToken))
             .Where(m => m != null);
-        
+
         var relationTypeSignature = TypeSignatureModel.Create(relationSymbol, cancellationToken);
 
         var result = declarationSignatures.Concat(typeParamSignatures)

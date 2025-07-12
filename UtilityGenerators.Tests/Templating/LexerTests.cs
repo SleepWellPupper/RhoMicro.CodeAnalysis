@@ -1,4 +1,6 @@
-﻿#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+﻿// SPDX-License-Identifier: MPL-2.0
+
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 namespace RhoMicro.CodeAnalysis.Tests.Templating;
 
 using System;
@@ -278,7 +280,7 @@ public partial class LexerTests(ITestOutputHelper testOutput)
         """", b => b
         .NotNewline(3).Newline(
                """
-               
+
 
                """.Length)
         .Whitespaces(trivia.Length).Token(kind, open.Length).NotNewline(3)

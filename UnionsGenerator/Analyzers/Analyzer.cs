@@ -1,4 +1,6 @@
-﻿#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+﻿// SPDX-License-Identifier: MPL-2.0
+
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 namespace RhoMicro.CodeAnalysis.UnionsGenerator.Analyzers;
 
 using Microsoft.CodeAnalysis;

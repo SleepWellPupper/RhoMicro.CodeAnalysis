@@ -1,4 +1,6 @@
-﻿#pragma warning disable CA1861
+﻿// SPDX-License-Identifier: MPL-2.0
+
+#pragma warning disable CA1861
 namespace RhoMicro.CodeAnalysis.JsonSchemaGenerator.Tests;
 public class RefTests : TestBase
 {
@@ -67,7 +69,7 @@ public class RefTests : TestBase
                 public Dependency Prop { get; set; } = new Dependency();
             }
             [RhoMicro.CodeAnalysis.JsonSchema]
-            class Dependency 
+            class Dependency
             {
                 public int Prop { get; set; }
             }
@@ -91,7 +93,7 @@ public class RefTests : TestBase
                 public Dependency Prop { get; set; } = new Dependency();
             }
             [RhoMicro.CodeAnalysis.JsonSchema]
-            class Dependency 
+            class Dependency
             {
                 public int Prop { get; set; }
             }

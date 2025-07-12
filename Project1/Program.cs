@@ -1,4 +1,6 @@
-﻿using System.Diagnostics.Metrics;
+﻿// SPDX-License-Identifier: MPL-2.0
+
+using System.Diagnostics.Metrics;
 using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -29,10 +31,10 @@ internal partial class Program
 
     [Template("(:Salutation:) (:Name:).", BodyParameterName = "Name")]
     readonly partial record struct Header(String Salutation);
-    
+
     [Template("(:Salutation:) (:Name:).", BodyParameterName = "Name")]
     readonly partial record struct Footer(String Salutation);
-    
+
     [Template(
         """
         {:

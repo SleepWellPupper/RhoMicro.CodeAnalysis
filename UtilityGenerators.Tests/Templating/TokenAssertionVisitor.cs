@@ -1,4 +1,6 @@
-﻿#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
+﻿// SPDX-License-Identifier: MPL-2.0
+
+#pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
 namespace RhoMicro.CodeAnalysis.Tests.Templating;
 
 using System;
@@ -9,7 +11,7 @@ using RhoMicro.CodeAnalysis.Templating.Syntax.Visitors;
 internal sealed class TokenAssertionVisitor : TokenValidator
 {
     private TokenAssertionVisitor(String message)
-        : base(TestContext.Current.CancellationToken) => 
+        : base(TestContext.Current.CancellationToken) =>
         _message = message;
 
     private readonly String _message;

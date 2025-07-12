@@ -1,4 +1,6 @@
-﻿namespace RhoMicro.CodeAnalysis.DslGenerator.Grammar;
+﻿// SPDX-License-Identifier: MPL-2.0
+
+namespace RhoMicro.CodeAnalysis.DslGenerator.Grammar;
 
 using RhoMicro.CodeAnalysis.DslGenerator.Lexing;
 
@@ -29,7 +31,7 @@ abstract partial record Rule
         protected override void AppendCtorArgs(IndentedStringBuilder builder, CancellationToken cancellationToken)
         {
             cancellationToken.ThrowIfCancellationRequested();
-            
+
             _ = AppendCtorArg(builder, nameof(Value), Value, quoteValue: true, cancellationToken);
         }
         public Boolean Equals(Terminal other) => other is not null && Value == other.Value;

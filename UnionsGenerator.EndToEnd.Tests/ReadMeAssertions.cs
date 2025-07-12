@@ -1,6 +1,8 @@
-﻿#pragma warning disable IDE0250
-#pragma warning disable IDE0059 
-#pragma warning disable CS1591 
+﻿// SPDX-License-Identifier: MPL-2.0
+
+#pragma warning disable IDE0250
+#pragma warning disable IDE0059
+#pragma warning disable CS1591
 namespace RhoMicro.CodeAnalysis.UnionsGenerator.EndToEnd.Tests;
 using System;
 using System.Collections.Generic;

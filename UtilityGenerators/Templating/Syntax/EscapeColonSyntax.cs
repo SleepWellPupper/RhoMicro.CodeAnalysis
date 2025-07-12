@@ -1,4 +1,6 @@
-﻿namespace RhoMicro.CodeAnalysis.Templating.Syntax;
+﻿// SPDX-License-Identifier: MPL-2.0
+
+namespace RhoMicro.CodeAnalysis.Templating.Syntax;
 
 using RhoMicro.CodeAnalysis.Templating;
 using RhoMicro.CodeAnalysis.Templating.Syntax.Visitors;

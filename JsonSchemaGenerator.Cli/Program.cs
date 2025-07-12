@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿// SPDX-License-Identifier: MPL-2.0
+
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;

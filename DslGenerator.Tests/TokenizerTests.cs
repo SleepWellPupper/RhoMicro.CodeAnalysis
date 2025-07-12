@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MPL-2.0
+
 #pragma warning disable CA1861 // Avoid constant arrays as arguments
 namespace DslGenerator.Tests;
 
@@ -54,7 +56,7 @@ public class TokenizerTests
         [       """
                 testname = ["is this the 1 legal value?"] / # here is a comment
                     *"no, it's not :)"; # and another comment
-                
+
                 """,
             new[] { "Name:testname", "Whitespace: ", "Equal:=", "Whitespace: ",
                              "BracketLeft:[", "Terminal:is this the 1 legal value?", "BracketRight:]",

@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MPL-2.0
+
 namespace RhoMicro.CodeAnalysis;
 
 [Template(
@@ -6,16 +8,16 @@ namespace RhoMicro.CodeAnalysis;
     public virtual (:new MethodSignatureTemplate("TResult", model.MemberNames().GenericVisitMethod, model):)
     {
         cancellationToken.ThrowIfCancellationRequested();
-    
+
         var result = GetDefault();
         var tmp = result;
 
         tmp = (:model.MemberNames().GenericOnBeforeVisitMethod:)(target, cancellationToken);
         result = Aggregate(result, tmp);
-        
+
         tmp = (:model.MemberNames().GenericTraverseMethod:)(target, cancellationToken);
         result = Aggregate(result, tmp);
-        
+
         tmp = (:model.MemberNames().GenericOnAfterVisitMethod:)(target, cancellationToken);
         result = Aggregate(result, tmp);
 
@@ -36,7 +38,7 @@ namespace RhoMicro.CodeAnalysis;
     public virtual (:new MethodSignatureTemplate("TResult", model.MemberNames().GenericOnBeforeVisitMethod, model):)
     {
         cancellationToken.ThrowIfCancellationRequested();
-    
+
         var result = GetDefault();
 
         return result;
@@ -61,7 +63,7 @@ namespace RhoMicro.CodeAnalysis;
     public virtual (:new MethodSignatureTemplate("TResult", model.MemberNames().GenericTraverseMethod, model):)
     {
         cancellationToken.ThrowIfCancellationRequested();
-    
+
         var result = GetDefault();
         var tmp = result;
 
@@ -80,7 +82,7 @@ namespace RhoMicro.CodeAnalysis;
                 }
 
                 (:Space4, new GenericPropertyTraversalTemplate(property):)
-    
+
                 if(isNullable)
                 {
                     renderer.Detent(Space4.Length);
@@ -108,9 +110,9 @@ namespace RhoMicro.CodeAnalysis;
     public virtual (:new MethodSignatureTemplate("TResult", model.MemberNames().GenericOnAfterVisitMethod, model):)
     {
         cancellationToken.ThrowIfCancellationRequested();
-    
+
         var result = GetDefault();
-    
+
         return result;
     }
 
