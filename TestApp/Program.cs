@@ -58,94 +58,11 @@ internal class Program
 
         Console.WriteLine(result);
 
-        program = program.Accept(new ShoutingCaseRewriter());
-
         program.Accept(Printer.Instance);
 
         result = program.Accept(new Interpreter());
 
         Console.WriteLine(result);
-    }
-}
-
-internal sealed class ShoutingCaseRewriter : SyntaxNodeRewriter
-{
-    public override AdditionExpression RewriteAdditionExpression(AdditionExpression target, CancellationToken cancellationToken = default)
-    {
-        var result = new AdditionExpression()
-        {
-            Lhs = target.Lhs.Accept(this, cancellationToken),
-            Rhs = target.Rhs.Accept(this, cancellationToken)
-        };
-
-        return result;
-    }
-    public override SubtractionExpression RewriteSubtractionExpression(SubtractionExpression target, CancellationToken cancellationToken = default)
-    {
-        var result = new SubtractionExpression()
-        {
-            Lhs = target.Lhs.Accept(this, cancellationToken),
-            Rhs = target.Rhs.Accept(this, cancellationToken)
-        };
-
-        return result;
-    }
-    public override DivisionExpression RewriteDivisionExpression(DivisionExpression target, CancellationToken cancellationToken = default)
-    {
-        var result = new DivisionExpression()
-        {
-            Lhs = target.Lhs.Accept(this, cancellationToken),
-            Rhs = target.Rhs.Accept(this, cancellationToken)
-        };
-
-        return result;
-    }
-    public override MultiplicationExpression RewriteMultiplicationExpression(MultiplicationExpression target, CancellationToken cancellationToken = default)
-    {
-        var result = new MultiplicationExpression()
-        {
-            Lhs = target.Lhs.Accept(this, cancellationToken),
-            Rhs = target.Rhs.Accept(this, cancellationToken)
-        };
-
-        return result;
-    }
-    public override VariableExpression RewriteVariableExpression(VariableExpression target, CancellationToken cancellationToken = default)
-    {
-        var result = new VariableExpression()
-        {
-            Name = target.Name.ToUpperInvariant()
-        };
-
-        return result;
-    }
-    public override AssignmentExpression RewriteAssignmentExpression(AssignmentExpression target, CancellationToken cancellationToken = default)
-    {
-        var result = new AssignmentExpression()
-        {
-            Name = target.Name.ToUpperInvariant(),
-            Expression = target.Expression.Accept(this, cancellationToken)
-        };
-
-        return result;
-    }
-    public override ExpressionStatement RewriteExpressionStatement(ExpressionStatement target, CancellationToken cancellationToken = default)
-    {
-        var result = new ExpressionStatement()
-        {
-            Expression = target.Expression.Accept(this, cancellationToken)
-        };
-
-        return result;
-    }
-    public override StatementList RewriteStatementList(StatementList target, CancellationToken cancellationToken = default)
-    {
-        var result = new StatementList()
-        {
-            Statements = target.Statements.Select(s => s.Accept(this, cancellationToken)).ToList()
-        };
-
-        return result;
     }
 }
 

@@ -18,11 +18,6 @@ namespace RhoMicro.CodeAnalysis;
         (:model.TypeNames().GenericVisitorInterfaceFull:) visitor,
         global::System.Threading.CancellationToken cancellationToken = default)
         => visitor.(:model.MemberNames().VisitMethod:)(this, cancellationToken);
-    /// <inheritdoc/>
-    public override (:model.FullName():) Accept(
-        (:model.TypeNames().RewriterInterfaceFull:) rewriter,
-        global::System.Threading.CancellationToken cancellationToken = default)
-        => rewriter.(:model.MemberNames().RewriteMethod:)(this, cancellationToken);
     {:
         }
         else
