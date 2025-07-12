@@ -20,15 +20,6 @@ namespace RhoMicro.CodeAnalysis;
         => visitor.(:model.MemberNames().VisitMethod:)(this, cancellationToken);
     {:
         }
-        else
-        {
-    :}
-    /// <inheritdoc/>
-    public abstract override (:model.FullName():) Accept(
-        (:model.TypeNames().RewriterInterfaceFull:) rewriter,
-        global::System.Threading.CancellationToken cancellationToken = default);
-    {:
-        }
     :}
     """)]
 [NonEquatable]
