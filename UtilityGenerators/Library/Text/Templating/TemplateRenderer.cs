@@ -1,4 +1,6 @@
-﻿#pragma warning disable IDE0251 // Make member 'readonly' => would cause buffer
+﻿// SPDX-License-Identifier: MPL-2.0
+
+#pragma warning disable IDE0251 // Make member 'readonly' => would cause buffer
 // operations to only be executed on copy
 namespace RhoMicro.CodeAnalysis.Library.Text.Templating;
 /// <summary>

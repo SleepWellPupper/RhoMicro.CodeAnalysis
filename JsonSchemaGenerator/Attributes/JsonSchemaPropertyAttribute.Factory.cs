@@ -1,4 +1,6 @@
-﻿#nullable enable
+﻿// SPDX-License-Identifier: MPL-2.0
+
+#nullable enable
 #pragma warning disable
 using System;
 using System.Linq;

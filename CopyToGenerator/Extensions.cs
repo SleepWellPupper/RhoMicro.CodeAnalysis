@@ -1,4 +1,6 @@
-﻿namespace RhoMicro.CodeAnalysis.CopyToGenerator;
+﻿// SPDX-License-Identifier: MPL-2.0
+
+namespace RhoMicro.CodeAnalysis.CopyToGenerator;
 
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Syntax;

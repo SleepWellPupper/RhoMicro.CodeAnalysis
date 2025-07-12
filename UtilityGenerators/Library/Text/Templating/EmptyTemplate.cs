@@ -1,4 +1,6 @@
-﻿namespace RhoMicro.CodeAnalysis.Library.Text.Templating;
+﻿// SPDX-License-Identifier: MPL-2.0
+
+namespace RhoMicro.CodeAnalysis.Library.Text.Templating;
 
 /// <summary>
 /// Represents an empty template. Rendering instance will always yield an empty string.

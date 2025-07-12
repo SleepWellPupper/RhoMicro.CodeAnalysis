@@ -1,1 +1,3 @@
-﻿global using RhoMicro.CodeAnalysis.Library;
+﻿// SPDX-License-Identifier: MPL-2.0
+
+global using RhoMicro.CodeAnalysis.Library;

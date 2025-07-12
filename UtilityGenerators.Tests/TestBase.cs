@@ -1,4 +1,6 @@
-﻿namespace RhoMicro.CodeAnalysis.UtilityGenerators.Tests;
+﻿// SPDX-License-Identifier: MPL-2.0
+
+namespace RhoMicro.CodeAnalysis.UtilityGenerators.Tests;
 
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis;

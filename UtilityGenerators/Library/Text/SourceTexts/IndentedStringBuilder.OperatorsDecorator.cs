@@ -1,4 +1,8 @@
-﻿namespace RhoMicro.CodeAnalysis.Library.Text.SourceTexts;
+﻿// SPDX-License-Identifier: MPL-2.0
+
+// SPDX-License-Identifier: MPL-2.0
+
+namespace RhoMicro.CodeAnalysis.Library.Text.SourceTexts;
 
 #if SOURCETEXTS_LIBRARY
 public

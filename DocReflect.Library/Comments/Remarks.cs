@@ -1,4 +1,8 @@
-﻿namespace RhoMicro.CodeAnalysis.DocReflect.Comments;
+﻿// SPDX-License-Identifier: MPL-2.0
+
+// SPDX-License-Identifier: MPL-2.0
+
+namespace RhoMicro.CodeAnalysis.DocReflect.Comments;
 
 /// <summary>
 /// Represents a <c>remarks</c> comment.

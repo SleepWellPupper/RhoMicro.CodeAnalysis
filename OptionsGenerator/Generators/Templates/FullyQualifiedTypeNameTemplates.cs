@@ -1,4 +1,6 @@
-﻿namespace RhoMicro.CodeAnalysis.OptionsGenerator.Generators;
+﻿// SPDX-License-Identifier: MPL-2.0
+
+namespace RhoMicro.CodeAnalysis.OptionsGenerator.Generators;
 internal readonly struct FullyQualifiedTypeNameTemplates(OptionsModel model)
 {
     public InterfaceOptionsFullyQualifiedNameTemplate Interface => new(model);

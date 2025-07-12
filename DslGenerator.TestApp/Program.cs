@@ -1,4 +1,6 @@
-﻿namespace DslGenerator.TestApp;
+﻿// SPDX-License-Identifier: MPL-2.0
+
+namespace DslGenerator.TestApp;
 
 internal partial class Program
 {

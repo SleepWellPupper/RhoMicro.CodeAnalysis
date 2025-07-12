@@ -1,4 +1,6 @@
-﻿namespace RhoMicro.CodeAnalysis.UtilityGenerators.Tests.Templating;
+﻿// SPDX-License-Identifier: MPL-2.0
+
+namespace RhoMicro.CodeAnalysis.UtilityGenerators.Tests.Templating;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

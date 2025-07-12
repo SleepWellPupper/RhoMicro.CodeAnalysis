@@ -1,4 +1,6 @@
-﻿namespace RhoMicro.CodeAnalysis.UnionsGenerator.Models.Storage;
+﻿// SPDX-License-Identifier: MPL-2.0
+
+namespace RhoMicro.CodeAnalysis.UnionsGenerator.Models.Storage;
 
 using RhoMicro.CodeAnalysis.Library.Text;
 using static RhoMicro.CodeAnalysis.Library.Text.IndentedStringBuilder.Appendables;

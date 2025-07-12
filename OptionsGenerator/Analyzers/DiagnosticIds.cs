@@ -1,3 +1,5 @@
+// SPDX-License-Identifier: MPL-2.0
+
 namespace RhoMicro.CodeAnalysis.OptionsGenerator.Analyzers;
 
 using System.Diagnostics.CodeAnalysis;

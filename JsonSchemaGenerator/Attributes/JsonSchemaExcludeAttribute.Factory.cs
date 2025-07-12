@@ -1,4 +1,6 @@
-﻿#pragma warning disable
+﻿// SPDX-License-Identifier: MPL-2.0
+
+#pragma warning disable
 using System;
 using System.Linq;
 using System.Collections.Generic;

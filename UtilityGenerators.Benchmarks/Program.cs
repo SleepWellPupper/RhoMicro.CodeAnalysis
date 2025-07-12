@@ -1,4 +1,6 @@
-﻿using BenchmarkDotNet.Running;
+﻿// SPDX-License-Identifier: MPL-2.0
+
+using BenchmarkDotNet.Running;
 
 using RhoMicro.CodeAnalysis.Benchmarks;
 

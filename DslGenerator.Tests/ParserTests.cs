@@ -1,4 +1,6 @@
-﻿#pragma warning disable CA1819 // Properties should not return arrays
+﻿// SPDX-License-Identifier: MPL-2.0
+
+#pragma warning disable CA1819 // Properties should not return arrays
 namespace RhoMicro.CodeAnalysis.DslGenerator.Tests;
 
 using RhoMicro.CodeAnalysis.DslGenerator.Analysis;

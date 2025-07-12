@@ -1,4 +1,6 @@
-﻿namespace RhoMicro.CodeAnalysis.UnionsGenerator.Transformation.Visitors;
+﻿// SPDX-License-Identifier: MPL-2.0
+
+namespace RhoMicro.CodeAnalysis.UnionsGenerator.Transformation.Visitors;
 
 using RhoMicro.CodeAnalysis.UnionsGenerator.Models;
 

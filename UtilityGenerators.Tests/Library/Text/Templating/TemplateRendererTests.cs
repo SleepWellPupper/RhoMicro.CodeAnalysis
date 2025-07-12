@@ -1,4 +1,6 @@
-﻿namespace RhoMicro.CodeAnalysis.UtilityGenerators.Tests.Library.Text.Templating;
+﻿// SPDX-License-Identifier: MPL-2.0
+
+namespace RhoMicro.CodeAnalysis.UtilityGenerators.Tests.Library.Text.Templating;
 using System;
 using System.Collections.Generic;
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member

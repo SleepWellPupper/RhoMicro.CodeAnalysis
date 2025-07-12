@@ -1,4 +1,6 @@
-﻿namespace RhoMicro.CodeAnalysis.JsonSchemaGenerator.Cli;
+﻿// SPDX-License-Identifier: MPL-2.0
+
+namespace RhoMicro.CodeAnalysis.JsonSchemaGenerator.Cli;
 using System;
 using System.Linq;
 using System.Reflection;

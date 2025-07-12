@@ -1,4 +1,8 @@
-﻿namespace RhoMicro.CodeAnalysis.DocReflect.Infrastructure;
+﻿// SPDX-License-Identifier: MPL-2.0
+
+// SPDX-License-Identifier: MPL-2.0
+
+namespace RhoMicro.CodeAnalysis.DocReflect.Infrastructure;
 
 /// <summary>
 /// Marks a class as a provider of documentation.

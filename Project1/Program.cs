@@ -1,4 +1,6 @@
-﻿using System.Diagnostics.Metrics;
+﻿// SPDX-License-Identifier: MPL-2.0
+
+using System.Diagnostics.Metrics;
 using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
