@@ -1,7 +1,5 @@
 ﻿// SPDX-License-Identifier: MPL-2.0
 
-// SPDX-License-Identifier: MPL-2.0
-
 namespace RhoMicro.CodeAnalysis;
 
 using System;
@@ -12,7 +10,7 @@ using RhoMicro.CodeAnalysis.Library.Models;
 using RhoMicro.CodeAnalysis.Library.Models.Collections;
 
 /// <summary>
-/// 
+///
 /// </summary>
 /// <param name="Index"></param>
 /// <param name="Parameters"></param>

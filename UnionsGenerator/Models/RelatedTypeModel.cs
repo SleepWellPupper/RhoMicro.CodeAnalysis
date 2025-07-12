@@ -26,7 +26,7 @@ internal sealed record RelatedTypeModel(TypeSignatureModel Signature, EquatableS
         var typeParamSignatures = relationSymbol.TypeParameters
             .Select(p => PartialUnionTypeModel.CreateFromTypeParameter(p, cancellationToken))
             .Where(m => m != null);
-        
+
         var relationTypeSignature = TypeSignatureModel.Create(relationSymbol, cancellationToken);
 
         var result = declarationSignatures.Concat(typeParamSignatures)

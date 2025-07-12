@@ -57,7 +57,7 @@ internal partial struct TemplateRenderer
         // of the current span examined. The currently examined span is a line
         // beginning with a non-newline and optionally followed by any number of
         // empty newlines. We treat an empty buffer as if it contained a single
-        // newline. 
+        // newline.
         var precededByNewline = _buffer.Span is [] or [.., '\n'] or [.., '\r', '\n'];
         var start = 0;
         var i = 0;
@@ -126,7 +126,7 @@ internal partial struct TemplateRenderer
         => Render(in value, EmptyTemplate.Instance);
     public void Render<T, TBody>(in T value, in TBody body)
         where T : ITemplate
-        where TBody : ITemplate 
+        where TBody : ITemplate
         => value.Render(ref this, body, _cancellationToken);
     public void Render<T>(in T value, RenderFragment fragment)
         where T : ITemplate

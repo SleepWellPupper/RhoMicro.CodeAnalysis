@@ -1,7 +1,5 @@
 ﻿// SPDX-License-Identifier: MPL-2.0
 
-// SPDX-License-Identifier: MPL-2.0
-
 namespace RhoMicro.CodeAnalysis;
 
 using System.Linq;
@@ -115,7 +113,7 @@ public sealed class FileInclusionGenerator : IIncrementalGenerator
                 {
                     _ = builder.Append(
                     """
-                    
+
                                 context.RegisterPostInitializationOutput(c =>
                                 {
                     """);

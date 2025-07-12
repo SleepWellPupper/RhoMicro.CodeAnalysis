@@ -112,11 +112,11 @@ internal static partial class ConstantSources
                     }
                 }
             }
-            
+
             internal static System.Boolean IsMarked(Type type) =>
                 type.CustomAttributes.Any(a => a.AttributeType.FullName == "{{Qualifications.NonGenericFullMetadataName}}") ||
-                type.GenericTypeArguments.Any(t => t.CustomAttributes.Any(a => 
-                    a.AttributeType.FullName.StartsWith("{{Qualifications.GenericFullMetadataName}}") 
+                type.GenericTypeArguments.Any(t => t.CustomAttributes.Any(a =>
+                    a.AttributeType.FullName.StartsWith("{{Qualifications.GenericFullMetadataName}}")
                     && a.AttributeType.GenericTypeArguments.Length < {{Qualifications.MaxRepresentableTypesCount}}));
 
             private static readonly System.Collections.Concurrent.ConcurrentDictionary<(Type, Type), Object> _conversionImplementations = new();

@@ -14,7 +14,7 @@ public partial class ParserTests
     {
         public EquatableList<Token> Tokens { get; } = tokens;
         private Int32 _index;
-        
+
         public Token Next() => Tokens[_index++];
     }
 }

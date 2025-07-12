@@ -44,7 +44,7 @@ public class AnalyzerTests
                   string Property { get; set; }
               }
               """).RunAsync(TestContext.Current.CancellationToken);
-    
+
     [Fact]
     public Task ReadOnlyPropertyDoesNotRaise_ROG0002() =>
         new OptionsGeneratorAnalyzerTest(
@@ -86,14 +86,14 @@ public class AnalyzerTests
         new OptionsGeneratorAnalyzerTest(
             """
             using RhoMicro.CodeAnalysis;
-                
+
             public class Bar
             {
                 [Options]
                 public partial interface {|ROG0003:IFoo|};
             }
             """).RunAsync(TestContext.Current.CancellationToken);
-    
+
     [Theory]
     [InlineData("T")]
     [InlineData("T, S")]

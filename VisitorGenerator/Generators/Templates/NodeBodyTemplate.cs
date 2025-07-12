@@ -10,18 +10,18 @@ namespace RhoMicro.CodeAnalysis;
     :}
     /// <inheritdoc/>
     public override void Accept(
-        (:model.TypeNames().VisitorInterfaceFull:) visitor, 
-        global::System.Threading.CancellationToken cancellationToken = default) 
+        (:model.TypeNames().VisitorInterfaceFull:) visitor,
+        global::System.Threading.CancellationToken cancellationToken = default)
         => visitor.(:model.MemberNames().VisitMethod:)(this, cancellationToken);
     /// <inheritdoc/>
     public override TResult Accept<TResult>(
-        (:model.TypeNames().GenericVisitorInterfaceFull:) visitor, 
-        global::System.Threading.CancellationToken cancellationToken = default) 
+        (:model.TypeNames().GenericVisitorInterfaceFull:) visitor,
+        global::System.Threading.CancellationToken cancellationToken = default)
         => visitor.(:model.MemberNames().VisitMethod:)(this, cancellationToken);
     /// <inheritdoc/>
     public override (:model.FullName():) Accept(
-        (:model.TypeNames().RewriterInterfaceFull:) rewriter, 
-        global::System.Threading.CancellationToken cancellationToken = default) 
+        (:model.TypeNames().RewriterInterfaceFull:) rewriter,
+        global::System.Threading.CancellationToken cancellationToken = default)
         => rewriter.(:model.MemberNames().RewriteMethod:)(this, cancellationToken);
     {:
         }
@@ -30,7 +30,7 @@ namespace RhoMicro.CodeAnalysis;
     :}
     /// <inheritdoc/>
     public abstract override (:model.FullName():) Accept(
-        (:model.TypeNames().RewriterInterfaceFull:) rewriter, 
+        (:model.TypeNames().RewriterInterfaceFull:) rewriter,
         global::System.Threading.CancellationToken cancellationToken = default);
     {:
         }

@@ -518,7 +518,7 @@ public partial class ParserTests(ITestOutputHelper testOutput)
                 var value2 = "World";
                 (:value:)<::
                     Hello, (:value2:)!
-                ::> 
+                ::>
             }
         :}
         bar

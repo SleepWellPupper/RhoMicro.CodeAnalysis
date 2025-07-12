@@ -8,16 +8,16 @@ namespace RhoMicro.CodeAnalysis;
         if(model.TypeParameters is [_,..])
         {
             (:'<':)
-    
+
             for(var i = 0; i < model.TypeParameters.Count; i++)
             {
                 if(i > 0)
                 {
                     (:", ":)
                 }
-                
+
                 (:model.TypeParameters[i]:)
-            }   
+            }
 
             (:'>':)
         }

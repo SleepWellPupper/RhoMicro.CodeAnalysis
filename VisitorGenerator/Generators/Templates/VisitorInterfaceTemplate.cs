@@ -5,7 +5,7 @@ namespace RhoMicro.CodeAnalysis;
 [Template(
     """
     /// <summary>
-    /// Provides base abstraction of the visitor pattern over nodes 
+    /// Provides base abstraction of the visitor pattern over nodes
     /// as defined by (:model.Cref():).
     /// </summary>
     (:model.Signature.Flags.HasFlag(NodeSignatureFlags.IsPublic) ? "public" : "internal":) interface (:model.TypeNames().VisitorInterface:)

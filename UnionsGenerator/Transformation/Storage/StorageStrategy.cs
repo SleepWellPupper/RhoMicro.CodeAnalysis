@@ -69,7 +69,7 @@ internal abstract partial class StorageStrategy
         /*
     PureValue   Reference   => reference(box)
                 Value       => field(generic) : value
-                Field       => field        
+                Field       => field
                 Auto        => field : value
         */
         StorageStrategy createForPureValueType() =>
@@ -82,7 +82,7 @@ internal abstract partial class StorageStrategy
             };
         /*
     ImpureValue Reference   => reference(box)
-                Value       => field(tle)            
+                Value       => field(tle)
                 Field       => field
                 Auto        => field
         */
@@ -96,8 +96,8 @@ internal abstract partial class StorageStrategy
             };
         /*
     Reference   Reference   => reference
-                Value       => reference(tle)        
-                Field       => field        
+                Value       => reference(tle)
+                Field       => field
                 Auto        => reference
         */
         StorageStrategy createForReferenceType() =>
@@ -110,7 +110,7 @@ internal abstract partial class StorageStrategy
             };
         /*
     Unknown     Reference   => reference(pbox)
-                Value       => field(ptle)            
+                Value       => field(ptle)
                 Field       => field
                 Auto        => field
         */

@@ -11,7 +11,7 @@ namespace RhoMicro.CodeAnalysis.Library.Text.Templating;
     /// <summary>
     (:DocumentationComment, _summary:)
     /// </summary>
-    
+
     """)]
 
 #if RHOMICRO_CODEANALYSIS_UTILITYGENERATORS

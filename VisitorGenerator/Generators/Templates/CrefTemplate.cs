@@ -23,7 +23,7 @@ namespace RhoMicro.CodeAnalysis;
 
                 (:typeParameters[i]:)
             }
-    
+
             (:'}':)
         }
     :}(:suffix:)"/>

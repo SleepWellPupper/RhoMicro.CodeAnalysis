@@ -17,7 +17,7 @@ namespace RhoMicro.CodeAnalysis;
         (:model.TypeNames().VisitorInterfaceFull:) visitor,
         global::System.Threading.CancellationToken cancellationToken = default);
     /// <summary>
-    /// Invokes the visitor method corresponding to the type of this target (double dispatch), 
+    /// Invokes the visitor method corresponding to the type of this target (double dispatch),
     /// producing some result of type <typeparamref name="TResult"/>.
     /// </summary>
     /// <typeparam name="TResult">

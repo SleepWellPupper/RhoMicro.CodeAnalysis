@@ -1,7 +1,5 @@
 ﻿// SPDX-License-Identifier: MPL-2.0
 
-// SPDX-License-Identifier: MPL-2.0
-
 #pragma warning disable
 namespace RhoMicro.CodeAnalysis;
 using System;

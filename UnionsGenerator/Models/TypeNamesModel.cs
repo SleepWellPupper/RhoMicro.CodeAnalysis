@@ -189,7 +189,7 @@ internal sealed class TypeNamesModel(
             .Replace(",", "_and_"));
         fullIdentifierOrHintName = new(() => $"{namespacePeriod.Replace(".", "_")}{( containingTypes.Count != 0 ? $"{String.Join("_", containingTypes.Select(t => t.Names.IdentifierOrHintName))}_" : String.Empty )}{identifierOrHintName.Value}");
 
-        fullGenericNullableName = 
+        fullGenericNullableName =
             isNullableAnnotated && symbol.IsReferenceType
             ? new(() => $"{fullGenericName.Value}?")
             : fullGenericName;

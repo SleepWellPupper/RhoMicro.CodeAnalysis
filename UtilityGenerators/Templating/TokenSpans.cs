@@ -1,7 +1,5 @@
 ﻿// SPDX-License-Identifier: MPL-2.0
 
-// SPDX-License-Identifier: MPL-2.0
-
 namespace RhoMicro.CodeAnalysis.Templating;
 /// <summary>
 /// Contains the spans describing a tokens span of characters in a source text

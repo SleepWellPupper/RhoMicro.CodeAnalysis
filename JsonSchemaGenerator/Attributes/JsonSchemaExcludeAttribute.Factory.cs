@@ -12,7 +12,7 @@ namespace RhoMicro.CodeAnalysis
     internal partial class JsonSchemaExcludeAttribute
     {
         /// <summary>
-        /// Attempts to create an instance of <see cref = "JsonSchemaExcludeAttribute"/> based on an 
+        /// Attempts to create an instance of <see cref = "JsonSchemaExcludeAttribute"/> based on an
         /// instance of <see cref = "AttributeData"/>.
         /// </summary>
         /// <param name = "data">The attribute data to try and create an instance from.</param>
@@ -25,8 +25,8 @@ namespace RhoMicro.CodeAnalysis
         public static Boolean TryCreate(AttributeData data, out JsonSchemaExcludeAttribute? result)
         {
             result = null;
-            if(data.AttributeClass == null 
-                || data.AttributeClass.MetadataName != "JsonSchemaExcludeAttribute" 
+            if(data.AttributeClass == null
+                || data.AttributeClass.MetadataName != "JsonSchemaExcludeAttribute"
                 || data.AttributeClass.ContainingNamespace.ToDisplayString() != "RhoMicro.CodeAnalysis")
             {
                 return false;
@@ -85,7 +85,7 @@ internal sealed partial class JsonSchemaExcludeAttribute : Attribute { }
     internal static class JsonSchemaExcludeAttributeExtensions
     {
         /// <summary>
-        /// Filters and projects an enumeration of <see cref = "AttributeData"/> onto 
+        /// Filters and projects an enumeration of <see cref = "AttributeData"/> onto
         /// instances of <see cref = "JsonSchemaExcludeAttribute"/>.
         /// </summary>
         /// <param name = "data">The attribute data to filter.</param>

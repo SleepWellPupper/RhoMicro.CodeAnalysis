@@ -17,7 +17,7 @@ partial class Tokenizer
     [UnionType<Token, TokenType>]
     private readonly partial struct TokenOrType;
     public static Tokenizer Instance { get; } = new();
-    
+
     public TokenizeResult Tokenize(SourceText sourceText, CancellationToken cancellationToken
 #if DSL_GENERATOR
         , String filePath = ""

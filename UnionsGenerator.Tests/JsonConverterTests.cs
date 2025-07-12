@@ -18,7 +18,7 @@ public class JsonConverterTests() : TestBase(Net80.References.All)
         """
         using RhoMicro.CodeAnalysis;
         using System;
-        
+
         [UnionType<Int32, String>]
         partial class Union { }
         """)]
@@ -26,7 +26,7 @@ public class JsonConverterTests() : TestBase(Net80.References.All)
         """
         using RhoMicro.CodeAnalysis;
         using System;
-        
+
         [UnionType<Int32, String>]
         [UnionTypeSettings(Miscellaneous = MiscellaneousSettings.Default)]
         partial class Union { }
@@ -35,7 +35,7 @@ public class JsonConverterTests() : TestBase(Net80.References.All)
         """
         using RhoMicro.CodeAnalysis;
         using System;
-        
+
         [UnionType<Int32, String>]
         [UnionTypeSettings(Miscellaneous = MiscellaneousSettings.None)]
         partial class Union { }
@@ -44,7 +44,7 @@ public class JsonConverterTests() : TestBase(Net80.References.All)
         """
         using RhoMicro.CodeAnalysis;
         using System;
-        
+
         [UnionType<Int32, String>]
         [UnionTypeSettings]
         partial class Union { }
@@ -53,9 +53,9 @@ public class JsonConverterTests() : TestBase(Net80.References.All)
         """
         using RhoMicro.CodeAnalysis;
         using System;
-        
+
         [assembly: UnionTypeSettings(Miscellaneous = MiscellaneousSettings.None)]
-        
+
         [UnionType<Int32, String>]
         partial class Union { }
         """)]
@@ -63,7 +63,7 @@ public class JsonConverterTests() : TestBase(Net80.References.All)
         """
         using RhoMicro.CodeAnalysis;
         using System;
-        
+
         [assembly: UnionTypeSettings(Miscellaneous = MiscellaneousSettings.Default)]
 
         [UnionType<Int32, String>]
@@ -73,9 +73,9 @@ public class JsonConverterTests() : TestBase(Net80.References.All)
         """
         using RhoMicro.CodeAnalysis;
         using System;
-        
+
         [assembly: UnionTypeSettings]
-        
+
         [UnionType<Int32, String>]
         partial class Union { }
         """)]
@@ -101,9 +101,9 @@ public class JsonConverterTests() : TestBase(Net80.References.All)
         """
         using RhoMicro.CodeAnalysis;
         using System;
-        
+
         [assembly: UnionTypeSettings(Miscellaneous = MiscellaneousSettings.GenerateJsonConverter)]
-        
+
         [UnionType<Int32, String>]
         partial class Union { }
         """)]

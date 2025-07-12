@@ -5,7 +5,7 @@ namespace RhoMicro.CodeAnalysis;
 [Template(
     """
     /// <summary>
-    /// Provides base abstraction of a rewriter over nodes 
+    /// Provides base abstraction of a rewriter over nodes
     /// as defined by (:model.Cref():).
     /// </summary>
     (:model.Signature.Flags.HasFlag(NodeSignatureFlags.IsPublic) ? "public" : "internal":) interface (:model.TypeNames().RewriterInterface:)

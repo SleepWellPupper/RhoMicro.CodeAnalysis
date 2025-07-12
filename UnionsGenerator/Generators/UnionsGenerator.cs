@@ -219,7 +219,7 @@ public class UnionsGenerator : IIncrementalGenerator
             .Select(createProvider)
             .Aggregate(
                 createProvider("RhoMicro.CodeAnalysis.RelationAttribute`1"),
-                (leftProvider, rightProvider) => 
+                (leftProvider, rightProvider) =>
                     leftProvider.Combine(rightProvider)
                     .Select((tuple, ct) =>
                     {
@@ -229,7 +229,7 @@ public class UnionsGenerator : IIncrementalGenerator
                             .GroupBy(t => t.targetSignature)
                             .Select(g => (targetSignature: g.Key, relations: g.SelectMany(t => t.relations).ToEquatableList(ct)))
                             .ToEquatableList(ct);
-                    
+
                         return result;
                     }))
             .Select((tuples, ct) =>

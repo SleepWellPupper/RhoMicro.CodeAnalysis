@@ -11,7 +11,7 @@ using RhoMicro.CodeAnalysis.Templating.Syntax.Visitors;
 internal sealed class TokenAssertionVisitor : TokenValidator
 {
     private TokenAssertionVisitor(String message)
-        : base(TestContext.Current.CancellationToken) => 
+        : base(TestContext.Current.CancellationToken) =>
         _message = message;
 
     private readonly String _message;

@@ -16,9 +16,9 @@ namespace RhoMicro.CodeAnalysis;
             (:model.FullName():)
         }
     :} (:name:)(
-        (:model.FullName():) target, 
+        (:model.FullName():) target,
         global::System.Threading.CancellationToken cancellationToken = default){:
-    
+
         if(isAbstract)
         {
             (:';':)

@@ -37,7 +37,7 @@ namespace RhoMicro.CodeAnalysis.OptionsGenerator.Generators;
                     serviceType: typeof((:model.Templates().FullyQualifiedTypeNames.Interface:)),
                     implementationType: typeof(TAdapter),
                     lifetime: lifetime);
-                    
+
                 if(tryAdd)
                 {
                     (:TypeNames.ServiceCollectionDescriptorExtensions:).TryAdd(
@@ -50,14 +50,14 @@ namespace RhoMicro.CodeAnalysis.OptionsGenerator.Generators;
                         services,
                         descriptor);
                 }
-    
+
                 var builder = (:TypeNames.OptionsBuilderConfigurationExtensions:).BindConfiguration(
                     (:TypeNames.OptionsServiceCollectionExtensions:).AddOptions<(:model.Templates().FullyQualifiedTypeNames.Mutable:)>(services),
                     configurationSection);
-              
+
                 ConfigureOptionsBuilder(builder, configuration);
             }
-    
+
             /// <summary>
             /// Hook method for intercepting the options configuration in <see cref="Execute((:TypeNames.IServiceCollection:), (:model.Templates().FullyQualifiedTypeNames.Configuration:))"/>.
             /// </summary>
@@ -71,12 +71,12 @@ namespace RhoMicro.CodeAnalysis.OptionsGenerator.Generators;
                 (:TypeNames.OptionsBuilder:)<(:model.Templates().FullyQualifiedTypeNames.Mutable:)> builder,
                 (:model.Templates().FullyQualifiedTypeNames.Configuration:) configuration);
         }
-    
+
         /// <summary>
         /// Provides an implementation for registering a custom implementation type or factory for <see cref="(:model.Templates().FullyQualifiedTypeNames.Interface:)"/>.
         /// </summary>
         public sealed partial class Custom(
-            (:TypeNames.Func:)<(:TypeNames.IServiceProvider:), (:model.Templates().FullyQualifiedTypeNames.Interface:)> factory, 
+            (:TypeNames.Func:)<(:TypeNames.IServiceProvider:), (:model.Templates().FullyQualifiedTypeNames.Interface:)> factory,
             (:TypeNames.ServiceLifetime:) lifetime,
             bool tryAdd)
             : (:model.Templates().FullyQualifiedTypeNames.RegistrationStrategy:)
@@ -90,7 +90,7 @@ namespace RhoMicro.CodeAnalysis.OptionsGenerator.Generators;
                     serviceType: typeof((:model.Templates().FullyQualifiedTypeNames.Interface:)),
                     factory: factory,
                     lifetime: lifetime);
-    
+
                 if(tryAdd)
                 {
                     (:TypeNames.ServiceCollectionDescriptorExtensions:).TryAdd(
@@ -105,9 +105,9 @@ namespace RhoMicro.CodeAnalysis.OptionsGenerator.Generators;
                 }
             }
         }
-    
+
         private (:model.Templates().TypeNames.RegistrationStrategy:)() { }
-    
+
         /// <summary>
         /// Executes the strategy, registering configured services to a service collection.
         /// </summary>

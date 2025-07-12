@@ -1,7 +1,5 @@
 ﻿// SPDX-License-Identifier: MPL-2.0
 
-// SPDX-License-Identifier: MPL-2.0
-
 namespace RhoMicro.CodeAnalysis.Templating.Syntax;
 
 using RhoMicro.CodeAnalysis.Templating.Syntax.Visitors;
@@ -18,7 +16,7 @@ using RhoMicro.CodeAnalysis.Templating.Syntax.Visitors;
 internal sealed record EscapedOpenBlockSyntax(OpenBlockSyntax OpenBlock, EscapeColonSyntax EscapeColon) : ISyntax
 {
     public const String Production = "escaped-open-block";
-    public void Accept<TVisitor>(TVisitor visitor) 
+    public void Accept<TVisitor>(TVisitor visitor)
         where TVisitor:ISyntaxVisitor
         => visitor.Visit(this);
     public override String ToString() => this.ToXmlTreeString(CancellationToken.None);

@@ -69,7 +69,7 @@ public class RefTests : TestBase
                 public Dependency Prop { get; set; } = new Dependency();
             }
             [RhoMicro.CodeAnalysis.JsonSchema]
-            class Dependency 
+            class Dependency
             {
                 public int Prop { get; set; }
             }
@@ -93,7 +93,7 @@ public class RefTests : TestBase
                 public Dependency Prop { get; set; } = new Dependency();
             }
             [RhoMicro.CodeAnalysis.JsonSchema]
-            class Dependency 
+            class Dependency
             {
                 public int Prop { get; set; }
             }

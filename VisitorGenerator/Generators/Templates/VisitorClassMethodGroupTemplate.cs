@@ -43,7 +43,7 @@ namespace RhoMicro.CodeAnalysis;
     public virtual (:new MethodSignatureTemplate("void", model.MemberNames().TraverseMethod, model):)
     {
         cancellationToken.ThrowIfCancellationRequested();
-    
+
     {:
             foreach(var property in model.Properties)
             {
@@ -59,7 +59,7 @@ namespace RhoMicro.CodeAnalysis;
                 }
 
                 (:Space4, new PropertyTraversalTemplate(property):)
-    
+
                 if(isNullable)
                 {
                     renderer.Detent(Space4.Length);

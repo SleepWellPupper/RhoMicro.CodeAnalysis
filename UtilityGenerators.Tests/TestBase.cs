@@ -118,7 +118,7 @@ public abstract class TestBase<TGenerator>
         var options = CreateCompilationOptions();
         var syntaxTrees = sources
             .Append(
-            """            
+            """
             #pragma warning disable
             global using global::System;
             global using global::System.Collections.Generic;
@@ -130,7 +130,7 @@ public abstract class TestBase<TGenerator>
             global using global::System.Runtime.CompilerServices;
             """)
             .Append(
-            """            
+            """
             #pragma warning disable
             namespace RhoMicro.CodeAnalysis.UtilityGenerators.Tests;
 

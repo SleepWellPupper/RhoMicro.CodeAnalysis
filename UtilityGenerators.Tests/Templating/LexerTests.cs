@@ -280,7 +280,7 @@ public partial class LexerTests(ITestOutputHelper testOutput)
         """", b => b
         .NotNewline(3).Newline(
                """
-               
+
 
                """.Length)
         .Whitespaces(trivia.Length).Token(kind, open.Length).NotNewline(3)

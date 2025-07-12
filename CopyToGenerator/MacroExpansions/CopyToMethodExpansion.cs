@@ -23,10 +23,10 @@ internal sealed class CopyToMethodExpansion(Model model) : MacroExpansionBase(mo
                  target)
                 {
                     if(this == target || target == null)
-                    { 
+                    {
                         return;
                     }
-                                
+
                     if(AvoidCopy(this, target))
                     {
                         return;

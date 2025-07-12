@@ -5,8 +5,8 @@ namespace RhoMicro.CodeAnalysis;
 [Template(
     """
     /// <summary>
-    /// Provides base abstraction of the visitor pattern over nodes 
-    /// as defined by (:model.Cref():). Visitors 
+    /// Provides base abstraction of the visitor pattern over nodes
+    /// as defined by (:model.Cref():). Visitors
     /// of this type return some result from their visit.
     /// </summary>
     /// <typeparam name="TResult">The type of result produced by visiting nodes.</typeparam>
@@ -17,7 +17,7 @@ namespace RhoMicro.CodeAnalysis;
         {
     :}
         /// <summary>
-        /// Visits a node of type <see cref="(:model.FullName():)"/>, 
+        /// Visits a node of type <see cref="(:model.FullName():)"/>,
         /// producing a result of type <typeparamref name="TResult"/>.
         /// </summary>
         /// <param name="target">

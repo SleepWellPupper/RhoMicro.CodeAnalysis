@@ -100,7 +100,7 @@ internal static class TypedConstantsExtensions
         value = null;
         return false;
     }
-    
+
     public static Boolean TryGetReferenceTypeArrayValue<T>(this TypedConstant typedConstant, [NotNullWhen(true)] out EquatableList<T>? value)
         where T : class
     {

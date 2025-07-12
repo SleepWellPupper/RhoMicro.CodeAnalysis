@@ -40,7 +40,7 @@ public class ParserTests
                 """
 
                  rule   =   # some commented stuff
-                    rule; 
+                    rule;
                 """,
                 new RuleListBuilder().New("rule", b => b.Reference("rule")),
                 Array.Empty<Int32>()
@@ -184,7 +184,7 @@ public class ParserTests
                 SingleAlpha = "a"-"z" / "A"-"Z" / "_";
                 Alpha = SingleAlpha *SingleAlpha;
                 Digit = "0"-"9" *Digit;
-                
+
                 """,
                 new RuleListBuilder("RhoMicroBackusNaurForm")
 
