@@ -10,7 +10,12 @@ using System.Diagnostics;
 [IncludeFile]
 #endif
 [DebuggerDisplay("Count: {Count}")]
-internal sealed record EquatableDictionary<TKey, TValue> : EquatableCollection<KeyValuePair<TKey, TValue>, IDictionary<TKey, TValue>>, IDictionary<TKey, TValue>, IReadOnlyDictionary<TKey, TValue>
+#if RHOMICRO_EMIT_PUBLIC_COLLECTIONS
+public
+#else
+internal 
+#endif
+sealed record EquatableDictionary<TKey, TValue> : EquatableCollection<KeyValuePair<TKey, TValue>, IDictionary<TKey, TValue>>, IDictionary<TKey, TValue>, IReadOnlyDictionary<TKey, TValue>
 {
     public EquatableDictionary(
         IDictionary<TKey, TValue> collection,

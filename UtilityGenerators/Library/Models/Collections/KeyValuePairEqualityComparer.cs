@@ -11,7 +11,12 @@ using System.Collections.Generic;
 #if GENERATOR
 [NonEquatable]
 #endif
-internal sealed partial class KeyValuePairEqualityComparer<TKey, TValue>(IEqualityComparer<TKey> keyComparer, IEqualityComparer<TValue> valueComparer) : IEqualityComparer<KeyValuePair<TKey, TValue>>
+#if RHOMICRO_EMIT_PUBLIC_COLLECTIONS
+public
+#else
+internal 
+#endif
+sealed partial class KeyValuePairEqualityComparer<TKey, TValue>(IEqualityComparer<TKey> keyComparer, IEqualityComparer<TValue> valueComparer) : IEqualityComparer<KeyValuePair<TKey, TValue>>
 {
     public KeyValuePairEqualityComparer(IEqualityComparer<TValue> valueComparer) : this(EqualityComparer<TKey>.Default, valueComparer) { }
     public static KeyValuePairEqualityComparer<TKey, TValue> Default { get; } = new(EqualityComparer<TKey>.Default, EqualityComparer<TValue>.Default);

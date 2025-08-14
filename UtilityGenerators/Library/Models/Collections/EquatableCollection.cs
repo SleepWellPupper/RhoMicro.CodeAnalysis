@@ -10,7 +10,12 @@ using System.Diagnostics;
 [IncludeFile]
 #endif
 [DebuggerDisplay("Count: {Count}")]
-internal sealed record EquatableCollection<T> : EquatableCollection<T, ICollection<T>>
+#if RHOMICRO_EMIT_PUBLIC_COLLECTIONS
+public
+#else
+internal 
+#endif
+sealed record EquatableCollection<T> : EquatableCollection<T, ICollection<T>>
 {
     public EquatableCollection(
         ICollection<T> collection,
@@ -21,7 +26,12 @@ internal sealed record EquatableCollection<T> : EquatableCollection<T, ICollecti
     { }
 }
 
-internal abstract record EquatableCollection<T, TCollection> : MutableCollection, ICollection<T>
+#if RHOMICRO_EMIT_PUBLIC_COLLECTIONS
+public
+#else
+internal 
+#endif
+abstract record EquatableCollection<T, TCollection> : MutableCollection, ICollection<T>
     where TCollection : ICollection<T>
 {
     public EquatableCollection(

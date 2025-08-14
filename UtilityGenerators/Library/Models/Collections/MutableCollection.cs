@@ -10,7 +10,12 @@ using System.Diagnostics;
 [IncludeFile]
 #endif
 [DebuggerDisplay("Count: {Count}")]
-internal abstract partial record MutableCollection(MutabilityContext MutabilityContext)
+#if RHOMICRO_EMIT_PUBLIC_COLLECTIONS
+public
+#else
+internal 
+#endif
+abstract partial record MutableCollection(MutabilityContext MutabilityContext)
 {
     public MutableCollection() : this(new MutabilityContext()) { }
     public Boolean IsReadOnly => MutabilityContext.IsImmutable;
@@ -22,7 +27,12 @@ internal abstract partial record MutableCollection(MutabilityContext MutabilityC
 #if RHOMICRO_CODEANALYSIS_UTILITYGENERATORS
 [NonEquatable]
 #endif
-internal partial class MutableCollection<T>(ICollection<T> wrapped, MutabilityContext mutabilityContext) : ICollection<T>
+#if RHOMICRO_EMIT_PUBLIC_COLLECTIONS
+public
+#else
+internal 
+#endif
+partial class MutableCollection<T>(ICollection<T> wrapped, MutabilityContext mutabilityContext) : ICollection<T>
 {
     public void Add(T item)
     {

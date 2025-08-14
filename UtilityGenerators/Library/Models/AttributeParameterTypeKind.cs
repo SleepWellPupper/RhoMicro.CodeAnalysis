@@ -5,7 +5,12 @@ namespace RhoMicro.CodeAnalysis.Library.Models;
 #if RHOMICRO_CODEANALYSIS_UTILITYGENERATORS
 [IncludeFile]
 #endif
-internal enum AttributeParameterTypeKind
+#if RHOMICRO_EMIT_PUBLIC_COLLECTIONS
+public
+#else
+internal 
+#endif
+enum AttributeParameterTypeKind
 {
     ReferenceType = 1,
     Type = 2,
@@ -36,7 +41,12 @@ internal enum AttributeParameterTypeKind
     NullableReferenceTypeNullableArray = Nullable | ReferenceType | NullableArray,
 }
 
-internal static class AttributeArgumentTypeKindExtensions
+#if RHOMICRO_EMIT_PUBLIC_COLLECTIONS
+public
+#else
+internal 
+#endif
+static class AttributeArgumentTypeKindExtensions
 {
     public static Boolean HasAnyFlagFast(this AttributeParameterTypeKind value, params ReadOnlySpan<AttributeParameterTypeKind> flags)
     {

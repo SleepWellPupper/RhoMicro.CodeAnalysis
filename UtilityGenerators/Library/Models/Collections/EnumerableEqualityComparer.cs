@@ -9,7 +9,12 @@ using System.Runtime.CompilerServices;
 #if RHOMICRO_CODEANALYSIS_UTILITYGENERATORS
 [IncludeFile]
 #endif
-internal static class EnumerableEqualityComparer
+#if RHOMICRO_EMIT_PUBLIC_COLLECTIONS
+public
+#else
+internal 
+#endif
+static class EnumerableEqualityComparer
 {
     public static Int32 GetHashCode<TEnumerable, T>(TEnumerable obj, IEqualityComparer<T> elementComparer)
         where TEnumerable : IEnumerable<T>
@@ -26,7 +31,12 @@ internal static class EnumerableEqualityComparer
 #if RHOMICRO_CODEANALYSIS_UTILITYGENERATORS
 [NonEquatable]
 #endif
-internal sealed partial class EnumerableEqualityComparer<T>(IEqualityComparer<T> elementComparer) : IEqualityComparer<IEnumerable<T>>
+#if RHOMICRO_EMIT_PUBLIC_COLLECTIONS
+public
+#else
+internal 
+#endif
+sealed partial class EnumerableEqualityComparer<T>(IEqualityComparer<T> elementComparer) : IEqualityComparer<IEnumerable<T>>
 {
     public static EnumerableEqualityComparer<T> Default { get; } = new(EqualityComparer<T>.Default);
 

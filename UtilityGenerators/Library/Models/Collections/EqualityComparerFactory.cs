@@ -10,7 +10,12 @@ using System.Collections.Generic;
 #if GENERATOR
 [NonEquatable]
 #endif
-internal partial class EqualityComparerFactory
+#if RHOMICRO_EMIT_PUBLIC_COLLECTIONS
+public
+#else
+internal 
+#endif
+partial class EqualityComparerFactory
 {
     public static EqualityComparerFactory Default { get; } = new();
 

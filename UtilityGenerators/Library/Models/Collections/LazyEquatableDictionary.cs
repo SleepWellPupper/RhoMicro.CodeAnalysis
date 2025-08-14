@@ -10,7 +10,12 @@ using System.Diagnostics;
 [IncludeFile]
 #endif
 [DebuggerDisplay("Count: {Count}")]
-internal sealed record LazyEquatableDictionary<TKey, TValue> : LazyEquatableDictionary<TKey, TValue, LazyEquatableDictionary<TKey, TValue>>
+#if RHOMICRO_EMIT_PUBLIC_COLLECTIONS
+public
+#else
+internal 
+#endif
+sealed record LazyEquatableDictionary<TKey, TValue> : LazyEquatableDictionary<TKey, TValue, LazyEquatableDictionary<TKey, TValue>>
 {
     public LazyEquatableDictionary(
         IDictionary<TKey, TValue> collection,
@@ -24,7 +29,13 @@ internal sealed record LazyEquatableDictionary<TKey, TValue> : LazyEquatableDict
     public Boolean Equals(LazyEquatableDictionary<TKey, TValue> other) => base.Equals(other);
     public override Int32 GetHashCode() => base.GetHashCode();
 }
-internal record LazyEquatableDictionary<TKey, TValue, TState> : EquatableCollection<KeyValuePair<TKey, TValue>, IDictionary<TKey, TValue>>, IDictionary<TKey, TValue>
+
+#if RHOMICRO_EMIT_PUBLIC_COLLECTIONS
+public
+#else
+internal 
+#endif
+record LazyEquatableDictionary<TKey, TValue, TState> : EquatableCollection<KeyValuePair<TKey, TValue>, IDictionary<TKey, TValue>>, IDictionary<TKey, TValue>
 {
     public LazyEquatableDictionary(
         IDictionary<TKey, TValue> collection,

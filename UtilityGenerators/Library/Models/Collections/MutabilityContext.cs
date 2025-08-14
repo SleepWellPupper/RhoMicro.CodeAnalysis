@@ -11,7 +11,12 @@ using System.Runtime.CompilerServices;
 #if GENERATOR
 [NonEquatable]
 #endif
-internal sealed partial class MutabilityContext : IDisposable
+#if RHOMICRO_EMIT_PUBLIC_COLLECTIONS
+public
+#else
+internal 
+#endif
+sealed partial class MutabilityContext : IDisposable
 {
     private Int32 _mutable;
     public Boolean IsImmutable => _mutable == 1;

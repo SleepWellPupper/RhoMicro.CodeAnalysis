@@ -12,7 +12,12 @@ using System.Runtime.CompilerServices;
 #endif
 [CollectionBuilder(typeof(Builder), "Create")]
 [DebuggerDisplay("Count: {Count}")]
-internal sealed record EquatableSet<T> : EquatableCollection<T, ISet<T>>, ISet<T>
+#if RHOMICRO_EMIT_PUBLIC_COLLECTIONS
+public
+#else
+internal 
+#endif
+sealed record EquatableSet<T> : EquatableCollection<T, ISet<T>>, ISet<T>
 {
     public EquatableSet(
         ISet<T> collection,

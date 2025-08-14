@@ -10,7 +10,12 @@ using System.Collections.Generic;
 #if GENERATOR
 [NonEquatable]
 #endif
-internal sealed partial class EquatableCollectionFactory(EqualityComparerFactory comparerFactory, MutabilityContext mutabilityContext) : IDisposable
+#if RHOMICRO_EMIT_PUBLIC_COLLECTIONS
+public
+#else
+internal 
+#endif
+sealed partial class EquatableCollectionFactory(EqualityComparerFactory comparerFactory, MutabilityContext mutabilityContext) : IDisposable
 {
     public static EquatableCollectionFactory CreateDefault() => new(EqualityComparerFactory.Default, new());
 

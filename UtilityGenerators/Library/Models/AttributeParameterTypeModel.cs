@@ -8,7 +8,12 @@ using Microsoft.CodeAnalysis;
 #if RHOMICRO_CODEANALYSIS_UTILITYGENERATORS
 [IncludeFile]
 #endif
-internal sealed record AttributeParameterTypeModel(
+#if RHOMICRO_EMIT_PUBLIC_COLLECTIONS
+public
+#else
+internal 
+#endif
+sealed record AttributeParameterTypeModel(
     AttributeParameterTypeKind Kind,
     String KindString,
     String DisplayString,

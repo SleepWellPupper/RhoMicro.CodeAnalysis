@@ -10,7 +10,12 @@ using RhoMicro.CodeAnalysis.Library.Models.Collections;
 #if GENERATOR
 [NonEquatable]
 #endif
-internal readonly partial struct ModelCreationContext(EquatableCollectionFactory collectionFactory, CancellationToken cancellationToken) : IDisposable
+#if RHOMICRO_EMIT_PUBLIC_COLLECTIONS
+public
+#else
+internal 
+#endif
+readonly partial struct ModelCreationContext(EquatableCollectionFactory collectionFactory, CancellationToken cancellationToken) : IDisposable
 {
     public EquatableCollectionFactory CollectionFactory { get; } = collectionFactory;
     public CancellationToken CancellationToken { get; } = cancellationToken;

@@ -9,7 +9,12 @@ using RhoMicro.CodeAnalysis.Library.Models.Collections;
 #if RHOMICRO_CODEANALYSIS_UTILITYGENERATORS
 [IncludeFile]
 #endif
-internal record TypeModel(
+#if RHOMICRO_EMIT_PUBLIC_COLLECTIONS
+public
+#else
+internal 
+#endif
+record TypeModel(
     EquatableList<String> NamespaceParts,
     String Name)
 {

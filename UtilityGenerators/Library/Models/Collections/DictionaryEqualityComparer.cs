@@ -12,7 +12,12 @@ using System.Runtime.CompilerServices;
 #if GENERATOR
 [NonEquatable]
 #endif
-internal sealed partial class DictionaryEqualityComparer<TKey, TValue>(IEqualityComparer<TKey> keyComparer, IEqualityComparer<TValue> valueComparer) : IEqualityComparer<IDictionary<TKey, TValue>>
+#if RHOMICRO_EMIT_PUBLIC_COLLECTIONS
+public
+#else
+internal 
+#endif
+sealed partial class DictionaryEqualityComparer<TKey, TValue>(IEqualityComparer<TKey> keyComparer, IEqualityComparer<TValue> valueComparer) : IEqualityComparer<IDictionary<TKey, TValue>>
 {
     public DictionaryEqualityComparer(IEqualityComparer<TValue> valueComparer) : this(EqualityComparer<TKey>.Default, valueComparer) { }
     public DictionaryEqualityComparer(IEqualityComparer<TKey> keyComparer) : this(keyComparer, EqualityComparer<TValue>.Default) { }

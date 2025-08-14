@@ -11,7 +11,12 @@ using System.Runtime.CompilerServices;
 #endif
 [CollectionBuilder(typeof(Builder), "Create")]
 [DebuggerDisplay("Count: {Count}")]
-internal sealed record EquatableList<T> : EquatableCollection<T, IList<T>>, IList<T>, IReadOnlyList<T>
+#if RHOMICRO_EMIT_PUBLIC_COLLECTIONS
+public
+#else
+internal 
+#endif
+sealed record EquatableList<T> : EquatableCollection<T, IList<T>>, IList<T>, IReadOnlyList<T>
 {
     public EquatableList(
         IList<T> collection,

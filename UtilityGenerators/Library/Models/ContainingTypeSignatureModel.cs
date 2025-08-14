@@ -10,7 +10,12 @@ using RhoMicro.CodeAnalysis.Library.Models.Collections;
 #if RHOMICRO_CODEANALYSIS_UTILITYGENERATORS
 [IncludeFile]
 #endif
-internal readonly record struct ContainingTypeSignatureModel(
+#if RHOMICRO_EMIT_PUBLIC_COLLECTIONS
+public
+#else
+internal 
+#endif
+readonly record struct ContainingTypeSignatureModel(
     PartialTypeKindModel Kind,
     String Name,
     EquatableList<TypeModel> TypeArguments)

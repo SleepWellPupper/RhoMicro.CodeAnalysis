@@ -14,7 +14,12 @@ using System.Runtime.CompilerServices;
 #if GENERATOR
 [NonEquatable]
 #endif
-internal sealed partial class SetEqualityComparer<T>(IEqualityComparer<T> elementComparer) : IEqualityComparer<ISet<T>>
+#if RHOMICRO_EMIT_PUBLIC_COLLECTIONS
+public
+#else
+internal 
+#endif
+sealed partial class SetEqualityComparer<T>(IEqualityComparer<T> elementComparer) : IEqualityComparer<ISet<T>>
 {
     public static SetEqualityComparer<T> Default { get; } = new(EqualityComparer<T>.Default);
 

@@ -12,7 +12,12 @@ using RhoMicro.CodeAnalysis.Library.Text.SourceTexts;
 #if RHOMICRO_CODEANALYSIS_UTILITYGENERATORS
 [IncludeFile]
 #endif
-internal sealed record NamedTypeModel(
+#if RHOMICRO_EMIT_PUBLIC_COLLECTIONS
+public
+#else
+internal 
+#endif
+sealed record NamedTypeModel(
     EquatableList<ContainingTypeSignatureModel> ContainingTypes,
     Accessibility? Accessibility,
     PartialTypeKindModel Kind,

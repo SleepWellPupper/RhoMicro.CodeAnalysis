@@ -12,7 +12,12 @@ using System.Runtime.CompilerServices;
 #endif
 [CollectionBuilder(typeof(Builder), "Create")]
 [DebuggerDisplay("Count: {Count}")]
-internal sealed record LazyEquatableList<T> : LazyEquatableList<T, LazyEquatableList<T>>
+#if RHOMICRO_EMIT_PUBLIC_COLLECTIONS
+public
+#else
+internal 
+#endif
+sealed record LazyEquatableList<T> : LazyEquatableList<T, LazyEquatableList<T>>
 {
     public LazyEquatableList(
         IList<T> collection,
@@ -26,7 +31,13 @@ internal sealed record LazyEquatableList<T> : LazyEquatableList<T, LazyEquatable
     public Boolean Equals(LazyEquatableList<T> other) => base.Equals(other);
     public override Int32 GetHashCode() => base.GetHashCode();
 }
-internal record LazyEquatableList<T, TState> : EquatableCollection<T, IList<T>>, IList<T>, IReadOnlyList<T>
+
+#if RHOMICRO_EMIT_PUBLIC_COLLECTIONS
+public
+#else
+internal 
+#endif
+record LazyEquatableList<T, TState> : EquatableCollection<T, IList<T>>, IList<T>, IReadOnlyList<T>
 {
     public LazyEquatableList(
         IList<T> collection,

@@ -8,7 +8,12 @@ using Microsoft.CodeAnalysis;
 #if RHOMICRO_CODEANALYSIS_UTILITYGENERATORS
 [IncludeFile]
 #endif
-internal readonly record struct PartialTypeKindModel(String Value)
+#if RHOMICRO_EMIT_PUBLIC_COLLECTIONS
+public
+#else
+internal 
+#endif
+readonly record struct PartialTypeKindModel(String Value)
 {
     public static PartialTypeKindModel Class => new("class");
     public static PartialTypeKindModel Record => new("record");
