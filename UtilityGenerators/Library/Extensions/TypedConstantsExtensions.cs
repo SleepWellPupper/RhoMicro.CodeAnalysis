@@ -608,7 +608,7 @@ internal static class TypedConstantsExtensions
         {
             if(array[i].TryGetTypeValue(out var item))
             {
-                builder[i] = item;
+                builder.Add(item);
             } else
             {
                 value = null;
@@ -663,7 +663,7 @@ internal static class TypedConstantsExtensions
         {
             if(array[i].TryGetNullableTypeValue(out var item))
             {
-                builder[i] = item;
+                builder.Add(item);
             } else
             {
                 value = null;
