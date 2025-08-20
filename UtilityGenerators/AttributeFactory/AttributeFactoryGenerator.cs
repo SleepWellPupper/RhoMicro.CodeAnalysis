@@ -2238,7 +2238,7 @@ public sealed partial class AttributeFactoryGenerator : IIncrementalGenerator
                     .Append("if(kvp.Value.TryGet").Append(property.Type.KindString).Append("Value(out ").Append(property.Type.NullableDisplayString).AppendLine(" value))")
                     .Indent().Append(property.Name).AppendCore(" = value");
 
-                if(property.Type.Kind.HasAnyFlagFast(AttributeParameterTypeKind.ValueType, AttributeParameterTypeKind.Enum))
+                if(property.Type.Kind.HasAnyFlagFast(AttributeParameterTypeKind.ValueType, AttributeParameterTypeKind.Enum, AttributeParameterTypeKind.TypeArray, AttributeParameterTypeKind.NullableTypeArray))
                     ctx.SourceBuilder.AppendCore(".Value");
 
                 ctx.SourceBuilder.AppendLine(';').Detent()
