@@ -15,7 +15,7 @@
 		<InternalsVisibleTo Include="RhoMicro.CodeAnalysis.UtilityGenerators.Tests" />
 		<InternalsVisibleTo Include="UtilityGenerators.Benchmarks" />
 	</ItemGroup>
-	
+
 	<PropertyGroup>
 		<IsPackable>true</IsPackable>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
@@ -28,7 +28,7 @@
 	<PropertyGroup>
 		<DefineConstants>$(DefineConstants);GENERATOR;RHOMICRO_CODEANALYSIS_UTILITYGENERATORS</DefineConstants>
 	</PropertyGroup>
-	
+
 	<ItemGroup>
 		<PackageReference Update="NETStandard.Library" PrivateAssets="all" />
 		<PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.12.0" />
@@ -41,11 +41,7 @@
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 	</ItemGroup>
-	
-	<ItemGroup>
-		<None Remove=".editorconfig"></None>
-	</ItemGroup>
-	
+
 	<ItemGroup>
 	  <None Remove="bin\Release\netstandard2.0\\RhoMicro.CodeAnalysis.UtilityGenerators.1.0.0.dll" />
 	</ItemGroup>
