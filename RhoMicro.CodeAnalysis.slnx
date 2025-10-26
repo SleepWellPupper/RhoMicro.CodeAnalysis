@@ -1,0 +1,43 @@
+<Solution>
+  <Folder Name="/Applications/">
+    <Project Path="DslGenerator.TestApp/DslGenerator.TestApp.csproj" />
+    <Project Path="EnumStringTestApp/EnumStringTestApp.csproj" />
+    <Project Path="IndentedStringBuilderTestApp/IndentedStringBuilderTestApp.csproj" />
+    <Project Path="Project1/Project1.csproj" />
+    <Project Path="TestApp/TestApp.csproj" />
+    <Project Path="UnionsGenerator.TestApplication/UnionsGenerator.TestApplication.csproj" />
+    <Project Path="UnionsGenerator.TestLibrary/UnionsGenerator.TestLibrary.csproj" />
+    <Project Path="WorkerService1/WorkerService1.csproj" />
+  </Folder>
+  <Folder Name="/Generators/">
+    <Project Path="CopyToGenerator/CopyToGenerator.csproj" />
+    <Project Path="DocReflect.Library/DocReflect.Library.csproj" />
+    <Project Path="DocReflect/DocReflect.csproj" />
+    <Project Path="DslGenerator.Tests/DslGenerator.Tests.csproj" />
+    <Project Path="DslGenerator/DslGenerator.csproj" />
+    <Project Path="EnumConstStringGenerator/EnumConstStringGenerator.csproj" />
+    <Project Path="JsonSchemaGenerator.Cli/JsonSchemaGenerator.Cli.csproj" />
+    <Project Path="JsonSchemaGenerator.Tests/JsonSchemaGenerator.Tests.csproj" />
+    <Project Path="JsonSchemaGenerator/JsonSchemaGenerator.csproj" />
+    <Project Path="OptionsGenerator.Tests/OptionsGenerator.Tests.csproj" />
+    <Project Path="OptionsGenerator/OptionsGenerator.csproj" />
+    <Project Path="UnionsGenerator.EndToEnd.Tests/UnionsGenerator.EndToEnd.Tests.csproj" />
+    <Project Path="UnionsGenerator.Tests/UnionsGenerator.Tests.csproj" />
+    <Project Path="UnionsGenerator/UnionsGenerator.csproj" />
+    <Project Path="UtilityGenerators.Benchmarks/UtilityGenerators.Benchmarks.csproj" />
+    <Project Path="UtilityGenerators.Dev/UtilityGenerators.Dev.csproj" />
+    <Project Path="UtilityGenerators.Library.Text.SourceTexts/UtilityGenerators.Library.Text.SourceTexts.csproj" />
+    <Project Path="UtilityGenerators.Tests.E2E/UtilityGenerators.Tests.E2E.csproj" />
+    <Project Path="UtilityGenerators.Tests/UtilityGenerators.Tests.csproj" />
+    <Project Path="UtilityGenerators/UtilityGenerators.csproj" />
+    <Project Path="VisitorGenerator/VisitorGenerator.csproj" />
+  </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path=".gitattributes" />
+    <File Path=".github/workflows/buildPublish.yml" />
+    <File Path=".gitignore" />
+    <File Path="AutoUpdateAssemblyName.txt" />
+    <File Path="Directory.Build.props" />
+    <File Path="global.json" />
+  </Folder>
+</Solution>
