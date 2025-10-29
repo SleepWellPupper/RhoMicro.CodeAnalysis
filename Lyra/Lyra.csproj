@@ -6,7 +6,7 @@
     <developmentDependency>true</developmentDependency>
     <NoPackageAnalysis>true</NoPackageAnalysis>
     <IsRoslynComponent>true</IsRoslynComponent>
-<!--    <ImplicitUsings>disable</ImplicitUsings>-->
+    <!--    <ImplicitUsings>disable</ImplicitUsings>-->
   </PropertyGroup>
 
   <PropertyGroup>

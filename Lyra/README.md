@@ -17,13 +17,13 @@ This project is licensed under the `MPL-2.0` license.
 .NET CLI:
 
 ```
-dotnet add package RhoMicro.CodeAnalysis.Lyra --version 1.0.0
+dotnet add package RhoMicro.CodeAnalysis.Lyra --version 1.0.1
 ```
 
 PackageReference:
 
 ```xml
-<PackageReference Include="RhoMicro.CodeAnalysis.Lyra" Version="1.0.0">
+<PackageReference Include="RhoMicro.CodeAnalysis.Lyra" Version="1.0.1">
     <PrivateAssets>all</PrivateAssets>
     <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
 </PackageReference>
