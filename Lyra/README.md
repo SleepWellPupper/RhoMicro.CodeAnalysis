@@ -23,10 +23,10 @@ dotnet add package RhoMicro.CodeAnalysis.Lyra --version 1.0.0
 PackageReference:
 
 ```xml
-
-<PropertyGroup>
-    <PackageReference Include="RhoMicro.CodeAnalysis.Lyra" Version="1.0.0"/>
-</PropertyGroup>
+<PackageReference Include="RhoMicro.CodeAnalysis.Lyra" Version="1.0.0">
+    <PrivateAssets>all</PrivateAssets>
+    <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+</PackageReference>
 ```
 
 ## How To Use
