@@ -1,5 +1,6 @@
 <Solution>
   <Folder Name="/Applications/">
+    <Project Path="CSharpSourceBuilder.TestApplication\CSharpSourceBuilder.TestApplication.csproj" Type="Classic C#" />
     <Project Path="DslGenerator.TestApp/DslGenerator.TestApp.csproj" />
     <Project Path="EnumStringTestApp/EnumStringTestApp.csproj" />
     <Project Path="IndentedStringBuilderTestApp/IndentedStringBuilderTestApp.csproj" />
@@ -19,6 +20,7 @@
     <Project Path="JsonSchemaGenerator.Cli/JsonSchemaGenerator.Cli.csproj" />
     <Project Path="JsonSchemaGenerator.Tests/JsonSchemaGenerator.Tests.csproj" />
     <Project Path="JsonSchemaGenerator/JsonSchemaGenerator.csproj" />
+    <Project Path="Lyra\Lyra.csproj" Type="Classic C#" />
     <Project Path="OptionsGenerator.Tests/OptionsGenerator.Tests.csproj" />
     <Project Path="OptionsGenerator/OptionsGenerator.csproj" />
     <Project Path="UnionsGenerator.EndToEnd.Tests/UnionsGenerator.EndToEnd.Tests.csproj" />

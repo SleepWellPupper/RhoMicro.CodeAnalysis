@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: MPL-2.0
 
+namespace RhoMicro.CodeAnalysis;
+
 using System.Diagnostics.CodeAnalysis;
 
 public interface IUnion

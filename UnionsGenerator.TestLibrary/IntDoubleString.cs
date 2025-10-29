@@ -1,13 +1,13 @@
 // SPDX-License-Identifier: MPL-2.0
 
 using System.Collections.Immutable;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Text;
+using RhoMicro.CodeAnalysis;
 
-public partial class IntDoubleString : IUnion, IEquatable<IntDoubleString>
+public partial class IntDoubleString : IUnion, IEquatable<IntDoubleString>, IComparable
 {
 #region VariantGroupKinds
 
@@ -18,7 +18,7 @@ public partial class IntDoubleString : IUnion, IEquatable<IntDoubleString>
         Number = 1 << 0,
         Integer = 1 << 1,
         ReferenceType = 1 << 2,
-        ValueType = 1 << 3
+        ValueType = 1 << 3,
     }
 
 #endregion
@@ -38,7 +38,8 @@ public partial class IntDoubleString : IUnion, IEquatable<IntDoubleString>
 
     readonly struct Factory : IUnionFactory<IntDoubleString>
     {
-        public Boolean TryCreate<TVariant>(TVariant value, [NotNullWhen(true)] out IntDoubleString? union)
+        public Boolean TryCreate<TVariant>(TVariant value,
+                                           [NotNullWhen(true)] out IntDoubleString? union)
         {
             switch (value)
             {
@@ -53,8 +54,7 @@ public partial class IntDoubleString : IUnion, IEquatable<IntDoubleString>
                     return true;
                 // TODO: detect/register related unions, match here (before IUnion box)
 
-                // attempt to convert to this union through double dispatch, this will
-                // effectively convert between related unions, albeit while incurring boxing
+                // attempt to convert to this union through double dispatch
                 case IUnion v: return v.TryMapTo(this, out union);
                 // switch against nullable variants here
                 /*
@@ -98,8 +98,7 @@ public partial class IntDoubleString : IUnion, IEquatable<IntDoubleString>
                 case IntDoubleString v: return new IntDoubleString(v);
                 // TODO: detect/register related unions, match here (before IUnion box)
 
-                // attempt to convert to this union through double dispatch, this will
-                // effectively convert between related unions, albeit while incurring boxing
+                // attempt to convert to this union through double dispatch
                 case IUnion v: return v.MapTo<IntDoubleString, Factory>(this);
                 case null:
                 // switch against nullable variants here
@@ -250,8 +249,7 @@ public partial class IntDoubleString : IUnion, IEquatable<IntDoubleString>
                     VariantKind.Int32 => __unmanagedVariantsContainer.Int32,
                     VariantKind.Double => __unmanagedVariantsContainer.Double,
                     VariantKind.String => __referenceVariantsContainer,
-                    _ => throw new InvalidOperationException(
-                            $"Unable to determine the variant of this union, as '{nameof(Variant)}' is not representing a valid variant of this union: '{Variant}'. This could be either because the union itself was not initialized correctly, or due to a bug in the 'UnionsGenerator' that generated this union type. Please report an issue to the maintainer.")
+                    _ => throw CreateUnknownVariantException()
             };
 
             return result;
@@ -263,16 +261,14 @@ public partial class IntDoubleString : IUnion, IEquatable<IntDoubleString>
 
     public Int32 ToInt32 => IsInt32
             ? AsInt32
-            : throw new InvalidOperationException(
-                    $"Unable to convert union to 'Int32', as it is currently representing the '{Variant}' variant.");
+            : throw CreateInvalidCastException(VariantKind.Int32);
 
     public Boolean IsDouble => Variant is VariantKind.Double;
     public Double AsDouble => __unmanagedVariantsContainer.Double;
 
     public Double ToDouble => IsDouble
             ? AsDouble
-            : throw new InvalidOperationException(
-                    $"Unable to convert union to 'Double', as it is currently representing the '{Variant}' variant.");
+            : throw CreateInvalidCastException(VariantKind.Double);
 
     // MNNW for non-nullable reference variants
     [MemberNotNullWhen(true, nameof(AsString))]
@@ -282,12 +278,234 @@ public partial class IntDoubleString : IUnion, IEquatable<IntDoubleString>
 
     public String ToString => IsString
             ? AsString
-            : throw new InvalidOperationException(
-                    $"Unable to convert union to 'String', as it is currently representing the '{Variant}' variant.");
+            : throw CreateInvalidCastException(VariantKind.String);
 
 #endregion
 
-#region Is/As Methods
+#region Switch
+
+    public void Switch(
+            Action<int> onInt32,
+            Action<double> onDouble,
+            Action<string> onString)
+    {
+        switch (Variant)
+        {
+            case VariantKind.Int32:
+                onInt32.Invoke(__unmanagedVariantsContainer.Int32);
+                break;
+            case VariantKind.Double:
+                onDouble.Invoke(__unmanagedVariantsContainer.Double);
+                break;
+            case VariantKind.String:
+                onString.Invoke((string)__referenceVariantsContainer);
+                break;
+        }
+    }
+
+    public void Switch<TState>(
+            TState state,
+            Action<int, TState> onInt32,
+            Action<double, TState> onDouble,
+            Action<string, TState> onString)
+    {
+        switch (Variant)
+        {
+            case VariantKind.Int32:
+                onInt32.Invoke(__unmanagedVariantsContainer.Int32, state);
+                break;
+            case VariantKind.Double:
+                onDouble.Invoke(__unmanagedVariantsContainer.Double, state);
+                break;
+            case VariantKind.String:
+                onString.Invoke((string)__referenceVariantsContainer, state);
+                break;
+        }
+    }
+
+    public void Switch(
+            Action defaultHandler,
+            Action<int>? onInt32 = null,
+            Action<double>? onDouble = null,
+            Action<string>? onString = null)
+    {
+        switch (Variant)
+        {
+            case VariantKind.Int32:
+                onInt32?.Invoke(__unmanagedVariantsContainer.Int32);
+                break;
+            case VariantKind.Double:
+                onDouble?.Invoke(__unmanagedVariantsContainer.Double);
+                break;
+            case VariantKind.String:
+                onString?.Invoke((string)__referenceVariantsContainer);
+                break;
+        }
+    }
+
+    public void Switch<TState>(
+            TState state,
+            Action<TState> defaultHandler,
+            Action<int, TState>? onInt32 = null,
+            Action<double, TState>? onDouble = null,
+            Action<string, TState>? onString = null)
+    {
+        switch (Variant)
+        {
+            case VariantKind.Int32:
+                onInt32?.Invoke(__unmanagedVariantsContainer.Int32, state);
+                break;
+            case VariantKind.Double:
+                onDouble?.Invoke(__unmanagedVariantsContainer.Double, state);
+                break;
+            case VariantKind.String:
+                onString?.Invoke((string)__referenceVariantsContainer, state);
+                break;
+        }
+    }
+
+    public TResult Switch<TResult>(
+            Func<int, TResult> onInt32,
+            Func<double, TResult> onDouble,
+            Func<string, TResult> onString)
+    {
+        switch (Variant)
+        {
+            case VariantKind.Int32:
+                return onInt32.Invoke(__unmanagedVariantsContainer.Int32);
+            case VariantKind.Double:
+                return onDouble.Invoke(__unmanagedVariantsContainer.Double);
+            case VariantKind.String:
+                return onString.Invoke((string)__referenceVariantsContainer);
+            default:
+                throw CreateUnknownVariantException();
+        }
+    }
+
+    public TResult Switch<TResult>(
+            Func<TResult> defaultHandler,
+            Func<int, TResult>? onInt32 = null,
+            Func<double, TResult>? onDouble = null,
+            Func<string, TResult>? onString = null)
+    {
+        switch (Variant)
+        {
+            case VariantKind.Int32:
+                return onInt32 is not null
+                        ? onInt32.Invoke(__unmanagedVariantsContainer.Int32)
+                        : defaultHandler.Invoke();
+            case VariantKind.Double:
+                return onDouble is not null
+                        ? onDouble.Invoke(__unmanagedVariantsContainer.Double)
+                        : defaultHandler.Invoke();
+            case VariantKind.String:
+                return onString is not null
+                        ? onString.Invoke((string)__referenceVariantsContainer)
+                        : defaultHandler.Invoke();
+            default:
+                throw CreateUnknownVariantException();
+        }
+    }
+
+    public TResult Switch<TResult>(
+            TResult defaultResult,
+            Func<int, TResult>? onInt32 = null,
+            Func<double, TResult>? onDouble = null,
+            Func<string, TResult>? onString = null)
+    {
+        switch (Variant)
+        {
+            case VariantKind.Int32:
+                return onInt32 is not null
+                        ? onInt32.Invoke(__unmanagedVariantsContainer.Int32)
+                        : defaultResult;
+            case VariantKind.Double:
+                return onDouble is not null
+                        ? onDouble.Invoke(__unmanagedVariantsContainer.Double)
+                        : defaultResult;
+            case VariantKind.String:
+                return onString is not null
+                        ? onString.Invoke((string)__referenceVariantsContainer)
+                        : defaultResult;
+            default:
+                throw CreateUnknownVariantException();
+        }
+    }
+
+    public TResult Switch<TResult, TState>(
+            TState state,
+            Func<int, TState, TResult> onInt32,
+            Func<double, TState, TResult> onDouble,
+            Func<string, TState, TResult> onString)
+    {
+        switch (Variant)
+        {
+            case VariantKind.Int32:
+                return onInt32.Invoke(__unmanagedVariantsContainer.Int32, state);
+            case VariantKind.Double:
+                return onDouble.Invoke(__unmanagedVariantsContainer.Double, state);
+            case VariantKind.String:
+                return onString.Invoke((string)__referenceVariantsContainer, state);
+            default:
+                throw CreateUnknownVariantException();
+        }
+    }
+
+    public TResult Switch<TResult, TState>(
+            TState state,
+            Func<TState, TResult> defaultHandler,
+            Func<int, TState, TResult>? onInt32 = null,
+            Func<double, TState, TResult>? onDouble = null,
+            Func<string, TState, TResult>? onString = null)
+    {
+        switch (Variant)
+        {
+            case VariantKind.Int32:
+                return onInt32 is not null
+                        ? onInt32.Invoke(__unmanagedVariantsContainer.Int32, state)
+                        : defaultHandler.Invoke(state);
+            case VariantKind.Double:
+                return onDouble is not null
+                        ? onDouble.Invoke(__unmanagedVariantsContainer.Double, state)
+                        : defaultHandler.Invoke(state);
+            case VariantKind.String:
+                return onString is not null
+                        ? onString.Invoke((string)__referenceVariantsContainer, state)
+                        : defaultHandler.Invoke(state);
+            default:
+                throw CreateUnknownVariantException();
+        }
+    }
+
+    public TResult Switch<TResult, TState>(
+            TState state,
+            TResult defaultResult,
+            Func<int, TState, TResult>? onInt32 = null,
+            Func<double, TState, TResult>? onDouble = null,
+            Func<string, TState, TResult>? onString = null)
+    {
+        switch (Variant)
+        {
+            case VariantKind.Int32:
+                return onInt32 is not null
+                        ? onInt32.Invoke(__unmanagedVariantsContainer.Int32, state)
+                        : defaultResult;
+            case VariantKind.Double:
+                return onDouble is not null
+                        ? onDouble.Invoke(__unmanagedVariantsContainer.Double, state)
+                        : defaultResult;
+            case VariantKind.String:
+                return onString is not null
+                        ? onString.Invoke((string)__referenceVariantsContainer, state)
+                        : defaultResult;
+            default:
+                throw CreateUnknownVariantException();
+        }
+    }
+
+#endregion
+
+#region Inspection
 
     // warn that value is guaranteed to be null for class TVariant and false return
     // attach [NNW(true)] and TVariant? when not representing any nullable reference variants
@@ -386,26 +604,52 @@ public partial class IntDoubleString : IUnion, IEquatable<IntDoubleString>
 
 #region Validation
 
-    static partial void Validate(Int32 value, Boolean throwIfInvalid, ref Boolean isValid);
-    static partial void Validate(Double value, Boolean throwIfInvalid, ref Boolean isValid);
-    static partial void Validate(String value, Boolean throwIfInvalid, ref Boolean isValid);
+    static partial void Validate(
+            Int32 value,
+            Boolean throwIfInvalid,
+            ref Boolean isValid);
+
+    static partial void Validate(
+            Double value,
+            Boolean throwIfInvalid,
+            ref Boolean isValid);
+
+    static partial void Validate(
+            String value,
+            Boolean throwIfInvalid,
+            ref Boolean isValid);
+
+    private InvalidCastException CreateInvalidCastException(
+            VariantKind variant)
+        => new InvalidCastException(
+                $"Unable to convert union to '{variant.Name}', as it is currently representing the '{Variant}' variant.");
+
+    private InvalidOperationException CreateUnknownVariantException()
+        => new InvalidOperationException(
+                $"Unable to determine the variant of this union, as '{nameof(Variant)}' is not representing a valid variant of this union: '{Variant}'. This could be either because the union itself was not initialized correctly, or due to a bug in the 'UnionsGenerator' that generated this union type. Please report an issue to the maintainer.");
 
 #endregion
 
 #region Factories
 
-    public static IntDoubleString Create(IntDoubleString value) => new(value);
+    public static IntDoubleString Create(
+            IntDoubleString value) => new(value);
 
-    public static Boolean TryCreate(IntDoubleString value, [NotNullWhen(true)] out IntDoubleString? union)
+    public static Boolean TryCreate(
+            IntDoubleString value,
+            [NotNullWhen(true)] out IntDoubleString? union)
     {
         union = Create(value);
 
         return true;
     }
 
-    public static IntDoubleString Create(Int32 value) => new IntDoubleString(value, validate: true);
+    public static IntDoubleString Create(
+            Int32 value) => new IntDoubleString(value, validate: true);
 
-    public static Boolean TryCreate(Int32 value, [NotNullWhen(true)] out IntDoubleString? union)
+    public static Boolean TryCreate(
+            Int32 value,
+            [NotNullWhen(true)] out IntDoubleString? union)
     {
         var isValid = true;
         Validate(value, throwIfInvalid: false, ref isValid);
@@ -416,9 +660,12 @@ public partial class IntDoubleString : IUnion, IEquatable<IntDoubleString>
         return isValid;
     }
 
-    public static IntDoubleString Create(Double value) => new IntDoubleString(value, validate: true);
+    public static IntDoubleString Create(
+            Double value) => new IntDoubleString(value, validate: true);
 
-    public static Boolean TryCreate(Double value, [NotNullWhen(true)] out IntDoubleString? union)
+    public static Boolean TryCreate(
+            Double value,
+            [NotNullWhen(true)] out IntDoubleString? union)
     {
         var isValid = true;
         Validate(value, throwIfInvalid: false, ref isValid);
@@ -429,9 +676,12 @@ public partial class IntDoubleString : IUnion, IEquatable<IntDoubleString>
         return isValid;
     }
 
-    public static IntDoubleString Create(String value) => new IntDoubleString(value, validate: true);
+    public static IntDoubleString Create(
+            String value) => new IntDoubleString(value, validate: true);
 
-    public static Boolean TryCreate(String value, [NotNullWhen(true)] out IntDoubleString? union)
+    public static Boolean TryCreate(
+            String value,
+            [NotNullWhen(true)] out IntDoubleString? union)
     {
         var isValid = true;
         Validate(value, throwIfInvalid: false, ref isValid);
@@ -442,10 +692,13 @@ public partial class IntDoubleString : IUnion, IEquatable<IntDoubleString>
         return isValid;
     }
 
-    public static IntDoubleString Create<T>(T value)
+    public static IntDoubleString Create<T>(
+            T value)
         => new Factory().Create(value);
 
-    public static Boolean TryCreate<T>(T value, [NotNullWhen(true)] out IntDoubleString? union)
+    public static Boolean TryCreate<T>(
+            T value,
+            [NotNullWhen(true)] out IntDoubleString? union)
         => new Factory().TryCreate(value, out union);
 
 #endregion
@@ -462,8 +715,7 @@ public partial class IntDoubleString : IUnion, IEquatable<IntDoubleString>
                 VariantKind.Int32 => factory.Create(__unmanagedVariantsContainer.Int32),
                 VariantKind.Double => factory.Create(__unmanagedVariantsContainer.Double),
                 VariantKind.String => factory.Create((String)__referenceVariantsContainer),
-                _ => throw new InvalidOperationException(
-                        $"Unable to determine the variant of this union, as '{nameof(Variant)}' is not representing a valid variant of this union: '{Variant}'. This could be either because the union itself was not initialized correctly, or due to a bug in the 'UnionsGenerator' that generated this union type. Please report an issue to the maintainer.")
+                _ => throw CreateUnknownVariantException()
         };
 
         return result;
@@ -480,8 +732,7 @@ public partial class IntDoubleString : IUnion, IEquatable<IntDoubleString>
                 VariantKind.Int32 => factory.TryCreate(__unmanagedVariantsContainer.Int32, out union),
                 VariantKind.Double => factory.TryCreate(__unmanagedVariantsContainer.Double, out union),
                 VariantKind.String => factory.TryCreate((String)__referenceVariantsContainer, out union),
-                _ => throw new InvalidOperationException(
-                        $"Unable to determine the variant of this union, as '{nameof(Variant)}' is not representing a valid variant of this union: '{Variant}'. This could be either because the union itself was not initialized correctly, or due to a bug in the 'UnionsGenerator' that generated this union type. Please report an issue to the maintainer.")
+                _ => throw CreateUnknownVariantException()
         };
 
         return result;
@@ -491,9 +742,12 @@ public partial class IntDoubleString : IUnion, IEquatable<IntDoubleString>
 
 #region Equality
 
-    public override Boolean Equals(Object? obj) => obj is IntDoubleString union && Equals(union);
+    public override Boolean Equals(
+            Object? obj)
+        => obj is IntDoubleString union && Equals(union);
 
-    public Boolean Equals(IntDoubleString other)
+    public Boolean Equals(
+            IntDoubleString other)
     {
         // only emit for reference unions
         if (ReferenceEquals(this, other))
@@ -520,8 +774,7 @@ public partial class IntDoubleString : IUnion, IEquatable<IntDoubleString>
                         EqualityComparer<String>.Default.Equals(
                                 (String)__referenceVariantsContainer,
                                 (String)other.__referenceVariantsContainer),
-                _ => throw new InvalidOperationException(
-                        $"Unable to determine the variant of this union, as '{nameof(Variant)}' is not representing a valid variant of this union: '{Variant}'. This could be either because the union itself was not initialized correctly, or due to a bug in the 'UnionsGenerator' that generated this union type. Please report an issue to the maintainer.")
+                _ => throw CreateUnknownVariantException()
         };
 
         return result;
@@ -534,8 +787,7 @@ public partial class IntDoubleString : IUnion, IEquatable<IntDoubleString>
                 VariantKind.Int32 => HashCode.Combine(Variant, __unmanagedVariantsContainer.Int32),
                 VariantKind.Double => HashCode.Combine(__unmanagedVariantsContainer.Double),
                 VariantKind.String => HashCode.Combine((String)__referenceVariantsContainer),
-                _ => throw new InvalidOperationException(
-                        $"Unable to determine the variant of this union, as '{nameof(Variant)}' is not representing a valid variant of this union: '{Variant}'. This could be either because the union itself was not initialized correctly, or due to a bug in the 'UnionsGenerator' that generated this union type. Please report an issue to the maintainer.")
+                _ => throw CreateUnknownVariantException()
         };
 
         return result;
@@ -553,6 +805,30 @@ public partial class IntDoubleString : IUnion, IEquatable<IntDoubleString>
 
     public static implicit operator IntDoubleString(String value) => Create(value);
     public static explicit operator String(IntDoubleString union) => union.ToString;
+
+#endregion
+
+#region Interface Implementations
+
+    // 
+    // track required names signatures of all union members and implement conflicting interface
+    // members explicitly?
+    // alternatively, explicitly implement all interface members to avoid that complexity?
+    Int32 IComparable.CompareTo(object obj)
+    {
+        switch (Variant)
+        {
+            case VariantKind.Int32:
+                // check if variant is implementing interface explicitly and cast when needed
+                return __unmanagedVariantsContainer.Int32.CompareTo(obj);
+            case VariantKind.Double:
+                return __unmanagedVariantsContainer.Double.CompareTo(obj);
+            case VariantKind.String:
+                return ((string)__referenceVariantsContainer).CompareTo(obj);
+            default:
+                throw CreateUnknownVariantException();
+        }
+    }
 
 #endregion
 }

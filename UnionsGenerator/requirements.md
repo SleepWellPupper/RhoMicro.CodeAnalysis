@@ -24,10 +24,10 @@ The term `adapter` refers to the type adapting the union onto interfaces impleme
 | 4  | An error is issued for `ref` like variants.                                                                                                                                                           |        | ×         |
 | 4  | An error is issued for `record` unions.                                                                                                                                                               |        | ×         |
 | 5  | A warning is issued for non-nullable reference variant on struct union.                                                                                                                               |        | ×         |
-| 6  | An error is issued if more than 31 variant groups are defined. This is to allow groups to be modelled using an int backed [Flags] enum.                                                               |        | ×         |
+| 6  | An error is issued if more than 63 variant groups are defined. This is to allow groups to be modelled using a [Flags] enum.                                                                           |        | ×         |
 | 7  | Variant group names have diagnostics mapped onto their definition in the attribute usage.                                                                                                             |        | ×         |
 | 8  | Variant names have diagnostics mapped onto their definition in the attribute usage.                                                                                                                   |        | ×         |
-| 9  | An error is issued if more than 255 variants are defined. This is to allow variants to be modelled using a byte backed enum.                                                                          |        | ×         |
+| 9  | The backing type of the `VariantKind` is chosen as the smallest integral datatype able to accommodate all variants.                                                                                   |        | ×         |
 | 10 | An option is provided to box managed struct variants.                                                                                                                                                 |        | ×         |
 | 11 | Managed struct variants are stored in dedicated fields by default.                                                                                                                                    |        | ×         |
 | 12 | An error is issued for static variants.                                                                                                                                                               |        | ×         |
@@ -38,11 +38,11 @@ The term `adapter` refers to the type adapting the union onto interfaces impleme
 | 17 | If multiple variants are defined, an explicit conversion to each variant is defined.                                                                                                                  |        | ×         |
 | 18 | If a validation method is implemented, then an explicit conversion from the validated variant is defined.                                                                                             |        | ×         |
 | 19 | If a validation method is not implemented, then an implicit conversion from the variant is defined.                                                                                                   |        | ×         |
-| 20 |                                                                                                                                                                                                       |        | ×         |
-| 21 |                                                                                                                                                                                                       |        | ×         |
-| 22 |                                                                                                                                                                                                       |        | ×         |
-| 23 |                                                                                                                                                                                                       |        | ×         |
-| 24 |                                                                                                                                                                                                       |        | ×         |
+| 20 | Documentation comments are emitted for every generated member.                                                                                                                                        |        | ×         |
+| 21 | Parameter lists are wrapped and indented.                                                                                                                                                             |        | ×         |
+| 22 | The backing type of the `VariantGroupKinds` is chosen as the smallest integral datatype able to accommodate all variants groups.                                                                      |        | ×         |
+| 23 | `Union` methods are grouped by the variant they are specific to.                                                                                                                                      |        | ×         |
+| 24 | Variant group names are ordered alphabetically, except for the default group `None`, which must always be the first element.                                                                          |        | ×         |
 | 25 |                                                                                                                                                                                                       |        | ×         |
 | 26 |                                                                                                                                                                                                       |        | ×         |
 | 27 |                                                                                                                                                                                                       |        | ×         |
@@ -50,88 +50,12 @@ The term `adapter` refers to the type adapting the union onto interfaces impleme
 | 29 |                                                                                                                                                                                                       |        | ×         |
 | 30 |                                                                                                                                                                                                       |        | ×         |
 
-## APIs
-
-### `Union`
-
-| id | signature                                                                                                                | description                                                                                                                                | conditions    | issues | met (×/✓) |
-|----|--------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|---------------|--------|-----------|
-| 1  | `public T Switch<T>(Func<Variant0, T>, Func<Variant1, T>)`                                                               | projects the value onto `T`, cases are obligatory                                                                                          |               |        | ×         |
-| 2  | `public T Switch<T>(Func<T>, Func<Variant0, T>? = null, Func<Variant1, T>? = null)`                                      | projects the value onto `T`, cases are optional, default case is obligatory                                                                | \> 1 variants |        | ×         |
-| 3  | `public T Switch<T>(T, Func<Variant0, T>? = null, Func<Variant1, T>? = null)`                                            | projects the value onto `T`, cases are optional, default projection is obligatory                                                          | \> 1 variants |        | ×         |
-| 4  | `public T Switch<T, TState>(TState, Func<Variant0, TState, T>, Func<Variant1, TState, T>)`                               | projects the value onto `T`, cases are obligatory, state is obligatory                                                                     |               |        | ×         |
-| 5  | `public T Switch<T, TState>(TState, Func<TState>, Func<Variant0, TState, T>? = null, Func<Variant1, TState, T>? = null)` | projects the value onto `T`, cases are optional, default case is obligatory, state is obligatory                                           | \> 1 variants |        | ×         |
-| 6  | `public T Switch<T, TState>(TState, T, Func<Variant0, TState, T>? = null, Func<Variant1, TState, T>? = null)`            | projects the value onto `T`, cases are optional, default projection is obligatory, state is obligatory                                     | \> 1 variants |        | ×         |
-| 7  | `public void Switch(Action<Variant0>, Action<Variant1>)`                                                                 | handles the value, cases are obligatory                                                                                                    |               |        | ×         |
-| 8  | `public void Switch(Action, Action<Variant0>? = null, Action<Variant1>? = null)`                                         | handles the value, cases are optional, default case is obligatory                                                                          | \> 1 variants |        | ×         |
-| 9  | `public void Switch<TState>(TState, Action<Variant0, TState>, Action<Variant1, TState>)`                                 | handles the value, cases are obligatory, state is obligatory                                                                               |               |        | ×         |
-| 10 | `public void Switch<TState>(TState, Action<TState> , Action<Variant0, TState>?, Action<Variant1, TState>?)`              | handles the value, cases are optional, default case is obligatory, state is obligatory                                                     | \> 1 variants |        | ×         |
-| 11 | `public Union Create<TValue>(TValue)`                                                                                    | wraps a value in a union, is polymorphically sensitive (allows for variant instances typed to their superclass), accepts `Union` instances |               | #153   | ×         |
-| 12 | `public bool TryCreate<TValue>(TValue, out Union union)`                                                                 | wraps a value in a union, is polymorphically sensitive (allows for variant instances typed to their superclass), accepts `Union` instances |               | #153   | ×         |
-| 13 | `public object Value { get; }`                                                                                           | gets the underlying value, boxing it if it is a value type                                                                                 |               | #146   | ×         |
-| 14 | `public Union.Variant Variant { get; }`                                                                                  | gets the variant                                                                                                                           |               |        | ×         |
-| 15 |                                                                                                                          |                                                                                                                                            |               |        | ×         |
-| 16 |                                                                                                                          |                                                                                                                                            |               |        | ×         |
-| 17 |                                                                                                                          |                                                                                                                                            |               |        | ×         |
-| 18 |                                                                                                                          |                                                                                                                                            |               |        | ×         |
-| 19 |                                                                                                                          |                                                                                                                                            |               |        | ×         |
-| 20 |                                                                                                                          |                                                                                                                                            |               |        | ×         |
-| 21 |                                                                                                                          |                                                                                                                                            |               |        | ×         |
-| 22 |                                                                                                                          |                                                                                                                                            |               |        | ×         |
-| 23 |                                                                                                                          |                                                                                                                                            |               |        | ×         |
-| 24 |                                                                                                                          |                                                                                                                                            |               |        | ×         |
-| 25 |                                                                                                                          |                                                                                                                                            |               |        | ×         |
-| 26 |                                                                                                                          |                                                                                                                                            |               |        | ×         |
-| 27 |                                                                                                                          |                                                                                                                                            |               |        | ×         |
-| 28 |                                                                                                                          |                                                                                                                                            |               |        | ×         |
-| 29 |                                                                                                                          |                                                                                                                                            |               |        | ×         |
-| 30 |                                                                                                                          |                                                                                                                                            |               |        | ×         |
-
-### `Union.Variant`
-
-| id | signature                                              | description                                            | conditions | issues | met (×/✓) |
-|----|--------------------------------------------------------|--------------------------------------------------------|------------|--------|-----------|
-| 1  | `public readonly struct Variant`                       | represents a variant and enumerates all valid variants |            |        | ×         |
-| 2  | `public static Variant None { get; }`                  | default value, used for detecting uninitialized unions |            |        | ×         |
-| 3  | `public static Variant Variant0 { get; }`              | enumeration of variants                                |            |        | ×         |
-| 4  | `public static ImmutableArray<Variant> GetAllValues()` | gets an array containing all available variant groups  |            |        | ×         |
-| 5  | `public string Name { get; }`                          | gets the name of the variant                           |            |        | ×         |
-| 6  | `public Type Type { get; }`                            | gets the `System.Type` of the variant                  |            |        | ×         |
-| 7  | `public VariantGroups Groups { get; }`                 | gets the variant groups containing this variant        |            |        | ×         |
-| 8  | `public bool IsDefault { get; }`                       | indicates whether the variant is equal to `None`       |            |        | ×         |
-| 9  |                                                        |                                                        |            |        | ×         |
-| 10 |                                                        |                                                        |            |        | ×         |
-
-### `Union.VariantGroups`
-
-| id | signature                                                               | description                                                             | conditions | issues | met (×/✓) |
-|----|-------------------------------------------------------------------------|-------------------------------------------------------------------------|------------|--------|-----------|
-| 1  | `public readonly struct VariantGroups`                                  | represents a variant group and enumerates all valid variant groups      |            |        | ×         |
-| 2  | `public static VariantGroups None { get; }`                             | default group used for unassociated variants                            |            |        | ×         |
-| 3  | `public static VariantGroups VariantGroup0 { get; }`                    | enumeration of variant groups                                           |            |        | ×         |
-| 4  | `public static ImmutableArray<VariantGroups> GetAllValues()`            | gets an array containing all available variant groups                   |            |        | ×         |
-| 5  | `public bool Contains(VariantGroups groups)`                            | indicates whether groups is contained in the current group              |            |        | ×         |
-| 6  | `public bool IsDefault { get; }`                                        | indicates whether the variant group is equal to `None`                  |            |        | ×         |
-| 7  | `public static VariantGroups operator \|(VariantGroups, VariantGroups)` | bitwise or operator for combining variant groups                        |            |        | ×         |
-| 8  | `public int IndividualGroupsCount { get; }`                             | gets the amount of individual groups combined in this group             |            |        | ×         |
-| 9  | `public void GetIndividualGroups(Span<VariantGroups> buffer)`           | populates a buffer with the individual groups combined in this group    |            |        | ×         |
-| 10 | `public ImmutableArray<VariantGroups> GetIndividualGroups()`            | gets an array containing the individual groups combined in this group   |            |        | ×         |
-| 11 | `public string Name { get; }`                                           | gets the name of or combined names of the groups combined in this group |            |        | ×         |
-| 12 |                                                                         |                                                                         |            |        | ×         |
-| 13 |                                                                         |                                                                         |            |        | ×         |
-| 14 |                                                                         |                                                                         |            |        | ×         |
-| 15 |                                                                         |                                                                         |            |        | ×         |
-| 16 |                                                                         |                                                                         |            |        | ×         |
-| 17 |                                                                         |                                                                         |            |        | ×         |
-| 18 |                                                                         |                                                                         |            |        | ×         |
-| 19 |                                                                         |                                                                         |            |        | ×         |
-| 20 |                                                                         |                                                                         |            |        | ×         |
-
 ## Notes
 
 ### TODO
 
-- Relations
+- relations
+- json support
 
 ### Table Template
 
