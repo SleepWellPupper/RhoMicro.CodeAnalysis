@@ -1,0 +1,47 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <developmentDependency>true</developmentDependency>
+    <NoPackageAnalysis>true</NoPackageAnalysis>
+    <IsRoslynComponent>true</IsRoslynComponent>
+<!--    <ImplicitUsings>disable</ImplicitUsings>-->
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <IsPackable>true</IsPackable>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Description>
+      Provides types for generating (indented) C# source texts.
+    </Description>
+    <PackageTags>Source Generator; StringBuilder; Indented; Indented StringBuilder; SourceBuilder; SourceText; CSharp; CSharp Source</PackageTags>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <DefineConstants>$(DefineConstants);CSHARPSOURCEBUILDER_GENERATOR</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Update="NETStandard.Library" PrivateAssets="all"/>
+    <PackageReference Include="Microsoft.Bcl.HashCode" Version="6.0.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.12.0"/>
+    <PackageReference Include="PolySharp" Version="1.15.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="RhoMicro.CodeAnalysis.UtilityGenerators" Version="15.3.4">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false"/>
+    <None Include="README.md" Pack="true" PackagePath="/" CopyToOutputDirectory="Always"/>
+  </ItemGroup>
+
+</Project>
