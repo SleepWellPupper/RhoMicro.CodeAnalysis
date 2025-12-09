@@ -1,4 +1,4 @@
-## Release 23.0.0-rc0
+## Release 23.0.0
 
 ### New Rules
 

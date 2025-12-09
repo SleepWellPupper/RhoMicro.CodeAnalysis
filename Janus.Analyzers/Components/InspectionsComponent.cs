@@ -18,10 +18,6 @@ internal readonly record struct InspectionsComponent(UnionModel Model) : ICSharp
         {
             ct.ThrowIfCancellationRequested();
 
-            // TODO:
-            // when mayBeNull in Is<T>(out u):
-            // comment explaining that value is guaranteed to be null if returning false, even without annotation
-
             var mayBeNull = m.Variants.Any(static v =>
                 v.Type is { IsNullable: true } or { Kind: VariantTypeKind.Unknown });
 

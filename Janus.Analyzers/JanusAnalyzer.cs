@@ -49,10 +49,7 @@ public sealed partial class JanusAnalyzer : DiagnosticAnalyzer
         _ = context ?? throw new ArgumentNullException(nameof(context));
 
         context.ConfigureGeneratedCodeAnalysis(GeneratedCodeAnalysisFlags.None);
-
-#if !DEBUG
         context.EnableConcurrentExecution();
-#endif
 
         context.RegisterOperationAction(
             ReportToStringSettingIgnored, OperationKind.Attribute);
