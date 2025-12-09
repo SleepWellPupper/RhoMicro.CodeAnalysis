@@ -22,9 +22,14 @@ internal readonly record struct TypeNameComponent : ICSharpSourceComponent
     /// <param name="type">
     /// The type whose name to append.
     /// </param>
-    public TypeNameComponent(Type type)
+    /// <param name="options">
+    /// The options to use when appending the type name, or <see langword="null"/>
+    /// to use the builders default type name options.
+    /// </param>
+    public TypeNameComponent(Type type, TypeNameOptions? options = null)
     {
         _type = type;
+        _options = options;
         _typeName = null;
     }
 
@@ -40,6 +45,7 @@ internal readonly record struct TypeNameComponent : ICSharpSourceComponent
         _typeName = typeName;
     }
 
+    private readonly TypeNameOptions? _options;
     private readonly Type? _type;
     private readonly String? _typeName;
 
@@ -50,7 +56,14 @@ internal readonly record struct TypeNameComponent : ICSharpSourceComponent
 
         if (_type is not null)
         {
-            builder.AppendTypeName(_type);
+            if (_options is { } o)
+            {
+                builder.AppendTypeName(_type, o);
+            }
+            else
+            {
+                builder.AppendTypeName(_type);
+            }
         }
         else if (_typeName is not null)
         {

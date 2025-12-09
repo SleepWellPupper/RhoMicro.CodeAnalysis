@@ -36,13 +36,13 @@ partial class CSharpSourceBuilder
         /// </param>
         public void AppendLiteral(String literal)
         {
-            if (!writer._appendCondition)
+            if (!writer.IsAppendConditionMet)
             {
                 return;
             }
 
             TryDetent();
-            writer.AppendCore(literal, out var lastLineStartText);
+            writer.AppendCore(literal.AsSpan(), out var lastLineStartText);
 
             if (!writer._detector.TryDetectIndentation(
                         lastLineStartText,
@@ -100,7 +100,7 @@ partial class CSharpSourceBuilder
         /// </typeparam>
         public void AppendFormatted<T>(T placeholder)
         {
-            if (!writer._appendCondition)
+            if (!writer.IsAppendConditionMet)
             {
                 return;
             }
@@ -123,7 +123,7 @@ partial class CSharpSourceBuilder
                     break;
                 case ICSharpSourceComponent component:
                     // invert call in order to allow jit to remove boxing conversion
-                    component.AppendTo(writer, writer._cancellationToken);
+                    component.AppendTo(writer, writer.CancellationToken);
                     break;
                 case null:
                     break;

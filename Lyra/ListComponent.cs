@@ -14,7 +14,7 @@ using System.Threading;
 /// This type supports value equality. The <see cref="Append"/> and <see cref="Separate"/>
 /// members are not taken into account when calculating equality. 
 /// </remarks>
-/// <param name="Elements">
+/// <param name="List">
 /// The elements to append to the builder.
 /// </param>
 /// <param name="Append">
@@ -29,6 +29,9 @@ using System.Threading;
 /// <param name="Terminator">
 /// The terminator to append to the final element.
 /// </param>
+/// <typeparam name="TList">
+/// The type of list to render.
+/// </typeparam>
 /// <typeparam name="TElement">
 /// The type of element to append.
 /// </typeparam>
@@ -38,25 +41,21 @@ using System.Threading;
 #if CSHARPSOURCEBUILDER_GENERATOR
 [IncludeFile]
 #endif
-internal readonly record struct ListComponent<TElement, TSeparator>(
-        ImmutableArray<TElement> Elements,
-        Action<TElement, Int32, Int32, CSharpSourceBuilder, CancellationToken> Append,
-        TSeparator Separator,
-        Action<TSeparator, Int32, Int32, CSharpSourceBuilder, CancellationToken> Separate,
-        TSeparator Terminator)
-        : ICSharpSourceComponent
+internal readonly record struct ListComponent<TList, TElement, TSeparator>(
+    TList List,
+    Action<TElement, Int32, Int32, CSharpSourceBuilder, CancellationToken> Append,
+    TSeparator Separator,
+    Action<TSeparator, Int32, Int32, CSharpSourceBuilder, CancellationToken> Separate,
+    TSeparator Terminator)
+    : ICSharpSourceComponent
+    where TList : IList<TElement>
 {
     /// <inheritdoc />
     public void AppendTo(CSharpSourceBuilder builder, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
-        if (Elements.IsDefault)
-        {
-            return;
-        }
-
-        var length = Elements.Length;
+        var length = List.Count;
 
         for (var index = 0; index < length; index++)
         {
@@ -67,7 +66,7 @@ internal readonly record struct ListComponent<TElement, TSeparator>(
                 Separate.Invoke(Separator, index, length, builder, cancellationToken);
             }
 
-            var element = Elements[index];
+            var element = List[index];
             Append.Invoke(element, index, length, builder, cancellationToken);
 
             if (index == length - 1)
@@ -78,7 +77,7 @@ internal readonly record struct ListComponent<TElement, TSeparator>(
     }
 
     /// <inheritdoc />
-    public Boolean Equals(ListComponent<TElement, TSeparator> other)
+    public Boolean Equals(ListComponent<TList, TElement, TSeparator> other)
     {
         if (!EqualityComparer<TSeparator>.Default.Equals(other.Separator, Separator))
         {
@@ -90,7 +89,7 @@ internal readonly record struct ListComponent<TElement, TSeparator>(
             return false;
         }
 
-        if (!ImmutableArrayEqualityComparer.Equals(other.Elements, Elements))
+        if (!other.List.SequenceEqual(List))
         {
             return false;
         }
@@ -104,7 +103,12 @@ internal readonly record struct ListComponent<TElement, TSeparator>(
         var hc = new HashCode();
         hc.Add(Separator);
         hc.Add(Terminator);
-        hc.Add(Elements, ImmutableArrayEqualityComparer<TElement>.Default);
+
+        foreach (var element in List)
+        {
+            hc.Add(element);
+        }
+
         var result = hc.ToHashCode();
 
         return result;

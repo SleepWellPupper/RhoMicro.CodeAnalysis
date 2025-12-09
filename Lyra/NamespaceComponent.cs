@@ -42,11 +42,11 @@ readonly record struct NamespaceComponent<TBody>(String Name, TBody Body) : ICSh
             builder.AppendLine($"namespace {Name}").AppendLine("{").Indent();
         }
 
-        builder.Append(Body);
+        builder.AppendLine(Body);
 
         if (Name is not [])
         {
-            builder.Detent().AppendLine("}");
+            builder.Detent().Append("}");
         }
     }
 }

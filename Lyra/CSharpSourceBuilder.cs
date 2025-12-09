@@ -4,7 +4,9 @@ namespace RhoMicro.CodeAnalysis.Lyra;
 
 using System;
 using System.Collections.Generic;
+using System.Collections.Immutable;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Threading;
 
 /// <summary>
@@ -39,11 +41,12 @@ internal partial class CSharpSourceBuilder : IDisposable
     {
     }
 
-    private const Int32 AppendMethodHighOverloadPriority = 3;
-    private const Int32 AppendMethodMediumOverloadPriority = 2;
-    private const Int32 AppendMethodLowOverloadPriority = 1;
-    private const Int32 AppendMethodNoOverloadPriority = 0;
+    private const Int32 _appendMethodHighOverloadPriority = 3;
+    private const Int32 _appendMethodMediumOverloadPriority = 2;
+    private const Int32 _appendMethodLowOverloadPriority = 1;
+    private const Int32 _appendMethodNoOverloadPriority = 0;
 
+    private readonly Stack<Boolean> _appendConditions = [];
     private readonly List<ReadOnlyMemory<Char>> _indentations;
     private readonly RentedArrayLifetime _rentedArrayLifetime;
     private readonly InterpolationIndentationDetectorContext _indentationDetectorContext;
@@ -77,13 +80,14 @@ internal partial class CSharpSourceBuilder : IDisposable
     /// </remarks>
     public Int32 Lines { get; private set; }
 
+    private Boolean IsAppendConditionMet => _appendConditions.Count == 0 || _appendConditions.Peek();
+
     private IInterpolationIndentationDetector _detector;
     private Boolean _lastWasNewLine = true;
     private Boolean _lastWasEmptyLine = false;
     private Boolean _preludeWritten = false;
     private Char[] _buffer;
-    private Boolean _appendCondition = true;
-    private CancellationToken _cancellationToken;
+    public CancellationToken CancellationToken { get; private set; }
 
     private static Int32 RoundUpToPowerOf2(Int32 value)
     {
@@ -113,8 +117,8 @@ internal partial class CSharpSourceBuilder : IDisposable
         if (_buffer.Length < requiredLength)
         {
             var newLength = RoundUpToPowerOf2(requiredLength);
-            var newBuffer = Options.CharBufferOwner.Rent((Int32)newLength);
-            _buffer.CopyTo(newBuffer);
+            var newBuffer = Options.CharBufferOwner.Rent(newLength);
+            _buffer.CopyTo(newBuffer.AsSpan());
             Options.CharBufferOwner.Return(_buffer);
             _buffer = newBuffer;
         }
@@ -126,7 +130,7 @@ internal partial class CSharpSourceBuilder : IDisposable
 
     private void AppendCore(ReadOnlySpan<Char> text, out ReadOnlyMemory<Char> lastLineStartText)
     {
-        _cancellationToken.ThrowIfCancellationRequested();
+        CancellationToken.ThrowIfCancellationRequested();
 
         lastLineStartText = default;
 
@@ -140,7 +144,7 @@ internal partial class CSharpSourceBuilder : IDisposable
         var tail = text;
         while (true)
         {
-            _cancellationToken.ThrowIfCancellationRequested();
+            CancellationToken.ThrowIfCancellationRequested();
 
             var nextNewline = tail.IndexOfAny('\n', '\r');
             if (nextNewline is -1)
@@ -195,12 +199,14 @@ internal partial class CSharpSourceBuilder : IDisposable
         }
 
         _preludeWritten = true;
-        Options.Prelude.Invoke(this, _cancellationToken);
+        DetentAll(out var indentations);
+        Options.Prelude.Invoke(this, CancellationToken);
+        Indent(indentations);
     }
 
     private void TryWriteIndentation()
     {
-        _cancellationToken.ThrowIfCancellationRequested();
+        CancellationToken.ThrowIfCancellationRequested();
 
         if (!_lastWasNewLine)
         {
@@ -242,7 +248,7 @@ internal partial class CSharpSourceBuilder : IDisposable
     /// </returns>
     public CSharpSourceBuilder SetCondition(Boolean condition)
     {
-        _appendCondition = condition;
+        _appendConditions.Push(condition);
         return this;
     }
 
@@ -256,11 +262,86 @@ internal partial class CSharpSourceBuilder : IDisposable
     /// </returns>
     public CSharpSourceBuilder UnsetCondition()
     {
-        _appendCondition = true;
+        _appendConditions.Pop();
         return this;
     }
 
 #region Indentation
+
+    /// <summary>
+    /// Detents the builder fully.
+    /// </summary>
+    /// <param name="indentations">
+    /// The indentations removed from the builder.
+    /// </param>
+    /// <returns>
+    /// A reference to the builder, for chaining of further method calls.
+    /// </returns>
+    public CSharpSourceBuilder DetentAll(out ImmutableArray<ReadOnlyMemory<Char>> indentations)
+    {
+        if (!IsAppendConditionMet)
+        {
+            indentations = [];
+            return this;
+        }
+
+        var result = new ReadOnlyMemory<Char>[_indentations.Count];
+        for (var i = 0; i < _indentations.Count; i++)
+        {
+            result[i] = _indentations[i];
+        }
+
+        _indentations.Clear();
+
+        indentations = ImmutableCollectionsMarshal.AsImmutableArray(result);
+        return this;
+    }
+
+    /// <summary>
+    /// Detents the builder fully.
+    /// </summary>
+    /// <returns>
+    /// A reference to the builder, for chaining of further method calls.
+    /// </returns>
+    public CSharpSourceBuilder DetentAll()
+    {
+        if (!IsAppendConditionMet)
+        {
+            return this;
+        }
+
+        _indentations.Clear();
+
+        return this;
+    }
+
+    /// <summary>
+    /// Indents the builder.
+    /// </summary>
+    /// <param name="indentations">
+    /// The indentations to add to the builder.
+    /// </param>
+    /// <typeparam name="TEnumerable">
+    /// The type of enumerable containing the indentations.
+    /// </typeparam>
+    /// <returns>
+    /// A reference to the builder, for chaining of further method calls.
+    /// </returns>
+    public CSharpSourceBuilder Indent<TEnumerable>(TEnumerable indentations)
+        where TEnumerable : IEnumerable<ReadOnlyMemory<Char>>
+    {
+        if (!IsAppendConditionMet)
+        {
+            return this;
+        }
+
+        foreach (var indentation in indentations)
+        {
+            _indentations.Add(indentation);
+        }
+
+        return this;
+    }
 
     /// <summary>
     /// Indents the builder.
@@ -273,7 +354,7 @@ internal partial class CSharpSourceBuilder : IDisposable
     /// </returns>
     public CSharpSourceBuilder Indent(ReadOnlyMemory<Char> indentation)
     {
-        if (!_appendCondition)
+        if (!IsAppendConditionMet)
         {
             return this;
         }
@@ -309,7 +390,7 @@ internal partial class CSharpSourceBuilder : IDisposable
     /// </returns>
     public CSharpSourceBuilder Detent()
     {
-        if (!_appendCondition)
+        if (!IsAppendConditionMet)
         {
             return this;
         }
@@ -335,17 +416,17 @@ internal partial class CSharpSourceBuilder : IDisposable
     /// <returns>
     /// A reference to the builder, for chaining of further method calls.
     /// </returns>
-    [OverloadResolutionPriority(AppendMethodLowOverloadPriority)]
+    [OverloadResolutionPriority(_appendMethodLowOverloadPriority)]
     public CSharpSourceBuilder Append(String text) =>
-            Append(text.AsSpan());
+        Append(text.AsSpan());
 
     /// <inheritdoc cref="Append(string)"/>
-    [OverloadResolutionPriority(AppendMethodLowOverloadPriority)]
+    [OverloadResolutionPriority(_appendMethodLowOverloadPriority)]
     public CSharpSourceBuilder Append(ReadOnlySpan<Char> text)
     {
-        _cancellationToken.ThrowIfCancellationRequested();
+        CancellationToken.ThrowIfCancellationRequested();
 
-        if (!_appendCondition)
+        if (!IsAppendConditionMet)
         {
             return this;
         }
@@ -355,19 +436,19 @@ internal partial class CSharpSourceBuilder : IDisposable
     }
 
     /// <inheritdoc cref="Append(string)"/>
-    [OverloadResolutionPriority(AppendMethodLowOverloadPriority)]
+    [OverloadResolutionPriority(_appendMethodLowOverloadPriority)]
     public CSharpSourceBuilder Append(Char text) =>
-            Append([text]);
+        Append([text]);
 
     /// <inheritdoc cref="Append(string)"/>
-    [OverloadResolutionPriority(AppendMethodMediumOverloadPriority)]
+    [OverloadResolutionPriority(_appendMethodMediumOverloadPriority)]
     public CSharpSourceBuilder Append(
-            [InterpolatedStringHandlerArgument("")]
-            InterpolatedStringHandler text)
+        [InterpolatedStringHandlerArgument("")]
+        InterpolatedStringHandler text)
     {
-        _cancellationToken.ThrowIfCancellationRequested();
+        CancellationToken.ThrowIfCancellationRequested();
 
-        if (!_appendCondition)
+        if (!IsAppendConditionMet)
         {
             return this;
         }
@@ -381,13 +462,13 @@ internal partial class CSharpSourceBuilder : IDisposable
     /// <typeparam name="T">
     /// The type of component to append,
     /// </typeparam>
-    [OverloadResolutionPriority(AppendMethodLowOverloadPriority)]
+    [OverloadResolutionPriority(_appendMethodLowOverloadPriority)]
     public CSharpSourceBuilder Append<T>(T component)
-            where T : ICSharpSourceComponent
+        where T : ICSharpSourceComponent
     {
-        _cancellationToken.ThrowIfCancellationRequested();
+        CancellationToken.ThrowIfCancellationRequested();
 
-        component.AppendTo(this, _cancellationToken);
+        component.AppendTo(this, CancellationToken);
 
         return this;
     }
@@ -401,12 +482,12 @@ internal partial class CSharpSourceBuilder : IDisposable
     /// <returns>
     /// A reference to the builder, for chaining of further method calls.
     /// </returns>
-    [OverloadResolutionPriority(AppendMethodNoOverloadPriority)]
+    [OverloadResolutionPriority(_appendMethodNoOverloadPriority)]
     public CSharpSourceBuilder Append(ICSharpSourceComponent component)
     {
-        _cancellationToken.ThrowIfCancellationRequested();
+        CancellationToken.ThrowIfCancellationRequested();
 
-        component.AppendTo(this, _cancellationToken);
+        component.AppendTo(this, CancellationToken);
 
         return this;
     }
@@ -421,12 +502,12 @@ internal partial class CSharpSourceBuilder : IDisposable
     /// <returns>
     /// A reference to the builder, for chaining of further method calls.
     /// </returns>
-    [OverloadResolutionPriority(AppendMethodHighOverloadPriority)]
+    [OverloadResolutionPriority(_appendMethodHighOverloadPriority)]
     public CSharpSourceBuilder AppendLine()
     {
-        _cancellationToken.ThrowIfCancellationRequested();
+        CancellationToken.ThrowIfCancellationRequested();
 
-        if (!_appendCondition)
+        if (!IsAppendConditionMet)
         {
             return this;
         }
@@ -462,10 +543,10 @@ internal partial class CSharpSourceBuilder : IDisposable
     /// <returns>
     /// A reference to the builder, for chaining of further method calls.
     /// </returns>
-    [OverloadResolutionPriority(AppendMethodLowOverloadPriority)]
+    [OverloadResolutionPriority(_appendMethodLowOverloadPriority)]
     public CSharpSourceBuilder AppendLine(String text)
     {
-        _cancellationToken.ThrowIfCancellationRequested();
+        CancellationToken.ThrowIfCancellationRequested();
 
         Append(text);
         AppendLine();
@@ -474,10 +555,10 @@ internal partial class CSharpSourceBuilder : IDisposable
     }
 
     /// <inheritdoc cref="AppendLine(string)"/>
-    [OverloadResolutionPriority(AppendMethodLowOverloadPriority)]
+    [OverloadResolutionPriority(_appendMethodLowOverloadPriority)]
     public CSharpSourceBuilder AppendLine(ReadOnlySpan<Char> text)
     {
-        _cancellationToken.ThrowIfCancellationRequested();
+        CancellationToken.ThrowIfCancellationRequested();
 
         Append(text);
         AppendLine();
@@ -486,10 +567,10 @@ internal partial class CSharpSourceBuilder : IDisposable
     }
 
     /// <inheritdoc cref="AppendLine(string)"/>
-    [OverloadResolutionPriority(AppendMethodLowOverloadPriority)]
+    [OverloadResolutionPriority(_appendMethodLowOverloadPriority)]
     public CSharpSourceBuilder AppendLine(Char text)
     {
-        _cancellationToken.ThrowIfCancellationRequested();
+        CancellationToken.ThrowIfCancellationRequested();
 
         Append(text);
         AppendLine();
@@ -498,14 +579,14 @@ internal partial class CSharpSourceBuilder : IDisposable
     }
 
     /// <inheritdoc cref="AppendLine(string)"/>
-    [OverloadResolutionPriority(AppendMethodMediumOverloadPriority)]
+    [OverloadResolutionPriority(_appendMethodMediumOverloadPriority)]
     public CSharpSourceBuilder AppendLine(
-            [InterpolatedStringHandlerArgument("")]
-            InterpolatedStringHandler text)
+        [InterpolatedStringHandlerArgument("")]
+        InterpolatedStringHandler text)
     {
-        _cancellationToken.ThrowIfCancellationRequested();
+        CancellationToken.ThrowIfCancellationRequested();
 
-        if (!_appendCondition)
+        if (!IsAppendConditionMet)
         {
             return this;
         }
@@ -521,13 +602,13 @@ internal partial class CSharpSourceBuilder : IDisposable
     /// <typeparam name="T">
     /// The type of component to append,
     /// </typeparam>
-    [OverloadResolutionPriority(AppendMethodLowOverloadPriority)]
+    [OverloadResolutionPriority(_appendMethodLowOverloadPriority)]
     public CSharpSourceBuilder AppendLine<T>(T component)
-            where T : ICSharpSourceComponent
+        where T : ICSharpSourceComponent
     {
-        _cancellationToken.ThrowIfCancellationRequested();
+        CancellationToken.ThrowIfCancellationRequested();
 
-        component.AppendTo(this, _cancellationToken);
+        component.AppendTo(this, CancellationToken);
         AppendLine();
 
         return this;
@@ -542,12 +623,12 @@ internal partial class CSharpSourceBuilder : IDisposable
     /// <returns>
     /// A reference to the builder, for chaining of further method calls.
     /// </returns>
-    [OverloadResolutionPriority(AppendMethodNoOverloadPriority)]
+    [OverloadResolutionPriority(_appendMethodNoOverloadPriority)]
     public CSharpSourceBuilder AppendLine(ICSharpSourceComponent component)
     {
-        _cancellationToken.ThrowIfCancellationRequested();
+        CancellationToken.ThrowIfCancellationRequested();
 
-        component.AppendTo(this, _cancellationToken);
+        component.AppendTo(this, CancellationToken);
         AppendLine();
 
         return this;
@@ -557,41 +638,85 @@ internal partial class CSharpSourceBuilder : IDisposable
 
 #region Append Type Name
 
+    /// <inheritdoc cref="AppendTypeName{T}(TypeNameOptions)"/>
+    public CSharpSourceBuilder AppendTypeName<T>() => AppendTypeName<T>(Options.DefaultTypeNameOptions);
+
     /// <inheritdoc cref="AppendTypeName(Type)"/>
     /// <typeparam name="T">
     /// The type whose name to append.
     /// </typeparam>
-    public CSharpSourceBuilder AppendTypeName<T>()
+    public CSharpSourceBuilder AppendTypeName<T>(TypeNameOptions options)
     {
-        AppendTypeName(typeof(T));
+        AppendTypeName(typeof(T), options);
 
         return this;
     }
 
+    /// <inheritdoc cref="AppendTypeName(Type, TypeNameOptions)"/>
+    public CSharpSourceBuilder AppendTypeName(Type type) => AppendTypeName(type, Options.DefaultTypeNameOptions);
+
     /// <summary>
     /// Appends the globally qualified C# name of a type to the builder.
     /// </summary>
+    /// <param name="options">
+    /// The options to use when appending the type name.
+    /// </param>
     /// <param name="type">
     /// The type whose name to append.
     /// </param>
     /// <returns>
     /// A reference to the builder, for chaining of further method calls.
     /// </returns>
-    public CSharpSourceBuilder AppendTypeName(Type type)
+    public CSharpSourceBuilder AppendTypeName(Type type, TypeNameOptions options)
     {
-        _cancellationToken.ThrowIfCancellationRequested();
+        CancellationToken.ThrowIfCancellationRequested();
 
-        if (!_appendCondition)
+        if (!IsAppendConditionMet)
         {
             return this;
         }
 
-        Append("global::");
-
-        if (type.Namespace is { } ns)
+        if (options.UseTypeAliases && _aliasedTypes.TryGetValue(type, out var aliased))
         {
-            Append(ns);
-            Append('.');
+            Append(aliased);
+        }
+        else
+        {
+            AppendMetadataTypeName(type, options);
+        }
+
+        return this;
+    }
+
+    private static readonly Dictionary<Type, String> _aliasedTypes = new()
+    {
+        { typeof(Boolean), "bool" },
+        { typeof(Byte), "byte" },
+        { typeof(SByte), "sbyte" },
+        { typeof(Int16), "short" },
+        { typeof(UInt16), "ushort" },
+        { typeof(Int32), "int" },
+        { typeof(UInt32), "int" },
+        { typeof(Int64), "long" },
+        { typeof(UInt64), "long" },
+        { typeof(Single), "float" },
+        { typeof(Double), "double" },
+        { typeof(Decimal), "decimal" },
+        { typeof(Char), "char" },
+        { typeof(String), "string" }
+    };
+
+    private void AppendMetadataTypeName(Type type, TypeNameOptions options)
+    {
+        if (options.UseGloballyQualifiedName)
+        {
+            Append("global::");
+
+            if (type.Namespace is { } ns)
+            {
+                Append(ns);
+                Append('.');
+            }
         }
 
         var firstIllegalIndex = type.Name.AsSpan().IndexOfAny('`', '[');
@@ -605,25 +730,25 @@ internal partial class CSharpSourceBuilder : IDisposable
             Append("[]");
         }
 
-        if (type.IsGenericType)
+        if (!type.IsGenericType)
         {
-            Append('<');
-
-            foreach (var parameter in type.GetGenericArguments())
-            {
-                _cancellationToken.ThrowIfCancellationRequested();
-
-                AppendTypeName(parameter);
-            }
-
-            Append('>');
+            return;
         }
 
-        return this;
+        Append('<');
+
+        foreach (var parameter in type.GetGenericArguments())
+        {
+            CancellationToken.ThrowIfCancellationRequested();
+
+            AppendTypeName(parameter, options);
+        }
+
+        Append('>');
     }
 
 #endregion
-    
+
 #region Cancellation
 
     /// <summary>
@@ -634,7 +759,7 @@ internal partial class CSharpSourceBuilder : IDisposable
     /// </returns>
     public CSharpSourceBuilder SetCancellationToken(CancellationToken cancellationToken)
     {
-        _cancellationToken = cancellationToken;
+        CancellationToken = cancellationToken;
         return this;
     }
 
@@ -647,7 +772,7 @@ internal partial class CSharpSourceBuilder : IDisposable
     /// </returns>
     public CSharpSourceBuilder UnsetCancellationToken()
     {
-        _cancellationToken = default;
+        CancellationToken = default;
         return this;
     }
 
@@ -665,9 +790,9 @@ internal partial class CSharpSourceBuilder : IDisposable
     /// A reference to the builder, for chaining of further method calls.
     /// </returns>
     public CSharpSourceBuilder SetInterpolationIndentationDetector(
-            IInterpolationIndentationDetector detector)
+        IInterpolationIndentationDetector detector)
     {
-        if (!_appendCondition)
+        if (!IsAppendConditionMet)
         {
             return this;
         }
@@ -690,17 +815,36 @@ internal partial class CSharpSourceBuilder : IDisposable
     /// A reference to the builder, for chaining of further method calls.
     /// </returns>
     public CSharpSourceBuilder SetInterpolationIndentationDetector(
-            IInterpolationIndentationDetector detector,
-            out IInterpolationIndentationDetector previousDetector)
+        IInterpolationIndentationDetector detector,
+        out IInterpolationIndentationDetector previousDetector)
     {
         previousDetector = _detector;
 
-        if (!_appendCondition)
+        if (!IsAppendConditionMet)
         {
             return this;
         }
 
         _detector = detector;
+
+        return this;
+    }
+
+#endregion
+
+#region Miscellaneous
+
+    /// <summary>
+    /// Skips checks to append the prelude until <see cref="Clear"/> is called.
+    /// This will cause the prelude to be omitted if no other calls appending
+    /// text to the builder have been made.
+    /// </summary>
+    /// <returns>
+    /// A reference to the builder, for chaining of further method calls.
+    /// </returns>
+    public CSharpSourceBuilder SkipPreludeChecks()
+    {
+        _preludeWritten = true;
 
         return this;
     }

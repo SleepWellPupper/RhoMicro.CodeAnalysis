@@ -17,13 +17,13 @@ This project is licensed under the `MPL-2.0` license.
 .NET CLI:
 
 ```
-dotnet add package RhoMicro.CodeAnalysis.Lyra --version 1.0.1
+dotnet add package RhoMicro.CodeAnalysis.Lyra --version 1.1.0
 ```
 
 PackageReference:
 
 ```xml
-<PackageReference Include="RhoMicro.CodeAnalysis.Lyra" Version="1.0.1">
+<PackageReference Include="RhoMicro.CodeAnalysis.Lyra" Version="1.1.0">
     <PrivateAssets>all</PrivateAssets>
     <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
 </PackageReference>
@@ -141,3 +141,44 @@ Note how the initial indentation in front of `foo` is carried along.
 
 The detection of these indentations can be configured using the
 `CSharpSourceBuilderOptions.InitialInterpolationIndentationDetector` property.
+
+### Components
+
+Some useful components are provided out of the box:
+```cs
+var body = ComponentFactory.Create(
+        myModel,
+        static (myModel, b, ct) =>
+        {
+            ct.ThrowIfCancellationRequested();
+        
+            b.Append(myModel.Value);
+        });
+
+var type = ComponentFactory.Type(
+        "partial struct",
+        myModel.Name,
+        body,
+        baseTypeList:
+        [
+            TypeName<IComparable>()
+        ]);
+
+var @namespace = ComponentFactory.Namespace(
+        myModel.Namespace,
+        type);
+
+builder.AppendLine(@namespace);
+```
+
+The output will look similar to this:
+```cs
+namespace Namespace
+{
+    partial struct Name : global::System.IComparable
+    {
+        // myModel.Value
+    }
+}
+
+```
