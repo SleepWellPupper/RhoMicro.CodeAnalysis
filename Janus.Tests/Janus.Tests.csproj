@@ -35,7 +35,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Janus.Library\Janus.Library.csproj"/>
-    <ProjectReference Include="..\Janus\Janus.csproj"/>
+    <ProjectReference Include="..\Janus.Analyzers\Janus.Analyzers.csproj"/>
+    <ProjectReference Include="..\Janus.CodeFixes\Janus.CodeFixes.csproj"/>
   </ItemGroup>
 
 </Project>

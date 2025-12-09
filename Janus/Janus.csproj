@@ -22,14 +22,14 @@
   </PropertyGroup>
 
   <PropertyGroup Condition=" $(Configuration) == 'Debug' ">
-    <Version>1.0.9</Version>
+    <Version>1.0.10</Version>
     <PackageOutputPath>..\dist\dev</PackageOutputPath>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Janus.Library\Janus.Library.csproj" PrivateAssets="all"/>
-    <ProjectReference Include="..\Janus.CodeFixes\Janus.CodeFixes.csproj"/>
-    <ProjectReference Include="..\Janus.Analyzers\Janus.Analyzers.csproj"/>
+    <ProjectReference Include="..\Janus.CodeFixes\Janus.CodeFixes.csproj" PrivateAssets="all"/>
+    <ProjectReference Include="..\Janus.Analyzers\Janus.Analyzers.csproj" PrivateAssets="all"/>
   </ItemGroup>
 
   <ItemGroup>
