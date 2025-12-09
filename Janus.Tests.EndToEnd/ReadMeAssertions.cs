@@ -3,21 +3,17 @@
 #pragma warning disable IDE0250
 #pragma warning disable IDE0059
 #pragma warning disable CS1591
-namespace RhoMicro.CodeAnalysis.UnionsGenerator.EndToEnd.Tests;
+namespace RhoMicro.CodeAnalysis.Janus.EndToEnd.Tests;
+
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
-
-using Microsoft.VisualBasic;
 
 public partial class ReadMeAssertions
 {
     [UnionType<Int32>]
     [UnionType<String>]
     private partial struct IntOrString;
+
     [Fact]
     public void TypeDeclarationTarget()
     {
@@ -26,6 +22,7 @@ public partial class ReadMeAssertions
     }
 
     private partial struct GenericUnion<[UnionType] T0, [UnionType] T1>;
+
     [Fact]
     public void TypeParameterTarget()
     {
@@ -33,24 +30,27 @@ public partial class ReadMeAssertions
         u = GenericUnion<Int32, String>.Create(32);
     }
 
-    [UnionType<List<String>>(Alias = "MultipleNames")]
-    [UnionType<String>(Alias = "SingleName")]
-    private partial struct Names;
+    [UnionType<List<String>>(Name = "MultipleNames")]
+    [UnionType<String>(Name = "SingleName")]
+    private sealed partial class Names;
+
     [Fact]
     public void AliasExample()
     {
         Names n = "John";
-        if(n.IsSingleName)
+        if (n.IsSingleName)
         {
             var singleName = n.AsSingleName;
-        } else if(n.IsMultipleNames)
+        }
+        else if (n.IsMultipleNames)
         {
             var multipleNames = n.AsMultipleNames;
         }
     }
 
-    [UnionType<Int32>(Options = UnionTypeOptions.ImplicitConversionIfSolitary)]
+    [UnionType<Int32>]
     private partial struct Int32Alias;
+
     [Fact]
     public void Solitary()
     {
@@ -60,6 +60,7 @@ public partial class ReadMeAssertions
     }
 
     private partial struct GenericConvertableUnion<[UnionType] T>;
+
     [Fact]
     public void SupersetOfParameter()
     {
@@ -68,9 +69,10 @@ public partial class ReadMeAssertions
     }
 
 #pragma warning disable CS8604 // Possible null reference argument.
-    [UnionType<String>(Options = UnionTypeOptions.Nullable)]
+    [UnionType<String>(IsNullable = true)]
     [UnionType<List<String>>]
     private partial struct NullableStringUnion;
+
     [Fact]
     public void NullableUnion()
     {
@@ -84,27 +86,28 @@ public partial class ReadMeAssertions
     [UnionType<Int32, Single>(Groups = ["Number"])]
     [UnionType<String, Char>(Groups = ["Text"])]
     private partial struct GroupedUnion;
+
     [Fact]
     public void GroupedUnions()
     {
         GroupedUnion u = "Hello, World!";
-        if(u.IsNumberGroup)
+        if (u.Variant.Group.ContainsNumber)
         {
             Assert.Fail("Expected union to be text.");
         }
 
-        if(!u.IsTextGroup)
+        if (!u.Variant.Group.ContainsText)
         {
             Assert.Fail("Expected union to be text.");
         }
 
         u = 32f;
-        if(!u.IsNumberGroup)
+        if (!u.Variant.Group.ContainsNumber)
         {
             Assert.Fail("Expected union to be number.");
         }
 
-        if(u.IsTextGroup)
+        if (u.Variant.Group.ContainsText)
         {
             Assert.Fail("Expected union to be number.");
         }

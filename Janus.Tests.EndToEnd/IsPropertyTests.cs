@@ -2,15 +2,15 @@
 
 #pragma warning disable IDE0059 // Unnecessary assignment of a value
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-namespace RhoMicro.CodeAnalysis.UnionsGenerator.EndToEnd.Tests;
+namespace RhoMicro.CodeAnalysis.Janus.EndToEnd.Tests;
 
 using System;
 
 public partial class IsPropertyTests
 {
-    [UnionType<Int32>(Alias = "Int")]
+    [UnionType<Int32>(Name = "Int")]
     [UnionType<List<String>>]
-    private partial class Union<[UnionType] T>;
+    private sealed partial class Union<[UnionType] T>;
 
     [Fact]
     public void IsIntWhenRepresentingInt32()
@@ -35,19 +35,19 @@ public partial class IsPropertyTests
     public void IsNotListWhenRepresentingInt32()
     {
         Union<Byte> u = 32;
-        Assert.False(u.IsList_of_String);
+        Assert.False(u.IsList);
     }
     [Fact]
     public void IsListWhenRepresentingList()
     {
         Union<Byte> u = new List<String>();
-        Assert.True(u.IsList_of_String);
+        Assert.True(u.IsList);
     }
     [Fact]
     public void IsNotListWhenRepresentingByte()
     {
         Union<Byte> u = (Byte)32;
-        Assert.False(u.IsList_of_String);
+        Assert.False(u.IsList);
     }
 
     [Fact]

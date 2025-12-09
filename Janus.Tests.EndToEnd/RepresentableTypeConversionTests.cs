@@ -2,15 +2,15 @@
 
 #pragma warning disable IDE0059 // Unnecessary assignment of a value
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
-namespace RhoMicro.CodeAnalysis.UnionsGenerator.EndToEnd.Tests;
+namespace RhoMicro.CodeAnalysis.Janus.EndToEnd.Tests;
 
 using System;
 using System.Numerics;
 
 public partial class RepresentableTypeConversionTests
 {
-    [UnionType<String>(Alias = "ErrorMessage")]
-    private readonly partial struct Result<[UnionType(Alias = "Result")] T>;
+    [UnionType<String>(Name = "ErrorMessage")]
+    private readonly partial struct Result<[UnionType(Name = "Result")] T>;
 
     [Fact]
     public void IsImplicitlyConvertibleFromString()
@@ -40,19 +40,19 @@ public partial class RepresentableTypeConversionTests
     public void IsNotExplicitlyConvertibleToString()
     {
         Result<Int32> r = 32;
-        _ = Assert.Throws<InvalidOperationException>(() => (String)r);
+        _ = Assert.Throws<InvalidCastException>(() => (String)r);
     }
     [Fact]
     public void IsNotExplicitlyConvertibleToInt32()
     {
         Result<Int32> r = "Hello, World!";
-        _ = Assert.Throws<InvalidOperationException>(() => (Int32)r);
+        _ = Assert.Throws<InvalidCastException>(() => (Int32)r);
     }
     [Fact]
     public void IsNotExplicitlyConvertibleToChar()
     {
         Result<Char> r = "Hello, World!";
-        _ = Assert.Throws<InvalidOperationException>(() => (Char)r);
+        _ = Assert.Throws<InvalidCastException>(() => (Char)r);
     }
     [Fact]
     public void IsExplicitlyConvertibleToInt32()

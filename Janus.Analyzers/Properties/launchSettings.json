@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "EndToEnd.Tests": {
+      "commandName": "DebugRoslynComponent",
+      "targetProject": "../Janus.EndToEnd.Tests/Janus.EndToEnd.Tests.csproj"
+    }
+  }
+}
