@@ -66,9 +66,7 @@ file static class Builder
         var result = ctx.CollectionFactory.CreateSet<T>();
 
         foreach(var element in elements)
-        {
             _ = result.Add(element);
-        }
 
         return result;
     }

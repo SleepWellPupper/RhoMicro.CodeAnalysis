@@ -68,9 +68,7 @@ internal static partial class TestHelpers
         static String getFormattedText(DiffPiece? line, Int32 columnWidth)
         {
             if(line?.Text == null)
-            {
                 return "".PadRight(columnWidth); // Blank space for missing lines
-            }
 
             // Return the line's text truncated or padded to fit the column width
             return line.Text.PadRight(columnWidth)[..columnWidth];

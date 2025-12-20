@@ -80,9 +80,7 @@ internal record LazyEquatableList<T, TState> : EquatableCollection<T, IList<T>>,
     {
         MutabilityContext.ThrowIfReadOnly();
         while(Count <= index)
-        {
             Add(Factory.Invoke(Count, this));
-        }
     }
 }
 
@@ -94,9 +92,7 @@ file static class Builder
         var result = ctx.CollectionFactory.CreateLazyList<T>();
 
         foreach(var element in elements)
-        {
             result.Add(element);
-        }
 
         return result;
     }

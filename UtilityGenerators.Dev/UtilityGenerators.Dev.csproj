@@ -7,7 +7,6 @@
 		<IsPackable>true</IsPackable>
 		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 		<PackageOutputPath>..\dist\dev</PackageOutputPath>
-    <NoWarn>$(NoWarn);NU5128</NoWarn>
 	</PropertyGroup>
 
 	<PropertyGroup>
@@ -118,9 +117,7 @@
 		<Compile Include="..\UtilityGenerators\Templating\Syntax\Visitors\TreeWalkingSyntaxVisitor.cs" Link="Templating\TreeWalkingSyntaxVisitor.cs" />
 		<Compile Include="..\UtilityGenerators\Templating\Syntax\Visitors\XmlTreeStringBuilder.cs" Link="Templating\XmlTreeStringBuilder.cs" />
 		<Compile Include="..\UtilityGenerators\Templating\Syntax\WhitespacesSyntax.cs" Link="Templating\WhitespacesSyntax.cs" />
-		<Compile Include="..\UtilityGenerators\Templating\TemplateAttribute.Model.cs">
-		  <Link>Templating\TemplateAttribute.Model.cs</Link>
-		</Compile>
+		<Compile Include="..\UtilityGenerators\Templating\TemplateAttribute.Model.cs" Link="Templating\TemplateAttribute.Model.cs" />
 		<Compile Include="..\UtilityGenerators\Templating\TemplateSourceText.cs" Link="Templating\TemplateSourceText.cs" />
 		<Compile Include="..\UtilityGenerators\Templating\TemplateSpan.cs" Link="Templating\TemplateSpan.cs" />
 		<Compile Include="..\UtilityGenerators\Templating\TemplateString.cs" Link="Templating\TemplateString.cs" />
@@ -133,6 +130,10 @@
 		<Compile Include="..\UtilityGenerators\TypeSymbolPattern\TypeSymbolPatternMethodModel.cs" Link="TypeSymbolPatternMethodModel.cs" />
 		<Compile Include="..\UtilityGenerators\TypeSymbolPattern\TypeSymbolPatternMethodsModel.cs" Link="TypeSymbolPatternMethodsModel.cs" />
 		<Compile Include="..\UtilityGenerators\TypeSymbolPattern\TypeSymbolPatternMethodsPartialModel.cs" Link="TypeSymbolPatternMethodsPartialModel.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Folder Include="Templating\" />
 	</ItemGroup>
 
 </Project>

@@ -22,7 +22,7 @@ public enum TokenType
 [Orderer(SummaryOrderPolicy.FastestToSlowest)]
 public class ParserMatchBenchmark
 {
-    private TokenType[] _types = [];
+    private TokenType[] _types;
 
     [GlobalSetup]
     public void GlobalSetup() => _types = [A, B, C, D];
@@ -35,39 +35,19 @@ public class ParserMatchBenchmark
         foreach(var peek in _types)
         {
             if(MatchAnyNaive(peek, _types[0]))
-            {
                 result++;
-            }
-
             if(MatchAnyNaive(peek, _types[1]))
-            {
                 result++;
-            }
-
             if(MatchAnyNaive(peek, _types[2]))
-            {
                 result++;
-            }
-
             if(MatchAnyNaive(peek, _types[3]))
-            {
                 result++;
-            }
-
             if(MatchAnyNaive(peek, _types[0], _types[1]))
-            {
                 result++;
-            }
-
             if(MatchAnyNaive(peek, _types[2], _types[3]))
-            {
                 result++;
-            }
-
             if(MatchAnyNaive(peek, _types[0], _types[1], _types[2], _types[3]))
-            {
                 result++;
-            }
         }
 
         return result;
@@ -80,39 +60,19 @@ public class ParserMatchBenchmark
         foreach(var peek in _types)
         {
             if(MatchAnyTernary(peek, _types[0]))
-            {
                 result++;
-            }
-
             if(MatchAnyTernary(peek, _types[1]))
-            {
                 result++;
-            }
-
             if(MatchAnyTernary(peek, _types[2]))
-            {
                 result++;
-            }
-
             if(MatchAnyTernary(peek, _types[3]))
-            {
                 result++;
-            }
-
             if(MatchAnyTernary(peek, _types[0], _types[1]))
-            {
                 result++;
-            }
-
             if(MatchAnyTernary(peek, _types[2], _types[3]))
-            {
                 result++;
-            }
-
             if(MatchAnyTernary(peek, _types[0], _types[1], _types[2], _types[3]))
-            {
                 result++;
-            }
         }
 
         return result;
@@ -123,9 +83,7 @@ public class ParserMatchBenchmark
         foreach(var t in types)
         {
             if(t == peek)
-            {
                 return true;
-            }
         }
 
         return false;

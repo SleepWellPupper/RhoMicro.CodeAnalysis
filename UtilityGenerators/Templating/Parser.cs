@@ -67,9 +67,7 @@ internal sealed partial class Parser
             : new(new EmptyTemplateSyntax());
 
         if(!IsAtEnd())
-        {
             EmitDiagnostic(Ids.UnexpectedToken, DiagnosticSeverity.Error);
-        }
 
         return result;
     }
@@ -722,9 +720,7 @@ internal sealed partial class Parser
         where TSyntax : ISyntax
     {
         if(syntax is null)
-        {
             return;
-        }
 
         _currentIndex -= syntax.CountTokens(_ct);
     }
@@ -741,9 +737,7 @@ internal sealed partial class Parser
         Int32 lookahead = 0)
     {
         if(Peek(lookahead) == kind)
-        {
             return true;
-        }
 
         return false;
     }
@@ -756,9 +750,7 @@ internal sealed partial class Parser
         foreach(var kind in kinds)
         {
             if(kind == peeked)
-            {
                 return true;
-            }
         }
 
         return false;

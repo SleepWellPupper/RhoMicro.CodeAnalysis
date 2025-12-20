@@ -4,7 +4,6 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <IncludeBuildOutput>false</IncludeBuildOutput>
-    <NoWarn>$(NoWarn);NU5048</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup>

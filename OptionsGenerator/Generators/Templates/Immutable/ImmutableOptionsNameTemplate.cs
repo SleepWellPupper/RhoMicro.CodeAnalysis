@@ -2,7 +2,5 @@
 
 namespace RhoMicro.CodeAnalysis.OptionsGenerator.Generators;
 
-#pragma warning disable CS9113
-
 [Template("(:model.NormalizedName:)"), NonEquatable]
 internal readonly partial struct ImmutableOptionsNameTemplate(OptionsModel model);

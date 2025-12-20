@@ -37,9 +37,6 @@ public class JanusAnalyzerTests
     public Task ExplicitlyGenericUnionsCannotBeJsonSerializable() => JanusTest.TestAnalyzer(
         """
         using RhoMicro.CodeAnalysis;
-        
-        #pragma warning disable RMJ0021
-        
         [UnionTypeSettings( {|RMJ0003:JsonConverterSetting = JsonConverterSetting.EmitJsonConverter|} )]
         partial struct Union<[UnionType] T>;
         """);
@@ -62,8 +59,6 @@ public class JanusAnalyzerTests
         """
         using RhoMicro.CodeAnalysis;
 
-        #pragma warning disable RMJ0021
-        
         static class Constants
         {
             public const JsonConverterSetting Value = JsonConverterSetting.EmitJsonConverter;
@@ -112,7 +107,7 @@ public class JanusAnalyzerTests
         """);
 
     [Fact]
-    public Task VariantNamesMustBeUniqueSingleExplicitDuplicate() => JanusTest.TestAnalyzer(
+    public Task VariantNamesMustBeUnique_SingleExplicitDuplicate() => JanusTest.TestAnalyzer(
         """
         using RhoMicro.CodeAnalysis;
 
@@ -122,7 +117,7 @@ public class JanusAnalyzerTests
         """);
 
     [Fact]
-    public Task VariantNamesMustBeUniqueMultipleExplicitDuplicate() => JanusTest.TestAnalyzer(
+    public Task VariantNamesMustBeUnique_MultipleExplicitDuplicate() => JanusTest.TestAnalyzer(
         """
         using RhoMicro.CodeAnalysis;
 
@@ -134,7 +129,7 @@ public class JanusAnalyzerTests
         """);
 
     [Fact]
-    public Task VariantNamesMustBeUniqueSingleImplicitDuplicate() => JanusTest.TestAnalyzer(
+    public Task VariantNamesMustBeUnique_SingleImplicitDuplicate() => JanusTest.TestAnalyzer(
         """
         using RhoMicro.CodeAnalysis;
         using System.Collections.Generic;
@@ -146,7 +141,7 @@ public class JanusAnalyzerTests
         """);
 
     [Fact]
-    public Task VariantNamesMustBeUniqueSingleImplicitInlineDuplicate() => JanusTest.TestAnalyzer(
+    public Task VariantNamesMustBeUnique_SingleImplicitInlineDuplicate() => JanusTest.TestAnalyzer(
         """
         using RhoMicro.CodeAnalysis;
         using System.Collections.Generic;
@@ -156,7 +151,7 @@ public class JanusAnalyzerTests
         """);
 
     [Fact]
-    public Task VariantNamesMustBeUniqueMultipleImplicitDuplicate() => JanusTest.TestAnalyzer(
+    public Task VariantNamesMustBeUnique_MultipleImplicitDuplicate() => JanusTest.TestAnalyzer(
         """
         using RhoMicro.CodeAnalysis;
         using System.Collections.Generic;
@@ -169,13 +164,11 @@ public class JanusAnalyzerTests
         """);
 
     [Fact]
-    public Task VariantNamesMustBeUniqueTypeParameter() => JanusTest.TestAnalyzer(
+    public Task VariantNamesMustBeUnique_TypeParameter() => JanusTest.TestAnalyzer(
         """
         using RhoMicro.CodeAnalysis;
         using System.Collections.Generic;
-        
-        #pragma warning disable RMJ0021
-        
+
         [UnionType<{|RMJ0006:System.String|}>]
         partial struct Union<[UnionType]{|RMJ0006:String|}>;
         """);
@@ -230,7 +223,7 @@ public class JanusAnalyzerTests
     );
 
     [Fact]
-    public Task ObjectCannotBeUsedAsAVariantClass() => JanusTest.TestAnalyzer(
+    public Task ObjectCannotBeUsedAsAVariant_Class() => JanusTest.TestAnalyzer(
         """
         using RhoMicro.CodeAnalysis;
 
@@ -242,7 +235,7 @@ public class JanusAnalyzerTests
     );
 
     [Fact]
-    public Task ObjectCannotBeUsedAsAVariantStruct() => JanusTest.TestAnalyzer(
+    public Task ObjectCannotBeUsedAsAVariant_Struct() => JanusTest.TestAnalyzer(
         """
         using RhoMicro.CodeAnalysis;
 
@@ -386,15 +379,6 @@ public class JanusAnalyzerTests
         [UnionType<int>]
         ref partial struct {|RMJ0020:Union|};
         """);
-
-    [Fact]
-    public Task TypeParameterVariantsShouldBeNamed() => JanusTest.TestAnalyzer(
-        """
-        using RhoMicro.CodeAnalysis;
-        
-        ref partial struct Union<[UnionType] {|RMJ0021:TVariant1|}, [UnionType(Name = "Variant")] TVariant2>;
-        """
-        );
 
     [Theory]
     [InlineData("""

@@ -38,12 +38,10 @@ public partial class ParserTests(ITestOutputHelper testOutput)
         ScanResult scanResult;
 
         using (var ctx = ModelCreationContext.CreateDefault(TestContext.Current.CancellationToken))
-        {
             scanResult = Lexer.Scan(
-                templateString,
-                newlineLength,
-                in ctx);
-        }
+                    templateString,
+                    newlineLength,
+                    in ctx);
 
         var nullableExpectedSyntax = syntaxFactory?.Invoke(new(scanResult.Tokens));
         if (nullableExpectedSyntax is { } s)
@@ -60,11 +58,9 @@ public partial class ParserTests(ITestOutputHelper testOutput)
 
         // Act
         using (var context = ModelCreationContext.CreateDefault(TestContext.Current.CancellationToken))
-        {
             (actualSyntax, _, actualDiagnostics) = Parser.Parse(
-                scanResult,
-                in context);
-        }
+                    scanResult,
+                    in context);
 
         // Assert
         if (nullableExpectedSyntax is { } expectedSyntax)

@@ -1,0 +1,32 @@
+﻿RhoMicroBackusNaurForm;
+
+RuleList = [Name ";"] *RuleDefinition;
+RuleDefinition = Name "=" Rule ";";
+
+Rule = Binary / Unary / Primary;
+
+Binary = Range / Concatenation / Alternative;
+Concatenation = Unary / (Rule Whitespace Rule);
+Alternative = Unary / (Rule "/" Rule);
+Range = Unary / (SingleAlpha "-" SingleAlpha);
+
+Unary = VariableRepetition / SpecificRepetition;
+VariableRepetition = Primary / ("*" Rule);
+SpecificRepetition = Primary / (Digit Rule);
+
+Primary = Grouping / OptionalGrouping / TerminalOrName;
+Grouping = TerminalOrName / ("(" Rule ")");
+OptionalGrouping = TerminalOrName / ("[" Rule "]");
+TerminalOrName = Terminal / Any / Name;
+Name = Alpha;
+Terminal = "\"" . "\"";
+Any = ".";
+
+Trivia = Whitespace / NewLine;
+Whitespace = Space / Tab *Whitespace;
+Space = " ";
+Tab = "	";
+NewLine = "\n" / "\r\n" / "\r";
+SingleAlpha = "a"-"z" / "A"-"Z" / "_";
+Alpha = SingleAlpha *SingleAlpha;
+Digit = "0"-"9" *Digit;

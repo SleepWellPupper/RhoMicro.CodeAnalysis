@@ -86,14 +86,10 @@ public sealed class OptionsAnalyzer : DiagnosticAnalyzer
     private static void AnalyzeSymbol(SymbolAnalysisContext ctx)
     {
         if(AnalyzeNamedTypeSymbol(ctx))
-        {
             return;
-        }
 
         if(AnalyzePropertySymbol(ctx))
-        {
             return;
-        }
     }
 
     private static Boolean AnalyzePropertySymbol(SymbolAnalysisContext ctx)

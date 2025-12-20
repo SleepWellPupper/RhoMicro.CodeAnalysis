@@ -278,9 +278,7 @@ internal sealed partial class Lexer
     private Char Peek(Int32 lookahead = 0)
     {
         if(IsAtEnd(lookahead))
-        {
             return '\0';
-        }
 
         var result = _reifiedTemplateString[_index + _length + lookahead];
 

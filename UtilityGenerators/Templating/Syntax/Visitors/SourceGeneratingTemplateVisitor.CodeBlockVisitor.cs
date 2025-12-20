@@ -18,15 +18,11 @@ internal sealed partial class SourceGeneratingTemplateVisitor
         protected override void OnToken(Token token)
         {
             if(token.TemplateString.Path is not { Length: > 0 } path)
-            {
                 return;
-            }
 
             var detentCount = 0;
             for(; detentCount < parent._builder.OpenBlocks; detentCount++)
-            {
                 parent._builder.DetentCore();
-            }
 
             parent._builder
                 .Append("#line (")
@@ -48,9 +44,7 @@ internal sealed partial class SourceGeneratingTemplateVisitor
                 .AppendLineCore();
 
             for(; detentCount > 0; detentCount--)
-            {
                 parent._builder.IndentCore();
-            }
         }
     }
 }

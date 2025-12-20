@@ -20,7 +20,7 @@ using System.Threading.Tasks;
 public class CliTests : TestBase
 {
     [Fact]
-    public async Task MainServiceGeneratesSingleSchema()
+    public async Task MainService_GeneratesSingleSchema()
     {
         await TestCli(
             """
@@ -45,7 +45,7 @@ public class CliTests : TestBase
             });
     }
     [Fact]
-    public async Task MainServiceGeneratesMultipleSchemata()
+    public async Task MainService_GeneratesMultipleSchemata()
     {
         await TestCli(
             """
@@ -88,7 +88,7 @@ public class CliTests : TestBase
             });
     }
     [Fact]
-    public async Task MainServiceGeneratesRefSchemata()
+    public async Task MainService_GeneratesRefSchemata()
     {
         await TestCli(
             """
@@ -141,9 +141,7 @@ public class CliTests : TestBase
         var schemataPaths = Directory.EnumerateFiles(settings.SchemataPath, "*.json", SearchOption.AllDirectories).ToArray();
 
         if(schemataPaths.Length != expectedSchemaFactories.Length)
-        {
             Assert.Fail($"Expected {expectedSchemaFactories.Length} schemata but found {schemataPaths.Length}.");
-        }
 
         var parsedExpectedSchemata = expectedSchemaFactories
             .Select(f => f.Invoke(assemblyName))
@@ -167,12 +165,10 @@ public class CliTests : TestBase
         }
 
         if(parsedExpectedSchemata.Count > 0)
-        {
             Assert.Fail($"Unhandled expected schemata:\n{String.Join('\n', parsedExpectedSchemata.Values.Select(s => s.ToJsonString()))}");
-        }
     }
 
-    private static MainService CreateMainService(Settings settings) =>
+    private MainService CreateMainService(Settings settings) =>
         new(settings, NullLogger.Instance, HostApplicationLifetimeFake.Instance);
 
     private Settings CreateSettings(String source, out String assemblyName)

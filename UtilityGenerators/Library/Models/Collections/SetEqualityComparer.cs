@@ -25,16 +25,12 @@ internal sealed partial class SetEqualityComparer<T>(IEqualityComparer<T> elemen
         where TSetY : ISet<T>
     {
         if(x.Count != y.Count)
-        {
             return false;
-        }
 
         foreach(var element in x)
         {
             if(!y.Contains(element, elementComparer))
-            {
                 return false;
-            }
         }
 
         return true;

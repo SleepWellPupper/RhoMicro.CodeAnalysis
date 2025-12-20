@@ -35,7 +35,7 @@ internal readonly record struct OperatorsComponent(UnionModel Model) : ICSharpSo
                 b.Append(
                     $"""
                      {Inheritdoc()}
-                     public static implicit operator {new UnionTypeNameComponent(m)}({variant.Type.NullableName} value) => CreateFrom{variant.Name}(value);
+                     public static implicit operator {new UnionTypeNameComponent(m)}({variant.Type.NullableName} value) => Create(value);
                      {Inheritdoc()}
                      public static {(m.Variants.Count is 1 ? "implicit" : "explicit")} operator {variant.Type.NullableName}({new UnionTypeNameComponent(m)} union) => union.CastTo{variant.Name};   
                      """

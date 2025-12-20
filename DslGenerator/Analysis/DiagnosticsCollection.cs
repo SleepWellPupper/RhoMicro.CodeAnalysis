@@ -1,0 +1,39 @@
+﻿// SPDX-License-Identifier: MPL-2.0
+
+namespace RhoMicro.CodeAnalysis.DslGenerator.Analysis;
+
+using RhoMicro.CodeAnalysis.DslGenerator.Lexing;
+
+using System;
+using System.Collections;
+using System.Collections.Generic;
+
+#if DSL_GENERATOR
+[IncludeFile]
+internal
+#endif
+sealed class DiagnosticsCollection : IReadOnlyList<Diagnostic>
+{
+    private readonly List<Diagnostic> _diagnostics = [];
+
+#if DSL_GENERATOR
+    public void ReportToContext(Microsoft.CodeAnalysis.SourceProductionContext context)
+    {
+        foreach(var diagnostic in _diagnostics)
+        {
+            var msDiagnostic = diagnostic.ToMsDiagnostic();
+            context.ReportDiagnostic(msDiagnostic);
+        }
+    }
+#endif
+    public void Add(DiagnosticDescriptor descriptor, Location location, params Object[] messageArgs) =>
+        _diagnostics.Add(new Diagnostic(descriptor, location, messageArgs));
+    public void Add(DiagnosticsCollection diagnostics) => _diagnostics.AddRange(diagnostics);
+
+    public Diagnostic this[Int32 index] => ((IReadOnlyList<Diagnostic>)_diagnostics)[index];
+
+    public Int32 Count => ((IReadOnlyCollection<Diagnostic>)_diagnostics).Count;
+
+    public IEnumerator<Diagnostic> GetEnumerator() => ((IEnumerable<Diagnostic>)_diagnostics).GetEnumerator();
+    IEnumerator IEnumerable.GetEnumerator() => ((IEnumerable)_diagnostics).GetEnumerator();
+}

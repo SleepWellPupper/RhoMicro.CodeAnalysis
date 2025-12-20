@@ -46,9 +46,7 @@ public sealed partial class IndentedStringBuilderAppendablesGenerator : IIncreme
     {
         var parameters = parameterList.Parameters;
         if(parameters.Count == 0)
-        {
             return String.Empty;
-        }
 
         var resultBuilder = new StringBuilder();
         var i = 0;
@@ -77,9 +75,7 @@ public sealed partial class IndentedStringBuilderAppendablesGenerator : IIncreme
         var result = ctx.CollectionFactory.CreateList<String>();
 
         if(clauses.Count == 0)
-        {
             return result;
-        }
 
         var constraintBuilder = new StringBuilder();
 
@@ -142,9 +138,7 @@ public sealed partial class IndentedStringBuilderAppendablesGenerator : IIncreme
                     .Type;
 
                 if(type == null)
-                {
                     return false;
-                }
 
                 var fullName = type.ToDisplayString(_fullyQualifiedFormat);
                 _ = constraintBuilder.Append(fullName);
@@ -166,25 +160,19 @@ public sealed partial class IndentedStringBuilderAppendablesGenerator : IIncreme
         var enumerator = parameterList.Parameters.GetEnumerator();
 
         if(!enumerator.MoveNext())
-        {
             return String.Empty;
-        }
 
         var resultBuilder = new StringBuilder();
 
         if(!tryAppend())
-        {
             return String.Empty;
-        }
 
         while(enumerator.MoveNext())
         {
             cancellationToken.ThrowIfCancellationRequested();
             _ = resultBuilder.Append(", ");
             if(!tryAppend())
-            {
                 return String.Empty;
-            }
         }
 
         return resultBuilder.ToString();
@@ -198,9 +186,7 @@ public sealed partial class IndentedStringBuilderAppendablesGenerator : IIncreme
                 null;
 
             if(type == null)
-            {
                 return false;
-            }
 
             if(enumerator.Current.Modifiers.Count > 0)
             {
@@ -213,9 +199,7 @@ public sealed partial class IndentedStringBuilderAppendablesGenerator : IIncreme
                 .Append(enumerator.Current.Identifier.Text);
 
             if(enumerator.Current.Default != null)
-            {
                 _ = resultBuilder.Append(enumerator.Current.Default.ToString());
-            }
 
             return true;
         }
@@ -270,16 +254,12 @@ public sealed partial class IndentedStringBuilderAppendablesGenerator : IIncreme
                 .Indent();
 
             if(constraints.Count > 0)
-            {
                 _ = builder.AppendLine().AppendJoinLines(String.Empty, constraints);
-            }
 
             _ = builder.Append(" =>");
 
             if(parameters == String.Empty && constraints.Count == 0)
-            {
                 _ = builder.Append(" StaticAppendableInstances.").Append(fieldName).AppendLine(';');
-            }
 
             _ = ( parameters == String.Empty && constraints.Count == 0 ? fieldsBuilder : builder ).AppendLine()
                 .Append("new")
@@ -304,9 +284,7 @@ public sealed partial class IndentedStringBuilderAppendablesGenerator : IIncreme
 
         var symbol = context.SemanticModel.GetDeclaredSymbol(context.Node, ct);
         if(!IsTargetSymbol(symbol))
-        {
             return _emptySignaturesArray;
-        }
 
         using var ctx = ModelCreationContext.CreateDefault(ct);
         var cds = (ClassDeclarationSyntax)context.Node;

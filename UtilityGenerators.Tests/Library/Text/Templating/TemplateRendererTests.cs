@@ -34,23 +34,17 @@ public class TemplateRendererTests
 
         // Act
         foreach(var h in header)
-        {
             renderer.Render(h);
-        }
 
         renderer.Indent(indentation);
 
         foreach(var b in body)
-        {
             renderer.Render(b);
-        }
 
         renderer.Detent(indentation.Length);
 
         foreach(var f in footer)
-        {
             renderer.Render(f);
-        }
 
         var actual = renderer.ToString();
 

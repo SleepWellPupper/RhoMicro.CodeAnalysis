@@ -34,7 +34,7 @@ internal readonly record struct ConstructorComponent(UnionModel Model) : ICSharp
                           if (validate)
                           {
                               var isValid = true;
-                              Validate{{variant.Name}}(value, throwIfInvalid: true, ref isValid);
+                              Validate(value, throwIfInvalid: true, ref isValid);
                           }
 
                           {{Create(variant, static (v, b, ct) =>

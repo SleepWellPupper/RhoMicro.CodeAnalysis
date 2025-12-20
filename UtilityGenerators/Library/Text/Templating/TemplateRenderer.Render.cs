@@ -47,9 +47,7 @@ internal partial struct TemplateRenderer
         // If the value is empty, we do not unnecessarily prepend indentation,
         // as no newline could be present.
         if(value is [])
-        {
             return;
-        }
 
         // Otherwise, we split at each newline and append the requested
         // indentation if the next line is not empty. Since the value will be

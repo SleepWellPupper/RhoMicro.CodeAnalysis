@@ -19,9 +19,7 @@ internal sealed partial class MutabilityContext : IDisposable
     public void ThrowIfReadOnly([CallerMemberName] String? callerName = null)
     {
         if(IsImmutable)
-        {
             throw new InvalidOperationException($"Unable to mutate using '{callerName}' after its mutability context was set to immutable.");
-        }
     }
     public void Dispose() => SetImmutable();
 }

@@ -104,9 +104,7 @@ internal sealed record PropertyModel(
             ct.ThrowIfCancellationRequested();
 
             if(i != 0)
-            {
                 _ = resultBuilder.Append(", ");
-            }
 
             var arg = ctorArguments[i];
             var param = ctorParameters[i];
@@ -125,9 +123,7 @@ internal sealed record PropertyModel(
             ct.ThrowIfCancellationRequested();
 
             if(ctorArguments.Length > 0 || i != 0)
-            {
                 _ = resultBuilder.Append(", ");
-            }
 
             var arg = namedArguments[i];
 
@@ -182,9 +178,7 @@ internal sealed record PropertyModel(
                     ct.ThrowIfCancellationRequested();
 
                     if(i != 0)
-                    {
                         _ = resultBuilder.Append(", ");
-                    }
 
                     var element = constant.Values[i];
                     appendFullyQualifiedCSharpString(element);

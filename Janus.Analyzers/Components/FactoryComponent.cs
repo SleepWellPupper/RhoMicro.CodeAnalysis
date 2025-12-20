@@ -72,8 +72,6 @@ internal readonly record struct FactoryComponent(UnionModel Model) : ICSharpSour
                               {
                                   ct.ThrowIfCancellationRequested();
 
-                                  var nullCaseHandled = false;
-
                                   for (var i = 0; i < m.Variants.Count; i++)
                                   {
                                       ct.ThrowIfCancellationRequested();
@@ -84,16 +82,7 @@ internal readonly record struct FactoryComponent(UnionModel Model) : ICSharpSour
                                           b.AppendLine();
                                       }
 
-                                      b.Append($"case {variant.Type.Name} v: return {new UnionTypeNameComponent(m)}.TryCreateFrom{variant.Name}(v, out union);");
-
-                                      if (!variant.Type.IsNullable || nullCaseHandled) {
-                                          continue;
-                                      }
-
-                                      b.AppendLine()
-                                          .Append($"case null: return {new UnionTypeNameComponent(m)}.TryCreateFrom{variant.Name}(({variant.Type.NullableName})null, out union);");
-                                          
-                                      nullCaseHandled = true;
+                                      b.Append($"case {variant.Type.Name} v: return {new UnionTypeNameComponent(m)}.TryCreate(v, out union);");
                                   }
                               })}}
                               case {{new UnionTypeNameComponent(m)}} v:
@@ -144,8 +133,6 @@ internal readonly record struct FactoryComponent(UnionModel Model) : ICSharpSour
                               {
                                   ct.ThrowIfCancellationRequested();
 
-                                  var nullCaseHandled = false;
-                                  
                                   for (var i = 0; i < m.Variants.Count; i++)
                                   {
                                       ct.ThrowIfCancellationRequested();
@@ -157,15 +144,6 @@ internal readonly record struct FactoryComponent(UnionModel Model) : ICSharpSour
                                       }
 
                                       b.Append($"case {variant.Type.Name} v: return new {new UnionTypeNameComponent(m)}(v);");
-
-                                      if (!variant.Type.IsNullable || nullCaseHandled) {
-                                          continue;
-                                      }
-
-                                      b.AppendLine()
-                                          .Append($"case null: return new {new UnionTypeNameComponent(m)}(({variant.Type.NullableName})null);");
-
-                                      nullCaseHandled = true;
                                   }
                               })}}
                               case {{new UnionTypeNameComponent(m)}} v: return new {{new UnionTypeNameComponent(m)}}(v);

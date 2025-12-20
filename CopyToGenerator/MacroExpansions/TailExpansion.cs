@@ -15,9 +15,7 @@ internal sealed class TailExpansion(Model model) : MacroExpansionBase(model, Mac
     public override void Expand(IExpandingMacroStringBuilder<Macro> builder, CancellationToken cancellationToken)
     {
         if(!Model.IsInGlobalNamespace)
-        {
             _ = builder.Append('}');
-        }
 
         _ = builder.Append('}');
     }

@@ -6,7 +6,7 @@ using RhoMicro.CodeAnalysis.Library.Text.Templating;
 
 internal partial class TemplateAttribute
 {
-    public partial record struct Model
+    public partial record Model
     {
         public String NewlineValue => Newline switch
         {

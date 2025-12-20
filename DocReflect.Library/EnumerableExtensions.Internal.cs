@@ -1,0 +1,35 @@
+﻿// SPDX-License-Identifier: MPL-2.0
+
+namespace RhoMicro.CodeAnalysis.Library;
+
+using RhoMicro.CodeAnalysis.Library.Models.Collections;
+
+internal static partial class EnumerableExtensions
+{
+	public static IReadOnlyDictionary<String, TValue> ToEquatableNameMap<TValue>(
+		this IEnumerable<TValue> elements,
+		Func<TValue, String> nameSelector,
+		String elementsName)
+	{
+		_ = elements ?? throw new ArgumentNullException(elementsName);
+
+        using var factory = EquatableCollectionFactory.CreateDefault();
+
+        var map = factory.CreateDictionary<String, TValue>();
+
+		foreach(var element in elements)
+		{
+			var name = nameSelector.Invoke(element);
+			if(map.ContainsKey(name))
+			{
+				throw new ArgumentException(
+					$"{elementsName} contains duplicate name: {name}",
+					elementsName);
+			}
+
+			map.Add(name, element);
+		}
+
+		return map;
+	}
+}

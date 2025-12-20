@@ -13,7 +13,7 @@ public class PrimitivesTest : TestBase
     [InlineData("global::System.UInt32")]
     [InlineData("global::System.Int64")]
     [InlineData("global::System.UInt64")]
-    public void GeneratesIntegerTypeForIntegralPrimitives(String type)
+    public void Generates_IntegerTypeForIntegralPrimitives(String type)
     {
         TestSchema(
             $$"""
@@ -37,7 +37,7 @@ public class PrimitivesTest : TestBase
     [InlineData("global::System.Single")]
     [InlineData("global::System.Double")]
     [InlineData("global::System.Decimal")]
-    public void GeneratesNumberTypeForDecimalPrimitives(String type)
+    public void Generates_NumberTypeForDecimalPrimitives(String type)
     {
 
         TestSchema(
@@ -64,7 +64,7 @@ public class PrimitivesTest : TestBase
     [InlineData("global::System.DateOnly")]
     [InlineData("global::System.TimeOnly")]
     [InlineData("global::System.DateTimeOffset")]
-    public void GeneratesStringTypeForDateTypes(String type)
+    public void Generates_StringTypeForDateTypes(String type)
     {
         TestSchema(
             $$"""
@@ -85,7 +85,7 @@ public class PrimitivesTest : TestBase
             });
     }
     [Fact]
-    public void GeneratesBooleanTypeForBooleanPrimitive()
+    public void Generates_BooleanTypeForBooleanPrimitive()
     {
         TestSchema(
             $$"""
@@ -106,7 +106,7 @@ public class PrimitivesTest : TestBase
             });
     }
     [Fact]
-    public void GeneratesStringTypeForStringPrimitive()
+    public void Generates_StringTypeForStringPrimitive()
     {
         TestSchema(
             $$"""
@@ -127,7 +127,7 @@ public class PrimitivesTest : TestBase
             });
     }
     [Fact]
-    public void GeneratesNullableObjectTypeForNullableObjectPrimitive()
+    public void Generates_NullableObjectTypeForNullableObjectPrimitive()
     {
         TestSchema(
             $$"""
@@ -153,7 +153,7 @@ public class PrimitivesTest : TestBase
             });
     }
     [Fact]
-    public void GeneratesObjectTypeForObjectPrimitive()
+    public void Generates_ObjectTypeForObjectPrimitive()
     {
         TestSchema(
             $$"""
@@ -178,7 +178,7 @@ public class PrimitivesTest : TestBase
             });
     }
     [Fact]
-    public void GeneratesEmptySchemaForEmptyType()
+    public void Generates_EmptySchemaForEmptyType()
     {
         TestSchema(
             $$"""

@@ -31,19 +31,13 @@ internal sealed record NodeSignatureModel(
         var flags = NodeSignatureFlags.None;
 
         if (type.IsRecord)
-        {
             flags |= NodeSignatureFlags.IsRecord;
-        }
 
         if (type.DeclaredAccessibility is Accessibility.Public)
-        {
             flags |= NodeSignatureFlags.IsPublic;
-        }
 
         if (type.IsSealed)
-        {
             flags |= NodeSignatureFlags.IsSealed;
-        }
 
         var typeParameters = ctx.CollectionFactory.CreateList<String>();
 

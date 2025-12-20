@@ -15,12 +15,8 @@ internal sealed class TemplateStringReconstructionVisitor(String newline, Indent
         Ct.ThrowIfCancellationRequested();
 
         if(token.Kind is TokenKind.Newline)
-        {
             builder.AppendCore(newline);
-        }
         else
-        {
             builder.AppendCore(token.Lexeme.ToString());
-        }
     }
 }

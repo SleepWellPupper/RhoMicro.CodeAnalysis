@@ -26,34 +26,22 @@ internal sealed record NodeModel(
         ctx.ThrowIfCancellationRequested();
 
         if (SymbolEqualityComparer.Default.Equals(nodeTypeCandidate, baseNodeType))
-        {
             return;
-        }
 
         if (!handledTypes.Add(nodeTypeCandidate))
-        {
             return;
-        }
 
         if (nodeTypeCandidate is not INamedTypeSymbol namedNodeTypeCandidate)
-        {
             return;
-        }
 
         if (namedNodeTypeCandidate.ContainingType is not null)
-        {
             return;
-        }
 
         if (!namedNodeTypeCandidate.Inherits(baseNodeType))
-        {
             return;
-        }
 
         if (!NodeSignatureModel.TryCreate(namedNodeTypeCandidate, out var signature, in ctx))
-        {
             return;
-        }
 
         var properties = ctx.CollectionFactory.CreateList<PropertyModel>();
         foreach (var member in namedNodeTypeCandidate.GetMembers())
@@ -61,18 +49,14 @@ internal sealed record NodeModel(
             ctx.ThrowIfCancellationRequested();
 
             if (PropertyModel.TryCreate(member, baseNodeType, out var property, in ctx))
-            {
                 properties.Add(property);
-            }
         }
 
         var model = new NodeModel(properties, signature, baseSignature);
         models.Add(model);
 
         if (nodeTypeCandidate.BaseType is { } baseNodeTypeCandidate)
-        {
             AddModels(baseNodeTypeCandidate, baseNodeType, baseSignature, models, handledTypes, in ctx);
-        }
     }
 
     public Boolean IsLeaf() => Signature.Flags.HasFlag(NodeSignatureFlags.IsSealed);

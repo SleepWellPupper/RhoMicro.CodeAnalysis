@@ -5,6 +5,7 @@ namespace RhoMicro.CodeAnalysis;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
+
 using RhoMicro.CodeAnalysis.Library.Models;
 using RhoMicro.CodeAnalysis.Library.Text.SourceTexts;
 
@@ -14,49 +15,37 @@ using RhoMicro.CodeAnalysis.Library.Text.SourceTexts;
 [Generator(LanguageNames.CSharp)]
 public partial class TypeSymbolPatternGenerator : IIncrementalGenerator
 {
-    // [TypeSymbolPattern(typeof(ITypeSymbol))]
-    // private static partial Boolean IsTypeSymbol(ITypeSymbol type);
+    [TypeSymbolPattern(typeof(ITypeSymbol))]
+    private static partial Boolean IsTypeSymbol(ITypeSymbol type);
     /// <inheritdoc/>
     public void Initialize(IncrementalGeneratorInitializationContext context)
     {
         var provider = context.SyntaxProvider.ForAttributeWithMetadataName(
-                "RhoMicro.CodeAnalysis.TypeSymbolPatternAttribute",
-                static (n, _) => n is MethodDeclarationSyntax
-                {
-                    Modifiers: [.., { RawKind: (Int32)SyntaxKind.PartialKeyword }]
-                },
-                static (ctx, ct) =>
-                {
-                    ct.ThrowIfCancellationRequested();
+            "RhoMicro.CodeAnalysis.TypeSymbolPatternAttribute",
+            static (n, _) => n is MethodDeclarationSyntax
+            {
+                Modifiers: [.., { RawKind: (Int32)SyntaxKind.PartialKeyword }]
+            },
+            static (ctx, ct) =>
+            {
+                ct.ThrowIfCancellationRequested();
 
-                    // The target must be partial, return bool, and have single parameter of type ITypeSymbol.
-                    if (ctx.TargetSymbol is not IMethodSymbol
-                        {
-                            ReturnType.SpecialType: SpecialType.System_Boolean,
-                            IsPartialDefinition: true,
-                            Parameters: [{ Type: {
-                                Name: nameof(ITypeSymbol),
-                                ContainingNamespace:
-                                {
-                                    Name: "CodeAnalysis",
-                                    ContainingNamespace:
-                                    {
-                                        Name: "Microsoft",
-                                        ContainingNamespace.IsGlobalNamespace: true
-                                    }
-                                }
-                            } }
-                            ]
-                        } target)
+                // The target must be partial, return bool, and have single parameter of type ITypeSymbol.
+                if(ctx.TargetSymbol is not IMethodSymbol
                     {
-                        return null;
-                    }
+                        ReturnType.SpecialType: SpecialType.System_Boolean,
+                        IsPartialDefinition: true,
+                        Parameters: [{ } singleParameter]
+                    } target || !IsTypeSymbol(singleParameter.Type))
+                {
+                    return null;
+                }
 
-                    using var modelCtx = ModelCreationContext.CreateDefault(ct);
-                    var result = TypeSymbolPatternMethodsPartialModel.Create(target, ctx.Attributes[0], in modelCtx);
+                using var modelCtx = ModelCreationContext.CreateDefault(ct);
+                var result = TypeSymbolPatternMethodsPartialModel.Create(target, ctx.Attributes[0], in modelCtx);
 
-                    return result;
-                }).Where(static m => m is not null)
+                return result;
+            }).Where(static m => m is not null)
             .Collect()
             .SelectMany(static (m, ct) =>
             {
@@ -73,15 +62,14 @@ public partial class TypeSymbolPatternGenerator : IIncrementalGenerator
 
                 var sourceBuilder = new IndentedStringBuilder(IndentedStringBuilderOptions.GeneratedFile with
                 {
-                    GeneratorName = typeof(TypeSymbolPatternGenerator).FullName, AmbientCancellationToken = ct
+                    GeneratorName = typeof(TypeSymbolPatternGenerator).FullName,
+                    AmbientCancellationToken = ct
                 });
 
                 m.ContainingType.BuildStrings(sourceBuilder, out var hintName, out _, ct);
 
-                foreach (var method in m.Methods)
-                {
+                foreach(var method in m.Methods)
                     AppendPatternMethods(sourceBuilder, method, ct);
-                }
 
                 var source = sourceBuilder
                     .CloseAllBlocks()
@@ -93,30 +81,24 @@ public partial class TypeSymbolPatternGenerator : IIncrementalGenerator
         context.RegisterSourceOutput(provider, (ctx, t) => ctx.AddSource(t.hintName, t.source));
     }
 
-    private static void AppendPatternMethods(IndentedStringBuilder sourceBuilder, TypeSymbolPatternMethodModel method,
-                                             CancellationToken ct)
+    private static void AppendPatternMethods(IndentedStringBuilder sourceBuilder, TypeSymbolPatternMethodModel method, CancellationToken ct)
     {
         ct.ThrowIfCancellationRequested();
 
         AppendPatternMethod(sourceBuilder, method, ct);
         AppendPatternOutMethod(sourceBuilder, method, ct);
     }
-
-    private static void AppendPatternOutMethod(IndentedStringBuilder sourceBuilder, TypeSymbolPatternMethodModel method,
-                                               CancellationToken ct)
+    private static void AppendPatternOutMethod(IndentedStringBuilder sourceBuilder, TypeSymbolPatternMethodModel method, CancellationToken ct)
     {
         ct.ThrowIfCancellationRequested();
 
         sourceBuilder.AppendCore(SyntaxFacts.GetText(method.Accessibility));
 
-        if (method.IsStatic)
-        {
+        if(method.IsStatic)
             sourceBuilder.AppendCore(" static");
-        }
 
         sourceBuilder
-            .Append(" bool ").Append(method.MethodName).AppendCore(
-                "(global::Microsoft.CodeAnalysis.ITypeSymbol? type, [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out ");
+            .Append(" bool ").Append(method.MethodName).AppendCore("(global::Microsoft.CodeAnalysis.ITypeSymbol? type, [global::System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out ");
 
         AppendPatternTypeType(sourceBuilder, method, ct);
 
@@ -133,22 +115,17 @@ public partial class TypeSymbolPatternGenerator : IIncrementalGenerator
             .Append("return result;")
             .CloseBlockCore();
     }
-
-    private static void AppendPatternMethod(IndentedStringBuilder sourceBuilder, TypeSymbolPatternMethodModel method,
-                                            CancellationToken ct)
+    private static void AppendPatternMethod(IndentedStringBuilder sourceBuilder, TypeSymbolPatternMethodModel method, CancellationToken ct)
     {
         ct.ThrowIfCancellationRequested();
 
         sourceBuilder.AppendCore(SyntaxFacts.GetText(method.Accessibility));
 
-        if (method.IsStatic)
-        {
+        if(method.IsStatic)
             sourceBuilder.AppendCore(" static");
-        }
 
         sourceBuilder
-            .Append(" partial bool ").Append(method.MethodName)
-            .AppendCore("(global::Microsoft.CodeAnalysis.ITypeSymbol? type");
+            .Append(" partial bool ").Append(method.MethodName).AppendCore("(global::Microsoft.CodeAnalysis.ITypeSymbol? type");
 
         sourceBuilder
             .Append(')')
@@ -167,32 +144,29 @@ public partial class TypeSymbolPatternGenerator : IIncrementalGenerator
             .CloseBlockCore();
     }
 
-    private static void AppendTypePattern(IndentedStringBuilder sourceBuilder, TypeModel type,
-                                          Boolean checkTypeArguments, ref CancellationToken ct)
+    private static void AppendTypePattern(IndentedStringBuilder sourceBuilder, TypeModel type, Boolean checkTypeArguments, ref CancellationToken ct)
     {
         ct.ThrowIfCancellationRequested();
 
-        if (type is NamedTypeModel named)
+        if(type is NamedTypeModel named)
         {
             sourceBuilder
                 .Append("global::Microsoft.CodeAnalysis.INamedTypeSymbol")
                 .OpenBracesBlock()
-                .Append("Name: \"").Append(type.Name).Append("\",").AppendLineCore();
+                    .Append("Name: \"").Append(type.Name).Append("\",").AppendLineCore();
 
-            if (checkTypeArguments)
+            if(checkTypeArguments)
             {
                 _ = sourceBuilder
                     .Append("TypeArguments:")
                     .OpenBracketsBlock();
 
-                for (var i = 0; i < named.TypeArguments.Count; i++)
+                for(var i = 0; i < named.TypeArguments.Count; i++)
                 {
                     ct.ThrowIfCancellationRequested();
 
-                    if (i != 0)
-                    {
+                    if(i != 0)
                         sourceBuilder.AppendCore(", ");
-                    }
 
                     var arg = named.TypeArguments[i];
                     AppendTypePattern(sourceBuilder, arg, checkTypeArguments, ref ct);
@@ -205,38 +179,35 @@ public partial class TypeSymbolPatternGenerator : IIncrementalGenerator
             }
 
             AppendNamespacePatternPart(sourceBuilder, type, ct);
-        }
-        else if (type is ArrayTypeModel array)
+        } else if(type is ArrayTypeModel array)
         {
             sourceBuilder
                 .Append("global::Microsoft.CodeAnalysis.IArrayTypeSymbol")
                 .OpenBracesBlock()
-                .AppendCore("ElementType: ");
+                    .AppendCore("ElementType: ");
 
             AppendTypePattern(sourceBuilder, array.ElementType, checkTypeArguments, ref ct);
 
             sourceBuilder.AppendLineCore();
-        }
-        else
+        } else
         {
             sourceBuilder
                 .OpenBracesBlock()
-                .Append("Name: \"").Append(type.Name).Append("\",").AppendLineCore();
+                    .Append("Name: \"").Append(type.Name).Append("\",").AppendLineCore();
             AppendNamespacePatternPart(sourceBuilder, type, ct);
         }
 
         sourceBuilder.CloseBlockCore();
     }
 
-    private static void AppendNamespacePatternPart(IndentedStringBuilder sourceBuilder, TypeModel type,
-                                                   CancellationToken ct)
+    private static void AppendNamespacePatternPart(IndentedStringBuilder sourceBuilder, TypeModel type, CancellationToken ct)
     {
         ct.ThrowIfCancellationRequested();
 
         sourceBuilder
             .AppendCore("ContainingNamespace: ");
 
-        for (var i = type.NamespaceParts.Count - 1; i > -1; i--)
+        for(var i = type.NamespaceParts.Count - 1; i > -1; i--)
         {
             ct.ThrowIfCancellationRequested();
 
@@ -252,24 +223,17 @@ public partial class TypeSymbolPatternGenerator : IIncrementalGenerator
             .OpenBracesBlock()
             .AppendCore("IsGlobalNamespace: true");
 
-        for (var i = -1; i < type.NamespaceParts.Count; i++)
-        {
+        for(var i = -1; i < type.NamespaceParts.Count; i++)
             sourceBuilder.CloseBlockCore();
-        }
     }
 
-    private static void AppendPatternTypeType(IndentedStringBuilder sourceBuilder, TypeSymbolPatternMethodModel method,
-                                              CancellationToken ct)
+    private static void AppendPatternTypeType(IndentedStringBuilder sourceBuilder, TypeSymbolPatternMethodModel method, CancellationToken ct)
     {
         ct.ThrowIfCancellationRequested();
 
-        if (method.Type.Type is ArrayTypeModel)
-        {
+        if(method.Type.Type is ArrayTypeModel)
             sourceBuilder.AppendCore("global::Microsoft.CodeAnalysis.IArrayTypeSymbol");
-        }
-        else if (method.Type.Type is NamedTypeModel)
-        {
+        else if(method.Type.Type is NamedTypeModel)
             sourceBuilder.AppendCore("global::Microsoft.CodeAnalysis.INamedTypeSymbol");
-        }
     }
 }

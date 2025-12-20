@@ -41,7 +41,6 @@ public sealed partial class JanusAnalyzer : DiagnosticAnalyzer
         DiagnosticDescriptors.DuplicateVariantGroupNamesAreIgnored,
         DiagnosticDescriptors.ClassUnionsShouldBeSealed,
         DiagnosticDescriptors.UnionCannotBeRefStruct,
-        DiagnosticDescriptors.TypeParameterVariantsShouldBeNamed,
     ];
 
     /// <inheritdoc />
@@ -90,92 +89,6 @@ public sealed partial class JanusAnalyzer : DiagnosticAnalyzer
             ReportClassUnionsShouldBeSealed, SymbolKind.NamedType);
         context.RegisterSymbolAction(
             ReportUnionCannotBeRefStruct, SymbolKind.NamedType);
-        context.RegisterOperationAction(
-            ReportTypeParameterVariantsShouldBeNamed, OperationKind.Attribute);
-    }
-
-    private static void ReportTypeParameterVariantsShouldBeNamed(OperationAnalysisContext ctx)
-    {
-        var ct = ctx.CancellationToken;
-
-        ct.ThrowIfCancellationRequested();
-
-        if (!AttributeAnalysisContext.TryCreateForUnionTypeAttribute(ctx, out var attributeContext))
-        {
-            return;
-        }
-
-        if (attributeContext.TargetSymbol is not ITypeParameterSymbol)
-        {
-            return;
-        }
-
-        var initializers = attributeContext.AttributeOperation.Initializer?.Initializers ?? [];
-
-        var hasNameAssignment = false;
-
-        foreach (var initializer in initializers)
-        {
-            ct.ThrowIfCancellationRequested();
-
-            if (initializer is ISimpleAssignmentOperation
-                {
-                    Target: IPropertyReferenceOperation
-                    {
-                        Member.Name: nameof(UnionTypeAttribute.Name)
-                    }
-                })
-            {
-                hasNameAssignment = true;
-                break;
-            }
-        }
-
-        if (hasNameAssignment)
-        {
-            return;
-        }
-
-        if (!attributeContext.TryGetUnionTypeSymbol(out var union))
-        {
-            return;
-        }
-
-        var unioName = union.ToDisplayString(SymbolDisplayFormat.CSharpErrorMessageFormat);
-        var variantName = attributeContext.TargetSymbol.Name;
-        foreach (var reference in union.DeclaringSyntaxReferences)
-        {
-            ct.ThrowIfCancellationRequested();
-
-            if (reference.GetSyntax(ct) is not TypeDeclarationSyntax
-                {
-                    TypeParameterList.Parameters: [{ }, ..] typeParameters
-                })
-            {
-                continue;
-            }
-
-            foreach (var typeParameterSyntax in typeParameters)
-            {
-                ct.ThrowIfCancellationRequested();
-
-                if (typeParameterSyntax.Identifier.Text != variantName)
-                {
-                    continue;
-                }
-
-                var location = typeParameterSyntax.Identifier.GetLocation();
-                var diagnostic = Diagnostic.Create(
-                    DiagnosticDescriptors.TypeParameterVariantsShouldBeNamed,
-                    location,
-                    messageArgs:
-                    [
-                        variantName,
-                        unioName
-                    ]);
-                ctx.ReportDiagnostic(diagnostic);
-            }
-        }
     }
 
     private static void ReportUnionCannotBeRefStruct(SymbolAnalysisContext ctx)

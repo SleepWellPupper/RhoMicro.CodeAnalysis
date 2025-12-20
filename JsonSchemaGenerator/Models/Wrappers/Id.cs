@@ -39,9 +39,7 @@ internal readonly record struct Id(String Value, Int32 Depth)
         var value = attribute?.Id?.Trim();
 
         if(String.IsNullOrWhiteSpace(value))
-        {
             return Create(target, ct);
-        }
 
         return Create(value!);
     }

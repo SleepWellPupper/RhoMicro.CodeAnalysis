@@ -19,10 +19,4 @@
 		<ProjectReference Include="../UtilityGenerators/UtilityGenerators.csproj"  OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
 	</ItemGroup>
 
-	<ItemGroup>
-	  <Compile Include="..\UtilityGenerators\GlobalUsings.cs">
-	    <Link>GlobalUsings.cs</Link>
-	  </Compile>
-	</ItemGroup>
-
 </Project>

@@ -1,42 +1,42 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <OutputType>Exe</OutputType>
-    <RootNamespace>OptionsGenerator.Tests</RootNamespace>
-    <TargetFramework>net10.0</TargetFramework>
-    <NoWarn>$(NoWarn);CS1591;NU1510;NU1701</NoWarn>
-    <!--
-    This template uses native xUnit.net command line options when using 'dotnet run' and
-    VSTest by default when using 'dotnet test'. For more information on how to enable support
-    for Microsoft Testing Platform, please visit:
-      https://xunit.net/docs/getting-started/v3/microsoft-testing-platform
-    -->
-  </PropertyGroup>
+    <PropertyGroup>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <OutputType>Exe</OutputType>
+        <RootNamespace>OptionsGenerator.Tests</RootNamespace>
+        <TargetFramework>net8.0</TargetFramework>
+        <!--
+        To enable the Microsoft Testing Platform 'dotnet test' experience, add property:
+          <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
+    
+        To enable the Microsoft Testing Platform native command line experience, add property:
+          <UseMicrosoftTestingPlatformRunner>true</UseMicrosoftTestingPlatformRunner>
+    
+        For more information on Microsoft Testing Platform support in xUnit.net, please visit:
+          https://xunit.net/docs/getting-started/v3/microsoft-testing-platform
+        -->
+    </PropertyGroup>
 
-  <ItemGroup>
-    <Content Include="xunit.runner.json" CopyToOutputDirectory="PreserveNewest"/>
-  </ItemGroup>
+    <ItemGroup>
+        <Content Include="xunit.runner.json" CopyToOutputDirectory="PreserveNewest"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <Using Include="Xunit"/>
-  </ItemGroup>
+    <ItemGroup>
+        <Using Include="Xunit"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Basic.Reference.Assemblies" Version="1.8.4"/>
-    <PackageReference Include="Basic.Reference.Assemblies.Net100" Version="1.8.4"/>
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="5.0.0"/>
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Analyzer.Testing" Version="1.1.2"/>
-    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.CodeFix.Testing" Version="1.1.2"/>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.1"/>
-    <PackageReference Include="xunit.v3" Version="3.2.1"/>
-    <PackageReference Include="xunit.runner.visualstudio" Version="3.1.5"/>
-    <PackageReference Include="System.Formats.Asn1" Version="10.0.1"/>
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Basic.Reference.Assemblies" Version="1.8.0" />
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.13.0" />
+        <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Analyzer.Testing" Version="1.1.2" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.13.0"/>
+        <PackageReference Include="xunit.v3" Version="2.0.0"/>
+        <PackageReference Include="xunit.runner.visualstudio" Version="3.0.2"/>
+    </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\OptionsGenerator\OptionsGenerator.csproj"/>
-  </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\OptionsGenerator\OptionsGenerator.csproj" />
+    </ItemGroup>
 
 </Project>

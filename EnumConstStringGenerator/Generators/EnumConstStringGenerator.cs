@@ -33,9 +33,7 @@ public sealed class EnumConstStringGenerator : IIncrementalGenerator
             {
                 ct.ThrowIfCancellationRequested();
                 if(ctx.TargetSymbol is not INamedTypeSymbol { TypeKind: TypeKind.Enum } target)
-                {
                     return null;
-                }
 
                 var members = target
                     .GetMembers()
@@ -98,9 +96,7 @@ public sealed class EnumConstStringGenerator : IIncrementalGenerator
                     IndentedStringBuilderOptions.GeneratedFile with { AmbientCancellationToken = ct });
 
                 if(@namespace != String.Empty)
-                {
                     builder.Append("namespace ").Append(@namespace).Append(';').AppendLineCore();
-                }
 
                 builder.Append("public static class ").Append(name).Append("Strings")
                 .OpenBracesBlock()

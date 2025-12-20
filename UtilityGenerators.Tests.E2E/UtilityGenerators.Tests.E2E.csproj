@@ -25,10 +25,4 @@
     <Using Include="Xunit"/>
   </ItemGroup>
 
-  <ItemGroup>
-    <Compile Include="..\UtilityGenerators\GlobalUsings.cs">
-      <Link>GlobalUsings.cs</Link>
-    </Compile>
-  </ItemGroup>
-
 </Project>

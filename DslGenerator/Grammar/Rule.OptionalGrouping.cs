@@ -1,0 +1,31 @@
+﻿// SPDX-License-Identifier: MPL-2.0
+
+namespace RhoMicro.CodeAnalysis.DslGenerator.Grammar;
+
+using System.Diagnostics;
+
+#if DSL_GENERATOR
+[IncludeFile]
+internal
+#endif
+abstract partial record Rule
+{
+    [DebuggerDisplay("{ToDisplayString()}")]
+    public sealed record OptionalGrouping(Rule Rule) : Rule
+    {
+        public override String ToString() => base.ToString();
+        public override void AppendDisplayStringTo(IndentedStringBuilder builder, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            _ = builder.Append('[').AppendDisplayString(Rule, cancellationToken).Append(']');
+        }
+        protected override void AppendCtorArgs(IndentedStringBuilder builder, CancellationToken cancellationToken)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+
+            _ = AppendCtorArg(builder, nameof(Rule), Rule, cancellationToken);
+        }
+        public override void Receive(SyntaxNodeVisitor visitor) => visitor.Visit(this);
+    }
+}

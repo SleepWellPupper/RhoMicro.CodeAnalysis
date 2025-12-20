@@ -108,9 +108,7 @@ internal sealed record TemplateString(TemplateSourceText Text, String Path, Sour
 
         var i = 0;
         for(; token.Text[i] == '"'; i++)
-        {
             cancellationToken.ThrowIfCancellationRequested();
-        }
 
         return i;
     }

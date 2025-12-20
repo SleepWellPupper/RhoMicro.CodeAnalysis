@@ -12,7 +12,7 @@ internal sealed record JsonNumberModel : JsonValueModel<Number>
     public override void AppendTo(StringBuilder sb, CancellationToken ct)
     {
         ct.ThrowIfCancellationRequested();
-        _ = sb.Append(Value.Switch(
+        _ = sb.Append(Value.Match(
             static d => d.ToString("0.#", CultureInfo.InvariantCulture),
             static l => l.ToString("0.#", CultureInfo.InvariantCulture),
             static ul => ul.ToString("0.#", CultureInfo.InvariantCulture)));

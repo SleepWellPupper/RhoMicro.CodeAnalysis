@@ -84,8 +84,8 @@ internal partial class CSharpSourceBuilder : IDisposable
 
     private IInterpolationIndentationDetector _detector;
     private Boolean _lastWasNewLine = true;
-    private Boolean _lastWasEmptyLine;
-    private Boolean _preludeWritten;
+    private Boolean _lastWasEmptyLine = false;
+    private Boolean _preludeWritten = false;
     private Char[] _buffer;
     public CancellationToken CancellationToken { get; private set; }
 

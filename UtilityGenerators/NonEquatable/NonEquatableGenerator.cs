@@ -27,9 +27,7 @@ public sealed class NonEquatableGenerator : IIncrementalGenerator
                 ct.ThrowIfCancellationRequested();
 
                 if(ctx.TargetSymbol is not INamedTypeSymbol target)
-                {
                     return null;
-                }
 
                 using var modelCtx = ModelCreationContext.CreateDefault(ct);
                 var model = NamedTypeModel.Create(target, in modelCtx);
@@ -54,9 +52,7 @@ public sealed class NonEquatableGenerator : IIncrementalGenerator
                     .AppendCore("public ");
 
                 if(m.Kind == PartialTypeKindModel.Class || m.Kind == PartialTypeKindModel.Record)
-                {
                     sourceBuilder.AppendCore("sealed ");
-                }
 
                 sourceBuilder.Append("override bool Equals(object obj) => throw new global::System.NotSupportedException(\"")
                     .Append(displayName)
@@ -69,9 +65,7 @@ public sealed class NonEquatableGenerator : IIncrementalGenerator
                     .AppendCore("public ");
 
                 if(m.Kind == PartialTypeKindModel.Class || m.Kind == PartialTypeKindModel.Record)
-                {
                     sourceBuilder.AppendCore("sealed ");
-                }
 
                 sourceBuilder.Append("override int GetHashCode() => throw new global::System.NotSupportedException(\"")
                     .Append(displayName)

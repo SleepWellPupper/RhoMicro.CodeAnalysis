@@ -16,7 +16,7 @@ using RhoMicro.CodeAnalysis.Library.Text.Templating;
 [NonEquatable]
 #endif
 #if RHOMICRO_CODEANALYSIS_UTILITYGENERATORS || RHOMICRO_CODEANALYSIS_UTILITYGENERATORS_DEV
-[GenerateFactory(GenerateModelTypeAsStruct = true)]
+[GenerateFactory]
 #endif
 internal sealed partial class TemplateAttribute : Attribute
 {
@@ -99,7 +99,14 @@ internal sealed partial class TemplateAttribute : Attribute
     /// <item><c>static global::RhoMicro.CodeAnalysis.Library.Text.Templating.Indentations</c></item>
     /// </list>
     /// </summary>
-    public String[]? Usings { get; set; }
+    [DefaultValue(
+        [
+            "static global::RhoMicro.CodeAnalysis.Library.Text.Templating.Indentations",
+        ])]
+    public String[] Usings { get; set; } =
+        [
+            "static global::RhoMicro.CodeAnalysis.Library.Text.Templating.Indentations",
+        ];
     /// <summary>
     /// Gets or sets a value indicating whether to generate a structural
     /// representation and debugging information of the template for debugging

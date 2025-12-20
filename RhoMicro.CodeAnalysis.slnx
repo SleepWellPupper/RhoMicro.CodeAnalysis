@@ -1,4 +1,44 @@
 <Solution>
+  <Folder Name="/Applications/">
+    <Project Path="CSharpSourceBuilder.TestApplication\CSharpSourceBuilder.TestApplication.csproj" />
+    <Project Path="DslGenerator.TestApp/DslGenerator.TestApp.csproj" />
+    <Project Path="EnumStringTestApp/EnumStringTestApp.csproj" />
+    <Project Path="IndentedStringBuilderTestApp/IndentedStringBuilderTestApp.csproj" />
+    <Project Path="Janus.TestApplication\Janus.TestApplication.csproj" />
+    <Project Path="Janus.TestLibrary\Janus.TestLibrary.csproj" />
+    <Project Path="Project1/Project1.csproj" />
+    <Project Path="TestApp/TestApp.csproj" />
+    <Project Path="WorkerService1/WorkerService1.csproj" />
+  </Folder>
+  <Folder Name="/Generators/">
+    <Project Path="CopyToGenerator/CopyToGenerator.csproj" />
+    <Project Path="DocReflect.Library/DocReflect.Library.csproj" />
+    <Project Path="DocReflect/DocReflect.csproj" />
+    <Project Path="DslGenerator.Tests/DslGenerator.Tests.csproj" />
+    <Project Path="DslGenerator/DslGenerator.csproj" />
+    <Project Path="EnumConstStringGenerator/EnumConstStringGenerator.csproj" />
+    <Project Path="Equa/Equa.csproj" />
+    <Project Path="Janus.Analyzers/Janus.Analyzers.csproj" />
+    <Project Path="Janus.CodeFixes/Janus.CodeFixes.csproj" />
+    <Project Path="Janus.Library/Janus.Library.csproj" />
+    <Project Path="Janus.Tests.EndToEnd\Janus.Tests.EndToEnd.csproj" />
+    <Project Path="Janus.Tests/Janus.Tests.csproj" />
+    <Project Path="Janus\Janus.csproj" />
+    <Project Path="JsonSchemaGenerator.Cli/JsonSchemaGenerator.Cli.csproj" />
+    <Project Path="JsonSchemaGenerator.Tests/JsonSchemaGenerator.Tests.csproj" />
+    <Project Path="JsonSchemaGenerator/JsonSchemaGenerator.csproj" />
+    <Project Path="Lyra\Lyra.csproj" />
+    <Project Path="OptionsGenerator.Tests/OptionsGenerator.Tests.csproj" />
+    <Project Path="OptionsGenerator/OptionsGenerator.csproj" />
+    <Project Path="Polyfills/Polyfills.csproj" />
+    <Project Path="UtilityGenerators.Benchmarks/UtilityGenerators.Benchmarks.csproj" />
+    <Project Path="UtilityGenerators.Dev/UtilityGenerators.Dev.csproj" />
+    <Project Path="UtilityGenerators.Library.Text.SourceTexts/UtilityGenerators.Library.Text.SourceTexts.csproj" />
+    <Project Path="UtilityGenerators.Tests.E2E/UtilityGenerators.Tests.E2E.csproj" />
+    <Project Path="UtilityGenerators.Tests/UtilityGenerators.Tests.csproj" />
+    <Project Path="UtilityGenerators/UtilityGenerators.csproj" />
+    <Project Path="VisitorGenerator/VisitorGenerator.csproj" />
+  </Folder>
   <Folder Name="/Solution Items/">
     <File Path=".gitattributes" />
     <File Path=".github/workflows/buildPublish.yml" />
@@ -7,30 +47,4 @@
     <File Path="Directory.Build.props" />
     <File Path="nuget.config" />
   </Folder>
-  <Project Path="CopyToGenerator/CopyToGenerator.csproj" />
-  <Project Path="EnumConstStringGenerator/EnumConstStringGenerator.csproj" />
-  <Project Path="Equa/Equa.csproj" />
-  <Project Path="Janus.Analyzers/Janus.Analyzers.csproj" />
-  <Project Path="Janus.Benchmarks/Janus.Benchmarks.csproj" />
-  <Project Path="Janus.CodeFixes/Janus.CodeFixes.csproj" />
-  <Project Path="Janus.Library/Janus.Library.csproj" />
-  <Project Path="Janus.TestApplication\Janus.TestApplication.csproj" />
-  <Project Path="Janus.TestLibrary\Janus.TestLibrary.csproj" />
-  <Project Path="Janus.Tests.EndToEnd\Janus.Tests.EndToEnd.csproj" />
-  <Project Path="Janus.Tests/Janus.Tests.csproj" />
-  <Project Path="Janus\Janus.csproj" />
-  <Project Path="JsonSchemaGenerator.Cli/JsonSchemaGenerator.Cli.csproj" />
-  <Project Path="JsonSchemaGenerator.Tests/JsonSchemaGenerator.Tests.csproj" />
-  <Project Path="JsonSchemaGenerator/JsonSchemaGenerator.csproj" />
-  <Project Path="Lyra\Lyra.csproj" />
-  <Project Path="OptionsGenerator.Tests/OptionsGenerator.Tests.csproj" />
-  <Project Path="OptionsGenerator/OptionsGenerator.csproj" />
-  <Project Path="Polyfills/Polyfills.csproj" />
-  <Project Path="UtilityGenerators.Benchmarks/UtilityGenerators.Benchmarks.csproj" />
-  <Project Path="UtilityGenerators.Dev/UtilityGenerators.Dev.csproj" />
-  <Project Path="UtilityGenerators.Library.Text.SourceTexts/UtilityGenerators.Library.Text.SourceTexts.csproj" />
-  <Project Path="UtilityGenerators.Tests.E2E/UtilityGenerators.Tests.E2E.csproj" />
-  <Project Path="UtilityGenerators.Tests/UtilityGenerators.Tests.csproj" />
-  <Project Path="UtilityGenerators/UtilityGenerators.csproj" />
-  <Project Path="VisitorGenerator/VisitorGenerator.csproj" />
 </Solution>

@@ -123,9 +123,7 @@ public partial class LexerTests(ITestOutputHelper testOutput)
 
         // Act
         using(var context = ModelCreationContext.CreateDefault(TestContext.Current.CancellationToken))
-        {
             actual = Lexer.Scan(templateString, newlineLength: 1, in context).RequiredQuotes;
-        }
 
         // Assert
         Assert.Equal(expected, actual);

@@ -45,9 +45,7 @@ internal sealed partial class SourceGeneratingTemplateVisitor : TreeWalkingSynta
 
         var detentCount = 0;
         for(; detentCount < _builder.OpenBlocks; detentCount++)
-        {
             _builder.DetentCore();
-        }
 
         _builder
             .Append("#line (")
@@ -61,9 +59,7 @@ internal sealed partial class SourceGeneratingTemplateVisitor : TreeWalkingSynta
             .AppendCore(')');
 
         if(_templateString.Path is { Length: > 0 } path)
-        {
             _builder.Append(" \"").Append(path).AppendCore('"');
-        }
 
         _builder
             .AppendLine()
@@ -77,9 +73,7 @@ internal sealed partial class SourceGeneratingTemplateVisitor : TreeWalkingSynta
             .AppendLineCore();
 
         for(; detentCount > 0; detentCount--)
-        {
             _builder.IndentCore();
-        }
 
         if(syntax.RenderBlockBody is { })
         {

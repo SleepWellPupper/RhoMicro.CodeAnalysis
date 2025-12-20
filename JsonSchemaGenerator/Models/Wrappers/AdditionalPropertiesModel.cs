@@ -12,9 +12,7 @@ internal readonly record struct AdditionalPropertiesModel(JsonDynamicModel Model
         get
         {
             if(Model.Value is JsonSchemaModel { Size: 0 })
-            {
                 False();
-            }
 
             return Model.Value;
         }

@@ -6,9 +6,7 @@ using System;
 /// <summary>
 /// Provides settings for the <see cref="MainService"/>.
 /// </summary>
-#pragma warning disable CA1515
 public sealed class Settings
-#pragma warning restore CA1515
 {
     /// <summary>
     /// Gets or sets the path of the assembly to emit generated json schemata for.

@@ -36,7 +36,7 @@ public class AnalyzerTests
     }
 
     [Fact]
-    public Task NonTargetWritablePropertyDoesNotRaiseROG0002() =>
+    public Task NonTargetWritablePropertyDoesNotRaise_ROG0002() =>
         new OptionsGeneratorAnalyzerTest(
             $$"""
               public partial interface IFoo
@@ -46,7 +46,7 @@ public class AnalyzerTests
               """).RunAsync(TestContext.Current.CancellationToken);
 
     [Fact]
-    public Task ReadOnlyPropertyDoesNotRaiseROG0002() =>
+    public Task ReadOnlyPropertyDoesNotRaise_ROG0002() =>
         new OptionsGeneratorAnalyzerTest(
             $$"""
               using RhoMicro.CodeAnalysis;
@@ -58,7 +58,7 @@ public class AnalyzerTests
               }
               """).RunAsync(TestContext.Current.CancellationToken);
     [Fact]
-    public Task WritablePropertyRaisesROG0002() =>
+    public Task WritablePropertyRaises_ROG0002() =>
         new OptionsGeneratorAnalyzerTest(
             $$"""
               using RhoMicro.CodeAnalysis;
@@ -76,13 +76,13 @@ public class AnalyzerTests
     [InlineData("T, S")]
     [InlineData("TName")]
     [InlineData("TElement, TName")]
-    public Task NonTargetGenericInterfaceDoesNotRaiseROG0001(String typeParameters) =>
+    public Task NonTargetGenericInterfaceDoesNotRaise_ROG0001(String typeParameters) =>
         new OptionsGeneratorAnalyzerTest(
                 $"public partial interface IFoo<{typeParameters}>;")
             .RunAsync(TestContext.Current.CancellationToken);
 
     [Fact]
-    public Task NestedTargetInterfaceRaisesROG0003() =>
+    public Task NestedTargetInterfaceRaises_ROG0003() =>
         new OptionsGeneratorAnalyzerTest(
             """
             using RhoMicro.CodeAnalysis;
@@ -99,7 +99,7 @@ public class AnalyzerTests
     [InlineData("T, S")]
     [InlineData("TName")]
     [InlineData("TElement, TName")]
-    public Task GenericTargetInterfaceRaisesROG0001(String typeParameters) =>
+    public Task GenericTargetInterfaceRaises_ROG0001(String typeParameters) =>
         new OptionsGeneratorAnalyzerTest(
             $$"""
               using RhoMicro.CodeAnalysis;
@@ -109,7 +109,7 @@ public class AnalyzerTests
               """).RunAsync(TestContext.Current.CancellationToken);
 
     [Fact]
-    public Task NonPartialTargetInterfaceRaisesCS0260() =>
+    public Task NonPartialTargetInterfaceRaises_CS0260() =>
         new OptionsGeneratorAnalyzerTest(
             $$"""
               using RhoMicro.CodeAnalysis;

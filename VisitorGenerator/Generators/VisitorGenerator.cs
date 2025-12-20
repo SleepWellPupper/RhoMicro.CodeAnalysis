@@ -119,9 +119,7 @@ public sealed class VisitorGenerator : IIncrementalGenerator
             ctx.ThrowIfCancellationRequested();
 
             if (model is null)
-            {
                 continue;
-            }
 
             var signature = model.Signature;
 
@@ -138,9 +136,7 @@ public sealed class VisitorGenerator : IIncrementalGenerator
                         ctx.ThrowIfCancellationRequested();
 
                         if (handledNodes.Add(node.Signature))
-                        {
                             newDuplicate.Nodes.Add(node);
-                        }
                     }
 
                     duplicate = newDuplicate;
@@ -154,9 +150,7 @@ public sealed class VisitorGenerator : IIncrementalGenerator
                     ctx.ThrowIfCancellationRequested();
 
                     if (handledNodes.Add(node.Signature))
-                    {
                         duplicate.Nodes.Add(node);
-                    }
                 }
             }
             else
@@ -172,22 +166,16 @@ public sealed class VisitorGenerator : IIncrementalGenerator
         ct.ThrowIfCancellationRequested();
 
         if (ctx.TargetSymbol is not INamedTypeSymbol baseNodeType)
-        {
             return null;
-        }
 
         if (baseNodeType.ContainingType is not null)
-        {
             return null;
-        }
 
         using var modelCtx = ModelCreationContext.CreateDefault(ct);
         var nodes = modelCtx.CollectionFactory.CreateList<NodeModel>();
 
         if (!NodeSignatureModel.TryCreate(baseNodeType, out var baseSignature, in modelCtx))
-        {
             return null;
-        }
 
         var handledTypes = new HashSet<ITypeSymbol>(SymbolEqualityComparer.Default);
         var result = new BaseNodeModel(nodes, baseSignature);
@@ -201,16 +189,12 @@ public sealed class VisitorGenerator : IIncrementalGenerator
                 ct.ThrowIfCancellationRequested();
 
                 if (arg is not { Kind: TypedConstantKind.Array, Values: { } @params })
-                {
                     continue;
-                }
 
                 foreach (var param in @params)
                 {
                     if (param is not { Kind: TypedConstantKind.Type, Value: ITypeSymbol typeArg })
-                    {
                         continue;
-                    }
 
                     NodeModel.AddModels(
                         typeArg,
@@ -223,9 +207,7 @@ public sealed class VisitorGenerator : IIncrementalGenerator
             }
 
             if (attribute.AttributeClass?.TypeArguments is not [_, ..] args)
-            {
                 continue;
-            }
 
             foreach (var arg in args)
             {
@@ -265,18 +247,14 @@ public sealed class VisitorGenerator : IIncrementalGenerator
             if (modifier.IsKind(SyntaxKind.AbstractKeyword))
             {
                 if (isAbstract)
-                {
                     return false;
-                }
 
                 isAbstract = true;
             }
         }
 
         if (!isAbstract)
-        {
             return false;
-        }
 
         return true;
     }

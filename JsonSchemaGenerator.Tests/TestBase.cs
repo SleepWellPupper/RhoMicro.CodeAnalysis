@@ -13,11 +13,9 @@ using System.Text.Json.Nodes;
 using System.Text.Json;
 
 /// <summary>
-/// Base class for tests verifying <see cref="JsonSchemaGenerator"/> outputs.
+/// Base class for tests verifying <see cref="UnionsGenerator"/> outputs.
 /// </summary>
-#pragma warning disable CA1515
 public abstract class TestBase
-#pragma warning restore CA1515
 {
     protected TestBase() : this(Net80.References.All.ToArray()) { }
 
@@ -93,9 +91,7 @@ public abstract class TestBase
             .ToDictionary(t => t.idNode!.AsValue().ToString(), t => t.s);
 
         if(schemata.Count == 0)
-        {
             Assert.Fail("no schemata found in assembly");
-        }
 
         JsonObject schema;
         var assemblyName = compilation.Assembly.Name;
@@ -135,14 +131,14 @@ public abstract class TestBase
         return assertion.Invoke(compilationWithDiagnostics);
     }
 
-    private static CompilationWithAnalyzers AttachAnalyzer(Compilation compilation)
+    private CompilationWithAnalyzers AttachAnalyzer(Compilation compilation)
     {
         var result = compilation.WithAnalyzers([ /*(DiagnosticAnalyzer)new Analyzers.Analyzer()*/]);
 
         return result;
     }
 
-    protected static GeneratorDriverRunResult RunGenerator(ref Compilation compilation)
+    protected GeneratorDriverRunResult RunGenerator(ref Compilation compilation)
     {
         var generator = new JsonSchemaGenerator.Generators.JsonSchemaGenerator();
 

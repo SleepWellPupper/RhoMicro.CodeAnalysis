@@ -19,21 +19,15 @@ internal sealed record JsonSchemaModel : JsonValueModel
     public JsonObjectModel Build(Boolean includeId = false, CancellationToken ct = default)
     {
         if(_result is not null)
-        {
             return _result;
-        }
 
         while(Interlocked.CompareExchange(ref _buildLock, 1, 0) == 1)
-        {
             ct.ThrowIfCancellationRequested();
-        }
 
         try
         {
             if(_result is not null)
-            {
                 return _result;
-            }
 
             _result = BuildCore(includeId, ct);
             return _result;
@@ -79,9 +73,7 @@ internal sealed record JsonSchemaModel : JsonValueModel
             }
 
             if(!hasSimple)
-            {
                 return anyOf;
-            }
 
             var result = new JsonObjectModel();
             result.Array("anyOf").Value.Add(anyOf);

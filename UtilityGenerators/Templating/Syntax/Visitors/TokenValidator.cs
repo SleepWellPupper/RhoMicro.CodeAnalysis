@@ -15,9 +15,7 @@ internal partial class TokenValidator(CancellationToken ct) : TreeWalkingSyntaxV
         AssertToken(token, type, l =>
         {
             if(l.Equals(lexeme))
-            {
                 return (true, null);
-            }
 
             return (false, $"expected:\n\n{lexeme}");
         }, syntax);
@@ -33,18 +31,14 @@ internal partial class TokenValidator(CancellationToken ct) : TreeWalkingSyntaxV
         Ct.ThrowIfCancellationRequested();
 
         if(lexemePredicate.Invoke(token.Lexeme.ToString()) is (var success, var message) && !success)
-        {
             OnError($"lexeme mismatch:\n{message}\n\nlexeme\n{token.Lexeme.ToString()}\ntoken:\n{token}\nsyntax:\n{syntax}");
-        }
     }
     private void AssertKind<TSyntax>(Token token, TokenKind kind, TSyntax syntax)
     {
         Ct.ThrowIfCancellationRequested();
 
         if(kind != token.Kind)
-        {
             OnError($"token kind mismatch: expected '{kind}', actual was '{token.Kind}'\ntoken:\n{token}\nsyntax:\n{syntax}");
-        }
     }
 
     protected virtual void OnError(String message) => throw new InvalidOperationException(message);

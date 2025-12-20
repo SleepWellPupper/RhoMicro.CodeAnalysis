@@ -15,10 +15,8 @@ public class MapLikeTests : TestBase
             ["Dictionary", "Dictionary"],
         }.Select(a => a.Select(n => $"global::System.Collections.Generic.{n}").ToArray())
         .ToArray();
-#pragma warning disable CA1819
     public static Object[][] Data =>
-#pragma warning restore CA1819
-        new String[][] {
+    new String[][] {
         ["global::System.DateTime", "string"],
         ["global::System.TimeSpan", "string"],
         ["global::System.DateOnly", "string"],
@@ -43,17 +41,15 @@ public class MapLikeTests : TestBase
         ["global::System.String", "string"]
     }.SelectMany(a => _mapLikeTypes.Select(l => new[] { $"{l[0]}<string, {a[0]}>", $"{l[1]}<string, {a[0]}>()", a[1] }))
      .ToArray();
-#pragma warning disable CA1819
     public static Object[][] ObjectData =>
-#pragma warning restore CA1819
-        new String[] {
+    new String[] {
         "global::System.Object",
     }.SelectMany(a => _mapLikeTypes.Select(l => new[] { $"{l[0]}<string, {a}>", $"{l[1]}<string, {a}>()" }))
      .ToArray();
 
     [Theory]
     [MemberData(nameof(Data))]
-    public void GeneratesObjectTypeForMapLikeType(String mapLikeType, String initializationType, String expectedType)
+    public void Generates_ObjectTypeForMapLikeType(String mapLikeType, String initializationType, String expectedType)
     {
         TestSchema(
             $$"""
@@ -83,7 +79,7 @@ public class MapLikeTests : TestBase
     }
     [Theory]
     [MemberData(nameof(ObjectData))]
-    public void GeneratesObjectTypeForMapLikeTypeWithObjectValueType(String mapLikeType, String initializationType)
+    public void Generates_ObjectTypeForMapLikeTypeWithObjectValueType(String mapLikeType, String initializationType)
     {
         TestSchema(
             $$"""
