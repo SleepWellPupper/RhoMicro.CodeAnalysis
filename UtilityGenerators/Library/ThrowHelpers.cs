@@ -25,7 +25,9 @@ internal static class ThrowHelpers
         internal static void ThrowIfNull([NotNull] Object? argument, [CallerArgumentExpression(nameof(argument))] String? paramName = null)
         {
             if(argument is null)
+            {
                 Throw(paramName);
+            }
         }
 
         [DoesNotReturn]
@@ -76,7 +78,9 @@ internal static class ThrowHelpers
         internal static void ThrowIfZero(Single value, [CallerArgumentExpression(nameof(value))] String? paramName = null)
         {
             if(value == 0)
+            {
                 ThrowZero(value, paramName);
+            }
         }
         /// <summary>Throws an <see cref="ArgumentOutOfRangeException"/> if <paramref name="value"/> is zero.</summary>
         /// <param name="value">The argument to validate as non-zero.</param>
@@ -84,7 +88,9 @@ internal static class ThrowHelpers
         internal static void ThrowIfZero(Double value, [CallerArgumentExpression(nameof(value))] String? paramName = null)
         {
             if(value == 0)
+            {
                 ThrowZero(value, paramName);
+            }
         }
         /// <summary>Throws an <see cref="ArgumentOutOfRangeException"/> if <paramref name="value"/> is zero.</summary>
         /// <param name="value">The argument to validate as non-zero.</param>
@@ -92,7 +98,9 @@ internal static class ThrowHelpers
         internal static void ThrowIfZero(SByte value, [CallerArgumentExpression(nameof(value))] String? paramName = null)
         {
             if(value == 0)
+            {
                 ThrowZero(value, paramName);
+            }
         }
         /// <summary>Throws an <see cref="ArgumentOutOfRangeException"/> if <paramref name="value"/> is zero.</summary>
         /// <param name="value">The argument to validate as non-zero.</param>
@@ -100,7 +108,9 @@ internal static class ThrowHelpers
         internal static void ThrowIfZero(Int16 value, [CallerArgumentExpression(nameof(value))] String? paramName = null)
         {
             if(value == 0)
+            {
                 ThrowZero(value, paramName);
+            }
         }
         /// <summary>Throws an <see cref="ArgumentOutOfRangeException"/> if <paramref name="value"/> is zero.</summary>
         /// <param name="value">The argument to validate as non-zero.</param>
@@ -108,7 +118,9 @@ internal static class ThrowHelpers
         internal static void ThrowIfZero(Int32 value, [CallerArgumentExpression(nameof(value))] String? paramName = null)
         {
             if(value == 0)
+            {
                 ThrowZero(value, paramName);
+            }
         }
         /// <summary>Throws an <see cref="ArgumentOutOfRangeException"/> if <paramref name="value"/> is zero.</summary>
         /// <param name="value">The argument to validate as non-zero.</param>
@@ -116,7 +128,9 @@ internal static class ThrowHelpers
         internal static void ThrowIfZero(Int64 value, [CallerArgumentExpression(nameof(value))] String? paramName = null)
         {
             if(value == 0)
+            {
                 ThrowZero(value, paramName);
+            }
         }
         /// <summary>Throws an <see cref="ArgumentOutOfRangeException"/> if <paramref name="value"/> is zero.</summary>
         /// <param name="value">The argument to validate as non-zero.</param>
@@ -124,7 +138,9 @@ internal static class ThrowHelpers
         internal static void ThrowIfZero(Byte value, [CallerArgumentExpression(nameof(value))] String? paramName = null)
         {
             if(value == 0)
+            {
                 ThrowZero(value, paramName);
+            }
         }
         /// <summary>Throws an <see cref="ArgumentOutOfRangeException"/> if <paramref name="value"/> is zero.</summary>
         /// <param name="value">The argument to validate as non-zero.</param>
@@ -132,7 +148,9 @@ internal static class ThrowHelpers
         internal static void ThrowIfZero(UInt16 value, [CallerArgumentExpression(nameof(value))] String? paramName = null)
         {
             if(value == 0)
+            {
                 ThrowZero(value, paramName);
+            }
         }
         /// <summary>Throws an <see cref="ArgumentOutOfRangeException"/> if <paramref name="value"/> is zero.</summary>
         /// <param name="value">The argument to validate as non-zero.</param>
@@ -140,7 +158,9 @@ internal static class ThrowHelpers
         internal static void ThrowIfZero(UInt32 value, [CallerArgumentExpression(nameof(value))] String? paramName = null)
         {
             if(value == 0)
+            {
                 ThrowZero(value, paramName);
+            }
         }
         /// <summary>Throws an <see cref="ArgumentOutOfRangeException"/> if <paramref name="value"/> is zero.</summary>
         /// <param name="value">The argument to validate as non-zero.</param>
@@ -148,7 +168,9 @@ internal static class ThrowHelpers
         internal static void ThrowIfZero(UInt64 value, [CallerArgumentExpression(nameof(value))] String? paramName = null)
         {
             if(value == 0)
+            {
                 ThrowZero(value, paramName);
+            }
         }
 
         /// <summary>Throws an <see cref="ArgumentOutOfRangeException"/> if <paramref name="value"/> is negative.</summary>
@@ -157,7 +179,9 @@ internal static class ThrowHelpers
         internal static void ThrowIfNegative(Single value, [CallerArgumentExpression(nameof(value))] String? paramName = null)
         {
             if(value < 0)
+            {
                 ThrowNegative(value, paramName);
+            }
         }
         /// <summary>Throws an <see cref="ArgumentOutOfRangeException"/> if <paramref name="value"/> is negative.</summary>
         /// <param name="value">The argument to validate as non-negative.</param>
@@ -165,7 +189,9 @@ internal static class ThrowHelpers
         internal static void ThrowIfNegative(Double value, [CallerArgumentExpression(nameof(value))] String? paramName = null)
         {
             if(value < 0)
+            {
                 ThrowNegative(value, paramName);
+            }
         }
         /// <summary>Throws an <see cref="ArgumentOutOfRangeException"/> if <paramref name="value"/> is negative.</summary>
         /// <param name="value">The argument to validate as non-negative.</param>
@@ -173,7 +199,9 @@ internal static class ThrowHelpers
         internal static void ThrowIfNegative(SByte value, [CallerArgumentExpression(nameof(value))] String? paramName = null)
         {
             if(value < 0)
+            {
                 ThrowNegative(value, paramName);
+            }
         }
         /// <summary>Throws an <see cref="ArgumentOutOfRangeException"/> if <paramref name="value"/> is negative.</summary>
         /// <param name="value">The argument to validate as non-negative.</param>
@@ -181,7 +209,9 @@ internal static class ThrowHelpers
         internal static void ThrowIfNegative(Int16 value, [CallerArgumentExpression(nameof(value))] String? paramName = null)
         {
             if(value < 0)
+            {
                 ThrowNegative(value, paramName);
+            }
         }
         /// <summary>Throws an <see cref="ArgumentOutOfRangeException"/> if <paramref name="value"/> is negative.</summary>
         /// <param name="value">The argument to validate as non-negative.</param>
@@ -189,7 +219,9 @@ internal static class ThrowHelpers
         internal static void ThrowIfNegative(Int32 value, [CallerArgumentExpression(nameof(value))] String? paramName = null)
         {
             if(value < 0)
+            {
                 ThrowNegative(value, paramName);
+            }
         }
         /// <summary>Throws an <see cref="ArgumentOutOfRangeException"/> if <paramref name="value"/> is negative.</summary>
         /// <param name="value">The argument to validate as non-negative.</param>
@@ -197,7 +229,9 @@ internal static class ThrowHelpers
         internal static void ThrowIfNegative(Int64 value, [CallerArgumentExpression(nameof(value))] String? paramName = null)
         {
             if(value < 0)
+            {
                 ThrowNegative(value, paramName);
+            }
         }
 
         /// <summary>Throws an <see cref="ArgumentOutOfRangeException"/> if <paramref name="value"/> is negative or zero.</summary>
@@ -206,7 +240,9 @@ internal static class ThrowHelpers
         internal static void ThrowIfNegativeOrZero(Single value, [CallerArgumentExpression(nameof(value))] String? paramName = null)
         {
             if(value <= 0)
+            {
                 ThrowNegativeOrZero(value, paramName);
+            }
         }
         /// <summary>Throws an <see cref="ArgumentOutOfRangeException"/> if <paramref name="value"/> is negative or zero.</summary>
         /// <param name="value">The argument to validate as non-zero or non-negative.</param>
@@ -214,7 +250,9 @@ internal static class ThrowHelpers
         internal static void ThrowIfNegativeOrZero(Double value, [CallerArgumentExpression(nameof(value))] String? paramName = null)
         {
             if(value <= 0)
+            {
                 ThrowNegativeOrZero(value, paramName);
+            }
         }
         /// <summary>Throws an <see cref="ArgumentOutOfRangeException"/> if <paramref name="value"/> is negative or zero.</summary>
         /// <param name="value">The argument to validate as non-zero or non-negative.</param>
@@ -222,7 +260,9 @@ internal static class ThrowHelpers
         internal static void ThrowIfNegativeOrZero(SByte value, [CallerArgumentExpression(nameof(value))] String? paramName = null)
         {
             if(value <= 0)
+            {
                 ThrowNegativeOrZero(value, paramName);
+            }
         }
         /// <summary>Throws an <see cref="ArgumentOutOfRangeException"/> if <paramref name="value"/> is negative or zero.</summary>
         /// <param name="value">The argument to validate as non-zero or non-negative.</param>
@@ -230,7 +270,9 @@ internal static class ThrowHelpers
         internal static void ThrowIfNegativeOrZero(Int16 value, [CallerArgumentExpression(nameof(value))] String? paramName = null)
         {
             if(value <= 0)
+            {
                 ThrowNegativeOrZero(value, paramName);
+            }
         }
         /// <summary>Throws an <see cref="ArgumentOutOfRangeException"/> if <paramref name="value"/> is negative or zero.</summary>
         /// <param name="value">The argument to validate as non-zero or non-negative.</param>
@@ -238,7 +280,9 @@ internal static class ThrowHelpers
         internal static void ThrowIfNegativeOrZero(Int32 value, [CallerArgumentExpression(nameof(value))] String? paramName = null)
         {
             if(value <= 0)
+            {
                 ThrowNegativeOrZero(value, paramName);
+            }
         }
         /// <summary>Throws an <see cref="ArgumentOutOfRangeException"/> if <paramref name="value"/> is negative or zero.</summary>
         /// <param name="value">The argument to validate as non-zero or non-negative.</param>
@@ -246,7 +290,9 @@ internal static class ThrowHelpers
         internal static void ThrowIfNegativeOrZero(Int64 value, [CallerArgumentExpression(nameof(value))] String? paramName = null)
         {
             if(value <= 0)
+            {
                 ThrowNegativeOrZero(value, paramName);
+            }
         }
 
         /// <summary>Throws an <see cref="ArgumentOutOfRangeException"/> if <paramref name="value"/> is equal to <paramref name="other"/>.</summary>
@@ -256,7 +302,9 @@ internal static class ThrowHelpers
         internal static void ThrowIfEqual<T>(T value, T other, [CallerArgumentExpression(nameof(value))] String? paramName = null) where T : IEquatable<T>?
         {
             if(EqualityComparer<T>.Default.Equals(value, other))
+            {
                 ThrowEqual(value, other, paramName);
+            }
         }
 
         /// <summary>Throws an <see cref="ArgumentOutOfRangeException"/> if <paramref name="value"/> is not equal to <paramref name="other"/>.</summary>
@@ -266,7 +314,9 @@ internal static class ThrowHelpers
         internal static void ThrowIfNotEqual<T>(T value, T other, [CallerArgumentExpression(nameof(value))] String? paramName = null) where T : IEquatable<T>?
         {
             if(!EqualityComparer<T>.Default.Equals(value, other))
+            {
                 ThrowNotEqual(value, other, paramName);
+            }
         }
 
         /// <summary>Throws an <see cref="ArgumentOutOfRangeException"/> if <paramref name="value"/> is greater than <paramref name="other"/>.</summary>
@@ -277,7 +327,9 @@ internal static class ThrowHelpers
             where T : IComparable<T>
         {
             if(value.CompareTo(other) > 0)
+            {
                 ThrowGreater(value, other, paramName);
+            }
         }
 
         /// <summary>Throws an <see cref="ArgumentOutOfRangeException"/> if <paramref name="value"/> is greater than or equal <paramref name="other"/>.</summary>
@@ -288,7 +340,9 @@ internal static class ThrowHelpers
             where T : IComparable<T>
         {
             if(value.CompareTo(other) >= 0)
+            {
                 ThrowGreaterEqual(value, other, paramName);
+            }
         }
 
         /// <summary>Throws an <see cref="ArgumentOutOfRangeException"/> if <paramref name="value"/> is less than <paramref name="other"/>.</summary>
@@ -299,7 +353,9 @@ internal static class ThrowHelpers
             where T : IComparable<T>
         {
             if(value.CompareTo(other) < 0)
+            {
                 ThrowLess(value, other, paramName);
+            }
         }
 
         /// <summary>Throws an <see cref="ArgumentOutOfRangeException"/> if <paramref name="value"/> is less than or equal <paramref name="other"/>.</summary>
@@ -310,7 +366,9 @@ internal static class ThrowHelpers
             where T : IComparable<T>
         {
             if(value.CompareTo(other) <= 0)
+            {
                 ThrowLessEqual(value, other, paramName);
+            }
         }
     }
 }

@@ -28,12 +28,16 @@ internal sealed partial class DictionaryEqualityComparer<TKey, TValue>(IEquality
         where TDictionaryY : IDictionary<TKey, TValue>
     {
         if(x.Count != y.Count)
+        {
             return false;
+        }
 
         foreach(var kvp in x)
         {
             if(!y.TryGetValue(kvp.Key, out var value) || !valueComparer.Equals(kvp.Value, value))
+            {
                 return false;
+            }
         }
 
         return true;

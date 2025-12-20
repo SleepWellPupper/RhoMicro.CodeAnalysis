@@ -56,7 +56,9 @@ file static class Builder
         var result = ctx.CollectionFactory.CreateList<T>();
 
         foreach(var element in elements)
+        {
             result.Add(element);
+        }
 
         return result;
     }

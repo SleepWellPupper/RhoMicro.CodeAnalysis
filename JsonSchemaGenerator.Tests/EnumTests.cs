@@ -81,7 +81,9 @@ public class EnumTests : TestBase
         ]
     };
 
+#pragma warning disable CA1819
     public static Object[][] Data =>
+#pragma warning restore CA1819
         _backingTypes.SelectMany(t =>
         {
             var values = _backingValues[t];
@@ -89,14 +91,16 @@ public class EnumTests : TestBase
 
             for(var i = 0; i < _enumNames.Length; i++)
                 for(var j = 0; j < values.Length; j++)
-                    result[i * values.Length + j] = [_enumNames[i].Zip(values[j]).ToArray(), t];
+            {
+                result[i * values.Length + j] = [_enumNames[i].Zip(values[j]).ToArray(), t];
+            }
 
             return result;
         }).ToArray();
 
     [Theory]
     [MemberData(nameof(Data))]
-    public void Generates_EnumNamesOrValuesOrIntegerForEnumType((String name, Int64 value)[] constants, String backingType)
+    public void GeneratesEnumNamesOrValuesOrIntegerForEnumType((String name, Int64 value)[] constants, String backingType)
     {
         TestSchema(
             $$"""
@@ -130,7 +134,7 @@ public class EnumTests : TestBase
     }
     [Theory]
     [MemberData(nameof(Data))]
-    public void Generates_EnumNamesOrValuesOrIntegerForMultipleEnumTypeProperties((String name, Int64 value)[] constants, String backingType)
+    public void GeneratesEnumNamesOrValuesOrIntegerForMultipleEnumTypeProperties((String name, Int64 value)[] constants, String backingType)
     {
         TestSchema(
             $$"""
@@ -182,7 +186,7 @@ public class EnumTests : TestBase
     }
     [Theory]
     [MemberData(nameof(Data))]
-    public void Generates_EnumNamesOrValuesOrIntegerOrNullForNullableEnumType((String name, Int64 value)[] constants, String backingType)
+    public void GeneratesEnumNamesOrValuesOrIntegerOrNullForNullableEnumType((String name, Int64 value)[] constants, String backingType)
     {
         TestSchema(
             $$"""
@@ -216,7 +220,7 @@ public class EnumTests : TestBase
     }
     [Theory]
     [MemberData(nameof(Data))]
-    public void Generates_EnumNamesOrValuesOrIntegerOrNullForMultipleNullableEnumTypeProperties((String name, Int64 value)[] constants, String backingType)
+    public void GeneratesEnumNamesOrValuesOrIntegerOrNullForMultipleNullableEnumTypeProperties((String name, Int64 value)[] constants, String backingType)
     {
         TestSchema(
             $$"""

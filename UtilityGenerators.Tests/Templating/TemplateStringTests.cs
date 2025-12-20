@@ -316,8 +316,8 @@ public class TemplateStringTests
     {
         // Arrange
         var token = CSharpSyntaxTree
-            .ParseText(sourceText)
-            .GetRoot()
+            .ParseText(sourceText, cancellationToken: TestContext.Current.CancellationToken)
+            .GetRoot(TestContext.Current.CancellationToken)
             .DescendantTokens(_ => true)
             .Single(t => t.RawKind is
                 (Int32)SyntaxKind.StringLiteralToken or

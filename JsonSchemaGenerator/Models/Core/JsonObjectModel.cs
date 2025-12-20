@@ -22,7 +22,9 @@ internal record JsonObjectModel : JsonValueModel<Dictionary<String, JsonValueMod
         {
             ct.ThrowIfCancellationRequested();
             if(i > 0 && Value.Count > 1)
+            {
                 _ = sb.Append(',');
+            }
 
             _ = sb.Append('"').Append(key).Append("\":").AppendModel(value, ct);
             i++;

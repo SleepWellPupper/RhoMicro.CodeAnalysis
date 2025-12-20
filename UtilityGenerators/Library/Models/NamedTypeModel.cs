@@ -61,7 +61,9 @@ internal sealed record NamedTypeModel(
         ctx.ThrowIfCancellationRequested();
 
         if(containingType is null)
+        {
             return;
+        }
 
         AddContainingTypes(containingType.ContainingType, containingTypes, in ctx);
 
@@ -77,20 +79,26 @@ internal sealed record NamedTypeModel(
         var resultBuilder = new StringBuilder();
 
         foreach(var part in NamespaceParts)
+        {
             _ = resultBuilder.Append(part).Append('.');
+        }
 
         foreach(var containingType in ContainingTypes)
         {
             _ = resultBuilder.Append(containingType.Name).Append('.');
 
             if(containingType.TypeArguments is { Count: > 0 and var innerCount })
+            {
                 _ = resultBuilder.Append(innerCount).Append('.');
+            }
         }
 
         _ = resultBuilder.Append(Name).Append('.');
 
         if(TypeArguments is { Count: > 0 and var outerCount })
+        {
             _ = resultBuilder.Append(outerCount).Append('.');
+        }
 
         var result = resultBuilder.Append("g.cs").ToString();
 
@@ -119,7 +127,9 @@ internal sealed record NamedTypeModel(
         AppendContainingTypes(resultBuilder, in tokenInfo, ct);
 
         if(!tokenInfo.SeparateParts && ( ContainingTypes.Count > 0 || NamespaceParts.Count > 0 ))
+        {
             _ = resultBuilder.Append(tokenInfo.SeparatorToken);
+        }
 
         AppendName(resultBuilder, Name, ct);
         AppendTypeArguments(resultBuilder, TypeArguments, in tokenInfo, ct);
@@ -129,34 +139,44 @@ internal sealed record NamedTypeModel(
         ct.ThrowIfCancellationRequested();
 
         if(NamespaceParts.Count <= 0)
+        {
             return;
+        }
 
         for(var i = 0; i < NamespaceParts.Count; i++)
         {
             ct.ThrowIfCancellationRequested();
 
             if(i != 0)
+            {
                 _ = resultBuilder.Append(tokenInfo.SeparatorToken);
+            }
 
             _ = resultBuilder.Append((String?)NamespaceParts[i]);
         }
 
         if(tokenInfo.SeparateParts)
+        {
             _ = resultBuilder.Append(tokenInfo.SeparatorToken);
+        }
     }
     private void AppendContainingTypes(StringBuilder resultBuilder, in AppendTokenInfo tokenInfo, CancellationToken ct)
     {
         ct.ThrowIfCancellationRequested();
 
         if(ContainingTypes.Count == 0)
+        {
             return;
+        }
 
         for(var i = 0; i < ContainingTypes.Count; i++)
         {
             ct.ThrowIfCancellationRequested();
 
             if(i != 0)
+            {
                 _ = resultBuilder.Append(tokenInfo.SeparatorToken);
+            }
 
             var containingType = ContainingTypes[i];
 
@@ -165,7 +185,9 @@ internal sealed record NamedTypeModel(
         }
 
         if(tokenInfo.SeparateParts)
+        {
             _ = resultBuilder.Append(tokenInfo.SeparatorToken);
+        }
     }
     private static void AppendName(
         StringBuilder resultBuilder,
@@ -181,10 +203,14 @@ internal sealed record NamedTypeModel(
         ct.ThrowIfCancellationRequested();
 
         if(typeArguments.Count == 0)
+        {
             return;
+        }
 
         if(tokenInfo.SeparateParts)
+        {
             _ = resultBuilder.Append(tokenInfo.SeparatorToken);
+        }
 
         _ = resultBuilder.Append(tokenInfo.OpenToken);
 
@@ -193,7 +219,9 @@ internal sealed record NamedTypeModel(
             ct.ThrowIfCancellationRequested();
 
             if(i != 0)
+            {
                 _ = resultBuilder.Append(tokenInfo.ArgumentSeparatorToken);
+            }
 
             var typeArgument = typeArguments[i];
             _ = resultBuilder.Append(typeArgument.Name);
@@ -281,7 +309,9 @@ internal sealed record NamedTypeModel(
         ct.ThrowIfCancellationRequested();
 
         if(superTypes.Length == 0)
+        {
             return;
+        }
 
         using var _ = sourceBuilder.Append(" :").AppendLine().OpenIndentBlockScope();
 
@@ -290,7 +320,9 @@ internal sealed record NamedTypeModel(
             ct.ThrowIfCancellationRequested();
 
             if(i != 0)
+            {
                 sourceBuilder.Append(',').AppendLineCore();
+            }
 
             sourceBuilder.AppendCore(superTypes[i]);
         }
@@ -318,7 +350,9 @@ internal sealed record NamedTypeModel(
         ct.ThrowIfCancellationRequested();
 
         if(NamespaceParts.Count <= 0)
+        {
             return;
+        }
 
         _ = sourceBuilder.Append("namespace ");
 
@@ -348,7 +382,9 @@ internal sealed record NamedTypeModel(
         ct.ThrowIfCancellationRequested();
 
         if(ContainingTypes.Count == 0)
+        {
             return;
+        }
 
         for(var i = 0; i < ContainingTypes.Count; i++)
         {
@@ -381,7 +417,9 @@ internal sealed record NamedTypeModel(
         ct.ThrowIfCancellationRequested();
 
         if(typeArguments.Count == 0)
+        {
             return;
+        }
 
         _ = hintNameBuilder.Append("_of");
         _ = displayStringBuilder.Append('<');

@@ -2,6 +2,8 @@
 
 namespace RhoMicro.CodeAnalysis.OptionsGenerator.Generators;
 
+#pragma warning disable CS9113
+
 [Template(
     """
     partial interface (:model.Templates().TypeNames.Interface:)

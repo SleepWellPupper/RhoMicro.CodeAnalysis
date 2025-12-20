@@ -52,7 +52,9 @@ public sealed partial class AttributeFactoryGenerator : IIncrementalGenerator
                 }
 
                 if(attributeModel is null)
+                {
                     return null;
+                }
 
                 using var modelCreationContext = ModelCreationContext.CreateDefault(ct);
                 var model = InitializationMethodModel.Create(target, attributeModel.Value, in modelCreationContext);
@@ -91,7 +93,9 @@ public sealed partial class AttributeFactoryGenerator : IIncrementalGenerator
                 ct.ThrowIfCancellationRequested();
 
                 if(ctx is not { Attributes: [{ } attribute], TargetSymbol: INamedTypeSymbol target })
+                {
                     return null;
+                }
 
                 using var modelCreationContext = ModelCreationContext.CreateDefault(ct);
                 var model = AttributeFactoryModel.Create(target, attribute, in modelCreationContext);
@@ -204,7 +208,9 @@ public sealed partial class AttributeFactoryGenerator : IIncrementalGenerator
                 .AppendCore(mappedProperty.Name);
 
             if(i < ctx.Model.MappedProperties.Count - 1 || ctx.Model.UnmappedProperties.Count > 0)
+            {
                 ctx.SourceBuilder.Append(',').AppendLineCore();
+            }
         }
 
         _ = ctx.SourceBuilder.CloseBlock()
@@ -226,7 +232,9 @@ public sealed partial class AttributeFactoryGenerator : IIncrementalGenerator
                 .AppendCore(unmappedProperty.Name);
 
             if(i < ctx.Model.UnmappedProperties.Count - 1)
+            {
                 ctx.SourceBuilder.Append(',').AppendLineCore();
+            }
         }
 
         ctx.SourceBuilder
@@ -372,7 +380,9 @@ public sealed partial class AttributeFactoryGenerator : IIncrementalGenerator
                     ctx.ThrowIfCancellationRequested();
 
                     if(j > 0)
+                    {
                         ctx.SourceBuilder.Append(',').AppendLineCore();
+                    }
 
                     var parameterIndex = ctor.Mappings[ctx.Model.MappedProperties[j].Name]?.ParameterIndex ?? -1;
                     var parameterIndexString = parameterIndex.ToString();
@@ -404,7 +414,9 @@ public sealed partial class AttributeFactoryGenerator : IIncrementalGenerator
             var ctor = ctx.Model.Constructors[i];
 
             if(ctor.Parameters.Count == 0)
+            {
                 continue;
+            }
 
             ctx.SourceBuilder.AppendCore('[');
 
@@ -413,7 +425,9 @@ public sealed partial class AttributeFactoryGenerator : IIncrementalGenerator
                 ctx.ThrowIfCancellationRequested();
 
                 if(j > 0)
+                {
                     ctx.SourceBuilder.AppendCore(", ");
+                }
 
                 ctx.SourceBuilder.AppendCore(ctor.Parameters[j].Pattern);
             }
@@ -1175,13 +1189,17 @@ public sealed partial class AttributeFactoryGenerator : IIncrementalGenerator
                 var property = ctx.Model.MappedProperties[i];
 
                 if(i > 0)
+                {
                     ctx.SourceBuilder.Append(',').AppendLineCore();
+                }
 
                 ctx.SourceBuilder.Append("nameof(").Append(property.Name).AppendCore(')');
             }
 
             if(ctx.Model.UnmappedProperties.Count > 0)
+            {
                 ctx.SourceBuilder.Append(',').AppendLineCore();
+            }
 
             ctx.SourceBuilder.CloseBlockCore();
         }
@@ -1197,7 +1215,9 @@ public sealed partial class AttributeFactoryGenerator : IIncrementalGenerator
                 var property = ctx.Model.UnmappedProperties[i];
 
                 if(i > 0)
+                {
                     ctx.SourceBuilder.Append(',').AppendLineCore();
+                }
 
                 ctx.SourceBuilder.Append("nameof(").Append(property.Name).AppendCore(')');
             }
@@ -1230,7 +1250,9 @@ public sealed partial class AttributeFactoryGenerator : IIncrementalGenerator
                 if(property.HasSetter)
                 {
                     if(settablePropertiesCount > 0)
+                    {
                         ctx.SourceBuilder.Append(',').AppendLineCore();
+                    }
 
                     ctx.SourceBuilder.Append(ctx.Model.AttributeModel.PropertyIdTypeName).Append(".").AppendCore(property.Name);
 
@@ -2027,7 +2049,9 @@ public sealed partial class AttributeFactoryGenerator : IIncrementalGenerator
         AppendModelProperties(in ctx);
 
         if(!ctx.Model.IsEquatable)
+        {
             AppendEquality(in ctx, $"{ctx.DisplayString}.{ctx.Model.AttributeModel.ModelTypeName}");
+        }
 
         ctx.SourceBuilder.CloseBlockCore();
     }
@@ -2052,7 +2076,9 @@ public sealed partial class AttributeFactoryGenerator : IIncrementalGenerator
 
         // If not equatable, we implement NonEquatable, it provides the impl for IEquatable<T>.
         if(!ctx.Model.IsEquatable)
+        {
             ctx.SourceBuilder.Append(" : IEquatable<").Append(ctx.Model.AttributeModel.ModelTypeName).AppendCore('>');
+        }
 
         ctx.SourceBuilder.OpenBracesBlock()
             .Append(accessibility).Append(ctx.Model.AttributeModel.ModelTypeName).Append("()")
@@ -2064,7 +2090,9 @@ public sealed partial class AttributeFactoryGenerator : IIncrementalGenerator
         ctx.CancellationToken.ThrowIfCancellationRequested();
 
         if(!ctx.Model.AttributeModel.GenerateDefaultInstance)
+        {
             return;
+        }
 
         ctx.SourceBuilder
             .Comment
@@ -2148,7 +2176,9 @@ public sealed partial class AttributeFactoryGenerator : IIncrementalGenerator
                     ctx.ThrowIfCancellationRequested();
 
                     if(i != 0)
+                    {
                         ctx.SourceBuilder.AppendCore(", ");
+                    }
 
                     var parameter = initializationMethod.Parameters[i];
                     ctx.SourceBuilder.Append(parameter.Name).Append(": state.").AppendCore(parameter.PropertyName);
@@ -2157,7 +2187,9 @@ public sealed partial class AttributeFactoryGenerator : IIncrementalGenerator
                 if(initializationMethod.CancellationTokenParameterName is { } name)
                 {
                     if(i != 0)
+                    {
                         ctx.SourceBuilder.AppendCore(", ");
+                    }
 
                     ctx.SourceBuilder.Append(name).AppendCore(": cancellationToken");
                 }
@@ -2193,7 +2225,9 @@ public sealed partial class AttributeFactoryGenerator : IIncrementalGenerator
             var kind = property.Type.Kind;
 
             if(kind.HasAnyFlagFast(AttributeParameterTypeKind.ValueType, AttributeParameterTypeKind.Enum))
+            {
                 ctx.SourceBuilder.AppendCore(".Value");
+            }
 
             ctx.SourceBuilder.Append(';').AppendLineCore();
         }
@@ -2230,7 +2264,9 @@ public sealed partial class AttributeFactoryGenerator : IIncrementalGenerator
                 ctx.ThrowIfCancellationRequested();
 
                 if(!property.HasSetter)
+                {
                     continue;
+                }
 
                 ctx.SourceBuilder
                     .Append("case nameof(").Append(ctx.DisplayString).Append('.').Append(property.Name).Append("):")
@@ -2239,7 +2275,9 @@ public sealed partial class AttributeFactoryGenerator : IIncrementalGenerator
                     .Indent().Append(property.Name).AppendCore(" = value");
 
                 if(property.Type.Kind.HasAnyFlagFast(AttributeParameterTypeKind.ValueType, AttributeParameterTypeKind.Enum, AttributeParameterTypeKind.TypeArray, AttributeParameterTypeKind.NullableTypeArray))
+                {
                     ctx.SourceBuilder.AppendCore(".Value");
+                }
 
                 ctx.SourceBuilder.AppendLine(';').Detent()
                     .AppendLine("break;")
@@ -2266,7 +2304,9 @@ public sealed partial class AttributeFactoryGenerator : IIncrementalGenerator
                 ctx.ThrowIfCancellationRequested();
 
                 if(property is { HasSetter: false, Mappings: [] })
+                {
                     continue;
+                }
 
                 ctx.SourceBuilder.Comment
                     .OpenSummary()
@@ -2301,7 +2341,9 @@ public sealed partial class AttributeFactoryGenerator : IIncrementalGenerator
                 ctx.ThrowIfCancellationRequested();
 
                 if(i != 0)
+                {
                     ctx.SourceBuilder.AppendCore(", ");
+                }
 
                 var parameter = initMethod.Parameters[i];
                 ctx.SourceBuilder.Append(parameter.Type).Append(' ').AppendCore(parameter.PropertyName);
@@ -2514,7 +2556,9 @@ public sealed partial class AttributeFactoryGenerator : IIncrementalGenerator
             .Append(ctx.DisplayString).Append('.').AppendCore(ctx.Model.AttributeModel.ModelTypeName);
 
             if(!ctx.Model.AttributeModel.GenerateModelTypeAsStruct)
+            {
                 ctx.SourceBuilder.AppendCore('?');
+            }
 
             ctx.SourceBuilder
                 .Append(" model, bool checkType = true, global::System.Threading.CancellationToken cancellationToken = default)")
@@ -2525,7 +2569,9 @@ public sealed partial class AttributeFactoryGenerator : IIncrementalGenerator
                 .Append("model = ").Append(ctx.DisplayString).Append('.').Append(ctx.Model.AttributeModel.ModelTypeName).AppendCore(".Create(data");
 
             if(initializationMethod is { Parameters.Count: > 0 })
+            {
                 ctx.SourceBuilder.AppendCore(", in state");
+            }
 
             ctx.SourceBuilder
                 .Append(", cancellationToken);")
@@ -2570,7 +2616,9 @@ public sealed partial class AttributeFactoryGenerator : IIncrementalGenerator
                 .AppendCore(" data");
 
             if(initializationMethod is { Parameters.Count: > 0 })
+            {
                 ctx.SourceBuilder.Append(", in ").Append(initializationMethod.StateTypeDisplayString).AppendCore(" state");
+            }
 
             ctx.SourceBuilder.Append(", global::System.Threading.CancellationToken cancellationToken = default)")
                 .OpenBracesBlock()
@@ -2578,7 +2626,9 @@ public sealed partial class AttributeFactoryGenerator : IIncrementalGenerator
                 .Append("return ").Append(ctx.DisplayString).Append('.').Append(ctx.Model.AttributeModel.ModelTypeName).AppendCore(".Create(data");
 
             if(initializationMethod is { Parameters.Count: > 0 })
+            {
                 ctx.SourceBuilder.AppendCore(", in state");
+            }
 
             ctx.SourceBuilder
                 .Append(", cancellationToken);")
@@ -2631,7 +2681,9 @@ public sealed partial class AttributeFactoryGenerator : IIncrementalGenerator
                 .AppendCore("(this global::System.Collections.Immutable.ImmutableArray<global::Microsoft.CodeAnalysis.AttributeData> data");
 
             if(initializationMethod is { Parameters.Count: > 0 })
+            {
                 ctx.SourceBuilder.Append(", ").Append(initializationMethod.StateTypeDisplayString).AppendCore(" state");
+            }
 
             ctx.SourceBuilder.Append(", global::System.Threading.CancellationToken cancellationToken = default)")
                 .OpenBracesBlock()
@@ -2643,7 +2695,9 @@ public sealed partial class AttributeFactoryGenerator : IIncrementalGenerator
                         .Indent().Append("yield return Get").Append(ctx.Model.Signature.Name).AppendCore("Model(datum");
 
             if(initializationMethod is { Parameters.Count: > 0 })
+            {
                 ctx.SourceBuilder.AppendCore(", in state");
+            }
 
             ctx.SourceBuilder.Append(", cancellationToken);").Detent()
                 .CloseBlock()
@@ -2676,7 +2730,9 @@ public sealed partial class AttributeFactoryGenerator : IIncrementalGenerator
                 .AppendCore("(this global::System.Collections.Generic.IEnumerable<global::Microsoft.CodeAnalysis.AttributeData> data");
 
             if(initializationMethod is { Parameters.Count: > 0 })
+            {
                 ctx.SourceBuilder.Append(", ").Append(initializationMethod.StateTypeDisplayString).AppendCore(" state");
+            }
 
             ctx.SourceBuilder.Append(", global::System.Threading.CancellationToken cancellationToken = default)")
                 .OpenBracesBlock()
@@ -2688,7 +2744,9 @@ public sealed partial class AttributeFactoryGenerator : IIncrementalGenerator
                         .Indent().Append("yield return Get").Append(ctx.Model.Signature.Name).AppendCore("Model(datum");
 
             if(initializationMethod is { Parameters.Count: > 0 })
+            {
                 ctx.SourceBuilder.AppendCore(", in state");
+            }
 
             ctx.SourceBuilder.Append(", cancellationToken);").Detent()
                 .CloseBlock()

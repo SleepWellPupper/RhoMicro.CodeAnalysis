@@ -6,7 +6,7 @@ public class AnnotationsTests : TestBase
 {
 
     [Fact]
-    public void Generates_DescriptionForSchema()
+    public void GeneratesDescriptionForSchema()
     {
         TestSchema(
             $$"""
@@ -32,7 +32,7 @@ public class AnnotationsTests : TestBase
             });
     }
     [Fact]
-    public void Generates_TitleForSchema()
+    public void GeneratesTitleForSchema()
     {
         TestSchema(
             $$"""
@@ -58,7 +58,7 @@ public class AnnotationsTests : TestBase
             });
     }
     [Fact]
-    public void Generates_DescriptionForProperty()
+    public void GeneratesDescriptionForProperty()
     {
         TestSchema(
             $$"""
@@ -85,7 +85,7 @@ public class AnnotationsTests : TestBase
             });
     }
     [Fact]
-    public void Generates_TitleForProperty()
+    public void GeneratesTitleForProperty()
     {
         TestSchema(
             $$"""
@@ -112,7 +112,7 @@ public class AnnotationsTests : TestBase
             });
     }
     [Fact]
-    public void Generates_TitleForRefProperty()
+    public void GeneratesTitleForRefProperty()
     {
         TestSchema(
             $$"""
@@ -140,7 +140,7 @@ public class AnnotationsTests : TestBase
             });
     }
     [Fact]
-    public void Generates_DescriptionForRefProperty()
+    public void GeneratesDescriptionForRefProperty()
     {
         TestSchema(
             $$"""
@@ -168,7 +168,7 @@ public class AnnotationsTests : TestBase
             });
     }
     [Fact]
-    public void Generates_TitleForEnumProperty()
+    public void GeneratesTitleForEnumProperty()
     {
         TestSchema(
             $$"""
@@ -211,7 +211,7 @@ public class AnnotationsTests : TestBase
             });
     }
     [Fact]
-    public void Generates_DescriptionForEnumProperty()
+    public void GeneratesDescriptionForEnumProperty()
     {
         TestSchema(
             $$"""

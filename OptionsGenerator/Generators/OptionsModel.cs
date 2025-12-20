@@ -35,7 +35,9 @@ internal sealed record OptionsModel(
             ctx.ThrowIfCancellationRequested();
 
             if(!OptionsAnalyzer.IsTargetProperty(member, out var p))
+            {
                 continue;
+            }
 
             if(!OptionsAnalyzer.IsValidTargetProperty(p))
             {

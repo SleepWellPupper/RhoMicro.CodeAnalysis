@@ -2,9 +2,11 @@
 
 namespace Janus.Tests;
 
+#pragma warning disable CA1812
+
 using Microsoft.CodeAnalysis;
 
-sealed class OverloadResolutionPriorityAttributeGenerator : IIncrementalGenerator
+internal sealed class OverloadResolutionPriorityAttributeGenerator : IIncrementalGenerator
 {
     public void Initialize(IncrementalGeneratorInitializationContext context) =>
         context.RegisterPostInitializationOutput(ctx =>

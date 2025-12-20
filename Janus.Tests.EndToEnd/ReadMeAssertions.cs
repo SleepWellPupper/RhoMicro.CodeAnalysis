@@ -3,6 +3,8 @@
 #pragma warning disable IDE0250
 #pragma warning disable IDE0059
 #pragma warning disable CS1591
+#pragma warning disable RMJ0021
+
 namespace RhoMicro.CodeAnalysis.Janus.EndToEnd.Tests;
 
 using System;

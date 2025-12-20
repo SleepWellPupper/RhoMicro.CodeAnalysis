@@ -53,7 +53,9 @@ internal sealed class XmlTreeStringBuilder(CancellationToken ct) : TreeStringBui
             .AppendCore('>');
 
         if(appendNewLine)
+        {
             Builder.AppendLineCore();
+        }
     }
     protected override void Append(String production, Boolean appendNewLine = true)
     {
@@ -66,6 +68,8 @@ internal sealed class XmlTreeStringBuilder(CancellationToken ct) : TreeStringBui
             .AppendLineCore();
 
         if(appendNewLine)
+        {
             Builder.AppendLineCore();
+        }
     }
 }

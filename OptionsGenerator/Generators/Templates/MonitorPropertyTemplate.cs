@@ -2,6 +2,8 @@
 
 namespace RhoMicro.CodeAnalysis.OptionsGenerator.Generators;
 
+#pragma warning disable CS9113
+
 [Template(
     """
     (:new PropertyAnnotationsTemplate(model):)public (:model.Type:) (:model.Name:) => monitor.CurrentValue.(:model.Name:);

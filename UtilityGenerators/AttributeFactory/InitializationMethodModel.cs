@@ -67,7 +67,9 @@ internal sealed record InitializationMethodModel(
                 })
             {
                 if(cancellationTokenParameter.HasValue)
+                {
                     parameters.Insert(cancellationTokenParameterIndex, cancellationTokenParameter.Value);
+                }
 
                 cancellationTokenParameter = model;
                 cancellationTokenParameterIndex = i;

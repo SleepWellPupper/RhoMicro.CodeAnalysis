@@ -17,7 +17,9 @@ internal static class EnumerableEqualityComparer
         var hc = new HashCode();
 
         foreach(var element in obj)
+        {
             hc.Add(element, elementComparer);
+        }
 
         return hc.ToHashCode();
     }
@@ -37,7 +39,9 @@ internal sealed partial class EnumerableEqualityComparer<T>(IEqualityComparer<T>
         where TEnumerableY : IEnumerable<T>
     {
         if(x.GetType() != y.GetType())
+        {
             return false;
+        }
 
         var result = x.SequenceEqual(y, elementComparer);
 

@@ -22,7 +22,7 @@ public class EquatableSetTests
     public void ValueSemantics_VerifyEquality(Int32[] values)
     {
         // Arrange
-        var factory = EquatableCollectionFactory.CreateDefault();
+        using var factory = EquatableCollectionFactory.CreateDefault();
         var set1 = factory.CreateSet<Int32>();
         var set2 = factory.CreateSet<Int32>();
 
@@ -45,7 +45,7 @@ public class EquatableSetTests
     public void ValueSemantics_VerifyInequality(Int32[] initialValues, Int32[] modifiedValues)
     {
         // Arrange
-        var factory = EquatableCollectionFactory.CreateDefault();
+        using var factory = EquatableCollectionFactory.CreateDefault();
         var set1 = factory.CreateSet<Int32>();
         var set2 = factory.CreateSet<Int32>();
 
@@ -68,7 +68,7 @@ public class EquatableSetTests
     public void Immutability_AddThrowsAfterSetImmutable(Int32[] values)
     {
         // Arrange
-        var factory = EquatableCollectionFactory.CreateDefault();
+        using var factory = EquatableCollectionFactory.CreateDefault();
         var set = factory.CreateSet<Int32>();
 
         foreach(var value in values)
@@ -88,7 +88,7 @@ public class EquatableSetTests
     public void Immutability_ClearThrowsAfterSetImmutable(Int32[] values)
     {
         // Arrange
-        var factory = EquatableCollectionFactory.CreateDefault();
+        using var factory = EquatableCollectionFactory.CreateDefault();
         var set = factory.CreateSet<Int32>();
 
         foreach(var value in values)
@@ -108,7 +108,7 @@ public class EquatableSetTests
     public void Immutability_ExceptWithThrowsAfterSetImmutable(Int32[] values)
     {
         // Arrange
-        var factory = EquatableCollectionFactory.CreateDefault();
+        using var factory = EquatableCollectionFactory.CreateDefault();
         var set = factory.CreateSet<Int32>();
 
         foreach(var value in values)
@@ -128,7 +128,7 @@ public class EquatableSetTests
     public void Immutability_IntersectWithThrowsAfterSetImmutable(Int32[] values)
     {
         // Arrange
-        var factory = EquatableCollectionFactory.CreateDefault();
+        using var factory = EquatableCollectionFactory.CreateDefault();
         var set = factory.CreateSet<Int32>();
 
         foreach(var value in values)
@@ -148,7 +148,7 @@ public class EquatableSetTests
     public void Immutability_SymmetricExceptWithThrowsAfterSetImmutable(Int32[] values)
     {
         // Arrange
-        var factory = EquatableCollectionFactory.CreateDefault();
+        using var factory = EquatableCollectionFactory.CreateDefault();
         var set = factory.CreateSet<Int32>();
 
         foreach(var value in values)
@@ -168,7 +168,7 @@ public class EquatableSetTests
     public void Immutability_UnionWithThrowsAfterSetImmutable(Int32[] values)
     {
         // Arrange
-        var factory = EquatableCollectionFactory.CreateDefault();
+        using var factory = EquatableCollectionFactory.CreateDefault();
         var set = factory.CreateSet<Int32>();
 
         foreach(var value in values)
@@ -188,7 +188,7 @@ public class EquatableSetTests
     public void Mutability_AddSucceedsBeforeSetImmutable(Int32[] values)
     {
         // Arrange
-        var factory = EquatableCollectionFactory.CreateDefault();
+        using var factory = EquatableCollectionFactory.CreateDefault();
         var set = factory.CreateSet<Int32>();
 
         // Act
@@ -209,7 +209,7 @@ public class EquatableSetTests
     public void Mutability_ClearSucceedsBeforeSetImmutable(Int32[] values)
     {
         // Arrange
-        var factory = EquatableCollectionFactory.CreateDefault();
+        using var factory = EquatableCollectionFactory.CreateDefault();
         var set = factory.CreateSet<Int32>();
 
         foreach(var value in values)
@@ -229,7 +229,7 @@ public class EquatableSetTests
     public void Mutability_ExceptWithSucceedsBeforeSetImmutable(Int32[] values)
     {
         // Arrange
-        var factory = EquatableCollectionFactory.CreateDefault();
+        using var factory = EquatableCollectionFactory.CreateDefault();
         var set = factory.CreateSet<Int32>();
 
         foreach(var value in values)
@@ -249,7 +249,7 @@ public class EquatableSetTests
     public void Mutability_IntersectWithSucceedsBeforeSetImmutable(Int32[] values)
     {
         // Arrange
-        var factory = EquatableCollectionFactory.CreateDefault();
+        using var factory = EquatableCollectionFactory.CreateDefault();
         var set = factory.CreateSet<Int32>();
 
         foreach(var value in values)
@@ -269,7 +269,7 @@ public class EquatableSetTests
     public void Mutability_SymmetricExceptWithSucceedsBeforeSetImmutable(Int32[] values)
     {
         // Arrange
-        var factory = EquatableCollectionFactory.CreateDefault();
+        using var factory = EquatableCollectionFactory.CreateDefault();
         var set = factory.CreateSet<Int32>();
 
         foreach(var value in values)
@@ -291,7 +291,7 @@ public class EquatableSetTests
     public void Mutability_UnionWithSucceedsBeforeSetImmutable(Int32[] values)
     {
         // Arrange
-        var factory = EquatableCollectionFactory.CreateDefault();
+        using var factory = EquatableCollectionFactory.CreateDefault();
         var set = factory.CreateSet<Int32>();
 
         foreach(var value in values)

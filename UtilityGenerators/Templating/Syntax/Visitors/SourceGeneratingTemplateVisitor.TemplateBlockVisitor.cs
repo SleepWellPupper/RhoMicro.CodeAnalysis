@@ -10,7 +10,7 @@ internal sealed partial class SourceGeneratingTemplateVisitor
     private sealed class TemplateBlockVisitor(SourceGeneratingTemplateVisitor parent, CancellationToken ct) : TreeWalkingSyntaxVisitor(ct)
     {
         private Int32 _index = -1;
-        private Int32 _length = 0;
+        private Int32 _length;
 
         public override void Visit(RenderBlockSyntax syntax)
         {
@@ -39,7 +39,9 @@ internal sealed partial class SourceGeneratingTemplateVisitor
             Ct.ThrowIfCancellationRequested();
 
             if(_index == -1)
+            {
                 return;
+            }
 
             if(_length != 0)
             {
@@ -103,7 +105,9 @@ internal sealed partial class SourceGeneratingTemplateVisitor
             Ct.ThrowIfCancellationRequested();
 
             if(_index == -1)
+            {
                 _index = spans.NewlineAwareTemplateSpan.Index;
+            }
 
             _length += spans.NewlineAwareTemplateSpan.Length;
         }

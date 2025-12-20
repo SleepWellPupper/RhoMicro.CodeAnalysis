@@ -2,6 +2,8 @@
 
 namespace RhoMicro.CodeAnalysis.OptionsGenerator.Generators;
 
+#pragma warning disable CS9113
+
 using RhoMicro.CodeAnalysis.Library.Text.Templating;
 
 [Template(

@@ -58,7 +58,7 @@ internal readonly record struct ValidationComponent(UnionModel Model) : ICSharpS
                            {Param("value", "The value to validate.")}
                            {Param("throwIfInvalid", "Indicates whether to throw an exception if the value is invalid.")}
                            {Param("isValid", "Indicates whether the value is valid.")}
-                           static partial void Validate({v.Type.NullableName} value, bool throwIfInvalid, ref bool isValid);
+                           static partial void Validate{v.Name}({v.Type.NullableName} value, bool throwIfInvalid, ref bool isValid);
                            """
                       );
                   }, separator: "\n\n")}}

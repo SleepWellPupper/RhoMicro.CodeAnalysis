@@ -21,7 +21,7 @@ public class LazyEquatableDictionaryTests
     public void ValueSemantics_VerifyEquality(Dictionary<Int32, String> values)
     {
         // Arrange
-        var factory = EquatableCollectionFactory.CreateDefault();
+        using var factory = EquatableCollectionFactory.CreateDefault();
         var dict1 = factory.CreateLazyDictionary<Int32, String>();
         var dict2 = factory.CreateLazyDictionary<Int32, String>();
 
@@ -42,7 +42,7 @@ public class LazyEquatableDictionaryTests
     public void ValueSemantics_VerifyInequality(Int32[] initialKeys, String[] initialValues, Int32[] modifiedKeys, String[] modifiedValues)
     {
         // Arrange
-        var factory = EquatableCollectionFactory.CreateDefault();
+        using var factory = EquatableCollectionFactory.CreateDefault();
         var dict1 = factory.CreateLazyDictionary<Int32, String>();
         var dict2 = factory.CreateLazyDictionary<Int32, String>();
 
@@ -65,7 +65,7 @@ public class LazyEquatableDictionaryTests
     public void Immutability_AddThrowsAfterSetImmutable(Dictionary<Int32, String> values)
     {
         // Arrange
-        var factory = EquatableCollectionFactory.CreateDefault();
+        using var factory = EquatableCollectionFactory.CreateDefault();
         var dict = factory.CreateLazyDictionary<Int32, String>();
 
         foreach(var kvp in values)
@@ -85,7 +85,7 @@ public class LazyEquatableDictionaryTests
     public void Immutability_ClearThrowsAfterSetImmutable(Dictionary<Int32, String> values)
     {
         // Arrange
-        var factory = EquatableCollectionFactory.CreateDefault();
+        using var factory = EquatableCollectionFactory.CreateDefault();
         var dict = factory.CreateLazyDictionary<Int32, String>();
 
         foreach(var kvp in values)
@@ -105,7 +105,7 @@ public class LazyEquatableDictionaryTests
     public void Immutability_RemoveThrowsAfterSetImmutable(Dictionary<Int32, String> values)
     {
         // Arrange
-        var factory = EquatableCollectionFactory.CreateDefault();
+        using var factory = EquatableCollectionFactory.CreateDefault();
         var dict = factory.CreateLazyDictionary<Int32, String>();
 
         foreach(var kvp in values)
@@ -125,7 +125,7 @@ public class LazyEquatableDictionaryTests
     public void Mutability_AddSucceedsBeforeSetImmutable(Dictionary<Int32, String> values)
     {
         // Arrange
-        var factory = EquatableCollectionFactory.CreateDefault();
+        using var factory = EquatableCollectionFactory.CreateDefault();
         var dict = factory.CreateLazyDictionary<Int32, String>();
 
         // Act
@@ -147,7 +147,7 @@ public class LazyEquatableDictionaryTests
     public void Mutability_ClearSucceedsBeforeSetImmutable(Dictionary<Int32, String> values)
     {
         // Arrange
-        var factory = EquatableCollectionFactory.CreateDefault();
+        using var factory = EquatableCollectionFactory.CreateDefault();
         var dict = factory.CreateLazyDictionary<Int32, String>();
 
         foreach(var kvp in values)
@@ -167,7 +167,7 @@ public class LazyEquatableDictionaryTests
     public void Mutability_RemoveSucceedsBeforeSetImmutable(Dictionary<Int32, String> values)
     {
         // Arrange
-        var factory = EquatableCollectionFactory.CreateDefault();
+        using var factory = EquatableCollectionFactory.CreateDefault();
         var dict = factory.CreateLazyDictionary<Int32, String>();
 
         foreach(var kvp in values)

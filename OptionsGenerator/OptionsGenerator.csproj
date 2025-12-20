@@ -41,4 +41,9 @@
 		<None Include="README.md" Pack="true" PackagePath="/" CopyToOutputDirectory="Always" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <AdditionalFiles Remove="AnalyzerReleases.Shipped.md" />
+	  <AdditionalFiles Remove="AnalyzerReleases.Unshipped.md" />
+	</ItemGroup>
+
 </Project>

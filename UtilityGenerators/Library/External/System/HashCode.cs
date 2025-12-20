@@ -346,15 +346,23 @@ namespace System
             // Switch can't be inlined.
 
             if(position == 0)
+            {
                 _queue1 = val;
+            }
             else if(position == 1)
+            {
                 _queue2 = val;
+            }
             else if(position == 2)
+            {
                 _queue3 = val;
+            }
             else // position == 3
             {
                 if(previousLength == 3)
+                {
                     Initialize(out _v1, out _v2, out _v3, out _v4);
+                }
 
                 _v1 = Round(_v1, _queue1);
                 _v2 = Round(_v2, _queue2);
@@ -396,7 +404,9 @@ namespace System
                 {
                     hash = QueueRound(hash, _queue2);
                     if(position > 2)
+                    {
                         hash = QueueRound(hash, _queue3);
+                    }
                 }
             }
 

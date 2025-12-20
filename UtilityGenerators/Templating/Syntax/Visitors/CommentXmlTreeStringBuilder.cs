@@ -51,7 +51,9 @@ internal sealed class CommentXmlTreeStringBuilder(CancellationToken ct) : Commen
             .AppendCore('>');
 
         if(appendNewLine)
+        {
             Builder.AppendLineCore();
+        }
     }
     protected override void Append(String production, Boolean appendNewLine = true)
     {
@@ -64,6 +66,8 @@ internal sealed class CommentXmlTreeStringBuilder(CancellationToken ct) : Commen
             .AppendLineCore();
 
         if(appendNewLine)
+        {
             Builder.AppendLineCore();
+        }
     }
 }

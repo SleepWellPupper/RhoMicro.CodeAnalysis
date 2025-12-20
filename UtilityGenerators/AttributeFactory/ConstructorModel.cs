@@ -39,7 +39,9 @@ internal readonly record struct ConstructorModel(
             var model = ParameterModel.Create(parameter, parameterIndex, in ctx);
 
             if(model is { MappedProperty: { } propertyName, Name: { } parameterName })
+            {
                 mappings[propertyName] = new ParameterMapping(index, parameterIndex, ParameterName: parameterName, PropertyName: propertyName);
+            }
 
             parameters.Add(model);
         }
@@ -60,21 +62,29 @@ internal readonly record struct ConstructorModel(
             ctx.ThrowIfCancellationRequested();
 
             if(i > 0)
+            {
                 ctx.SourceBuilder.AppendCore(", ");
+            }
 
             var param = Parameters[i];
 
             _ = ctx.SourceBuilder.Comment.SeeCRef(param.Type.ElementDisplayString);
 
             if(param.Type.Kind.HasAnyFlagFast(AttributeParameterTypeKind.Array))
+            {
                 ctx.SourceBuilder.AppendCore("[]");
+            }
 
             ctx.SourceBuilder.AppendCore(' ');
 
             if(( i == highlightIndex || highlightIndex == -1 ) && param.MappedProperty is { } mappedProperty)
+            {
                 ctx.SourceBuilder.Comment.OpenEmphasis().Append(param.Name).Append("->").Append(mappedProperty).CloseBlockCore();
+            }
             else
+            {
                 ctx.SourceBuilder.AppendCore(param.Name);
+            }
         }
 
         ctx.SourceBuilder.AppendCore(')');
@@ -92,21 +102,29 @@ internal readonly record struct ConstructorModel(
             ctx.ThrowIfCancellationRequested();
 
             if(i > 0)
+            {
                 ctx.SourceBuilder.AppendCore(", ");
+            }
 
             var param = Parameters[i];
 
             _ = ctx.SourceBuilder.Append(param.Type.ElementDisplayString);
 
             if(param.Type.Kind.HasAnyFlagFast(AttributeParameterTypeKind.Array))
+            {
                 ctx.SourceBuilder.AppendCore("[]");
+            }
 
             ctx.SourceBuilder.AppendCore(' ');
 
             if(( i == highlightIndex || highlightIndex == -1 ) && param.MappedProperty is not null)
+            {
                 ctx.SourceBuilder.Append('<').Append(param.Name).AppendCore('>');
+            }
             else
+            {
                 ctx.SourceBuilder.AppendCore(param.Name);
+            }
         }
 
         ctx.SourceBuilder.AppendCore(')');

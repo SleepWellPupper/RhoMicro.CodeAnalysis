@@ -67,7 +67,9 @@ public partial class TemplateBenchmark
         {
             builder.Append("Surfers gameplay at the bottom Sussy imposter Pibby glitch in real life No").Append('\n');
             for(var i = 0; i < 10; i++)
+            {
                 builder.Append(Parameter);
+            }
         }
     }
     private readonly record struct StringBuilderTextRender(String Parameter)

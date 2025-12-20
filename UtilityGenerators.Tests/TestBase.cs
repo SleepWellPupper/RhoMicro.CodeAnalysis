@@ -41,7 +41,9 @@ public abstract class TestBase<TGenerator>
         var runResult = RunGenerator(ref compilation, ct);
 
         if(runResult.Diagnostics.Where(d => d.IsWarningAsError || d.Severity is DiagnosticSeverity.Error).Any())
+        {
             FailDiagnostics("Generator run produced diagnostics:", runResult.Diagnostics);
+        }
     }
     protected GeneratorDriverRunResult RunGenerator(ref Compilation compilation, CancellationToken ct)
     {
@@ -59,7 +61,9 @@ public abstract class TestBase<TGenerator>
             cancellationToken: ct);
 
         if(!diagnostics.IsEmpty)
+        {
             FailDiagnostics("Generator produced diagnostics:", diagnostics);
+        }
 
         var aggregateDiagnostics = compilation
             .GetDiagnostics(ct)
@@ -80,7 +84,9 @@ public abstract class TestBase<TGenerator>
                 _ = messageBuilder.Append(diagnosticGroup.diagnostics.Length).Append(" diagnostics in ").AppendLine(diagnosticGroup.key);
 
                 foreach(var diagnostic in diagnosticGroup.diagnostics)
+                {
                     _ = messageBuilder.AppendLine(diagnostic.ToString().Split(".g.cs").Last());
+                }
 
                 if(trees.TryGetValue(diagnosticGroup.key, out var tree))
                 {
@@ -112,7 +118,7 @@ public abstract class TestBase<TGenerator>
                         .OrderBy(d => d.Location.GetLineSpan().StartLinePosition.Line)
                         .ThenBy(d => d.Location.GetLineSpan().StartLinePosition.Character))}");
     }
-    private static Int32 _sourceIndex = 0;
+    private static Int32 _sourceIndex;
     protected CSharpCompilation CreateCompilation(CancellationToken ct, params String[] sources)
     {
         var options = CreateCompilationOptions();

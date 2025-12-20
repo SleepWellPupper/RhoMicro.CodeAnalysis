@@ -3,7 +3,7 @@
 namespace RhoMicro.CodeAnalysis.Tests.E2E;
 
 [GenerateFactory]
-partial class TestAttribute
+sealed partial class TestAttribute
 {
     public Type[] TypeArrayProperty { get; set; } = [];
     public Type?[] NullableTypeArrayProperty { get; set; } = [];

@@ -15,9 +15,9 @@ internal
     public StringOrChar DefaultIndentation { get; init; } = StringOrChar.Tab;
     public StringOrChar NewLine { get; init; } = StringOrChar.NewLine;
     public String GeneratorName { get; init; } = String.Empty;
-    public Boolean PrependMarkerComment { get; init; } = false;
-    public Boolean PrependWarningDisablePragma { get; init; } = false;
-    public Boolean PrependNullableEnable { get; init; } = false;
+    public Boolean PrependMarkerComment { get; init; }
+    public Boolean PrependWarningDisablePragma { get; init; }
+    public Boolean PrependNullableEnable { get; init; }
     public String License { get; init; } = String.Empty;
     public CancellationToken AmbientCancellationToken { get; init; } = CancellationToken.None;
 

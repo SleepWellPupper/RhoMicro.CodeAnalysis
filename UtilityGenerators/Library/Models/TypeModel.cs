@@ -18,10 +18,14 @@ internal record TypeModel(
         ctx.ThrowIfCancellationRequested();
 
         if(type is INamedTypeSymbol named)
+        {
             return NamedTypeModel.Create(named, in ctx);
+        }
 
         if(type is IArrayTypeSymbol array)
+        {
             return ArrayTypeModel.Create(array, in ctx);
+        }
 
         var namespaceParts = GetNamespaceParts(type, in ctx);
         var name = type.Name;
@@ -47,7 +51,9 @@ internal record TypeModel(
         ctx.ThrowIfCancellationRequested();
 
         if(@namespace is null or { IsGlobalNamespace: true })
+        {
             return;
+        }
 
         AddNamespaceParts(@namespace.ContainingNamespace, parts, in ctx);
 

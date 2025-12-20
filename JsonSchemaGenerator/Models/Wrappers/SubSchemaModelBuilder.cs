@@ -41,20 +41,35 @@ internal readonly struct SubSchemaModelBuilder
             } else
             {
                 if(simple.Items.IsValueCreated && simple.Items.Value.Build(includeId: false, ct) is { Value.Count: > 0 } items)
+                {
                     simpleSchema.Value.SetProperty("items", items);
+                }
+
                 if(simple.Type.Model is { Value.Count: > 0 } types)
+                {
                     simpleSchema.Value.SetProperty("type", types);
+                }
+
                 if(simple.Properties.Model is { Value.Count: > 0 } properties)
+                {
                     simpleSchema.Value.SetProperty("properties", properties);
+                }
+
                 if(simple.Required.Model is { Value.Count: > 0 } required)
+                {
                     simpleSchema.Value.SetProperty("required", required);
+                }
             }
 
             if(simple.Type.Model.Value.Any(t => t is JsonTypeModel { Value: JsonType.Object }))
+            {
                 simpleSchema.Value.SetProperty("additionalProperties", simple.Additional.ModelOrSetDefault);
+            }
 
             if(includeId && simple.GetId() is { Value.Length: > 0 } id)
+            {
                 simpleSchema.Value.SetProperty("$id", id);
+            }
 
             if(simpleSchema is { IsValueCreated: true, Value: { } schema })
             {
@@ -93,7 +108,9 @@ internal readonly struct SubSchemaModelBuilder
         if(symbol is not INamedTypeSymbol target)
         {
             if(symbol is ITypeSymbol typeSymbol && populateNonProperties)
+            {
                 PopulateNonProperties(rootId, typeSymbol, idCache, isKnownToBeRef: false, ct);
+            }
 
             return;
         }
@@ -106,7 +123,9 @@ internal readonly struct SubSchemaModelBuilder
             Ref.Value.Ref(id, rootId.Value);
 
             if(populateNonProperties)
+            {
                 PopulateNonProperties(rootId, target, idCache, isKnownToBeRef: true, ct);
+            }
 
             return;
         }
@@ -115,11 +134,15 @@ internal readonly struct SubSchemaModelBuilder
 
         ct.ThrowIfCancellationRequested();
         if(populateNonProperties)
+        {
             PopulateNonProperties(rootId, target, idCache, isKnownToBeRef: false, ct);
+        }
 
         ct.ThrowIfCancellationRequested();
         if(Ref.IsValueCreated)
+        {
             return;
+        }
 
         ct.ThrowIfCancellationRequested();
         // is schema?
@@ -160,7 +183,9 @@ internal readonly struct SubSchemaModelBuilder
             propSchema.Populate(rootId, propType, idCache, ct);
 
             if(propSymbol.IsRequired)
+            {
                 Simple.Value.Required.Add(propName);
+            }
 
             if(propSymbol.TryGetFirstJsonSchemaPropertyAttribute(out var a))
             {
@@ -189,7 +214,10 @@ internal readonly struct SubSchemaModelBuilder
             ct.ThrowIfCancellationRequested();
             Simple.Value.Type.Add(JsonType.Null);
             if(typeArg is INamedTypeSymbol namedTypeArg)
+            {
                 PopulateNonProperties(rootId, namedTypeArg, idCache, isKnownToBeRef, ct);
+            }
+
             return;
         }
         // enum
@@ -217,7 +245,9 @@ internal readonly struct SubSchemaModelBuilder
                     _ => null
                 };
                 if(strongValue.HasValue)
+                {
                     Enum.Value.Add(strongValue.Value);
+                }
             }
 
             Populate(rootId, underlyingType, idCache, ct);
@@ -231,7 +261,9 @@ internal readonly struct SubSchemaModelBuilder
         }
 
         if(isKnownToBeRef)
+        {
             return;
+        }
 
         ct.ThrowIfCancellationRequested();
         var typeString = target.ToDisplayString(SymbolDisplayFormats.FullyQualifiedNoGlobalNamespaceFormat);

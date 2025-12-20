@@ -44,7 +44,9 @@ public sealed class OptionsGenerator : IIncrementalGenerator
                     using var modelContext = ModelCreationContext.CreateDefault(ct);
 
                     if(!OptionsModel.TryCreate(target, attribute, out var result, in modelContext))
+                    {
                         return null;
+                    }
 
                     return result;
                 })

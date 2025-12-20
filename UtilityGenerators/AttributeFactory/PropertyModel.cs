@@ -3,10 +3,8 @@
 namespace RhoMicro.CodeAnalysis;
 
 using System;
-
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
-
 using RhoMicro.CodeAnalysis.Library.Models;
 using RhoMicro.CodeAnalysis.Library.Models.Collections;
 
@@ -17,9 +15,9 @@ internal sealed partial record PropertyModel(
     Boolean HasSetter,
     EquatableList<ParameterMapping> Mappings)
 {
-    [TypeSymbolPattern(typeof(String[]))]
-    private static partial Boolean IsStringArray(ITypeSymbol? type);
-    public static PropertyModel Create(IPropertySymbol property, LazyEquatableDictionary<String, EquatableList<ParameterMapping>> propertyMappings, in ModelCreationContext ctx)
+    public static PropertyModel Create(IPropertySymbol property,
+                                       LazyEquatableDictionary<String, EquatableList<ParameterMapping>>
+                                           propertyMappings, in ModelCreationContext ctx)
     {
         ctx.ThrowIfCancellationRequested();
 
@@ -30,13 +28,16 @@ internal sealed partial record PropertyModel(
 
         String? defaultValueExpression = null;
 
-        foreach(var attribute in property.GetAttributes())
+        foreach (var attribute in property.GetAttributes())
         {
             ctx.ThrowIfCancellationRequested();
 
-            if(attribute.IsDefaultValueAttribute() && attribute.ConstructorArguments is [{ } defaultValue])
+            if (attribute.IsDefaultValueAttribute() && attribute.ConstructorArguments is [{ } defaultValue])
             {
-                defaultValueExpression = IsStringArray(defaultValue.Type)
+                defaultValueExpression = defaultValue.Type is IArrayTypeSymbol
+                {
+                    ElementType.SpecialType: SpecialType.System_String
+                }
                     ? $"[{String.Join(", ", defaultValue.Values.Select(c => c.ToCSharpString()))}]"
                     : defaultValue.ToCSharpString();
             }
@@ -54,5 +55,6 @@ internal sealed partial record PropertyModel(
 
         return result;
     }
-    public override String ToString() => $"{Name}{{g{( HasSetter ? "/s" : "" )}}}<-[{String.Join(", ", Mappings)}]";
+
+    public override String ToString() => $"{Name}{{g{(HasSetter ? "/s" : "")}}}<-[{String.Join(", ", Mappings)}]";
 }

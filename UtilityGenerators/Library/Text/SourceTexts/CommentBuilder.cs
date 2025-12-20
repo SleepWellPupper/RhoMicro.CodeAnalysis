@@ -77,15 +77,21 @@ internal
         for(var i = 0; i < parameterTypes.Length; i++)
         {
             if(i > 0)
+            {
                 Builder.AppendCore(", ");
+            }
 
             if(highlightIndex == i)
+            {
                 Builder.AppendCore('<');
+            }
 
             Builder.AppendCore(parameterTypes[i]);
 
             if(highlightIndex == i)
+            {
                 Builder.AppendCore('>');
+            }
         }
 
         Builder.AppendCore(")\"/>");
@@ -103,15 +109,21 @@ internal
         foreach(var type in parameterTypes)
         {
             if(i > 0)
+            {
                 Builder.AppendCore(", ");
+            }
 
             if(highlightIndex == i)
+            {
                 Builder.AppendCore('<');
+            }
 
             Builder.AppendCore(type);
 
             if(highlightIndex == i)
+            {
                 Builder.AppendCore('>');
+            }
 
             i++;
         }
@@ -126,24 +138,32 @@ internal
     public IndentedStringBuilder InheritDoc(String name, Boolean topLevel = true)
     {
         if(topLevel)
+        {
             _ = Builder.Append("/// ");
+        }
 
         _ = Builder.Append("<inheritdoc cref=\"").Append(name).Append("\"/>");
 
         if(topLevel)
+        {
             _ = Builder.AppendLine();
+        }
 
         return Builder;
     }
     public IndentedStringBuilder InheritDoc(Boolean topLevel = true)
     {
         if(topLevel)
+        {
             _ = Builder.Append("/// ");
+        }
 
         _ = Builder.Append("<inheritdoc/>");
 
         if(topLevel)
+        {
             _ = Builder.AppendLine();
+        }
 
         return Builder;
     }

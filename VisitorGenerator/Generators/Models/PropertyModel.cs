@@ -24,7 +24,9 @@ internal sealed partial record PropertyModel(
         result = null;
 
         if(propertyCandidate is not IPropertySymbol property)
+        {
             return false;
+        }
 
         if(property is not
             {
@@ -72,7 +74,9 @@ internal sealed partial record PropertyModel(
         }
 
         if(propertyType is null)
+        {
             return false;
+        }
 
         var type = propertyType.ToDisplayString();
 

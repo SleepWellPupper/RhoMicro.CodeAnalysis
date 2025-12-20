@@ -50,13 +50,24 @@ internal readonly record struct SourcePosition : IComparable<SourcePosition>
     public Int32 CompareTo(SourcePosition other)
     {
         if(Line > other.Line)
+        {
             return 1;
+        }
+
         if(Line < other.Line)
+        {
             return -1;
+        }
+
         if(Character > other.Character)
+        {
             return 1;
+        }
+
         if(Character < other.Character)
+        {
             return -1;
+        }
 
         return 0;
     }

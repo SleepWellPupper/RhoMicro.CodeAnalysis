@@ -5,7 +5,7 @@ namespace RhoMicro.CodeAnalysis.JsonSchemaGenerator.Tests;
 public class NullableReferenceTypeTests : TestBase
 {
     [Fact]
-    public void Generates_StringOrNullForNullableString()
+    public void GeneratesStringOrNullForNullableString()
     {
         TestSchema(
             $$"""
@@ -27,7 +27,7 @@ public class NullableReferenceTypeTests : TestBase
             });
     }
     [Fact]
-    public void Generates_ObjectOrNullForNullableObject()
+    public void GeneratesObjectOrNullForNullableObject()
     {
         TestSchema(
             $$"""

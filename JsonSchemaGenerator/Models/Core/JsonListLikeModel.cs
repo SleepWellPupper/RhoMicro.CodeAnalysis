@@ -22,7 +22,9 @@ internal abstract record JsonListLikeModel<TList> : JsonValueModel<TList>
         {
             ct.ThrowIfCancellationRequested();
             if(i > 0 && Value.Count > 1)
+            {
                 _ = sb.Append(',');
+            }
 
             _ = sb.AppendModel(item, ct);
             i++;

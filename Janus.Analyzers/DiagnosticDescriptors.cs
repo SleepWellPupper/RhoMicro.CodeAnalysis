@@ -163,4 +163,12 @@ internal static class DiagnosticDescriptors
         category: "Usage",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true);
+
+    public static DiagnosticDescriptor TypeParameterVariantsShouldBeNamed { get; } = new(
+        id: "RMJ0021",
+        title: "Type parameter variants should be named",
+        messageFormat: "Variant `{0}` of union `{1}` should be named explicitly",
+        category: "Design",
+        defaultSeverity: DiagnosticSeverity.Warning,
+        isEnabledByDefault: true);
 }

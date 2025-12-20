@@ -20,6 +20,8 @@ internal
     public void Dispose()
     {
         foreach(var scope in _scopes)
+        {
             scope.Dispose();
+        }
     }
 }

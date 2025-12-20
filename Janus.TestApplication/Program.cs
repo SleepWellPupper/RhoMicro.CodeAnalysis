@@ -11,6 +11,7 @@ var options = new JsonSerializerOptions(JsonSerializerDefaults.Web)
     PropertyNamingPolicy = new CustomNamingPolicy(), PropertyNameCaseInsensitive = true,
 };
 
+// ReSharper disable once RedundantAssignment
 var union = IntDoubleString.Create(42d);
 union = "foo";
 union = 47;
@@ -30,7 +31,12 @@ if (union.IsDouble)
 Console.WriteLine(union);
 var serialized = JsonSerializer.Serialize(union, options);
 Console.WriteLine(serialized);
-serialized = serialized.ToLower().Replace("47", "[9,8,7]").Replace("2", "3");
+#pragma warning disable CA1308
+serialized = serialized
+    .ToLowerInvariant()
+#pragma warning restore CA1308
+    .Replace("47", "[9,8,7]", StringComparison.InvariantCulture)
+    .Replace("2", "3", StringComparison.InvariantCulture);
 Console.WriteLine(serialized);
 var deserialized =
     JsonSerializer.Deserialize<IntDoubleString>(

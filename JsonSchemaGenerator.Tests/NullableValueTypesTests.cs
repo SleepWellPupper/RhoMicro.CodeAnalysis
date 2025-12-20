@@ -25,7 +25,7 @@ public class NullableValueTypesTests : TestBase
     [InlineData("global::System.UInt64", "integer")]
 
     [InlineData("global::System.Boolean", "boolean")]
-    public void Generates_TypeOrNullForNullableValueType(String valueType, String expectedType)
+    public void GeneratesTypeOrNullForNullableValueType(String valueType, String expectedType)
     {
         TestSchema(
             $$"""

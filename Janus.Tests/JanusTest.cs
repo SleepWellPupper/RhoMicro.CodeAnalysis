@@ -2,13 +2,15 @@
 
 namespace Janus.Tests;
 
+#pragma warning disable CA1812
+
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp.Testing;
 using Microsoft.CodeAnalysis.Testing;
 using RhoMicro.CodeAnalysis;
 using RhoMicro.CodeAnalysis.Janus;
 
-class JanusTest : CSharpCodeFixTest<JanusAnalyzer, JanusCodeFixProvider, DefaultVerifier>
+internal sealed class JanusTest : CSharpCodeFixTest<JanusAnalyzer, JanusCodeFixProvider, DefaultVerifier>
 {
     public JanusTest()
     {

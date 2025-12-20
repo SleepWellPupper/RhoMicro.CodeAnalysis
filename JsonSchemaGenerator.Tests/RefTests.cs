@@ -5,7 +5,7 @@ namespace RhoMicro.CodeAnalysis.JsonSchemaGenerator.Tests;
 public class RefTests : TestBase
 {
     [Fact]
-    public void Generates_RefForCircularDependency()
+    public void GeneratesRefForCircularDependency()
     {
         TestSchema(
             $$"""
@@ -34,7 +34,7 @@ public class RefTests : TestBase
             });
     }
     [Fact]
-    public void Generates_RefForSimpleSchemaDependency()
+    public void GeneratesRefForSimpleSchemaDependency()
     {
         TestSchema(
             $$"""
@@ -58,7 +58,7 @@ public class RefTests : TestBase
             }, n => $"./{n}/Schema.json");
     }
     [Fact]
-    public void Generates_RefForComplexSchemaDependency()
+    public void GeneratesRefForComplexSchemaDependency()
     {
         TestSchema(
             $$"""
@@ -112,7 +112,7 @@ public class RefTests : TestBase
             }, n => $"./{n}/Dependency.json");
     }
     [Fact]
-    public void Generates_RequiredRefForRequiredSchemaDependency()
+    public void GeneratesRequiredRefForRequiredSchemaDependency()
     {
         TestSchema(
             $$"""
@@ -137,7 +137,7 @@ public class RefTests : TestBase
             }, n => $"./{n}/Schema.json");
     }
     [Fact]
-    public void Generates_NullableRefForSchemaDependency()
+    public void GeneratesNullableRefForSchemaDependency()
     {
         TestSchema(
             $$"""

@@ -56,7 +56,9 @@ internal ref struct DynamicallyAllocatedCharBuffer : IDisposable
     public void Add(params ReadOnlySpan<Char> characters)
     {
         if(characters.Length == 0)
+        {
             return;
+        }
 
         var target = Reserve(characters.Length);
         characters.CopyTo(target);
@@ -111,7 +113,9 @@ internal ref struct DynamicallyAllocatedCharBuffer : IDisposable
     public readonly void Dispose()
     {
         if(_rented is not null)
+        {
             ArrayPool<Char>.Shared.Return(_rented);
+        }
     }
 
     public readonly override String ToString() => Span.ToString();

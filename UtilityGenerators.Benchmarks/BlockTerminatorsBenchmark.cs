@@ -55,7 +55,9 @@ public class BlockTerminatorsBenchmark
             for(var i = 0; i < _orderedChars.Length; i++)
             {
                 if(_orderedChars[i] == c)
+                {
                     return true;
+                }
             }
 
             return false;
@@ -63,22 +65,34 @@ public class BlockTerminatorsBenchmark
         public static Boolean LinearSearchUnrolled(Char c)
         {
             if(c == '(')
+            {
                 return true;
+            }
 
             if(c == ')')
+            {
                 return true;
+            }
 
             if(c == '<')
+            {
                 return true;
+            }
 
             if(c == '>')
+            {
                 return true;
+            }
 
             if(c == '{')
+            {
                 return true;
+            }
 
             if(c == '}')
+            {
                 return true;
+            }
 
             return false;
         }
@@ -87,22 +101,34 @@ public class BlockTerminatorsBenchmark
             var result = false;
 
             if(c == '(')
+            {
                 result = true;
+            }
 
             if(c == ')')
+            {
                 result = true;
+            }
 
             if(c == '<')
+            {
                 result = true;
+            }
 
             if(c == '>')
+            {
                 result = true;
+            }
 
             if(c == '{')
+            {
                 result = true;
+            }
 
             if(c == '}')
+            {
                 result = true;
+            }
 
             return result;
         }
@@ -196,7 +222,10 @@ public class BlockTerminatorsBenchmark
     {
         var result = 0;
         foreach(var c in _characters)
+        {
             result += BlockTerminators.IsBlockTerminator(c) ? 1 : 0;
+        }
+
         return result;
     }
     [Benchmark]
@@ -204,7 +233,10 @@ public class BlockTerminatorsBenchmark
     {
         var result = 0;
         foreach(var c in _characters)
+        {
             result += BlockTerminators.BinarySearch(c) ? 1 : 0;
+        }
+
         return result;
     }
     [Benchmark]
@@ -212,7 +244,10 @@ public class BlockTerminatorsBenchmark
     {
         var result = 0;
         foreach(var c in _characters)
+        {
             result += BlockTerminators.LinearSearch(c) ? 1 : 0;
+        }
+
         return result;
     }
     [Benchmark]
@@ -220,7 +255,10 @@ public class BlockTerminatorsBenchmark
     {
         var result = 0;
         foreach(var c in _characters)
+        {
             result += BlockTerminators.LinearSearchUnrolled(c) ? 1 : 0;
+        }
+
         return result;
     }
     [Benchmark]
@@ -228,7 +266,10 @@ public class BlockTerminatorsBenchmark
     {
         var result = 0;
         foreach(var c in _characters)
+        {
             result += BlockTerminators.LinearSearchUnrolledConditions(c) ? 1 : 0;
+        }
+
         return result;
     }
     [Benchmark]
@@ -236,7 +277,10 @@ public class BlockTerminatorsBenchmark
     {
         var result = 0;
         foreach(var c in _characters)
+        {
             result += BlockTerminators.LinearSearchUnrolledShortCircuiting(c) ? 1 : 0;
+        }
+
         return result;
     }
     [Benchmark]
@@ -244,7 +288,10 @@ public class BlockTerminatorsBenchmark
     {
         var result = 0;
         foreach(var c in _characters)
+        {
             result += BlockTerminators.LinearSearchUnrolledPatternMatching(c) ? 1 : 0;
+        }
+
         return result;
     }
     [Benchmark(Baseline = true)]
@@ -252,7 +299,10 @@ public class BlockTerminatorsBenchmark
     {
         var result = 0;
         foreach(var c in _characters)
+        {
             result += BlockTerminators.LinearSearchUnrolledTernary(c) ? 1 : 0;
+        }
+
         return result;
     }
     [Benchmark]
@@ -260,7 +310,10 @@ public class BlockTerminatorsBenchmark
     {
         var result = 0;
         foreach(var c in _characters)
+        {
             result += BlockTerminators.LinearSearchUnrolledTernary2(c) ? 1 : 0;
+        }
+
         return result;
     }
     [Benchmark]
@@ -268,7 +321,10 @@ public class BlockTerminatorsBenchmark
     {
         var result = 0;
         foreach(var c in _characters)
+        {
             result += BlockTerminators.LinearSearchUnrolledTernary3(c) ? 1 : 0;
+        }
+
         return result;
     }
 }

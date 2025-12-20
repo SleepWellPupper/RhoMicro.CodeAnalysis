@@ -140,7 +140,9 @@ internal sealed record AttributeFactoryModel(
                 ctx.ThrowIfCancellationRequested();
 
                 if(mapping is { } m)
+                {
                     propertyMappings[m.PropertyName].Add(m);
+                }
             }
         }
     }

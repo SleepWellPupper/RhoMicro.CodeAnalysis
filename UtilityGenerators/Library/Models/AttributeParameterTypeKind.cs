@@ -43,7 +43,9 @@ internal static class AttributeArgumentTypeKindExtensions
         foreach(var flag in flags)
         {
             if(( value & flag ) == flag)
+            {
                 return true;
+            }
         }
 
         return false;

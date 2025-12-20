@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <LangVersion>preview</LangVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AssemblyName>Janus.Benchmarks</AssemblyName>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BenchmarkDotNet" Version="0.15.8"/>
+    <PackageReference Include="OneOf" Version="3.0.271" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Janus.Analyzers\Janus.Analyzers.csproj" OutputItemType="analyzer" ReferenceOutputAssembly="false"/>
+    <ProjectReference Include="..\Janus.CodeFixes\Janus.CodeFixes.csproj" OutputItemType="analyzer" ReferenceOutputAssembly="false"/>
+    <ProjectReference Include="..\Janus.Library\Janus.Library.csproj"/>
+  </ItemGroup>
+
+</Project>
