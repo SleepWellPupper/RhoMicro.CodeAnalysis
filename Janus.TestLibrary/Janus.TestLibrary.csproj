@@ -7,14 +7,17 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.Bcl.HashCode" Version="6.0.0" />
+    <PackageReference Include="Microsoft.Bcl.HashCode" Version="6.0.0"/>
     <PackageReference Include="PolySharp" Version="1.15.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="RhoMicro.CodeAnalysis.Janus" Version="1.0.10"/>
-    <PackageReference Include="System.Collections.Immutable" Version="10.0.0" />
-    <PackageReference Include="System.Text.Json" Version="10.0.0" />
+    <PackageReference Include="System.Collections.Immutable" Version="10.0.0"/>
+    <PackageReference Include="System.Text.Json" Version="10.0.0"/>
+
+    <ProjectReference Include="..\Janus.Analyzers\Janus.Analyzers.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false"/>
+    <ProjectReference Include="..\Janus.CodeFixes\Janus.CodeFixes.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false"/>
+    <ProjectReference Include="..\Janus.Library\Janus.Library.csproj"/>
   </ItemGroup>
 
 </Project>

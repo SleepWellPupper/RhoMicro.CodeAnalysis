@@ -4,8 +4,6 @@
     <Project Path="DslGenerator.TestApp/DslGenerator.TestApp.csproj" />
     <Project Path="EnumStringTestApp/EnumStringTestApp.csproj" />
     <Project Path="IndentedStringBuilderTestApp/IndentedStringBuilderTestApp.csproj" />
-    <Project Path="Janus.TestApplication\Janus.TestApplication.csproj" />
-    <Project Path="Janus.TestLibrary\Janus.TestLibrary.csproj" />
     <Project Path="Project1/Project1.csproj" />
     <Project Path="TestApp/TestApp.csproj" />
     <Project Path="WorkerService1/WorkerService1.csproj" />
@@ -21,6 +19,8 @@
     <Project Path="Janus.Analyzers/Janus.Analyzers.csproj" />
     <Project Path="Janus.CodeFixes/Janus.CodeFixes.csproj" />
     <Project Path="Janus.Library/Janus.Library.csproj" />
+    <Project Path="Janus.TestApplication\Janus.TestApplication.csproj" />
+    <Project Path="Janus.TestLibrary\Janus.TestLibrary.csproj" />
     <Project Path="Janus.Tests.EndToEnd\Janus.Tests.EndToEnd.csproj" />
     <Project Path="Janus.Tests/Janus.Tests.csproj" />
     <Project Path="Janus\Janus.csproj" />
