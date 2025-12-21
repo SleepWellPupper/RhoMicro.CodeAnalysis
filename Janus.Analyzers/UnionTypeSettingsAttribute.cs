@@ -112,7 +112,7 @@ namespace RhoMicro.CodeAnalysis
         /// reference equality for comparing reference union types via <c>==</c> or <c>!=</c>.
         /// </summary>
         public EqualityOperatorsSetting EqualityOperatorsSetting { get; set; }
-        
+
         /// <summary>
         /// Gets or sets a value indicating whether to make the union type JSON serializable.
         /// </summary>

@@ -25,7 +25,7 @@ internal readonly record struct ConstructorComponent(UnionModel Model) : ICSharp
                       {{Param("value", "The variant value to initialize the new instance with.")}}
                       [{{typeof(OverloadResolutionPriorityAttribute)}}(1)]
                       public {{model.Name}}({{variant.Type.NullableName}} value) : this(value, validate: true) { }
-
+                      
                       {{Summary("Initializes a new instance.")}}
                       {{Param("value", "The variant value to initialize the new instance with.")}}
                       {{Param("validate", "Indicates whether to validate the value.")}}
