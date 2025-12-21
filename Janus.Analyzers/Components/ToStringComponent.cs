@@ -57,7 +57,7 @@ internal readonly record struct ToStringComponent(UnionModel Model) : ICSharpSou
 
                                      b.Append(
                                          $$"""
-                                           {{p}}{(typeof({{p}}).IsGenericTypeParameter ? string.Empty : $":{typeof({{p}})}" )}
+                                           {{p}}{(typeof({{p}}) is { IsGenericParameter: true, DeclaringMethod: null } ? string.Empty : $":{typeof({{p}})}" )}
                                            """
                                      );
                                  }, separator: ", ")}>");
