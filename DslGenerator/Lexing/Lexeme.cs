@@ -18,6 +18,8 @@ internal readonly partial struct Lexeme : IEquatable<String>, IEquatable<Char>, 
 
     public static Lexeme Empty { get; } = String.Empty;
 
+    public Boolean Equals(Lexeme other) => Switch(other.Equals, other.Equals, other.Equals);
+
     public Boolean Equals(Char c) =>
         Switch(
             onString: s => s.Length == 1 && s[0] == c,

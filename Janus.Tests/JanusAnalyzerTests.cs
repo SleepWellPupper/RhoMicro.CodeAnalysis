@@ -8,6 +8,18 @@ using RhoMicro.CodeAnalysis.Janus;
 public class JanusAnalyzerTests
 {
     [Fact]
+    public Task EqualsIsNotOverriddenIfUserProvided() => JanusTest.TestAnalyzer(
+        """
+        using RhoMicro.CodeAnalysis;
+        
+        [UnionType<int>]
+        partial struct Union
+        {
+            public bool Equals(Union other) => false;
+        }
+        """);
+    
+    [Fact]
     public Task StructUnionHasEqualityOperatorEmitted() => JanusTest.TestAnalyzer(
         """
         using RhoMicro.CodeAnalysis;
@@ -15,13 +27,10 @@ public class JanusAnalyzerTests
         [UnionType<int>]
         partial struct Union
         {
-            public static bool operator !=(Union a, Union b) => true;
+            public static bool operator !=(Union a, Union b) => throw null;
+            public static bool operator ==(Union a, Union b) => throw null;
         }
-        """,
-        DiagnosticResult
-            .CompilerError("CS0111")
-            .WithSpan("RhoMicro.CodeAnalysis.Janus.Analyzers/RhoMicro.CodeAnalysis.Janus.JanusGenerator/Union.g.cs", 1387, 33, 1387, 35)
-            .WithArguments("op_Inequality", "Union"));
+        """);
 
     [Theory]
     [InlineData("None")]

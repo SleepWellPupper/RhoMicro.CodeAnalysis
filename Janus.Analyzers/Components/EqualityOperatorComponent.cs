@@ -14,11 +14,16 @@ internal readonly record struct EqualityOperatorComponent(UnionModel Model) : IC
 
         if (Model is
             {
-                Settings.EqualityOperatorsSetting: EqualityOperatorsSetting.OmitOperators
+                AreEqualityOperatorsUserProvided: true
             } or
             {
+                Settings.EqualityOperatorsSetting: EqualityOperatorsSetting.OmitOperators
+            }
+            or
+            {
                 Settings.EqualityOperatorsSetting: EqualityOperatorsSetting.EmitOperatorsIfValueType,
-                TypeKind: not UnionTypeKind.Struct
+                TypeKind:
+                not UnionTypeKind.Struct
             })
         {
             return;

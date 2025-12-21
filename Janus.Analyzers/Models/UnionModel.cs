@@ -8,6 +8,7 @@ using System.Text;
 using Library.Models;
 using Library.Models.Collections;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 
 internal sealed partial record UnionModel(
     UnionTypeKind TypeKind,
@@ -19,6 +20,9 @@ internal sealed partial record UnionModel(
     EquatableList<String> TypeParameters,
     UnionTypeSettingsAttribute.Model Settings,
     Boolean IsToStringUserProvided,
+    Boolean IsEqualsUserProvided,
+    Boolean IsGetHashCodeUserProvided,
+    Boolean AreEqualityOperatorsUserProvided,
     String DocsCommentId,
     Boolean EmitDocsComment)
 {
@@ -114,8 +118,51 @@ internal sealed partial record UnionModel(
             AppendContainingType(t, containingTypes, in ctx);
         }
 
-        var isToStringUserProvided =
-            target.GetMembers(nameof(ToString)).Any(m => m is IMethodSymbol { Parameters: [] });
+        var (isToStringUserProvided,
+            isEqualsUserProvided,
+            isGetHashCodeUserProvided,
+            areEqualityOperatorsUserProvided) = (false, false, false, false);
+        var members = target.GetMembers();
+
+        foreach (var member in members)
+        {
+            ct.ThrowIfCancellationRequested();
+
+            switch (member.Name)
+            {
+                case nameof(ToString):
+                    if (member is IMethodSymbol { Parameters: [] })
+                    {
+                        isToStringUserProvided = true;
+                    }
+
+                    break;
+                case nameof(Equals):
+                    if (member is IMethodSymbol { Parameters: [{ } singleParameter] }
+                     && SymbolEqualityComparer.Default.Equals(singleParameter.Type, target))
+                    {
+                        isEqualsUserProvided = true;
+                    }
+
+                    break;
+                case nameof(GetHashCode):
+                    if (member is IMethodSymbol { Parameters: [] })
+                    {
+                        isGetHashCodeUserProvided = true;
+                    }
+
+                    break;
+                case "op_Equality" or "op_Inequality":
+                    if (member is IMethodSymbol { Parameters: [{ } firstParameter, { } secondParameter] }
+                     && SymbolEqualityComparer.Default.Equals(firstParameter.Type, target)
+                     && SymbolEqualityComparer.Default.Equals(secondParameter.Type, target))
+                    {
+                        areEqualityOperatorsUserProvided = true;
+                    }
+
+                    break;
+            }
+        }
 
         var emitDocsComment = target.GetDocumentationCommentXml(cancellationToken: ct) is null or [];
 
@@ -129,6 +176,9 @@ internal sealed partial record UnionModel(
             TypeParameters: typeParameters,
             Settings: settings,
             IsToStringUserProvided: isToStringUserProvided,
+            IsEqualsUserProvided: isEqualsUserProvided,
+            IsGetHashCodeUserProvided: isGetHashCodeUserProvided,
+            AreEqualityOperatorsUserProvided: areEqualityOperatorsUserProvided,
             DocsCommentId: docsCommentId,
             EmitDocsComment: emitDocsComment
         );
