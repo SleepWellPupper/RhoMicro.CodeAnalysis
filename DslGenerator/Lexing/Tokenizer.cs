@@ -5,24 +5,24 @@ namespace RhoMicro.CodeAnalysis.DslGenerator.Lexing;
 using static RhoMicro.CodeAnalysis.DslGenerator.Analysis.DiagnosticDescriptors;
 using RhoMicro.CodeAnalysis.DslGenerator.Grammar;
 using RhoMicro.CodeAnalysis.DslGenerator.Analysis;
-
 using static Lexemes;
 
 #if DSL_GENERATOR
 [IncludeFile]
 internal
 #endif
-partial class Tokenizer
+    partial class Tokenizer
 {
     [UnionType<Token, TokenType>]
     private readonly partial struct TokenOrType;
+
     public static Tokenizer Instance { get; } = new();
 
     public TokenizeResult Tokenize(SourceText sourceText, CancellationToken cancellationToken
 #if DSL_GENERATOR
-        , String filePath = ""
+                                   , String filePath = ""
 #endif
-        )
+    )
     {
         cancellationToken.ThrowIfCancellationRequested();
 
@@ -32,7 +32,7 @@ partial class Tokenizer
         var isUnknown = false;
         var (start, current, line, character) = (0, 0, 0, 0);
 
-        while(!isAtEnd())
+        while (!isAtEnd())
         {
             cancellationToken.ThrowIfCancellationRequested();
             scanToken();
@@ -45,7 +45,7 @@ partial class Tokenizer
         void scanToken()
         {
             var c = advance();
-            switch(c)
+            switch (c)
             {
                 case Equal:
                     addToken(TokenType.Equal);
@@ -58,9 +58,7 @@ partial class Tokenizer
                     break;
                 case Alternative:
                     //check for incremental alternative "/="
-                    var type = match(Equal) ?
-                        TokenType.SlashEqual :
-                        TokenType.Slash;
+                    var type = match(Equal) ? TokenType.SlashEqual : TokenType.Slash;
                     addToken(type);
                     break;
                 case GroupOpen:
@@ -92,7 +90,7 @@ partial class Tokenizer
                     break;
                 case CarriageReturn:
                     closeUnknown();
-                    if(lookAhead() == NewLine)
+                    if (lookAhead() == NewLine)
                         advancePure();
                     addNewLine();
                     break;
@@ -103,13 +101,15 @@ partial class Tokenizer
                     consumeWhitespace(Tab);
                     break;
                 default:
-                    if(isAlpha(c))
+                    if (isAlpha(c))
                     {
                         name();
-                    } else if(isDigit(c))
+                    }
+                    else if (isDigit(c))
                     {
                         specificRepetition();
-                    } else
+                    }
+                    else
                     {
                         openUnknown();
                     }
@@ -138,7 +138,7 @@ partial class Tokenizer
         {
             closeUnknown();
 
-            while(isDigit(lookAhead()))
+            while (isDigit(lookAhead()))
                 advancePure();
             addToken(TokenType.Number);
         }
@@ -159,14 +159,14 @@ partial class Tokenizer
 
         void closeUnknown()
         {
-            if(isUnknown)
+            if (isUnknown)
             {
-                if(!isAtEnd())
+                if (!isAtEnd())
                     regressPure();
                 isUnknown = false;
                 addToken(TokenType.Unknown);
                 diagnostics!.Add(UnexpectedCharacter, getLocation());
-                if(!isAtEnd())
+                if (!isAtEnd())
                     advancePure();
             }
         }
@@ -177,9 +177,9 @@ partial class Tokenizer
         {
             closeUnknown();
 
-            var token = tokenOrType.Match(
-                token => token,
-                type => new Token(type, getLexeme(), getLocation()));
+            var token = tokenOrType.Switch(
+                onToken: token => token,
+                onTokenType: type => new Token(type, getLexeme(), getLocation()));
             tokens!.Add(token);
             resetLexemeStart();
         }
@@ -196,9 +196,11 @@ partial class Tokenizer
 
         Lexeme getLexeme() => new StringSlice(source!, start, current - start);
 
-        Char? lookAhead(Int32 lookAheadOffset = 0) => current + lookAheadOffset >= source!.Length ? null : source![current + lookAheadOffset];
+        Char? lookAhead(Int32 lookAheadOffset = 0) =>
+            current + lookAheadOffset >= source!.Length ? null : source![current + lookAheadOffset];
 
-        Char? lookBehind(Int32 lookBehindOffset = 0) => current - lookBehindOffset < 1 ? null : source![current - 1 - lookBehindOffset];
+        Char? lookBehind(Int32 lookBehindOffset = 0) =>
+            current - lookBehindOffset < 1 ? null : source![current - 1 - lookBehindOffset];
 
         Location getLocation() => Location.Create(
             line,
@@ -207,11 +209,11 @@ partial class Tokenizer
 #if DSL_GENERATOR
             , filePath
 #endif
-            );
+        );
 
         Boolean match(Char expected)
         {
-            if(isAtEnd() || source![current] != expected)
+            if (isAtEnd() || source![current] != expected)
                 return false;
             current++;
             return true;
@@ -230,13 +232,13 @@ partial class Tokenizer
             discardToken(); //discard hash token
             advancePure(); //consume hash
 
-            if(isAtNewLine() || isAtEnd())
+            if (isAtNewLine() || isAtEnd())
                 return;
 
-            while(!isAtNewLine() && !isAtEnd(lookaheadOffset: 1))
+            while (!isAtNewLine() && !isAtEnd(lookaheadOffset: 1))
                 advancePure();
 
-            if(!isAtNewLine())
+            if (!isAtNewLine())
                 advancePure(); //consume last comment char
 
             addToken(TokenType.Comment);
@@ -246,7 +248,7 @@ partial class Tokenizer
         {
             closeUnknown();
 
-            while(lookAhead() == expected)
+            while (lookAhead() == expected)
                 advancePure();
 
             addToken(TokenType.Whitespace);
@@ -256,9 +258,9 @@ partial class Tokenizer
         {
             discardToken(); //discard quote token
             var containsCharacters = false;
-            while(( lookAhead() != Quote || lookBehind() == Escape ) && !isAtEnd())
+            while ((lookAhead() != Quote || lookBehind() == Escape) && !isAtEnd())
             {
-                if(lookAhead() == NewLine)
+                if (lookAhead() == NewLine)
                 {
                     line++;
                 }
@@ -267,19 +269,19 @@ partial class Tokenizer
                 containsCharacters = true;
             }
 
-            if(containsCharacters)
+            if (containsCharacters)
             {
                 addToken(TokenType.Terminal);
             }
 
-            if(isAtEnd())
+            if (isAtEnd())
             {
                 diagnostics.Add(UnterminatedTerminal, getLocation(), getLexeme());
                 return;
             }
 
             //add empty token
-            if(!containsCharacters)
+            if (!containsCharacters)
             {
                 addToken(TokenType.Terminal);
             }
@@ -293,7 +295,7 @@ partial class Tokenizer
         {
             closeUnknown();
 
-            while(isAlpha(lookAhead()))
+            while (isAlpha(lookAhead()))
                 advancePure();
 
             addToken(TokenType.Name);

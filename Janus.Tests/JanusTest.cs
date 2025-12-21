@@ -24,10 +24,10 @@ class JanusTest : CSharpCodeFixTest<JanusAnalyzer, JanusCodeFixProvider, Default
             .WaitAsync(TestContext.Current.CancellationToken);
     }
 
-    public static Task TestAnalyzer(String source)
+    public static Task TestAnalyzer(String source, params DiagnosticResult[] expected)
     {
         return CodeFixVerifier<JanusAnalyzer, JanusCodeFixProvider, JanusTest, DefaultVerifier>
-            .VerifyAnalyzerAsync(source)
+            .VerifyAnalyzerAsync(source, expected)
             .WaitAsync(TestContext.Current.CancellationToken);
     }
 

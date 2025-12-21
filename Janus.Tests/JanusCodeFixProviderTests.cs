@@ -8,7 +8,7 @@ using Microsoft.CodeAnalysis.Diagnostics;
 using Microsoft.CodeAnalysis.Testing;
 using RhoMicro.CodeAnalysis.Janus;
 
-public class CodeFixTests
+public class JanusCodeFixProviderTests
 {
     [Fact]
     public Task ClassUnionsShouldBeSealed() =>

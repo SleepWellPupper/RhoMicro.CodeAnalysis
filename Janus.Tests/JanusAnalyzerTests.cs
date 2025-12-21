@@ -2,8 +2,27 @@
 
 namespace Janus.Tests;
 
+using Microsoft.CodeAnalysis.Testing;
+using RhoMicro.CodeAnalysis.Janus;
+
 public class JanusAnalyzerTests
 {
+    [Fact]
+    public Task StructUnionHasEqualityOperatorEmitted() => JanusTest.TestAnalyzer(
+        """
+        using RhoMicro.CodeAnalysis;
+
+        [UnionType<int>]
+        partial struct Union
+        {
+            public static bool operator !=(Union a, Union b) => true;
+        }
+        """,
+        DiagnosticResult
+            .CompilerError("CS0111")
+            .WithSpan("RhoMicro.CodeAnalysis.Janus.Analyzers/RhoMicro.CodeAnalysis.Janus.JanusGenerator/Union.g.cs", 1387, 33, 1387, 35)
+            .WithArguments("op_Inequality", "Union"));
+
     [Theory]
     [InlineData("None")]
     [InlineData("Simple")]
