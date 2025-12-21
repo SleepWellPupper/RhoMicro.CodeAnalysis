@@ -21,6 +21,15 @@
   <!--    <PackageOutputPath>..\dist\dev</PackageOutputPath>-->
   <!--  </PropertyGroup>-->
 
+  <PropertyGroup Condition=" $(Configuration) == 'Debug' ">
+    <PackageName>$(AssemblyName)</PackageName>
+    <PackageOutputPath>..\dist\dev</PackageOutputPath>
+  </PropertyGroup>
+
+  <Target Condition=" $(Configuration) == 'Debug' " Name="MovePackageToDistDev" AfterTargets="GenerateNuspec">
+    <Copy SourceFiles="$(PackageOutputPath)\$(PackageName).nupkg" DestinationFiles="$(PackageOutputPath)\..\dev\$(AssemblyName).nupkg"/>
+  </Target>
+
   <ItemGroup>
     <ProjectReference Include="..\Janus.Library\Janus.Library.csproj" PrivateAssets="all"/>
     <ProjectReference Include="..\Janus.CodeFixes\Janus.CodeFixes.csproj" PrivateAssets="all"/>
