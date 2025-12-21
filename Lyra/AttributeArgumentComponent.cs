@@ -19,26 +19,29 @@ internal readonly record struct AttributeArgumentComponent : ICSharpSourceCompon
 {
     private AttributeArgumentComponent(
             Char assignmentOperator,
-            TypeNameComponent? type = null,
-            ICSharpSourceComponent? expressionComponent = null,
-            String? expression = null,
-            String? name = null)
+            TypeNameComponent? type,
+            ICSharpSourceComponent? expressionComponent,
+            String? expression,
+            String? name,
+            String? member)
     {
         _type = type;
         _expressionComponent = expressionComponent;
         _expression = expression;
         _name = name;
         _assignmentOperator = assignmentOperator;
+        _member = member;
     }
 
     private readonly TypeNameComponent? _type;
     private readonly ICSharpSourceComponent? _expressionComponent;
+    private readonly String? _member;
     private readonly String? _expression;
     private readonly String? _name;
     private readonly Char _assignmentOperator;
 
     /// <summary>
-    /// Creates a positional (constructor) argument of type <see cref="Type"/>.
+    /// Creates a positional (constructor) argument of type <see cref="Type"/> using a <c>typeof()</c> expression.
     /// </summary>
     /// <param name="type">
     /// The type to append into the <c>typeof()</c> expression assigned to the parameter.
@@ -49,12 +52,41 @@ internal readonly record struct AttributeArgumentComponent : ICSharpSourceCompon
     /// <returns>
     /// A new positional argument component.
     /// </returns>
-    public static AttributeArgumentComponent CreatePositional(TypeNameComponent type, String? parameterName = null)
+    public static AttributeArgumentComponent CreatePositional(
+            TypeNameComponent type,
+            String? parameterName = null)
         => new(assignmentOperator: ':',
                 type: type,
                 expressionComponent: null,
                 expression: null,
-                name: parameterName);
+                name: parameterName,
+                member: null);
+
+    /// <summary>
+    /// Creates a positional (constructor) argument using a <c>type.member</c> expression.
+    /// </summary>
+    /// <param name="type">
+    /// The type whose member to use.
+    /// </param>
+    /// <param name="member">
+    /// The member to use.
+    /// </param>
+    /// <param name="parameterName">
+    /// The name of the parameter.
+    /// </param>
+    /// <returns>
+    /// A new positional argument component.
+    /// </returns>
+    public static AttributeArgumentComponent CreatePositionalMemberAccess(
+            TypeNameComponent type,
+            String member,
+            String? parameterName = null)
+        => new(assignmentOperator: ':',
+                type: type,
+                expressionComponent: null,
+                expression: null,
+                name: parameterName,
+                member: member);
 
     /// <summary>
     /// Creates a positional (constructor) argument.
@@ -68,13 +100,15 @@ internal readonly record struct AttributeArgumentComponent : ICSharpSourceCompon
     /// <returns>
     /// A new positional argument component.
     /// </returns>
-    public static AttributeArgumentComponent CreatePositional(ICSharpSourceComponent expressionComponent,
-                                                              String? parameterName = null)
+    public static AttributeArgumentComponent CreatePositional(
+            ICSharpSourceComponent expressionComponent,
+            String? parameterName = null)
         => new(assignmentOperator: ':',
                 type: null,
                 expressionComponent: expressionComponent,
                 expression: null,
-                name: parameterName);
+                name: parameterName,
+                member: null);
 
     /// <summary>
     /// Creates a positional (constructor) argument.
@@ -93,7 +127,8 @@ internal readonly record struct AttributeArgumentComponent : ICSharpSourceCompon
                 type: null,
                 expressionComponent: null,
                 expression: expression,
-                name: parameterName);
+                name: parameterName,
+                member: null);
 
     /// <summary>
     /// Creates a named (property) argument of type <see cref="Type"/>.
@@ -112,7 +147,34 @@ internal readonly record struct AttributeArgumentComponent : ICSharpSourceCompon
                 type: type,
                 expressionComponent: null,
                 expression: null,
-                name: propertyName);
+                name: propertyName,
+                member: null);
+
+    /// <summary>
+    /// Creates a named (property) argument using a <c>type.member</c> expression.
+    /// </summary>
+    /// <param name="type">
+    /// The type whose member to use.
+    /// </param>
+    /// <param name="member">
+    /// The member to use.
+    /// </param>
+    /// <param name="propertyName">
+    /// The name of the property.
+    /// </param>
+    /// <returns>
+    /// A new positional argument component.
+    /// </returns>
+    public static AttributeArgumentComponent CreateNamedMemberAccess(
+            TypeNameComponent type,
+            String member,
+            String propertyName)
+        => new(assignmentOperator: '=',
+                type: type,
+                expressionComponent: null,
+                expression: null,
+                name: propertyName,
+                member: member);
 
     /// <summary>
     /// Creates a named (property) argument.
@@ -132,7 +194,8 @@ internal readonly record struct AttributeArgumentComponent : ICSharpSourceCompon
                 type: null,
                 expressionComponent: expressionComponent,
                 expression: null,
-                name: propertyName);
+                name: propertyName,
+                member: null);
 
     /// <summary>
     /// Creates a named (property) argument.
@@ -151,7 +214,8 @@ internal readonly record struct AttributeArgumentComponent : ICSharpSourceCompon
                 type: null,
                 expressionComponent: null,
                 expression: expression,
-                name: propertyName);
+                name: propertyName,
+                member: null);
 
     /// <inheritdoc />
     public void AppendTo(CSharpSourceBuilder builder, CancellationToken cancellationToken = default)
@@ -175,9 +239,13 @@ internal readonly record struct AttributeArgumentComponent : ICSharpSourceCompon
             builder.Append($"{_assignmentOperator} ");
         }
 
-        if (_type is { } type)
+        if (_member is { } member && _type is { } type)
         {
-            builder.Append($"typeof({type})");
+            builder.Append($"{type}.{member}");
+        }
+        else if (_type is { } typeOfArgument)
+        {
+            builder.Append($"typeof({typeOfArgument})");
         }
         else if (_expressionComponent is not null)
         {

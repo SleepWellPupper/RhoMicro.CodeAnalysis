@@ -22,7 +22,8 @@
 
 	<ItemGroup>
 		<!--<ProjectReference Include="..\DslGenerator\DslGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />-->
-		<ProjectReference Include="..\UnionsGenerator\UnionsGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+		<ProjectReference Include="..\Janus.Analyzers\Janus.Analyzers.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
+		<ProjectReference Include="..\Janus.CodeFixes\Janus.CodeFixes.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false" />
 	</ItemGroup>
 
 	<ItemGroup>

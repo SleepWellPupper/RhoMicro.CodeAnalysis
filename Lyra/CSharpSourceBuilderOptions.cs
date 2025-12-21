@@ -20,6 +20,11 @@ internal partial class CSharpSourceBuilderOptions
     public static CSharpSourceBuilderOptions Default { get; } = new();
 
     /// <summary>
+    /// Gets the options to use when writing type names and no other options are explicitly provided.
+    /// </summary>
+    public virtual TypeNameOptions DefaultTypeNameOptions { get; init; } = TypeNameOptions.Default;
+    
+    /// <summary>
     /// Gets the initial indentation to apply to the builder.
     /// </summary>
     public virtual ImmutableArray<ReadOnlyMemory<Char>> InitialIndentation { get; init; } = [];

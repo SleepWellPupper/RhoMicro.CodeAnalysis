@@ -1,55 +1,59 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
-    <!--AutoUpdateAssemblyName-->
+  <!--AutoUpdateAssemblyName-->
 
-    <PropertyGroup>
-        <TargetFramework>netstandard2.0</TargetFramework>
-        <IncludeBuildOutput>false</IncludeBuildOutput>
-        <developmentDependency>true</developmentDependency>
-        <NoPackageAnalysis>true</NoPackageAnalysis>
-        <IsRoslynComponent>true</IsRoslynComponent>
-        <Nullable>enable</Nullable>
-        <ImplicitUsings>enable</ImplicitUsings>
-    </PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <developmentDependency>true</developmentDependency>
+    <NoPackageAnalysis>true</NoPackageAnalysis>
+    <IsRoslynComponent>true</IsRoslynComponent>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
 
-    <ItemGroup>
-        <InternalsVisibleTo Include="RhoMicro.CodeAnalysis.DslGenerator.Tests"/>
-    </ItemGroup>
-    
-    <PropertyGroup>
-        <IsPackable>true</IsPackable>
-        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-        <Description>Generates utilities for lexing and parsing domain specific languages, little languages etc.</Description>
-        <PackageTags>Source Generator</PackageTags>
-    </PropertyGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="RhoMicro.CodeAnalysis.DslGenerator.Tests"/>
+  </ItemGroup>
 
-    <PropertyGroup>
-        <DefineConstants>$(DefineConstants);DSL_GENERATOR</DefineConstants>
-    </PropertyGroup>
+  <PropertyGroup>
+    <IsPackable>true</IsPackable>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Description>Generates utilities for lexing and parsing domain specific languages, little languages etc.</Description>
+    <PackageTags>Source Generator</PackageTags>
+  </PropertyGroup>
 
-    <ItemGroup>
-        <PackageReference Update="NETStandard.Library" PrivateAssets="all"/>
-        <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.12.0"/>
-        <PackageReference Include="PolySharp" Version="1.15.0">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-    </ItemGroup>
+  <PropertyGroup>
+    <DefineConstants>$(DefineConstants);DSL_GENERATOR</DefineConstants>
+  </PropertyGroup>
 
-    <ItemGroup>
-        <PackageReference Include="RhoMicro.CodeAnalysis.UtilityGenerators" Version="15.3.4">
-            <PrivateAssets>all</PrivateAssets>
-            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-        </PackageReference>
-        <ProjectReference Include="..\UnionsGenerator\UnionsGenerator.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false"/>
-    </ItemGroup>
+  <ItemGroup>
+    <PackageReference Update="NETStandard.Library" PrivateAssets="all"/>
+    <PackageReference Include="Microsoft.Bcl.HashCode" Version="6.0.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="4.12.0"/>
+    <PackageReference Include="PolySharp" Version="1.15.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
 
-    <ItemGroup>
-        <None Remove="bin\Debug\netstandard2.0\\RhoMicro.CodeAnalysis.DslGenerator.13.0.0.568.dll"/>
-    </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="RhoMicro.CodeAnalysis.UtilityGenerators" Version="15.3.4">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
 
-    <ItemGroup>
-        <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false"/>
-        <None Include="README.md" Pack="true" PackagePath="/" CopyToOutputDirectory="Always"/>
-    </ItemGroup>
+    <ProjectReference Include="..\Janus.Analyzers\Janus.Analyzers.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false"/>
+    <ProjectReference Include="..\Janus.CodeFixes\Janus.CodeFixes.csproj" OutputItemType="Analyzer" ReferenceOutputAssembly="false"/>
+    <ProjectReference Include="..\Janus.Library\Janus.Library.csproj"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="bin\Debug\netstandard2.0\\RhoMicro.CodeAnalysis.DslGenerator.13.0.0.568.dll"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="$(OutputPath)\$(AssemblyName).dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false"/>
+    <None Include="README.md" Pack="true" PackagePath="/" CopyToOutputDirectory="Always"/>
+  </ItemGroup>
 
 </Project>

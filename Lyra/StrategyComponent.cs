@@ -8,27 +8,66 @@ namespace RhoMicro.CodeAnalysis.Lyra;
 /// <remarks>
 /// This type does not support value equality.
 /// </remarks>
-/// <param name="append">
+/// <param name="Append">
 /// The callback to invoke when appending to a builder.
 /// </param>
 #if CSHARPSOURCEBUILDER_GENERATOR
 [IncludeFile]
 #endif
-readonly record struct StrategyComponent(Action<CSharpSourceBuilder, CancellationToken> append) : ICSharpSourceComponent
+readonly record struct StrategyComponent(Action<CSharpSourceBuilder, CancellationToken> Append) : ICSharpSourceComponent
 {
     /// <inheritdoc />
     public void AppendTo(CSharpSourceBuilder builder, CancellationToken cancellationToken = default)
     {
         cancellationToken.ThrowIfCancellationRequested();
 
-        append.Invoke(builder, cancellationToken);
+        Append.Invoke(builder, cancellationToken);
     }
 
     /// <inheritdoc />
     public Boolean Equals(StrategyComponent other) =>
-            throw new NotSupportedException("Equals is not supported on this type.");
+        throw new NotSupportedException("Equals is not supported on this type.");
 
     /// <inheritdoc />
     public override Int32 GetHashCode() =>
-            throw new NotSupportedException("GetHashCode is not supported on this type.");
+        throw new NotSupportedException("GetHashCode is not supported on this type.");
+}
+
+/// <summary>
+/// Implements an arbitrary component that uses state.
+/// </summary>
+/// <remarks>
+/// This type does not support value equality.
+/// </remarks>
+/// <param name="State">
+/// The state used by the component.
+/// </param>
+/// <param name="Append">
+/// The callback to invoke when appending to a builder.
+/// </param>
+/// <typeparam name="TState">
+/// The type of state used by the component.
+/// </typeparam>
+#if CSHARPSOURCEBUILDER_GENERATOR
+[IncludeFile]
+#endif
+readonly record struct StrategyComponent<TState>(
+    TState State,
+    Action<TState, CSharpSourceBuilder, CancellationToken> Append) : ICSharpSourceComponent
+{
+    /// <inheritdoc />
+    public void AppendTo(CSharpSourceBuilder builder, CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+
+        Append.Invoke(State, builder, cancellationToken);
+    }
+
+    /// <inheritdoc />
+    public Boolean Equals(StrategyComponent<TState> other) =>
+        throw new NotSupportedException("Equals is not supported on this type.");
+
+    /// <inheritdoc />
+    public override Int32 GetHashCode() =>
+        throw new NotSupportedException("GetHashCode is not supported on this type.");
 }

@@ -112,9 +112,9 @@ internal readonly record struct TypeComponent<TBody>(
         builder.AppendLine()
                .AppendLine('{')
                .Indent()
-               .Append(Body)
+               .AppendLine(Body)
                .Detent()
-               .AppendLine('}');
+               .Append('}');
     }
 
     /// <inheritdoc />

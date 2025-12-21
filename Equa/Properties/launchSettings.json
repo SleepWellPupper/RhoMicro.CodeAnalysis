@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "Janus": {
+      "commandName": "DebugRoslynComponent",
+      "targetProject": "../Janus/Janus.csproj"
+    }
+  }
+}

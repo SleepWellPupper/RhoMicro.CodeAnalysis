@@ -1,0 +1,40 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <developmentDependency>true</developmentDependency>
+    <NoPackageAnalysis>true</NoPackageAnalysis>
+    <IsRoslynComponent>true</IsRoslynComponent>
+    <Nullable>enable</Nullable>
+    <!--    <ImplicitUsings>disable</ImplicitUsings>-->
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <DefineConstants>$(DefineConstants);RHOMICRO_CODEANALYSIS_JANUS_ANALYZERS</DefineConstants>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\Lyra\Lyra.csproj" OutputItemType="analyzer" ReferenceOutputAssembly="false"/>
+    <ProjectReference Include="..\Polyfills\Polyfills.csproj" OutputItemType="analyzer" ReferenceOutputAssembly="false"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Update="NETStandard.Library" PrivateAssets="all"/>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="5.0.0"/>
+    <PackageReference Include="PolySharp" Version="1.15.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="RhoMicro.CodeAnalysis.UtilityGenerators" Version="22.0.3">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Include="AnalyzerReleases.Shipped.md"/>
+    <AdditionalFiles Include="AnalyzerReleases.Unshipped.md"/>
+  </ItemGroup>
+
+</Project>

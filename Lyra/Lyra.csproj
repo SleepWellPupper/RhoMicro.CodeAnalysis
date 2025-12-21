@@ -6,7 +6,8 @@
     <developmentDependency>true</developmentDependency>
     <NoPackageAnalysis>true</NoPackageAnalysis>
     <IsRoslynComponent>true</IsRoslynComponent>
-<!--    <ImplicitUsings>disable</ImplicitUsings>-->
+    <Version>1.2.0</Version>
+    <!--    <ImplicitUsings>disable</ImplicitUsings>-->
   </PropertyGroup>
 
   <PropertyGroup>
@@ -30,9 +31,6 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="RhoMicro.CodeAnalysis.UtilityGenerators" Version="15.3.4">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

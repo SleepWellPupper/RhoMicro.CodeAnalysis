@@ -3,11 +3,12 @@
 		<EnableNETAnalyzers>true</EnableNETAnalyzers>
 		<AnalysisMode>All</AnalysisMode>
 		<EnforceExtendedAnalyzerRules>true</EnforceExtendedAnalyzerRules>
-		<LangVersion>latest</LangVersion>
+		<LangVersion>preview</LangVersion>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<GenerateDocumentationFile>True</GenerateDocumentationFile>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <SolutionName>RhoMicro.CodeAnalysis</SolutionName>
 		<RootNamespace>$(SolutionName)</RootNamespace>
 		<AssemblyName>$(SolutionName).$(MSBuildProjectName)</AssemblyName>
 	</PropertyGroup>
@@ -17,7 +18,7 @@
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageLicenseExpression>MPL-2.0</PackageLicenseExpression>
 		<Authors>Paul Braetz</Authors>
-		<Copyright>2024</Copyright>
+		<Copyright>$([System.DateTime]::Now.ToString('yyyy'))</Copyright>
 		<Company>RhoMicro</Company>
 		<PackageId>$(SolutionName).$(MSBuildProjectName)</PackageId>
 		<RepositoryUrl>https://github.com/SleepWellPupper/RhoMicro.CodeAnalysis/tree/master/$(MSBuildProjectName)</RepositoryUrl>

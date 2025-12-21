@@ -9,7 +9,7 @@ using Microsoft.CodeAnalysis;
 /// Generates sources for using the <see cref="CSharpSourceBuilder"/> and related types.
 /// </summary>
 [Generator(LanguageNames.CSharp)]
-public class Generator : IIncrementalGenerator
+public sealed class Generator : IIncrementalGenerator
 {
     /// <inheritdoc />
     public void Initialize(IncrementalGeneratorInitializationContext context)

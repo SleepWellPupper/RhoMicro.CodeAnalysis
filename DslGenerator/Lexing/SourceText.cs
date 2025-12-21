@@ -12,15 +12,15 @@ using System.Text;
 internal readonly partial struct SourceText : IDisposable
 {
     public String ToString(CancellationToken cancellationToken) =>
-        Match(
-            s => s,
-            s =>
+        Switch(
+            onString: s => s,
+            onStream: s =>
             {
                 cancellationToken.ThrowIfCancellationRequested();
                 var reader = new StreamReader(s);
                 var resultBuilder = new StringBuilder();
                 var line = reader.ReadLine();
-                while(line != null)
+                while (line != null)
                 {
                     cancellationToken.ThrowIfCancellationRequested();
                     _ = resultBuilder.AppendLine(line);
@@ -31,10 +31,12 @@ internal readonly partial struct SourceText : IDisposable
 
                 return result;
             });
+
     public static SourceText Empty { get; } = String.Empty;
+
     public void Dispose()
     {
-        if(TryAsStream(out var s))
+        if (TryCastToStream(out var s))
             s.Dispose();
     }
 }

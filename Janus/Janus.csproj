@@ -1,0 +1,35 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <!--AutoUpdateAssemblyName-->
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <IsPackable>true</IsPackable>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Description>
+      Generate hybrid (tagged/type) union types.
+    </Description>
+    <PackageTags>Source Generator; Union Types; Unions;Discriminated Unions;Tagged Unions;Variant Types</PackageTags>
+    <PackageIconUrl>https://raw.githubusercontent.com/PaulBraetz/RhoMicro.CodeAnalysis/master/Janus/PackageLogo.svg</PackageIconUrl>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Janus.Library\Janus.Library.csproj" PrivateAssets="all"/>
+    <ProjectReference Include="..\Janus.CodeFixes\Janus.CodeFixes.csproj" PrivateAssets="all"/>
+    <ProjectReference Include="..\Janus.Analyzers\Janus.Analyzers.csproj" PrivateAssets="all"/>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="PackageLogo.svg" Pack="true" PackagePath=""/>
+    <None Include="README.md" Pack="true" PackagePath="/" CopyToOutputDirectory="Always"/>
+    <None Include="$(OutputPath)\$(AssemblyName).Analyzers.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false"/>
+    <None Include="$(OutputPath)\$(AssemblyName).CodeFixes.dll" Pack="true" PackagePath="analyzers/dotnet/cs" Visible="false"/>
+    <None Include="$(OutputPath)\$(AssemblyName).Library.dll" Pack="true" PackagePath="lib/netstandard2.0/" Visible="true"/>
+    <None Include="$(OutputPath)\$(AssemblyName).Library.pdb" Pack="true" PackagePath="lib/netstandard2.0/" Visible="true"/>
+    <None Include="$(OutputPath)\$(AssemblyName).Library.xml" Pack="true" PackagePath="lib/netstandard2.0/" Visible="true"/>
+  </ItemGroup>
+
+</Project>
