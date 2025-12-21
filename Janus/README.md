@@ -25,6 +25,7 @@ Package Reference:
 	<PackageReference Include="RhoMicro.CodeAnalysis.Janus" Version="*"/>
 </ItemGroup>
 ```
+
 CLI:
 ```
 dotnet add package RhoMicro.CodeAnalysis.Janus
@@ -55,30 +56,36 @@ Use `UnionTypeAttribute<T0>` to add `T0` to the list of variants:
 [UnionType<String>]
 partial struct IntOrString;
 ```
+
 Usage:
 ```cs
 IntOrString u = "Hello, World!"; //implicitly converted
 u = 32; //implicitly converted
 ```
+
 Use `UnionTypeAttribute` on type parameters to add the targeted type parameter to the list of variants:
 ```cs
 partial struct GenericUnion<[UnionType] T0, [UnionType] T1>;
 ```
+
 Usage:
 ```cs
 var u = GenericUnion<Int32, String>.CreateFromT1("Hello, World!");
 u = GenericUnion<Int32, String>.CreateFromT0(32);
 ```
-*Note: due to compiler restrictions no conversions from or to generic type parameters are generated. Using factory methods is an alternative way of creating union instances.*
+
+*Note: due to compiler restrictions no conversions from or to generic type parameters are generated. Using factory
+methods is an alternative way of creating union instances.*
 
 - `Name`
 
-Define names for generated members using `Name` , e.g.:
+Define names for generated members using `Name`:
 ```cs
 [UnionType<List<String>>(Name = "MultipleNames")]
 [UnionType<String>(Name = "SingleName")]
 partial struct Names;
 ```
+
 Usage:
 ```cs
 Names n = "John";
@@ -124,6 +131,7 @@ Group variants into categories by assigning `Groups`:
 [UnionType<String, Char>(Groups = ["Text"])]
 partial struct GroupedUnion;
 ```
+
 Usage:
 ```cs
 GroupedUnion u = "Hello, World!";
@@ -160,13 +168,16 @@ partial struct Union;
 Use the `UnionTypeSettingsAttribute` to supply additional instructions to the generator.
 The attribute may be applied to either an assembly or a union type.
 When targeting a union type, it defines settings specific to that type.
-If, however, the attribute is annotating an assembly, it supplies the default settings for every union type in that assembly.
+If, however, the attribute is annotating an assembly, it supplies the default settings for every union type in that
+assembly.
 
 Settings inheritance is therefore ordered like so:
 
-- default settings are applied (see [UnionTypeSettingsAttribute](https://raw.githubusercontent.com/PaulBraetz/RhoMicro.CodeAnalysis/master/Janus/Attributes/UnionTypeSettingsAttribute.cs))
+- default settings are applied (
+  see [UnionTypeSettingsAttribute](https://raw.githubusercontent.com/PaulBraetz/RhoMicro.CodeAnalysis/master/Janus/Attributes/UnionTypeSettingsAttribute.cs))
 - if settings could be located on assembly, settings defined therein are applied and override inherited settings
-- if settings could be located on union type, settings defined therein are applied and override inherited or assembly settings
+- if settings could be located on union type, settings defined therein are applied and override inherited or assembly
+  settings
 
 #### `ToStringSetting`
 
@@ -211,7 +222,7 @@ Define if equality operators should be generated:
 
 #### `JsonConverterSetting`
 
-Define how json support should be generated:
+Define how JSON support should be generated:
 
 - `Inherit`
 > Inherits the setting. This is the default value.
@@ -224,10 +235,10 @@ Define how json support should be generated:
 - `EmitJsonConverter`
 > A JSON converter implementation is emitted.
 
-## Contrived Example
+## Compound Example
 
-In our imaginary usecase, a user shall be retrieved from the infrastructure via a name query. The following types will be found throughout the example:
-
+In our imaginary usecase, a user shall be retrieved from the infrastructure via a name query. The following types will
+be found throughout the example:
 ```cs
 sealed record User(String Name);
 
@@ -240,15 +251,16 @@ enum ErrorCode
 readonly record struct MultipleUsersError(Int32 Count);
 ```
 
-The `User` type represents a user. The `ErrorCode` represents an error that does not contain additional information, like `MultipleUsersError` does. It represents multiple users having been found while only one was requested.
+The `User` type represents a user. The `ErrorCode` represents an error that does not contain additional information,
+like `MultipleUsersError` does. It represents multiple users having been found while only one was requested.
 
 We define a union type to represent our imaginary query:
-
 ```cs
 [UnionType<ErrorCode, MultipleUsersError>(Groups = ["Error"])]
 [UnionType<User>(Groups = ["Success"])]
 readonly partial struct GetUserResult;
 ```
+
 Instances of `GetUserResult` can represent *either* an instance of `ErrorCode`, `MultipleUsersError` or `User`.
 
 It will be used in a service façade like so:
@@ -258,6 +270,7 @@ interface IUserService
     GetUserResult GetUserByName(String name);
 }
 ```
+
 A repository abstracts over the underlying infrastructure:
 ```cs
 interface IUserRepository
@@ -265,10 +278,12 @@ interface IUserRepository
     IQueryable<User> UsersByName(String name);
 }
 ```
+
 Access violations would be communicated through the repository using the following exception type:
 ```cs
 sealed class UnauthorizedDatabaseAccessException : Exception;
 ```
+
 An implementation of the `IUserService` is provided as follows:
 ```cs
 sealed class UserService : IUserService
@@ -301,10 +316,12 @@ sealed class UserService : IUserService
     }
 }
 ```
-As you can see, possible representations of `GetUserResult` are implicitly converted and returned by the service. Users of `OneOf` will be familiar with this.
 
-On the consumer side of this api, a generated `Match` function helps with transforming the union instance to another type:
+As you can see, possible representations of `GetUserResult` are implicitly converted and returned by the service. Users
+of `OneOf` will be familiar with this.
 
+On the consumer side of this api, a generated `Match` function helps with transforming the union instance to another
+type:
 ```cs
 sealed class UserModel
 {
