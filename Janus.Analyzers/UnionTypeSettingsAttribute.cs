@@ -105,13 +105,13 @@ namespace RhoMicro.CodeAnalysis
         /// Defines how to generate an implementation for <see cref="Object.ToString"/>.
         /// </summary>
         public ToStringSetting ToStringSetting { get; set; }
+        
         /// <summary>
         /// Indicates how to generate equality operators.
         /// By default, equality operators will only be emitted for value types, to preserve
         /// reference equality for comparing reference union types via <c>==</c> or <c>!=</c>.
         /// </summary>
         public EqualityOperatorsSetting EqualityOperatorsSetting { get; set; }
-
 
         /// <summary>
         /// Gets or sets a value indicating whether to make the union type JSON serializable.
