@@ -221,12 +221,7 @@ internal readonly record struct JsonConverterComponent(UnionModel Model) : ICSha
                       {
                           ct.ThrowIfCancellationRequested();
 
-                          b.Append(
-                              $$"""
-                                global::System.Text.Json.JsonSerializer.Serialize(writer, value.CastTo{{v.Name}}, options);
-                                break;
-                                """
-                          );
+                          b.Append($"global::System.Text.Json.JsonSerializer.Serialize(writer, value.CastTo{v.Name}, options);");
                       }, static (_, b, ct) =>
                       {
                           ct.ThrowIfCancellationRequested();
