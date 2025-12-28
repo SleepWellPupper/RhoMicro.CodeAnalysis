@@ -14,6 +14,50 @@ internal readonly record struct VariantsSwitchComponent(
     {
         cancellationToken.ThrowIfCancellationRequested();
 
+        if (Model.Variants.Count < 24)
+        {
+            AppendIfElseStatements(builder, cancellationToken);
+        }
+        else
+        {
+            AppendSwitchStatement(builder, cancellationToken);
+        }
+    }
+
+    private void AppendIfElseStatements(CSharpSourceBuilder builder, CancellationToken cancellationToken)
+    {
+        foreach (var variant in Model.Variants)
+        {
+            builder.AppendLine($"if({VariantExpression} is VariantKind.{variant.Name})")
+                .AppendLine('{')
+                .Indent();
+
+            Append.Invoke(variant, Model, builder, cancellationToken);
+
+            builder.AppendLine()
+                .Detent()
+                .Append("} else ");
+        }
+
+        builder.AppendLine('{')
+            .Indent();
+
+        if (Default is not null)
+        {
+            Default.Invoke(Model, builder, cancellationToken);
+        }
+        else
+        {
+            builder.Append("throw CreateUnknownVariantException();");
+        }
+
+        builder.AppendLine()
+            .Detent()
+            .AppendLine('}');
+    }
+
+    private void AppendSwitchStatement(CSharpSourceBuilder builder, CancellationToken cancellationToken)
+    {
         builder.AppendLine($"switch({VariantExpression})")
             .AppendLine('{')
             .Indent();
