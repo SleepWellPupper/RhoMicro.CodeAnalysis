@@ -18,12 +18,14 @@ public partial class IsPropertyTests
         Union<Byte> u = 32;
         Assert.True(u.IsInt);
     }
+
     [Fact]
     public void IsNotIntWhenRepresentingList()
     {
         Union<Byte> u = new List<String>();
         Assert.False(u.IsInt);
     }
+
     [Fact]
     public void IsNotIntWhenRepresentingByte()
     {
@@ -37,12 +39,14 @@ public partial class IsPropertyTests
         Union<Byte> u = 32;
         Assert.False(u.IsList);
     }
+
     [Fact]
     public void IsListWhenRepresentingList()
     {
         Union<Byte> u = new List<String>();
         Assert.True(u.IsList);
     }
+
     [Fact]
     public void IsNotListWhenRepresentingByte()
     {
@@ -56,12 +60,14 @@ public partial class IsPropertyTests
         Union<Byte> u = 32;
         Assert.False(u.IsT);
     }
+
     [Fact]
     public void IsNotByteWhenRepresentingList()
     {
         Union<Byte> u = new List<String>();
         Assert.False(u.IsT);
     }
+
     [Fact]
     public void IsByteWhenRepresentingByte()
     {
