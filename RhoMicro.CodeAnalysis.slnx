@@ -17,6 +17,7 @@
     <Project Path="EnumConstStringGenerator/EnumConstStringGenerator.csproj" />
     <Project Path="Equa/Equa.csproj" />
     <Project Path="Janus.Analyzers/Janus.Analyzers.csproj" />
+    <Project Path="Janus.Benchmarks/Janus.Benchmarks.csproj" />
     <Project Path="Janus.CodeFixes/Janus.CodeFixes.csproj" />
     <Project Path="Janus.Library/Janus.Library.csproj" />
     <Project Path="Janus.TestApplication\Janus.TestApplication.csproj" />
