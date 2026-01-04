@@ -66,6 +66,9 @@ internal readonly record struct SwitchComponent(UnionModel Model) : ICSharpSourc
 
                               b.Append($"{typeof(Action)}<{v.Type.NullableName}, TState> on{v.Name}");
                           }, separator: ",\n")}})
+                      #if NET9_0_OR_GREATER
+                          where TState : allows ref struct
+                      #endif
                       {
                           {{new VariantsSwitchComponent(m, static (v, _, b, ct) =>
                           {
@@ -141,6 +144,9 @@ internal readonly record struct SwitchComponent(UnionModel Model) : ICSharpSourc
 
                               b.Append($"{typeof(Action)}<{v.Type.NullableName}, TState>? on{v.Name} = null");
                           }, separator: ",\n")}})
+                      #if NET9_0_OR_GREATER
+                          where TState : allows ref struct
+                      #endif
                       {
                           {{new VariantsSwitchComponent(m, static (v, _, b, ct) =>
                           {
@@ -214,6 +220,9 @@ internal readonly record struct SwitchComponent(UnionModel Model) : ICSharpSourc
 
                               b.Append($"{func}<{v.Type.NullableName}, TState, TResult> on{v.Name}");
                           }, separator: ",\n")}})
+                      #if NET9_0_OR_GREATER
+                          where TState : allows ref struct
+                      #endif
                       {
                           {{new VariantsSwitchComponent(m, static (v, _, b, ct) =>
                           {
@@ -287,6 +296,9 @@ internal readonly record struct SwitchComponent(UnionModel Model) : ICSharpSourc
 
                               b.Append($"{func}<{v.Type.NullableName}, TState, TResult>? on{v.Name} = null");
                           }, separator: ",\n")}})
+                      #if NET9_0_OR_GREATER
+                          where TState : allows ref struct
+                      #endif
                       {
                           {{new VariantsSwitchComponent(m, static (v, _, b, ct) =>
                           {
@@ -370,6 +382,9 @@ internal readonly record struct SwitchComponent(UnionModel Model) : ICSharpSourc
 
                               b.Append($"{func}<{v.Type.NullableName}, TState, TResult>? on{v.Name} = null");
                           }, separator: ",\n")}})
+                      #if NET9_0_OR_GREATER
+                          where TState : allows ref struct
+                      #endif
                       {
                           {{new VariantsSwitchComponent(m, static (v, _, b, ct) =>
                           {
