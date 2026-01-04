@@ -92,7 +92,7 @@ partial class UnionTypeAttribute
                 Type = new(
                     isArray
                         ? VariantTypeKind.Reference
-                        : actualVariant.IsUnmanagedType
+                        : actualVariant.IsUnmanagedOrUnmanagedUnionType
                             ? VariantTypeKind.Unmanaged
                             : VariantTypeKind.Value,
                     IsNullable: true,
@@ -106,7 +106,7 @@ partial class UnionTypeAttribute
                 var name = variant.ToDisplayString(TypeDisplayFormat);
                 Type = extractedVariant switch
                 {
-                    { IsUnmanagedType: true } =>
+                    { IsUnmanagedOrUnmanagedUnionType: true } =>
                         new(isArray
                                 ? VariantTypeKind.Reference
                                 : VariantTypeKind.Unmanaged,
@@ -170,5 +170,87 @@ partial class UnionTypeAttribute
     {
         get => base.IsNullable;
         set => base.IsNullable = value;
+    }
+}
+
+file static class Extensions
+{
+    extension(ITypeSymbol symbol)
+    {
+        public Boolean IsUnmanagedOrUnmanagedUnionType
+        {
+            get
+            {
+                var result = isUnmanaged(symbol, null);
+
+                return result;
+
+                Boolean isUnmanaged(ITypeSymbol candidate, Dictionary<ITypeSymbol, Boolean?>? unmanagedTypes)
+                {
+                    if (!candidate.IsUnmanagedType)
+                    {
+                        unmanagedTypes?[candidate] = false;
+                        return false;
+                    }
+
+                    unmanagedTypes = new Dictionary<ITypeSymbol, Boolean?>(SymbolEqualityComparer.Default);
+
+                    if (unmanagedTypes.TryGetValue(candidate, out var memoizedValue))
+                    {
+                        if (memoizedValue is { } memoizedResult)
+                        {
+                            return memoizedResult;
+                        }
+
+                        return true;
+                    }
+
+                    var typeAttributes = candidate.GetAttributes();
+                    foreach (var attribute in typeAttributes)
+                    {
+                        if (!attribute.IsUnionTypeAttribute())
+                        {
+                            continue;
+                        }
+
+                        foreach (var variant in attribute.AttributeClass?.TypeArguments ?? [])
+                        {
+                            if (isUnmanaged(variant, unmanagedTypes))
+                            {
+                                continue;
+                            }
+
+                            unmanagedTypes[candidate] = false;
+                            return false;
+                        }
+                    }
+
+                    if (candidate is INamedTypeSymbol namedCandidate)
+                    {
+                        foreach (var typeParameter in namedCandidate.TypeParameters)
+                        {
+                            if (typeParameter.HasUnmanagedTypeConstraint)
+                            {
+                                continue;
+                            }
+
+                            var typeParameterAttributes = typeParameter.GetAttributes();
+
+                            foreach (var attribute in typeParameterAttributes)
+                            {
+                                if (attribute.IsUnionTypeAttribute())
+                                {
+                                    unmanagedTypes[candidate] = false;
+                                    return false;
+                                }
+                            }
+                        }
+                    }
+
+                    unmanagedTypes[candidate] = true;
+                    return true;
+                }
+            }
+        }
     }
 }
