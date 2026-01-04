@@ -11,14 +11,14 @@ public class JanusAnalyzerTests
     public Task EqualsIsNotOverriddenIfUserProvided() => JanusTest.TestAnalyzer(
         """
         using RhoMicro.CodeAnalysis;
-        
+
         [UnionType<int>]
         partial struct Union
         {
             public bool Equals(Union other) => false;
         }
         """);
-    
+
     [Fact]
     public Task StructUnionHasEqualityOperatorEmitted() => JanusTest.TestAnalyzer(
         """
@@ -442,6 +442,14 @@ public class JanusAnalyzerTests
 
         [UnionType<int>]
         [UnionTypeSettings(ToStringSetting = ToStringSetting.None)]
+        sealed partial class Union;
+        """
+    )]
+    [InlineData(
+        """
+        using RhoMicro.CodeAnalysis;
+
+        [UnionType<int[]>]
         sealed partial class Union;
         """
     )]

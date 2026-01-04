@@ -11,7 +11,7 @@ partial class UnionTypeAttribute
     [StructLayout(LayoutKind.Auto)]
     partial record struct Model
     {
-        internal static readonly SymbolDisplayFormat TypeDisplayFormat = new SymbolDisplayFormat(
+        internal static readonly SymbolDisplayFormat TypeDisplayFormat = new(
             globalNamespaceStyle: SymbolDisplayGlobalNamespaceStyle.Included,
             typeQualificationStyle: SymbolDisplayTypeQualificationStyle.NameAndContainingTypesAndNamespaces,
             genericsOptions: SymbolDisplayGenericsOptions.IncludeTypeParameters,
@@ -64,10 +64,21 @@ partial class UnionTypeAttribute
         [InitializationMethod(StateTypeName = "TypeArgumentState")]
         private void Initialize(ITypeSymbol variant, CancellationToken ct)
         {
-            var isInterface = variant.TypeKind is TypeKind.Interface;
-            var docsId = variant.GetDocumentationCommentId() ?? String.Empty;
+            var isArray = false;
 
-            if (variant is INamedTypeSymbol
+            var extractedVariant = variant;
+
+            if (variant is IArrayTypeSymbol { ElementType: { } elementType })
+            {
+                isArray = true;
+                extractedVariant = elementType;
+            }
+
+            var isInterface = extractedVariant.TypeKind is TypeKind.Interface;
+            var docsId = extractedVariant.GetDocumentationCommentId() ?? String.Empty;
+            var variantName = Name;
+
+            if (extractedVariant is INamedTypeSymbol
                 {
                     OriginalDefinition:
                     {
@@ -76,10 +87,14 @@ partial class UnionTypeAttribute
                     TypeArguments: [{ } actualVariant]
                 })
             {
-                Name ??= actualVariant.Name;
+                variantName ??= actualVariant.Name;
                 var name = actualVariant.ToDisplayString(TypeDisplayFormat);
                 Type = new(
-                    actualVariant.IsUnmanagedType ? VariantTypeKind.Unmanaged : VariantTypeKind.Value,
+                    isArray
+                        ? VariantTypeKind.Reference
+                        : actualVariant.IsUnmanagedType
+                            ? VariantTypeKind.Unmanaged
+                            : VariantTypeKind.Value,
                     IsNullable: true,
                     IsInterface: isInterface,
                     Name: name,
@@ -87,18 +102,22 @@ partial class UnionTypeAttribute
             }
             else
             {
-                Name ??= variant.Name;
+                variantName ??= extractedVariant.Name;
                 var name = variant.ToDisplayString(TypeDisplayFormat);
-                Type = variant switch
+                Type = extractedVariant switch
                 {
                     { IsUnmanagedType: true } =>
-                        new(VariantTypeKind.Unmanaged,
+                        new(isArray
+                                ? VariantTypeKind.Reference
+                                : VariantTypeKind.Unmanaged,
                             IsNullable: false,
                             IsInterface: isInterface,
                             Name: name,
                             DocsId: docsId),
                     { IsValueType: true } =>
-                        new(VariantTypeKind.Value,
+                        new(isArray
+                                ? VariantTypeKind.Reference
+                                : VariantTypeKind.Value,
                             IsNullable: false,
                             IsInterface: isInterface,
                             Name: name,
@@ -110,13 +129,19 @@ partial class UnionTypeAttribute
                             Name: name,
                             DocsId: docsId),
                     _ =>
-                        new(VariantTypeKind.Unknown,
+                        new(isArray
+                                ? VariantTypeKind.Reference
+                                : VariantTypeKind.Unknown,
                             IsNullable: false,
                             IsInterface: false,
                             Name: name,
                             DocsId: docsId),
                 };
             }
+
+            Name ??= isArray
+                ? $"{variantName}Array"
+                : variantName;
         }
 
         public VariantTypeModel Type { get; private set; }
