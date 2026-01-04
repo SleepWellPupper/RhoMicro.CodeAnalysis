@@ -2,7 +2,7 @@
 
 This repository contains my explorations on c# source code generation and analysis.
 
-The [UnionsGenerator](UnionsGenerator) generator enables the use of union types in C#.
+The [Janus](Janus) generator enables the use of union types in C#.
 
 The [JsonSchemaGenerator](JsonSchemaGenerator) generator generates json schemata from C# class definitions.
 
