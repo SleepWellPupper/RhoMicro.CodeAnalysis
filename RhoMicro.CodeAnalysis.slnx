@@ -1,6 +1,5 @@
 <Solution>
   <Folder Name="/Applications/">
-    <Project Path="CSharpSourceBuilder.TestApplication\CSharpSourceBuilder.TestApplication.csproj" />
     <Project Path="DslGenerator.TestApp/DslGenerator.TestApp.csproj" />
     <Project Path="EnumStringTestApp/EnumStringTestApp.csproj" />
     <Project Path="IndentedStringBuilderTestApp/IndentedStringBuilderTestApp.csproj" />
