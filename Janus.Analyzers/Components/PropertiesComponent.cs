@@ -22,7 +22,7 @@ internal readonly record struct PropertiesComponent(UnionModel Model) : ICSharpS
             b.AppendLine(
                 $$"""
                   {{Summary("Gets the variant of the union.")}}
-                  public VariantModel Variant { get; } = VariantModel.Unknown;
+                  public VariantModel Variant { get; }
                   {{Summary("Gets the value of the union.")}}
                   public object{{(isNullable ? "?" : String.Empty)}} Value 
                   {

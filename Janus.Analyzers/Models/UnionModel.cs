@@ -26,6 +26,12 @@ internal sealed partial record UnionModel(
     String DocsCommentId,
     Boolean EmitDocsComment)
 {
+    public Boolean HasValueTypeVariant => Variants is
+    [
+        { Type.Kind: VariantTypeKind.Unmanaged or VariantTypeKind.Value },
+        ..
+    ];
+
     [field: MaybeNull] public TypeNames TypeNames => field ??= new TypeNames(this);
 
     private static readonly SymbolDisplayFormat _namespaceFormat = new(
