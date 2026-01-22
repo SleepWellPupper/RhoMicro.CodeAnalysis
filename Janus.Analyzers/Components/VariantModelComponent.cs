@@ -28,12 +28,23 @@ internal readonly record struct VariantModelComponent(UnionModel Model) : ICShar
                   {{Summary("Gets the kind of variant represented.")}}
                   public VariantKind Kind { get; }
 
-                  {{Summary(static (b, ct) =>
+                  {{Create(m, static (m, b, ct) =>
                   {
                       ct.ThrowIfCancellationRequested();
-                      b.Append($"Gets a variant model representing {Cref("VariantKind.Unknown")}.");
+
+                      if (m.TypeKind is UnionTypeKind.Class)
+                      {
+                          return;
+                      }
+
+                      if (m.HasValueTypeVariant)
+                      {
+                          b.Append(CreateDefaultMember(m.Variants[0]));
+                      }else
+                      {
+                          b.Append(CreateUnknownAndDefaultMember());
+                      }
                   })}}
-                  public static VariantModel Unknown { get; } = new(VariantKind.Unknown);
 
                   {{List<UnionTypeAttribute.Model>(m.Variants, static (v, _, _, b, ct) =>
                   {
@@ -167,5 +178,60 @@ internal readonly record struct VariantModelComponent(UnionModel Model) : ICShar
         var region = Region("VariantModel", type);
 
         builder.Append(region);
+    }
+
+    private static StrategyComponent<UnionTypeAttribute.Model> CreateDefaultMember(
+        UnionTypeAttribute.Model defaultVariant)
+    {
+        var result = Create(
+            defaultVariant,
+            static (v, b, ct) =>
+            {
+                ct.ThrowIfCancellationRequested();
+
+                b.Append($"""
+                          {Summary(v, static (v, b, ct) =>
+                          {
+                              ct.ThrowIfCancellationRequested();
+                              b.Append($"Gets a variant model representing {Cref(v, static (n, b, ct) =>
+                              {
+                                  ct.ThrowIfCancellationRequested();
+
+                                  b.Append($"VariantKind.{n.Name}");
+                              })}.");
+                          })}
+                          public static VariantModel Default => default;
+                          """
+                );
+            });
+
+        return result;
+    }
+
+    private static StrategyComponent CreateUnknownAndDefaultMember()
+    {
+        var result = Create(static (b, ct) =>
+        {
+            ct.ThrowIfCancellationRequested();
+
+            b.Append($$"""
+                       {{Summary(static (b, ct) =>
+                       {
+                           ct.ThrowIfCancellationRequested();
+                           b.Append($"Gets a variant model representing {Cref("VariantKind.Unknown")}.");
+                       })}}
+                       public static VariantModel Unknown { get; } = new(VariantKind.Unknown);
+
+                       {{Summary(static (b, ct) =>
+                       {
+                           ct.ThrowIfCancellationRequested();
+                           b.Append($"Gets a variant model representing {Cref("VariantKind.Unknown")}.");
+                       })}}
+                       public static VariantModel Default => default;
+                       """
+            );
+        });
+
+        return result;
     }
 }
