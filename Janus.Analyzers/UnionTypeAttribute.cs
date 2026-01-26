@@ -48,6 +48,14 @@ namespace RhoMicro.CodeAnalysis
         /// variant type.
         /// </summary>
         public virtual bool IsNullable { get; set; }
+        
+        /// <summary>
+        /// Gets or sets a value indicating whether this variant is the default value of the uninitialized
+        /// variant. Only one variant may be the default value.
+        /// This setting is only relevant for <see langword="struct"/> union types.
+        /// Only variants of a value type or nullable reference type may be designated as default variants.
+        /// </summary>
+        public virtual bool IsDefault { get; set; }
     }
     
     /// <summary>

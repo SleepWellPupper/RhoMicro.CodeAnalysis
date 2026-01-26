@@ -32,15 +32,10 @@ internal readonly record struct VariantModelComponent(UnionModel Model) : ICShar
                   {
                       ct.ThrowIfCancellationRequested();
 
-                      if (m.TypeKind is UnionTypeKind.Class)
-                      {
-                          return;
-                      }
-
-                      if (m.HasValueTypeVariant)
+                      if (m.HasDefaultVariant)
                       {
                           b.Append(CreateDefaultMember(m.Variants[0]));
-                      }else
+                      }else if (m.TypeKind is UnionTypeKind.Struct)
                       {
                           b.Append(CreateUnknownAndDefaultMember());
                       }

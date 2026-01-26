@@ -408,6 +408,35 @@ public class JanusAnalyzerTests
         ref partial struct {|RMJ0020:Union|};
         """);
 
+    [Fact]
+    public Task NonNullableReferenceTypeVariantCannotBeDefaultVariant() => JanusTest.TestAnalyzer(
+        """
+        using RhoMicro.CodeAnalysis;
+
+        [UnionType<int>]
+        [UnionType<string>({|RMJ0023:IsDefault = true|})]
+        readonly partial struct Union;
+        """);
+
+    [Fact]
+    public Task ClassUnionsShouldNotUseDefaultVariants() => JanusTest.TestAnalyzer(
+        """
+        using RhoMicro.CodeAnalysis;
+
+        [UnionType<int>({|RMJ0021:IsDefault = true|})]
+        sealed partial class Union;
+        """);
+
+    [Fact]
+    public Task CannotDeclareMultipleDefaultVariants() => JanusTest.TestAnalyzer(
+        """
+        using RhoMicro.CodeAnalysis;
+
+        [UnionType<int>({|RMJ0022:IsDefault = true|})]
+        [UnionType<double>({|RMJ0022:IsDefault = true|})]
+        readonly partial struct Union;
+        """);
+
     [Theory]
     [InlineData("""
                 using RhoMicro.CodeAnalysis;
@@ -451,6 +480,58 @@ public class JanusAnalyzerTests
 
         [UnionType<int[]>]
         sealed partial class Union;
+        """
+    )]
+    [InlineData(
+        """
+        // StructUnionWithoutUnknownVariant
+        using RhoMicro.CodeAnalysis;
+        using System.Collections.Generic;
+        using System;
+
+        [UnionType<string, List<int>, DateTime>]
+        partial struct StructUnionWithoutUnknownVariant;
+        """
+    )]
+    [InlineData(
+        """
+        // StructUnionWithUnmanagedDefaultVariant
+        using RhoMicro.CodeAnalysis;
+        using System.Collections.Generic;
+        using System.Threading;
+
+        [UnionType<int>(IsDefault = true)]
+        [UnionType<List<int>>(IsNullable = true)]
+        // unmanaged but alphabetically first, managed value type, non-nullable reference type
+        [UnionType<double, CancellationToken, string>]
+        partial struct StructUnionWithUnmanagedDefaultVariant;
+        """
+    )]
+    [InlineData(
+        """
+        // StructUnionWithManagedStructDefaultVariant
+        using RhoMicro.CodeAnalysis;
+        using System.Collections.Generic;
+        using System.Threading;
+
+        [UnionType<CancellationToken>(IsDefault = true)]
+        [UnionType<List<int>>(IsNullable = true)]
+        // unmanaged, non-nullable reference type
+        [UnionType<double, string>]
+        partial struct StructUnionWithManagedStructDefaultVariant;
+        """
+    )]
+    [InlineData(
+        """
+        // StructUnionWithNullableReferenceTypeDefaultVariant
+        using RhoMicro.CodeAnalysis;
+        using System.Collections.Generic;
+        using System.Threading;
+
+        [UnionType<List<int>>(IsNullable = true, IsDefault = true)]
+        // unmanaged, managed struct, non-nullable reference type
+        [UnionType<double, CancellationToken, string>]
+        partial struct StructUnionWithNullableReferenceTypeDefaultVariant;
         """
     )]
     public Task ProducesNoDiagnostics(String source) => JanusTest.TestAnalyzer(source);

@@ -16,7 +16,7 @@ internal readonly record struct VariantKindComponent(UnionModel Model) : ICSharp
     {
         cancellationToken.ThrowIfCancellationRequested();
 
-        var members = Model.TypeKind is UnionTypeKind.Class || Model.HasValueTypeVariant
+        var members = Model.HasDefaultVariant
             ? CreateMembersWithoutUnknown()
             : CreateMembersWithUnknown();
 

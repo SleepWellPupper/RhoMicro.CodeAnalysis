@@ -26,11 +26,15 @@ internal sealed partial record UnionModel(
     String DocsCommentId,
     Boolean EmitDocsComment)
 {
-    public Boolean HasValueTypeVariant => Variants is
-    [
-        { Type.Kind: VariantTypeKind.Unmanaged or VariantTypeKind.Value },
-        ..
-    ];
+    public Boolean HasDefaultVariant => this is
+    {
+        TypeKind : UnionTypeKind.Struct,
+        Variants :
+        [
+            { Type: not { Kind: VariantTypeKind.Reference, IsNullable: false } },
+            ..
+        ]
+    };
 
     [field: MaybeNull] public TypeNames TypeNames => field ??= new TypeNames(this);
 
@@ -219,6 +223,13 @@ internal sealed partial record UnionModel(
 
         variantsList.Sort((x, y) =>
         {
+            var defaultPrecedence = y.IsDefault.CompareTo(x.IsDefault);
+
+            if (defaultPrecedence is not 0)
+            {
+                return defaultPrecedence;
+            }
+
             var xTypePrecedence = getTypePrecedence(x.Type);
             var yTypePrecedence = getTypePrecedence(y.Type);
             // negative order means x precedes y in sort order, x has higher precedence than y

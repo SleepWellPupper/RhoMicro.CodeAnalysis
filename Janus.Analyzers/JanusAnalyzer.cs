@@ -41,6 +41,9 @@ public sealed partial class JanusAnalyzer : DiagnosticAnalyzer
         DiagnosticDescriptors.DuplicateVariantGroupNamesAreIgnored,
         DiagnosticDescriptors.ClassUnionsShouldBeSealed,
         DiagnosticDescriptors.UnionCannotBeRefStruct,
+        DiagnosticDescriptors.ClassUnionsShouldNotUseDefaultVariants,
+        DiagnosticDescriptors.CannotDeclareMultipleDefaultVariants,
+        DiagnosticDescriptors.NonNullableReferenceTypeVariantCannotBeDefaultVariant,
     ];
 
     /// <inheritdoc />
@@ -89,6 +92,150 @@ public sealed partial class JanusAnalyzer : DiagnosticAnalyzer
             ReportClassUnionsShouldBeSealed, SymbolKind.NamedType);
         context.RegisterSymbolAction(
             ReportUnionCannotBeRefStruct, SymbolKind.NamedType);
+        context.RegisterSymbolAction(
+            ReportClassUnionsShouldNotUseDefaultVariants, SymbolKind.NamedType);
+        context.RegisterSymbolAction(
+            ReportCannotDeclareMultipleDefaultVariants, SymbolKind.NamedType);
+        context.RegisterSymbolAction(
+            ReportNonNullableReferenceTypeVariantCannotBeDefaultVariant, SymbolKind.NamedType);
+    }
+
+    private static void ReportNonNullableReferenceTypeVariantCannotBeDefaultVariant(SymbolAnalysisContext ctx)
+    {
+        var ct = ctx.CancellationToken;
+        ct.ThrowIfCancellationRequested();
+
+        if (ctx.Symbol is not INamedTypeSymbol target)
+        {
+            return;
+        }
+
+        var attributes = target.GetAttributes()
+            .Select(a => (
+                success: a.TryGetUnionTypeAttributeModel(
+                             new UnionTypeAttribute.Model.TypeArgumentState(target), out var model)
+                      && model is { IsDefault: true, IsNullable: false },
+                variant: a is { AttributeClass.TypeArguments: [{ IsReferenceType: true } arg] }
+                    ? arg.ToDisplayString(SymbolDisplayFormat.CSharpErrorMessageFormat)
+                    : null,
+                location: (a.ApplicationSyntaxReference?.GetSyntax(ct) as AttributeSyntax)
+                ?.ArgumentList
+                ?.Arguments
+                .FirstOrDefault(attributeArg =>
+                    attributeArg?.NameEquals?.Name.Identifier.Text is nameof(UnionTypeAttribute.IsDefault))
+                ?.GetLocation()))
+            .Where(t => t is (
+                success: true,
+                variant: not null,
+                location: not null));
+
+        var union = target.ToDisplayString(SymbolDisplayFormat.CSharpErrorMessageFormat);
+
+        foreach (var (_, variant, location) in attributes)
+        {
+            ct.ThrowIfCancellationRequested();
+
+            var diagnostic = Diagnostic.Create(
+                DiagnosticDescriptors.NonNullableReferenceTypeVariantCannotBeDefaultVariant,
+                location,
+                messageArgs: [union, variant]
+            );
+            ctx.ReportDiagnostic(diagnostic);
+        }
+    }
+
+    private static void ReportClassUnionsShouldNotUseDefaultVariants(SymbolAnalysisContext ctx)
+    {
+        var ct = ctx.CancellationToken;
+        ct.ThrowIfCancellationRequested();
+
+        if (ctx.Symbol is not INamedTypeSymbol { IsReferenceType: true } target)
+        {
+            return;
+        }
+
+        var attributes = target.GetAttributes()
+            .Select(a => (
+                success: a.TryGetUnionTypeAttributeModel(
+                             new UnionTypeAttribute.Model.TypeArgumentState(target), out var model)
+                      && model is { IsDefault: true },
+                variant: a is { AttributeClass.TypeArguments: [{ } arg] }
+                    ? arg.ToDisplayString(SymbolDisplayFormat.CSharpErrorMessageFormat)
+                    : null,
+                location: (a.ApplicationSyntaxReference?.GetSyntax(ct) as AttributeSyntax)
+                ?.ArgumentList
+                ?.Arguments
+                .FirstOrDefault(attributeArg =>
+                    attributeArg?.NameEquals?.Name.Identifier.Text is nameof(UnionTypeAttribute.IsDefault))
+                ?.GetLocation()))
+            .Where(t => t is (
+                success: true,
+                variant: not null,
+                location: not null));
+
+        var union = target.ToDisplayString(SymbolDisplayFormat.CSharpErrorMessageFormat);
+
+        foreach (var (_, variant, location) in attributes)
+        {
+            ct.ThrowIfCancellationRequested();
+
+            var diagnostic = Diagnostic.Create(
+                DiagnosticDescriptors.ClassUnionsShouldNotUseDefaultVariants,
+                location,
+                messageArgs: [union, variant]
+            );
+            ctx.ReportDiagnostic(diagnostic);
+        }
+    }
+
+    private static void ReportCannotDeclareMultipleDefaultVariants(SymbolAnalysisContext ctx)
+    {
+        var ct = ctx.CancellationToken;
+        ct.ThrowIfCancellationRequested();
+
+        if (ctx.Symbol is not INamedTypeSymbol target)
+        {
+            return;
+        }
+
+        var attributes = target.GetAttributes()
+            .Select(a => (
+                success: a.TryGetUnionTypeAttributeModel(
+                             new UnionTypeAttribute.Model.TypeArgumentState(target), out var model)
+                      && model is { IsDefault: true },
+                variant: a is { AttributeClass.TypeArguments: [{ } arg] }
+                    ? arg.ToDisplayString(SymbolDisplayFormat.CSharpErrorMessageFormat)
+                    : null,
+                location: (a.ApplicationSyntaxReference?.GetSyntax(ct) as AttributeSyntax)
+                ?.ArgumentList
+                ?.Arguments
+                .FirstOrDefault(attributeArg =>
+                    attributeArg?.NameEquals?.Name.Identifier.Text is nameof(UnionTypeAttribute.IsDefault))
+                ?.GetLocation()))
+            .Where(t => t is (
+                success: true,
+                variant: not null,
+                location: not null))
+            .ToList();
+
+        if (attributes.Count is 0 or 1)
+        {
+            return;
+        }
+
+        var union = target.ToDisplayString(SymbolDisplayFormat.CSharpErrorMessageFormat);
+
+        foreach (var (_, variant, location) in attributes)
+        {
+            ct.ThrowIfCancellationRequested();
+
+            var diagnostic = Diagnostic.Create(
+                DiagnosticDescriptors.CannotDeclareMultipleDefaultVariants,
+                location,
+                messageArgs: [union, variant]
+            );
+            ctx.ReportDiagnostic(diagnostic);
+        }
     }
 
     private static void ReportUnionCannotBeRefStruct(SymbolAnalysisContext ctx)

@@ -163,4 +163,29 @@ internal static class DiagnosticDescriptors
         category: "Usage",
         defaultSeverity: DiagnosticSeverity.Error,
         isEnabledByDefault: true);
+
+    public static DiagnosticDescriptor ClassUnionsShouldNotUseDefaultVariants { get; } = new(
+        id: "RMJ0021",
+        title: "Class variants should not use default variants",
+        messageFormat: "Union `{0}` declares a default variant `{1}` but is a class",
+        category: "Usage",
+        defaultSeverity: DiagnosticSeverity.Warning,
+        isEnabledByDefault: true);
+
+    public static DiagnosticDescriptor CannotDeclareMultipleDefaultVariants { get; } = new(
+        id: "RMJ0022",
+        title: "Cannot declare multiple default variants",
+        messageFormat: "Union `{0}` declares a default variant `{1}` but another default variant was already declared",
+        category: "Usage",
+        defaultSeverity: DiagnosticSeverity.Error,
+        isEnabledByDefault: true);
+
+    public static DiagnosticDescriptor NonNullableReferenceTypeVariantCannotBeDefaultVariant { get; } = new(
+        id: "RMJ0023",
+        title: "Non-nullable reference type variant cannot be default variant",
+        messageFormat:
+        "Union `{0}` declares a non-nullable reference type default variant `{1}`, but only value type and nullable reference type variants can be declared as the default variant",
+        category: "Usage",
+        defaultSeverity: DiagnosticSeverity.Error,
+        isEnabledByDefault: true);
 }
