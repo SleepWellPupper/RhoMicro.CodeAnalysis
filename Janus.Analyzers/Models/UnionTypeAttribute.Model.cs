@@ -171,6 +171,12 @@ partial class UnionTypeAttribute
         get => base.IsNullable;
         set => base.IsNullable = value;
     }
+
+    public override Boolean IsDefault
+    {
+        get => base.IsNullable;
+        set => base.IsNullable = value;
+    }
 }
 
 file static class Extensions
