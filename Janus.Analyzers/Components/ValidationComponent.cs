@@ -31,10 +31,10 @@ internal readonly record struct ValidationComponent(UnionModel Model) : ICSharpS
                   private {{typeof(InvalidOperationException)}} CreateUnknownVariantException()
                       => new {{typeof(InvalidOperationException)}}(
                           $"Unable to determine the variant of this union, as '{nameof(Variant)}' is not " +
-                          $"representing a valid variant of this union: '{Variant}'. This could be either " + 
-                          "because the union itself was not initialized correctly, or due to a bug in the " + 
-                          "'JanusJanus' source generator that generated this union type. Please report an issue to the " + 
-                          "maintainer.");
+                          $"representing a valid variant of this union: '{nameof(Variant)}.{nameof(Variant.Kind)}: " + 
+                          $"{(int)Variant.Kind}'. This could be either because the union itself was not initialized " +
+                          "correctly, or due to a bug in the 'Janus' source generator that generated this union " +
+                          "type. Please file an issue with the maintainer.");
                           
                   {{List<UnionTypeAttribute.Model>(m.Variants, static (v, _, _, b, ct) =>
                   {
