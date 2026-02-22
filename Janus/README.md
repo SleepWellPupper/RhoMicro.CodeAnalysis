@@ -297,7 +297,7 @@ sealed class UserService : IUserService
         IQueryable<User> users;
         try
         {
-            users = _repository.UsersByName(name);
+            var users = _repository.UsersByName(name);
         } catch(UnauthorizedDatabaseAccessException)
         {
             return ErrorCode.Unauthorized;
@@ -320,7 +320,7 @@ sealed class UserService : IUserService
 As you can see, possible representations of `GetUserResult` are implicitly converted and returned by the service. Users
 of `OneOf` will be familiar with this.
 
-On the consumer side of this api, a generated `Match` function helps with transforming the union instance to another
+On the consumer side of this api, a generated `Switch` function helps with transforming the union instance to another
 type:
 ```cs
 sealed class UserModel
