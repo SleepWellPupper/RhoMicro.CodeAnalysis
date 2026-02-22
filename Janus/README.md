@@ -297,7 +297,7 @@ sealed class UserService : IUserService
         IQueryable<User> users;
         try
         {
-            var users = _repository.UsersByName(name);
+            users = _repository.UsersByName(name);
         } catch(UnauthorizedDatabaseAccessException)
         {
             return ErrorCode.Unauthorized;
