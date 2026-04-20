@@ -11,8 +11,6 @@
     <Project Path="CopyToGenerator/CopyToGenerator.csproj" />
     <Project Path="DocReflect.Library/DocReflect.Library.csproj" />
     <Project Path="DocReflect/DocReflect.csproj" />
-    <Project Path="DslGenerator.Tests/DslGenerator.Tests.csproj" />
-    <Project Path="DslGenerator/DslGenerator.csproj" />
     <Project Path="EnumConstStringGenerator/EnumConstStringGenerator.csproj" />
     <Project Path="Equa/Equa.csproj" />
     <Project Path="Janus.Analyzers/Janus.Analyzers.csproj" />
