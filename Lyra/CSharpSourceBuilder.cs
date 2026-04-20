@@ -737,10 +737,16 @@ internal partial class CSharpSourceBuilder : IDisposable
 
         Append('<');
 
-        foreach (var parameter in type.GetGenericArguments())
+        for (var i = 0; i < type.GetGenericArguments().Length; i++)
         {
             CancellationToken.ThrowIfCancellationRequested();
 
+            if (i is not 0)
+            {
+                Append(", ");
+            }
+            
+            var parameter = type.GetGenericArguments()[i];
             AppendTypeName(parameter, options);
         }
 
