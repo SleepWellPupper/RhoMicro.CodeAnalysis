@@ -703,7 +703,8 @@ internal partial class CSharpSourceBuilder : IDisposable
         { typeof(Double), "double" },
         { typeof(Decimal), "decimal" },
         { typeof(Char), "char" },
-        { typeof(String), "string" }
+        { typeof(String), "string" },
+        { typeof(Object), "object" },
     };
 
     private void AppendMetadataTypeName(Type type, TypeNameOptions options)
