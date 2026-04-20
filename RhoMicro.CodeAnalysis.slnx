@@ -26,6 +26,7 @@
     <Project Path="JsonSchemaGenerator.Tests/JsonSchemaGenerator.Tests.csproj" />
     <Project Path="JsonSchemaGenerator/JsonSchemaGenerator.csproj" />
     <Project Path="Lyra\Lyra.csproj" />
+    <Project Path="Lyra.Tests\Lyra.Tests.csproj" />
     <Project Path="OptionsGenerator.Tests/OptionsGenerator.Tests.csproj" />
     <Project Path="OptionsGenerator/OptionsGenerator.csproj" />
     <Project Path="Polyfills/Polyfills.csproj" />

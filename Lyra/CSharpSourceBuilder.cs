@@ -696,14 +696,15 @@ internal partial class CSharpSourceBuilder : IDisposable
         { typeof(Int16), "short" },
         { typeof(UInt16), "ushort" },
         { typeof(Int32), "int" },
-        { typeof(UInt32), "int" },
+        { typeof(UInt32), "uint" },
         { typeof(Int64), "long" },
-        { typeof(UInt64), "long" },
+        { typeof(UInt64), "ulong" },
         { typeof(Single), "float" },
         { typeof(Double), "double" },
         { typeof(Decimal), "decimal" },
         { typeof(Char), "char" },
-        { typeof(String), "string" }
+        { typeof(String), "string" },
+        { typeof(Object), "object" },
     };
 
     private void AppendMetadataTypeName(Type type, TypeNameOptions options)
@@ -737,10 +738,16 @@ internal partial class CSharpSourceBuilder : IDisposable
 
         Append('<');
 
-        foreach (var parameter in type.GetGenericArguments())
+        for (var i = 0; i < type.GetGenericArguments().Length; i++)
         {
             CancellationToken.ThrowIfCancellationRequested();
 
+            if (i is not 0)
+            {
+                Append(", ");
+            }
+            
+            var parameter = type.GetGenericArguments()[i];
             AppendTypeName(parameter, options);
         }
 
