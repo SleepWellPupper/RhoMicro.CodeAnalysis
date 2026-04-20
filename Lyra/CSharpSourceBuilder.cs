@@ -696,7 +696,7 @@ internal partial class CSharpSourceBuilder : IDisposable
         { typeof(Int16), "short" },
         { typeof(UInt16), "ushort" },
         { typeof(Int32), "int" },
-        { typeof(UInt32), "int" },
+        { typeof(UInt32), "uint" },
         { typeof(Int64), "long" },
         { typeof(UInt64), "long" },
         { typeof(Single), "float" },
