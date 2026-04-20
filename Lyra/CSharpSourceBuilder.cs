@@ -698,7 +698,7 @@ internal partial class CSharpSourceBuilder : IDisposable
         { typeof(Int32), "int" },
         { typeof(UInt32), "uint" },
         { typeof(Int64), "long" },
-        { typeof(UInt64), "long" },
+        { typeof(UInt64), "ulong" },
         { typeof(Single), "float" },
         { typeof(Double), "double" },
         { typeof(Decimal), "decimal" },
