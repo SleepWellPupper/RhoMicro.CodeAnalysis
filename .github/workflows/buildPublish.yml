@@ -29,7 +29,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: '9'
+        dotnet-version: '10'
 
     - name: Run Tests
       run: dotnet test -c Release -p:Version=1.0.0
@@ -43,7 +43,7 @@ jobs:
     - name: Setup .NET
       uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: '9'
+        dotnet-version: '10'
 
     - name: Run Tests
       run: dotnet test -c Release -p:Version=${{github.ref_name}}
