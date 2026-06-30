@@ -1,5 +1,7 @@
 // SPDX-License-Identifier: MPL-2.0
 
+using System;
+
 namespace RhoMicro.CodeAnalysis.Lyra;
 
 using System.Runtime.CompilerServices;
