@@ -23,4 +23,10 @@ jobs:
     - name: Test
       run: dotnet test --no-build --verbosity normal
     - name: Publish
-      run: dotnet nuget push "./dist/debug/*.nupkg" --skip-duplicate --api-key=${{ secrets.NUGET_API_KEY }} --source https://api.nuget.org/v3/index.json
+      run: |
+        for pkg in ./dist/debug/*.nupkg; do
+          dotnet nuget push "$pkg" \
+            --source "https://api.nuget.org/v3/index.json" \
+            --api-key "${{ secrets.NUGET_API_KEY }}" \
+            --skip-duplicate
+        done
